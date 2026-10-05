@@ -1,0 +1,56 @@
+/*
+ * Every colour the site uses, as a custom property. Nothing else may carry a
+ * raw hex or rgba (a test refuses it), so light and dark are one swap and a
+ * status is never a colour alone.
+ */
+:root {
+  --bg: #f6f7fb;
+  --surface: #ffffff;
+  --surface-2: #eef1f7;
+  --border: #d9dee8;
+  --text: #0f172a;
+  --text-2: #475569;
+  --text-3: #64748b;
+  --brand: #1f5eff;
+  --brand-strong: #1747c2;
+  --on-brand: #ffffff;
+  --ok-bg: #e4f7ec;
+  --ok-fg: #126b3a;
+  --warn-bg: #fff4d6;
+  --warn-fg: #7a4d00;
+  --danger-bg: #fde8e8;
+  --danger-fg: #a11c1c;
+  --info-bg: #e6eeff;
+  --info-fg: #1b3f9b;
+  --muted-bg: #eceff4;
+  --muted-fg: #3f4a5c;
+  --focus: #1f5eff;
+  --shadow: 0 1px 2px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.06);
+  --backdrop: rgba(15, 23, 42, 0.45);
+}
+
+:root[data-theme='dark'] {
+  --bg: #0b0f17;
+  --surface: #121826;
+  --surface-2: #1a2232;
+  --border: #273146;
+  --text: #e7ecf5;
+  --text-2: #b4bdcf;
+  --text-3: #8b95ab;
+  --brand: #5b8cff;
+  --brand-strong: #7da3ff;
+  --on-brand: #0b0f17;
+  --ok-bg: #0f2e1f;
+  --ok-fg: #7fe0a8;
+  --warn-bg: #352a0c;
+  --warn-fg: #ffd47a;
+  --danger-bg: #3a1414;
+  --danger-fg: #ff9b9b;
+  --info-bg: #142247;
+  --info-fg: #9db7ff;
+  --muted-bg: #1d2535;
+  --muted-fg: #c0c8d8;
+  --focus: #7da3ff;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --backdrop: rgba(0, 0, 0, 0.6);
+}
