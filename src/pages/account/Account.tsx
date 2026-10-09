@@ -1,9 +1,13 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
-import type { MySubscription, SeatRequest } from '../../api/types';
+import { ApiError } from '../../api/client';
+import type { Activity, ActivityPrices, MySubscription, Pricing, QuoteLine, RequestResult, SeatRequest, SubscriptionBranch } from '../../api/types';
 import { isUnauthorized, ownerChooseAccount, ownerLogin, ownerLogout, ownerRequest, type AccountChoice } from '../../auth/owner';
-import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, RequestBadge, StateBadge, Table } from '../../components/ui';
+import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
+import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
+import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, StateBadge, Table, type Tone } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
-import { formatDate, formatDateTime, formatInt } from '../../lib/format';
+import { ACTIVITIES, activityPrice, canWithdraw, explainActivityChange, isScheduledActivityChange } from '../../lib/activity';
+import { formatDate, formatDateTime, formatInt, formatMru } from '../../lib/format';
 import { paymentProvider } from '../../providers/payment';
 
 type Session = { kind: 'checking' } | { kind: 'anonymous' } | { kind: 'signed'; data: MySubscription };
@@ -139,6 +143,12 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
   const quote = data.pricing.quote;
   const date = ent.state === 'complimentary' ? data.pricing.currentPeriod.periodStart : ent.periodEnd;
   const explainKey = `status.explain.${ent.state}` as Key;
+  // Bumped after an activity request, so the requests list below reads the new row.
+  const [requestsVersion, setRequestsVersion] = useState(0);
+  const afterActivityRequest = useCallback(async () => {
+    setRequestsVersion((v) => v + 1);
+    await reload();
+  }, [reload]);
 
   return (
     <div className="stack">
@@ -184,18 +194,12 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
           )}
         </div>
         <div className="card">
-          <h2>{t('account.stores')}</h2>
-          <ul>
-            {data.business.branches.map((b) => (
-              <li key={b.name}>{b.name}</li>
-            ))}
-          </ul>
-        </div>
-        <div className="card">
           <h2>{t('account.period')}</h2>
           {ent.periodEnd ? <p>{t('account.period.ends', { date: formatDate(ent.periodEnd, lang) })}</p> : <p className="muted">{t('account.period.none')}</p>}
         </div>
       </section>
+
+      <StoreActivities data={data} onRequested={afterActivityRequest} />
 
       <section className="card stack">
         <h2>{t('account.quote')}</h2>
@@ -203,6 +207,8 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         <Table
           columns={[
             { label: t('account.quote.store'), render: (l) => l.name },
+            { label: t('account.stores.activity'), render: (l) => (l.activity ? <ActivityName activity={l.activity} /> : '—') },
+            { label: t('account.quote.activityFee'), render: (l) => (typeof l.activityFee === 'number' ? <Money amount={l.activityFee} /> : '—') },
             { label: t('account.quote.staff'), render: (l) => formatInt(l.staffCount, lang) },
             { label: t('account.quote.included'), render: (l) => formatInt(l.includedSeats, lang) },
             { label: t('account.quote.paid'), render: (l) => formatInt(l.paidSeats, lang) },
@@ -239,7 +245,7 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         <p className="muted small">{t('account.quote.next', { amount: `${formatInt(data.pricing.nextRenewalEstimate.monthlyTotal, lang)} MRU` })}</p>
       </section>
 
-      <Requests stores={ent.seatsByStore.map((s) => ({ id: s.branchId, name: s.name }))} onChanged={reload} />
+      <Requests stores={ent.seatsByStore.map((s) => ({ id: s.branchId, name: s.name }))} prices={data.pricing.plan} version={requestsVersion} onChanged={reload} />
 
       <section className="card stack">
         <h2>{t('account.payment.howto')}</h2>
@@ -291,12 +297,221 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
   );
 }
 
-function Requests({ stores, onChanged }: { stores: { id: string; name: string }[]; onChanged: () => Promise<void> }) {
+/** What `activity-requests` refuses by name (docs/73 §6), said in words. */
+const ACTIVITY_REFUSALS = new Set(['activity_unchanged', 'activity_not_for_warehouse', 'activity_request_pending']);
+
+/**
+ * Each store with its activity and the change waiting for the next renewal,
+ * and — per store — the action to ask for another activity. Warehouses stay
+ * electronics (D154 c), and a store the server did not describe (an older API)
+ * offers no change at all.
+ */
+function StoreActivities({ data, onRequested }: { data: MySubscription; onRequested: () => Promise<void> }) {
+  const { t } = useI18n();
+  const [open, setOpen] = useState<string | null>(null);
+  const lineOf = (id: string) => data.pricing.quote.lines.find((l) => l.branchId === id);
+
+  return (
+    <section className="card stack">
+      <h2>{t('account.stores')}</h2>
+      <ul className="store-list">
+        {data.business.branches.map((b) => {
+          const changeable = b.id && b.activity && b.type !== 'warehouse' ? { ...b, id: b.id, activity: b.activity } : null;
+          return (
+            <li key={b.id ?? b.name} className="stack">
+              <div className="row spread">
+                <div className="stack-tight">
+                  <strong>{b.name}</strong>
+                  {b.type === 'warehouse' ? <span className="muted small">{t('account.stores.warehouse')}</span> : null}
+                  {b.activity ? <ActivityWithNext activity={b.activity} next={b.activityNext} /> : null}
+                </div>
+                {changeable && open !== changeable.id ? (
+                  <button type="button" className="btn btn-sm" onClick={() => setOpen(changeable.id)}>
+                    {t('account.stores.change')}
+                  </button>
+                ) : null}
+              </div>
+              {changeable && open === changeable.id ? (
+                <ActivityChange branch={changeable} line={lineOf(changeable.id)} pricing={data.pricing} onRequested={onRequested} onClose={() => setOpen(null)} />
+              ) : null}
+            </li>
+          );
+        })}
+      </ul>
+    </section>
+  );
+}
+
+/**
+ * Ask for another activity for one store (D154, docs/73 §3, §6).
+ *
+ * Before the request, the consequence is EXPLAINED from the plan's prices and
+ * the store's own fee on the quote — never from constants — and says that the
+ * amount due is the one the server records. After it, the page renders the
+ * row the server answered with, by its status: awaiting payment of the
+ * difference, waiting for the renewal (which is also what an upgrade becomes
+ * when no paid month is running), or a scheduled change withdrawn.
+ */
+function ActivityChange({
+  branch,
+  line,
+  pricing,
+  onRequested,
+  onClose,
+}: {
+  branch: SubscriptionBranch & { id: string; activity: Activity };
+  line: QuoteLine | undefined;
+  pricing: Pricing;
+  onRequested: () => Promise<void>;
+  onClose: () => void;
+}) {
+  const { t, lang } = useI18n();
+  const [target, setTarget] = useState<Activity | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<unknown>(null);
+  const [result, setResult] = useState<RequestResult | null>(null);
+  const name = (a: Activity) => t(`activity.${a}` as Key);
+
+  const next = branch.activityNext ?? null;
+  // With a change scheduled, keeping today's activity is a choice of its own: it withdraws that change.
+  const options: Activity[] = [...(next ? [branch.activity] : []), ...ACTIVITIES.filter((a) => a !== branch.activity && a !== next)];
+  const currentFee = typeof line?.activityFee === 'number' ? line.activityFee : null;
+  // The next renewal is priced like the server's own renewal estimate: the scheduled plan when there is one.
+  const renewalPrices: ActivityPrices = pricing.upcomingPlan ?? pricing.plan;
+
+  const send = async () => {
+    if (!target) return;
+    setBusy(true);
+    setError(null);
+    try {
+      setResult(await ownerRequest<RequestResult>('platform/my-subscription/activity-requests', { method: 'POST', body: { branchId: branch.id, activity: target } }));
+      await onRequested();
+    } catch (e) {
+      setError(e);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (result) {
+    const outcome = outcomeOf(result, branch, renewalPrices, t, lang);
+    return (
+      <div className="stack">
+        <Notice tone={outcome.tone}>{outcome.text}</Notice>
+        <div className="row">
+          <button type="button" className="btn btn-sm" onClick={onClose}>
+            {t('action.close')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  let explanation: string | null = null;
+  let fromPriceList = false;
+  if (target && target === branch.activity && next) {
+    explanation = t('account.change.keepExplain', { activity: name(next) });
+  } else if (target) {
+    const preview = explainActivityChange(currentFee, activityPrice(pricing.plan, target));
+    const price = activityPrice(renewalPrices, target);
+    if (!preview || price === null) {
+      explanation = t('account.change.unknown');
+    } else {
+      fromPriceList = true;
+      explanation =
+        preview.kind === 'upgrade'
+          ? t('account.change.upgrade', { difference: formatMru(preview.differenceNow, lang), price: formatMru(price, lang) })
+          : t('account.change.downgrade', { price: formatMru(price, lang) });
+    }
+  }
+
+  return (
+    <div className="card stack">
+      <h3>{t('account.change.title', { store: branch.name })}</h3>
+      <p>{currentFee !== null ? t('account.change.now', { activity: name(branch.activity), amount: formatMru(currentFee, lang) }) : name(branch.activity)}</p>
+      <ActivityCards
+        name={`activity-${branch.id}`}
+        legend={t('account.change.to')}
+        options={options}
+        value={target}
+        onChange={(a) => {
+          setTarget(a);
+          setError(null);
+        }}
+        prices={pricing.plan}
+        labelOf={(a) => (a === branch.activity ? t('account.change.keep', { activity: name(a) }) : null)}
+      />
+      {explanation ? (
+        <div className="stack-tight" aria-live="polite">
+          <Notice tone="info">{explanation}</Notice>
+          {fromPriceList ? <p className="muted small">{t('account.change.estimate')}</p> : null}
+        </div>
+      ) : null}
+      {error instanceof ApiError && error.code && ACTIVITY_REFUSALS.has(error.code) ? (
+        <Notice tone="danger" title={t(`account.change.error.${error.code}` as Key)}>
+          {error.message}
+        </Notice>
+      ) : (
+        <ErrorNotice error={error} />
+      )}
+      <div className="row">
+        <button type="button" className="btn btn-primary" disabled={busy || !target} onClick={() => void send()}>
+          {t('account.requests.submit')}
+        </button>
+        <button type="button" className="btn" onClick={onClose}>
+          {t('action.cancel')}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/** The server's answer to an activity request, in words — read from the row's status, never from the prices. */
+function outcomeOf(
+  result: RequestResult,
+  branch: SubscriptionBranch & { activity: Activity },
+  renewalPrices: ActivityPrices,
+  t: ReturnType<typeof useI18n>['t'],
+  lang: ReturnType<typeof useI18n>['lang'],
+): { tone: Tone; text: string } {
+  const a = result.allocation;
+  const store = a.branchName ?? branch.name;
+  const name = (x: Activity) => t(`activity.${x}` as Key);
+  if (!result.created && a.status === 'released') {
+    return { tone: 'ok', text: t('account.change.outcome.withdrawn', { store, activity: name(a.activityFrom ?? branch.activity) }) };
+  }
+  const prefix = result.created ? '' : `${t('account.change.outcome.existing')} `;
+  if (a.status === 'pending_payment' && a.activityEffective === 'now') {
+    const amount = formatMru(a.monthlyAmount, lang);
+    const price = a.activityTo ? activityPrice(renewalPrices, a.activityTo) : null;
+    return {
+      tone: 'warn',
+      text: prefix + (price !== null ? t('account.change.outcome.due', { amount, price: formatMru(price, lang) }) : t('account.change.outcome.dueNoPrice', { amount })),
+    };
+  }
+  if (isScheduledActivityChange(a) && a.activityTo) {
+    return { tone: 'info', text: prefix + t('account.change.outcome.renewal', { store, activity: name(a.activityTo) }) };
+  }
+  return { tone: 'info', text: prefix + t('account.change.outcome.other', { status: t(`account.requests.status.${a.status}` as Key) }) };
+}
+
+function Requests({
+  stores,
+  prices,
+  version,
+  onChanged,
+}: {
+  stores: { id: string; name: string }[];
+  prices: ActivityPrices;
+  version: number;
+  onChanged: () => Promise<void>;
+}) {
   const { t, lang } = useI18n();
   const [rows, setRows] = useState<SeatRequest[] | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [branchId, setBranchId] = useState(stores[0]?.id ?? '');
   const [storeName, setStoreName] = useState('');
+  const [storeActivity, setStoreActivity] = useState<Activity>('electronics');
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
@@ -308,7 +523,7 @@ function Requests({ stores, onChanged }: { stores: { id: string; name: string }[
   }, []);
   useEffect(() => {
     void load();
-  }, [load]);
+  }, [load, version]);
 
   const act = async (fn: () => Promise<unknown>) => {
     setBusy(true);
@@ -335,23 +550,14 @@ function Requests({ stores, onChanged }: { stores: { id: string; name: string }[
       ) : (
         <Table
           columns={[
-            {
-              label: t('admin.seats.request'),
-              render: (r) => (
-                <>
-                  {r.kind === 'seat' ? t('account.requests.seat') : t('account.requests.store')}{' '}
-                  {r.kind === 'seat' && r.store ? t('account.requests.at', { store: r.store.name }) : r.label ? `“${r.label}”` : ''}{' '}
-                  {r.person ? t('account.requests.for', { person: r.person.name }) : ''}
-                </>
-              ),
-            },
-            { label: t('admin.seats.amount'), render: (r) => t('account.requests.perMonth', { amount: `${formatInt(r.monthlyAmount, lang)} MRU` }) },
-            { label: t('admin.businesses.state'), render: (r) => <RequestBadge status={r.status} /> },
+            { label: t('admin.seats.request'), render: (r) => <RequestSummary request={r} /> },
+            { label: t('admin.seats.amount'), render: (r) => <RequestAmount request={r} /> },
+            { label: t('admin.businesses.state'), render: (r) => <RequestStatus request={r} /> },
             { label: t('admin.seats.requested'), render: (r) => formatDate(r.requestedAt, lang) },
             {
               label: '',
               render: (r) =>
-                r.status === 'pending_payment' ? (
+                canWithdraw(r) ? (
                   <button type="button" className="btn btn-sm" disabled={busy} onClick={() => void act(() => ownerRequest(`platform/my-subscription/seat-requests/${r.id}/withdraw`, { method: 'POST' }))}>
                     {t('account.requests.withdraw')}
                   </button>
@@ -391,12 +597,26 @@ function Requests({ stores, onChanged }: { stores: { id: string; name: string }[
           className="stack"
           onSubmit={(e) => {
             e.preventDefault();
-            if (storeName.trim()) void act(() => ownerRequest('platform/my-subscription/store-requests', { method: 'POST', body: { name: storeName.trim() } })).then(() => setStoreName(''));
+            if (storeName.trim())
+              void act(() => ownerRequest('platform/my-subscription/store-requests', { method: 'POST', body: { name: storeName.trim(), activity: storeActivity } })).then(() => setStoreName(''));
           }}
         >
           <h3>{t('account.requests.add.store')}</h3>
           <Field label={t('account.requests.store.name')}>
             <input maxLength={160} value={storeName} onChange={(e) => setStoreName(e.target.value)} />
+          </Field>
+          <Field label={t('account.requests.store.activity')}>
+            <select value={storeActivity} onChange={(e) => setStoreActivity(e.target.value as Activity)}>
+              {ACTIVITIES.map((a) => {
+                const price = activityPrice(prices, a);
+                const label = t(`activity.${a}` as Key);
+                return (
+                  <option key={a} value={a}>
+                    {price !== null ? t('account.requests.option', { activity: label, amount: formatMru(price, lang) }) : label}
+                  </option>
+                );
+              })}
+            </select>
           </Field>
           <button type="submit" className="btn" disabled={busy || !storeName.trim()}>
             {t('account.requests.submit')}
