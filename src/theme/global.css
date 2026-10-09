@@ -452,12 +452,103 @@ dialog.modal .body {
 }
 .estimate-store {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto auto auto;
   gap: 10px;
   align-items: center;
+}
+.estimate-store select {
+  width: auto;
 }
 @media (max-width: 719px) {
   .estimate-store {
     grid-template-columns: 1fr;
   }
+  .estimate-store select {
+    width: 100%;
+  }
+}
+
+/*
+ * Activity cards (D154): large choices that wrap to one column on a narrow
+ * screen. Logical properties only, so Arabic mirrors without a rule of its own;
+ * the native radio stays visible, so the choice never reads by colour alone.
+ */
+.choice-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-inline-size: 0;
+  display: grid;
+  gap: 8px;
+}
+.choice-fieldset legend {
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 0;
+  margin-block-end: 6px;
+}
+.choice-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+}
+.choice-card {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  padding-block: 14px;
+  padding-inline: 16px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: start;
+  cursor: pointer;
+}
+.choice-card.static {
+  cursor: default;
+  border-width: 1px;
+}
+.choice-card.selected {
+  border-color: var(--brand);
+  background: var(--info-bg);
+}
+.choice-card:focus-within {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.choice-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.choice-head input[type='radio'] {
+  inline-size: 20px;
+  block-size: 20px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  flex: none;
+  accent-color: var(--brand);
+}
+.choice-price {
+  font-size: 1.15rem;
+}
+.stack-tight {
+  display: grid;
+  gap: 2px;
+}
+.store-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+.store-list > li {
+  padding-block-end: 12px;
+  border-block-end: 1px solid var(--border);
+}
+.store-list > li:last-child {
+  border-block-end: 0;
+  padding-block-end: 0;
 }

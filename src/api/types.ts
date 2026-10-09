@@ -2,6 +2,14 @@
 
 export type EntitlementState = 'pending' | 'active' | 'grace' | 'expired' | 'complimentary' | 'suspended' | 'cancelled' | 'rejected';
 
+/**
+ * What a branch is subscribed to do (D154, docs/73 §3): the electronics store,
+ * the money services agent counter, or both. Every field that carries one is
+ * optional here because an API older than the activity does not send it, and
+ * the site then shows nothing rather than a guess.
+ */
+export type Activity = 'electronics' | 'money_agent' | 'both';
+
 export interface BranchSeats {
   branchId: string;
   name: string;
@@ -12,6 +20,9 @@ export interface BranchSeats {
   seatLimit: number;
   seatsAvailable: number;
   overLimit: boolean;
+  activity?: Activity;
+  /** A change waiting for the next renewal, or null. */
+  activityNext?: Activity | null;
 }
 
 export interface Entitlement {
@@ -38,6 +49,9 @@ export interface Entitlement {
 export interface QuoteLine {
   branchId: string | null;
   name: string;
+  activity?: Activity;
+  /** What this branch's activity costs per month, priced by the server. */
+  activityFee?: number;
   staffCount: number;
   includedSeats: number;
   paidSeats: number;
@@ -50,6 +64,8 @@ export interface QuoteLine {
 
 export interface Quote {
   branchMonthly: number;
+  agentMonthly?: number;
+  bothMonthly?: number;
   extraStaffMonthly: number;
   includedSeatsPerStore: number;
   activeBranchCount: number;
@@ -65,10 +81,16 @@ export interface Quote {
   lines: QuoteLine[];
 }
 
-export interface PlanVersion {
+/** The three monthly prices a plan version carries; `branchMonthly` stays the electronics store's. */
+export interface ActivityPrices {
+  branchMonthly: number;
+  agentMonthly?: number;
+  bothMonthly?: number;
+}
+
+export interface PlanVersion extends ActivityPrices {
   id?: string;
   version: number;
-  branchMonthly: number;
   includedStaffPerBranch: number;
   extraStaffMonthly: number;
   effectiveFrom: string;
@@ -77,14 +99,13 @@ export interface PlanVersion {
   state?: 'in_force' | 'scheduled';
 }
 
-export interface PublicPlan {
+export interface PublicPlan extends ActivityPrices {
   version: number;
-  branchMonthly: number;
   includedSeatsPerStore: number;
   extraSeatMonthly: number;
   currency: 'MRU';
   effectiveFrom: string;
-  upcoming: { version: number; branchMonthly: number; includedSeatsPerStore: number; extraSeatMonthly: number; effectiveFrom: string } | null;
+  upcoming: (ActivityPrices & { version: number; includedSeatsPerStore: number; extraSeatMonthly: number; effectiveFrom: string }) | null;
 }
 
 export interface Pricing {
@@ -126,8 +147,19 @@ export interface PaymentRow {
   providerVerified: false;
 }
 
+/** One of the business's active branches, as `GET platform/my-subscription` lists it. */
+export interface SubscriptionBranch {
+  /** The UUID an activity request names the branch by. Absent from an older API. */
+  id?: string;
+  name: string;
+  type: string;
+  activity?: Activity;
+  activityNext?: Activity | null;
+  activityChangedAt?: string | null;
+}
+
 export interface MySubscription {
-  business: { name: string; city: string | null; createdAt: string; branches: { name: string; type: string }[] };
+  business: { name: string; city: string | null; createdAt: string; branches: SubscriptionBranch[] };
   owner: { name: string; email: string | null; phone: string | null; emailVerified: boolean; phoneVerified: boolean } | null;
   entitlement: Entitlement;
   pricing: Pricing;
@@ -139,11 +171,19 @@ export type SeatRequestStatus = 'pending_payment' | 'paid' | 'granted' | 'releas
 
 export interface SeatRequest {
   id: string;
-  kind: 'seat' | 'store';
+  kind: 'seat' | 'store' | 'activity';
   status: SeatRequestStatus;
   store: { id: string; name: string } | null;
   person: { id: string; name: string } | null;
   label: string | null;
+  branchId?: string | null;
+  branchName?: string | null;
+  /** An activity change: what the branch does and what was asked. A store request carries the new store's activity in `activityTo`. */
+  activityFrom?: Activity | null;
+  activityTo?: Activity | null;
+  /** `now` once the difference is paid; `renewal` for a change that waits for the next renewal. */
+  activityEffective?: 'now' | 'renewal' | null;
+  /** Per month for a seat or a store; for an activity change, the difference for this month. */
   monthlyAmount: number;
   currency: string;
   requestedBy: string;
@@ -157,6 +197,12 @@ export interface SeatRequest {
   version: number;
   providerVerified: false;
   business?: { id: string; name: string; publicStoreId: string };
+}
+
+/** The answer to every Owner request (seat, store, activity): the row, and whether this call created it. */
+export interface RequestResult {
+  allocation: SeatRequest;
+  created: boolean;
 }
 
 export interface Dashboard {
@@ -222,7 +268,7 @@ export interface BusinessDetail {
   publicStoreId: string;
   city: string | null;
   createdAt: string;
-  branches: { id: string; name: string; type: string }[];
+  branches: { id: string; name: string; type: string; activity?: Activity; activityNext?: Activity | null }[];
   people: Person[];
   entitlement: Entitlement | null;
   pricing: Pricing | null;

@@ -1,6 +1,9 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { en } from '../src/i18n/en';
+import { fr } from '../src/i18n/fr';
+import { ar } from '../src/i18n/ar';
 
 /** Every source file, so a new one cannot escape the rules. */
 function walk(dir: string, out: string[] = []): string[] {
@@ -16,15 +19,41 @@ const files = walk(SRC);
 const code = files.filter((f) => /\.(ts|tsx)$/.test(f));
 const read = (f: string) => readFileSync(f, 'utf8');
 
+/*
+ * Every price field the API sends, and any local named like one. Widened for
+ * the activity prices (docs/73, 2026-10-09): `agentMonthly`, `bothMonthly` and
+ * `activityFee` are caught by `\w*Monthly` / `\w*Fee`, as is a local such as
+ * `targetFee` — the old list named each field and would have let them through.
+ */
+const PRICE = String.raw`\w*Monthly|\w*Fee|monthlyAmount|monthlyTotal|assessedTotal|differenceNow`;
+const PRICE_ARITHMETIC = new RegExp(String.raw`(${PRICE})\s*[*+\-/]\s*\w|\w\s*[*+\-/]\s*(${PRICE})\b`);
+/**
+ * The one exception, pinned: explaining an activity upgrade BEFORE it is asked
+ * for needs "the new price minus today's" (docs/73 §6). It lives in one pure,
+ * tested function, carries this marker, and the amount actually due is always
+ * the one the server records on the request.
+ */
+const EXPLANATION_ONLY = '// explanation-only:';
+
 describe('the website never computes a price', () => {
   it('no source multiplies or adds a price field', () => {
-    const pattern = /(branchMonthly|extraStaffMonthly|extraSeatMonthly|monthlyAmount|seatFee|monthlyTotal|staffFee|branchFee|assessedTotal)\s*[*+\-/]\s*\w|\w\s*[*+\-/]\s*(branchMonthly|extraStaffMonthly|extraSeatMonthly|monthlyAmount|seatFee|monthlyTotal|staffFee|branchFee|assessedTotal)\b/;
     for (const f of code) {
       const hits = read(f)
         .split('\n')
-        .filter((line: string) => pattern.test(line) && !line.trim().startsWith('//') && !line.trim().startsWith('*'));
+        .filter((line: string) => PRICE_ARITHMETIC.test(line) && !line.trim().startsWith('//') && !line.trim().startsWith('*'))
+        .filter((line: string) => !(relative(SRC, f) === join('lib', 'activity.ts') && line.includes(EXPLANATION_ONLY)));
       expect({ file: relative(SRC, f), hits }).toEqual({ file: relative(SRC, f), hits: [] });
     }
+  });
+
+  it('explains exactly one difference, in one place', () => {
+    const marked = code.flatMap((f) =>
+      read(f)
+        .split('\n')
+        .filter((line) => line.includes(EXPLANATION_ONLY))
+        .map(() => relative(SRC, f)),
+    );
+    expect(marked).toEqual([join('lib', 'activity.ts')]);
   });
 });
 
@@ -75,9 +104,26 @@ describe('the payment boundary', () => {
     expect(src).not.toMatch(/available: true/);
   });
 
+  /**
+   * The money services agent's own trade names the providers it exchanges
+   * credit for (D154, docs/73 §6) — one catalogue string per language, checked
+   * by the parity test to carry no payment wording. It is cut out before the
+   * scan; every other line of every source still may not name a provider.
+   */
+  const AGENT_TRADE: Record<string, string> = {
+    [join('i18n', 'en.ts')]: en['activity.money_agent.body'],
+    [join('i18n', 'fr.ts')]: fr['activity.money_agent.body'],
+    [join('i18n', 'ar.ts')]: ar['activity.money_agent.body'],
+  };
+
   it('no page names a payment destination number or a provider', () => {
     for (const f of code) {
-      const src = read(f);
+      let src = read(f);
+      const trade = AGENT_TRADE[relative(SRC, f)];
+      if (trade) {
+        expect({ file: relative(SRC, f), found: src.split(trade).length - 1 }).toEqual({ file: relative(SRC, f), found: 1 });
+        src = src.replace(trade, '');
+      }
       expect({ file: relative(SRC, f), ok: !/bankily|masrivi|sedad|bimbank/i.test(src) }).toEqual({ file: relative(SRC, f), ok: true });
     }
   });
