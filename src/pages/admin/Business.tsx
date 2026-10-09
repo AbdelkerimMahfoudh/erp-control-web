@@ -46,6 +46,8 @@ export function Business() {
   const [data, setData] = useState<BusinessDetail | null>(null);
   const [requests, setRequests] = useState<SeatRequest[]>([]);
   const [error, setError] = useState<unknown>(null);
+  /** The last decision's result, kept above the requests: the decided row may leave or change in the reloaded list. */
+  const [outcome, setOutcome] = useState<string[] | null>(null);
   const { ask, dialog } = useStepUp();
 
   const load = useCallback(async () => {
@@ -191,6 +193,13 @@ export function Business() {
 
       <section className="card stack">
         <h2>{t('admin.seats.title')}</h2>
+        {outcome ? (
+          <Notice tone="ok">
+            {outcome.map((l) => (
+              <div key={l}>{l}</div>
+            ))}
+          </Notice>
+        ) : null}
         {requests.length === 0 ? (
           <Empty text={t('account.requests.none')} />
         ) : (
@@ -201,7 +210,7 @@ export function Business() {
               { label: t('admin.businesses.state'), render: (r) => <RequestStatus request={r} /> },
               { label: t('admin.action.reference'), render: (r) => <span className="ltr">{r.payment?.reference ?? '—'}</span> },
               { label: t('admin.seats.requested'), render: (r) => formatDateTime(r.requestedAt, lang) },
-              { label: '', render: (r) => <SeatRequestActions companyId={data.id} request={r} ask={ask} onDone={load} /> },
+              { label: '', render: (r) => <SeatRequestActions companyId={data.id} request={r} ask={ask} onDone={load} onOutcome={setOutcome} /> },
             ]}
             rows={requests}
             keyOf={(r) => r.id}

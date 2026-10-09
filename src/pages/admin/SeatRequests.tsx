@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import type { SeatRequest, SeatRequestStatus } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
-import { Empty, ErrorNotice, Loading, Table } from '../../components/ui';
+import { Empty, ErrorNotice, Loading, Notice, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDateTime } from '../../lib/format';
 import { SeatRequestActions } from './SeatRequestActions';
@@ -22,6 +22,8 @@ export function SeatRequests() {
   const [status, setStatus] = useState<SeatRequestStatus>('pending_payment');
   const [rows, setRows] = useState<SeatRequest[] | null>(null);
   const [error, setError] = useState<unknown>(null);
+  /** The last decision's result, kept above the list: the decided row usually leaves the list it was shown in. */
+  const [outcome, setOutcome] = useState<string[] | null>(null);
   const { ask, dialog } = useStepUp();
 
   const load = useCallback(async () => {
@@ -53,6 +55,13 @@ export function SeatRequests() {
         </label>
       </div>
       <ErrorNotice error={error} />
+      {outcome ? (
+        <Notice tone="ok">
+          {outcome.map((l) => (
+            <div key={l}>{l}</div>
+          ))}
+        </Notice>
+      ) : null}
       {rows === null ? (
         <Loading />
       ) : rows.length === 0 ? (
@@ -68,7 +77,7 @@ export function SeatRequests() {
             { label: t('admin.seats.amount'), render: (r) => <RequestAmount request={r} /> },
             { label: t('admin.businesses.state'), render: (r) => <RequestStatus request={r} /> },
             { label: t('admin.seats.requested'), render: (r) => formatDateTime(r.requestedAt, lang) },
-            { label: '', render: (r) => (r.business ? <SeatRequestActions companyId={r.business.id} request={r} ask={ask} onDone={load} /> : null) },
+            { label: '', render: (r) => (r.business ? <SeatRequestActions companyId={r.business.id} request={r} ask={ask} onDone={load} onOutcome={setOutcome} /> : null) },
           ]}
           rows={rows}
           keyOf={(r) => r.id}

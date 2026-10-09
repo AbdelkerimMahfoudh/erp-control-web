@@ -21,8 +21,24 @@ interface ConfirmResult {
  * An activity upgrade is confirmed like a seat (the branch changes at once);
  * refusing leaves the branch as it is; only a change still waiting for the
  * renewal can be released — the server refuses to release one in force.
+ *
+ * `onOutcome` hands the result to the page before the list is reloaded: a
+ * decided request usually leaves the list it was in ("Awaiting payment"), and
+ * its row — with any message drawn inside it — goes with it.
  */
-export function SeatRequestActions({ companyId, request, ask, onDone }: { companyId: string; request: SeatRequest; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
+export function SeatRequestActions({
+  companyId,
+  request,
+  ask,
+  onDone,
+  onOutcome,
+}: {
+  companyId: string;
+  request: SeatRequest;
+  ask: () => Promise<string | null>;
+  onDone: () => Promise<void>;
+  onOutcome?: (lines: string[]) => void;
+}) {
   const { t } = useI18n();
   const [mode, setMode] = useState<'none' | 'confirm' | 'refuse' | 'release'>('none');
   const [amount, setAmount] = useState(String(request.monthlyAmount));
@@ -34,6 +50,8 @@ export function SeatRequestActions({ companyId, request, ask, onDone }: { compan
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [outcome, setOutcome] = useState<string[] | null>(null);
+  // Shown once: by the page when it keeps the result, otherwise in this row.
+  const report = (lines: string[]) => (onOutcome ? onOutcome(lines) : setOutcome(lines));
 
   const base = `platform/businesses/${companyId}/seat-requests/${request.id}`;
   const releasable = (request.kind === 'seat' && (request.status === 'paid' || request.status === 'granted')) || isScheduledActivityChange(request);
@@ -61,13 +79,13 @@ export function SeatRequestActions({ companyId, request, ask, onDone }: { compan
               : t('admin.seats.stillPending', { reasons: r.activation.pending.map((p) => t(`pending.${p}` as Key)).join(', ') }),
           );
         }
-        setOutcome(lines);
+        report(lines);
       } else {
         const r = await adminRequest<{ applied: boolean }>(`${base}/${mode === 'refuse' ? 'refuse' : 'release'}`, {
           method: 'POST',
           body: { reason: reason.trim(), expectedVersion: request.version, confirmPassword },
         });
-        setOutcome([r.applied ? t('admin.action.applied') : t('admin.action.noop')]);
+        report([r.applied ? t('admin.action.applied') : t('admin.action.noop')]);
       }
       setMode('none');
       await onDone();

@@ -58,6 +58,33 @@ describe('the platform console', () => {
     expect(within(later).queryByRole('button', { name: 'Confirm payment' })).toBeNull();
   });
 
+  it('keeps the confirmation’s result on screen after the paid request leaves the queue', async () => {
+    const upgrade = { ...allocation({}), business: BUSINESS };
+    let paid = false;
+    serve((url) => {
+      if (url.endsWith('/platform/admin/me')) return { body: ADMIN };
+      if (url.endsWith('/platform/seat-requests?status=pending_payment')) return { body: paid ? [] : [upgrade] };
+      if (url.endsWith(`/seat-requests/${upgrade.id}/confirm-payment`)) {
+        paid = true;
+        return { body: { applied: true, allocation: { ...upgrade, status: 'paid' }, paymentId: 'pay1', activation: null } };
+      }
+      return undefined;
+    });
+    mount('/admin/seat-requests');
+    const user = userEvent.setup();
+    const row = (await screen.findByText(/Activity change at Agence Centre/)).closest('tr')!;
+    await user.click(within(row).getByRole('button', { name: 'Confirm payment' }));
+    await user.type(within(row).getByLabelText(/Reference/), 'BK-2026-1009');
+    await user.click(within(row).getByRole('button', { name: 'Confirm' }));
+    await user.type(await screen.findByLabelText('Password'), 'step-up-password');
+    await user.click(within(screen.getByRole('dialog', { hidden: true })).getByRole('button', { name: 'Confirm', hidden: true }));
+
+    // The reloaded queue is empty — the row and anything drawn in it are gone — and the result is still there, once.
+    expect(await screen.findByText('Nothing is waiting.')).toBeTruthy();
+    expect(screen.queryByText(/Activity change at Agence Centre/)).toBeNull();
+    expect(screen.getAllByText('The store’s activity was changed.')).toHaveLength(1);
+  });
+
   it('lists and schedules the three activity prices', async () => {
     const sent = serve((url) => {
       if (url.endsWith('/platform/admin/me')) return { body: ADMIN };
