@@ -205,6 +205,22 @@ export interface RequestResult {
   created: boolean;
 }
 
+/**
+ * One activity a store could be asked to take, as the server would answer the request now (D154): `dueNow` is what
+ * the request would put awaiting payment, `monthlyAfter` what the store pays per month once the next paid period
+ * opens. A refused one names the request standing in its way.
+ */
+export type ActivityOption =
+  | { activity: Activity; outcome: 'now' | 'renewal' | 'keep' | 'requested'; dueNow: number; monthlyAfter: number }
+  | { activity: Activity; outcome: 'refused'; code: 'activity_request_pending'; blockedBy: Activity; dueNow: 0; monthlyAfter: null };
+
+/** GET platform/my-subscription/activity-options: every store's options, and what a new store would be charged. */
+export interface ActivityOptions {
+  running: boolean;
+  stores: { branchId: string; name: string; activity: Activity; activityNext: Activity | null; options: ActivityOption[] }[];
+  newStore: { activity: Activity; monthly: number }[];
+}
+
 export interface Dashboard {
   byState: Record<EntitlementState, number>;
   businesses: number;

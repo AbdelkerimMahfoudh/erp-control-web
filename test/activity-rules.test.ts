@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import type { SeatRequest } from '../src/api/types';
-import { activityPrice, canWithdraw, explainActivityChange, isScheduledActivityChange } from '../src/lib/activity';
+import { activityPrice, canWithdraw, isScheduledActivityChange, pricesAfter } from '../src/lib/activity';
 
-/** The pure activity rules of the website (D154, docs/73 §6): read a price, explain a change, know a scheduled one. */
+/** The pure activity rules of the website (D154, docs/73 §6): read a price the server sent, know a scheduled change. */
 
 /** An activity request row, as `seat-allocation.service.ts` serialises the fields these rules read. */
 function row(over: Partial<SeatRequest>): Pick<SeatRequest, 'kind' | 'status' | 'confirmedAt'> {
@@ -20,16 +20,15 @@ describe('the activity rules the site uses', () => {
     expect(activityPrice(null, 'electronics')).toBeNull();
   });
 
-  it('explains a higher price as the difference now, and anything else as the renewal (D154 b)', () => {
-    expect(explainActivityChange(300, 700)).toEqual({ kind: 'upgrade', differenceNow: 400 });
-    expect(explainActivityChange(500, 700)).toEqual({ kind: 'upgrade', differenceNow: 200 });
-    expect(explainActivityChange(300, 500)).toEqual({ kind: 'upgrade', differenceNow: 200 });
-    expect(explainActivityChange(700, 300)).toEqual({ kind: 'downgrade', differenceNow: 0 });
-    expect(explainActivityChange(500, 300)).toEqual({ kind: 'downgrade', differenceNow: 0 });
-    // The server schedules an equal price like a lower one.
-    expect(explainActivityChange(500, 500)).toEqual({ kind: 'downgrade', differenceNow: 0 });
-    expect(explainActivityChange(null, 700)).toBeNull();
-    expect(explainActivityChange(300, null)).toBeNull();
+  it('reads the card prices from the server’s options, and leaves out what it did not price', () => {
+    expect(
+      pricesAfter([
+        { activity: 'electronics', outcome: 'renewal', dueNow: 0, monthlyAfter: 550 },
+        { activity: 'both', outcome: 'now', dueNow: 400, monthlyAfter: 770 },
+      ]),
+    ).toEqual({ branchMonthly: 550, agentMonthly: undefined, bothMonthly: 770 });
+    // A refused option has no price.
+    expect(activityPrice(pricesAfter([{ activity: 'money_agent', outcome: 'refused', code: 'activity_request_pending', blockedBy: 'both', dueNow: 0, monthlyAfter: null }]), 'money_agent')).toBeNull();
   });
 
   it('knows a scheduled change from an applied one, and what the Owner may withdraw', () => {

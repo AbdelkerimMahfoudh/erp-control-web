@@ -25,35 +25,31 @@ const read = (f: string) => readFileSync(f, 'utf8');
  * `activityFee` are caught by `\w*Monthly` / `\w*Fee`, as is a local such as
  * `targetFee` — the old list named each field and would have let them through.
  */
-const PRICE = String.raw`\w*Monthly|\w*Fee|monthlyAmount|monthlyTotal|assessedTotal|differenceNow`;
+const PRICE = String.raw`\w*Monthly|\w*Fee|monthlyAmount|monthlyTotal|assessedTotal|differenceNow|dueNow|monthlyAfter|monthly`;
 const PRICE_ARITHMETIC = new RegExp(String.raw`(${PRICE})\s*[*+\-/]\s*\w|\w\s*[*+\-/]\s*(${PRICE})\b`);
 /**
- * The one exception, pinned: explaining an activity upgrade BEFORE it is asked
- * for needs "the new price minus today's" (docs/73 §6). It lives in one pure,
- * tested function, carries this marker, and the amount actually due is always
- * the one the server records on the request.
+ * There used to be one exception — explaining an activity upgrade before it
+ * was asked for, as "the new price minus today's". It priced from today's list
+ * where the server charges the running period's own prices, and only when a
+ * paid month runs (the 2026-10-09 review), so the server now answers that
+ * question itself (GET my-subscription/activity-options). No exception remains.
  */
-const EXPLANATION_ONLY = '// explanation-only:';
+const EXPLANATION_ONLY = 'explanation-only';
 
 describe('the website never computes a price', () => {
   it('no source multiplies or adds a price field', () => {
     for (const f of code) {
       const hits = read(f)
         .split('\n')
-        .filter((line: string) => PRICE_ARITHMETIC.test(line) && !line.trim().startsWith('//') && !line.trim().startsWith('*'))
-        .filter((line: string) => !(relative(SRC, f) === join('lib', 'activity.ts') && line.includes(EXPLANATION_ONLY)));
+        .filter((line: string) => PRICE_ARITHMETIC.test(line) && !line.trim().startsWith('//') && !line.trim().startsWith('*'));
       expect({ file: relative(SRC, f), hits }).toEqual({ file: relative(SRC, f), hits: [] });
     }
   });
 
-  it('explains exactly one difference, in one place', () => {
-    const marked = code.flatMap((f) =>
-      read(f)
-        .split('\n')
-        .filter((line) => line.includes(EXPLANATION_ONLY))
-        .map(() => relative(SRC, f)),
-    );
-    expect(marked).toEqual([join('lib', 'activity.ts')]);
+  it('explains no change by its own arithmetic: the server says what a change would do', () => {
+    const marked = code.filter((f) => read(f).includes(EXPLANATION_ONLY)).map((f) => relative(SRC, f));
+    expect(marked).toEqual([]);
+    expect(read(join(SRC, 'pages/account/Account.tsx'))).toMatch(/platform\/my-subscription\/activity-options/);
   });
 });
 

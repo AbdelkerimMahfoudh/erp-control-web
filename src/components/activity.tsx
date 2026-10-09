@@ -21,7 +21,7 @@ export function ActivityWithNext({ activity, next }: { activity?: Activity | nul
   );
 }
 
-function CardBody({ activity, prices }: { activity: Activity; prices: ActivityPrices | null | undefined }) {
+function CardBody({ activity, prices }: { activity: Activity; prices: Partial<ActivityPrices> | null | undefined }) {
   const { t } = useI18n();
   const price = activityPrice(prices, activity);
   return (
@@ -58,7 +58,7 @@ export function ActivityCards({
   options: readonly Activity[];
   value: Activity | null;
   onChange: (a: Activity) => void;
-  prices: ActivityPrices | null | undefined;
+  prices: Partial<ActivityPrices> | null | undefined;
   /** A card title other than the activity's name (e.g. "Keep …"). */
   labelOf?: (a: Activity) => string | null;
 }) {

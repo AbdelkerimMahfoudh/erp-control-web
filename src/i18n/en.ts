@@ -185,8 +185,8 @@ export const en = {
   'account.change.upgrade': '{difference} now for this month, then {price} per month from the next renewal.',
   'account.change.downgrade': '{price} per month from the next renewal; nothing is due now.',
   'account.change.keepExplain': 'The change to {activity} scheduled for the renewal is withdrawn. Nothing is due and nothing is refunded.',
-  'account.change.estimate':
-    'Explained from the price list. The amount due is the one the server records when you send the request: if no paid month is running, the change waits for the next renewal and nothing is due now.',
+  'account.change.estimate': 'This is the platform’s answer for this store now: the request records exactly these amounts.',
+  'account.change.blocked': 'A change to {activity} is already requested for this store. To ask for another activity, withdraw that request first from the requests below.',
   'account.change.unknown': 'The server calculates the amount when you send the request.',
   'account.change.outcome.due': '{amount} due now for this month (the difference), then {price} per month. The request waits for the platform to confirm your payment.',
   'account.change.outcome.dueNoPrice': '{amount} due now for this month (the difference). The request waits for the platform to confirm your payment.',

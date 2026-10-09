@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { ApiError } from '../../api/client';
-import type { Activity, ActivityPrices, MySubscription, Pricing, QuoteLine, RequestResult, SeatRequest, SubscriptionBranch } from '../../api/types';
+import type { Activity, ActivityOption, ActivityOptions, MySubscription, QuoteLine, RequestResult, SeatRequest, SubscriptionBranch } from '../../api/types';
 import { isUnauthorized, ownerChooseAccount, ownerLogin, ownerLogout, ownerRequest, type AccountChoice } from '../../auth/owner';
 import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
 import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, StateBadge, Table, type Tone } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
-import { ACTIVITIES, activityPrice, canWithdraw, explainActivityChange, isScheduledActivityChange } from '../../lib/activity';
+import { ACTIVITIES, canWithdraw, isScheduledActivityChange, pricesAfter } from '../../lib/activity';
 import { formatDate, formatDateTime, formatInt, formatMru } from '../../lib/format';
 import { paymentProvider } from '../../providers/payment';
 
@@ -149,6 +149,24 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
     setRequestsVersion((v) => v + 1);
     await reload();
   }, [reload]);
+  // What each change, and a new store, would cost: the server's own answer (D154), read again with the account.
+  const [options, setOptions] = useState<ActivityOptions | null>(null);
+  const [optionsError, setOptionsError] = useState<unknown>(null);
+  useEffect(() => {
+    let live = true;
+    ownerRequest<ActivityOptions>('platform/my-subscription/activity-options')
+      .then((o) => {
+        if (!live) return;
+        setOptions(o);
+        setOptionsError(null);
+      })
+      .catch((e: unknown) => {
+        if (live) setOptionsError(e);
+      });
+    return () => {
+      live = false;
+    };
+  }, [data]);
 
   return (
     <div className="stack">
@@ -199,7 +217,7 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         </div>
       </section>
 
-      <StoreActivities data={data} onRequested={afterActivityRequest} />
+      <StoreActivities data={data} options={options} optionsError={optionsError} onRequested={afterActivityRequest} />
 
       <section className="card stack">
         <h2>{t('account.quote')}</h2>
@@ -245,7 +263,7 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         <p className="muted small">{t('account.quote.next', { amount: `${formatInt(data.pricing.nextRenewalEstimate.monthlyTotal, lang)} MRU` })}</p>
       </section>
 
-      <Requests stores={ent.seatsByStore.map((s) => ({ id: s.branchId, name: s.name }))} prices={data.pricing.plan} version={requestsVersion} onChanged={reload} />
+      <Requests stores={ent.seatsByStore.map((s) => ({ id: s.branchId, name: s.name }))} newStore={options?.newStore ?? null} version={requestsVersion} onChanged={reload} />
 
       <section className="card stack">
         <h2>{t('account.payment.howto')}</h2>
@@ -306,10 +324,21 @@ const ACTIVITY_REFUSALS = new Set(['activity_unchanged', 'activity_not_for_wareh
  * electronics (D154 c), and a store the server did not describe (an older API)
  * offers no change at all.
  */
-function StoreActivities({ data, onRequested }: { data: MySubscription; onRequested: () => Promise<void> }) {
+function StoreActivities({
+  data,
+  options,
+  optionsError,
+  onRequested,
+}: {
+  data: MySubscription;
+  options: ActivityOptions | null;
+  optionsError: unknown;
+  onRequested: () => Promise<void>;
+}) {
   const { t } = useI18n();
   const [open, setOpen] = useState<string | null>(null);
   const lineOf = (id: string) => data.pricing.quote.lines.find((l) => l.branchId === id);
+  const optionsOf = (id: string) => (options ? (options.stores.find((s) => s.branchId === id)?.options ?? []) : null);
 
   return (
     <section className="card stack">
@@ -332,7 +361,14 @@ function StoreActivities({ data, onRequested }: { data: MySubscription; onReques
                 ) : null}
               </div>
               {changeable && open === changeable.id ? (
-                <ActivityChange branch={changeable} line={lineOf(changeable.id)} pricing={data.pricing} onRequested={onRequested} onClose={() => setOpen(null)} />
+                <ActivityChange
+                  branch={changeable}
+                  line={lineOf(changeable.id)}
+                  options={optionsOf(changeable.id)}
+                  optionsError={optionsError}
+                  onRequested={onRequested}
+                  onClose={() => setOpen(null)}
+                />
               ) : null}
             </li>
           );
@@ -345,23 +381,26 @@ function StoreActivities({ data, onRequested }: { data: MySubscription; onReques
 /**
  * Ask for another activity for one store (D154, docs/73 §3, §6).
  *
- * Before the request, the consequence is EXPLAINED from the plan's prices and
- * the store's own fee on the quote — never from constants — and says that the
- * amount due is the one the server records. After it, the page renders the
+ * Before the request, the consequence is the SERVER's answer for this store
+ * now (GET my-subscription/activity-options): what would be due now, what the
+ * store pays per month once the next paid period opens, or why a change cannot
+ * be asked yet — the page computes no charge. After it, the page renders the
  * row the server answered with, by its status: awaiting payment of the
- * difference, waiting for the renewal (which is also what an upgrade becomes
- * when no paid month is running), or a scheduled change withdrawn.
+ * difference, waiting for the renewal, or a scheduled change withdrawn.
  */
 function ActivityChange({
   branch,
   line,
-  pricing,
+  options,
+  optionsError,
   onRequested,
   onClose,
 }: {
   branch: SubscriptionBranch & { id: string; activity: Activity };
   line: QuoteLine | undefined;
-  pricing: Pricing;
+  /** Null while the server's options are loading (or could not be read). */
+  options: ActivityOption[] | null;
+  optionsError: unknown;
   onRequested: () => Promise<void>;
   onClose: () => void;
 }) {
@@ -373,11 +412,10 @@ function ActivityChange({
   const name = (a: Activity) => t(`activity.${a}` as Key);
 
   const next = branch.activityNext ?? null;
-  // With a change scheduled, keeping today's activity is a choice of its own: it withdraws that change.
-  const options: Activity[] = [...(next ? [branch.activity] : []), ...ACTIVITIES.filter((a) => a !== branch.activity && a !== next)];
   const currentFee = typeof line?.activityFee === 'number' ? line.activityFee : null;
-  // The next renewal is priced like the server's own renewal estimate: the scheduled plan when there is one.
-  const renewalPrices: ActivityPrices = pricing.upcomingPlan ?? pricing.plan;
+  const offered = (options ?? []).filter((o) => o.outcome !== 'refused');
+  const blockedBy = [...new Set((options ?? []).flatMap((o) => (o.outcome === 'refused' ? [o.blockedBy] : [])))];
+  const chosen = offered.find((o) => o.activity === target) ?? null;
 
   const send = async () => {
     if (!target) return;
@@ -394,7 +432,7 @@ function ActivityChange({
   };
 
   if (result) {
-    const outcome = outcomeOf(result, branch, renewalPrices, t, lang);
+    const outcome = outcomeOf(result, branch, chosen?.monthlyAfter ?? null, t, lang);
     return (
       <div className="stack">
         <Notice tone={outcome.tone}>{outcome.text}</Notice>
@@ -408,43 +446,49 @@ function ActivityChange({
   }
 
   let explanation: string | null = null;
-  let fromPriceList = false;
-  if (target && target === branch.activity && next) {
-    explanation = t('account.change.keepExplain', { activity: name(next) });
-  } else if (target) {
-    const preview = explainActivityChange(currentFee, activityPrice(pricing.plan, target));
-    const price = activityPrice(renewalPrices, target);
-    if (!preview || price === null) {
-      explanation = t('account.change.unknown');
-    } else {
-      fromPriceList = true;
-      explanation =
-        preview.kind === 'upgrade'
-          ? t('account.change.upgrade', { difference: formatMru(preview.differenceNow, lang), price: formatMru(price, lang) })
-          : t('account.change.downgrade', { price: formatMru(price, lang) });
-    }
+  if (chosen) {
+    const price = formatMru(chosen.monthlyAfter, lang);
+    const upgrade = t('account.change.upgrade', { difference: formatMru(chosen.dueNow, lang), price });
+    const renewal = t('account.change.downgrade', { price });
+    if (chosen.outcome === 'keep') explanation = t('account.change.keepExplain', { activity: name(next ?? chosen.activity) });
+    else if (chosen.outcome === 'now') explanation = upgrade;
+    else if (chosen.outcome === 'renewal') explanation = renewal;
+    else explanation = `${t('account.change.outcome.existing')} ${chosen.dueNow > 0 ? upgrade : renewal}`;
   }
 
   return (
     <div className="card stack">
       <h3>{t('account.change.title', { store: branch.name })}</h3>
       <p>{currentFee !== null ? t('account.change.now', { activity: name(branch.activity), amount: formatMru(currentFee, lang) }) : name(branch.activity)}</p>
-      <ActivityCards
-        name={`activity-${branch.id}`}
-        legend={t('account.change.to')}
-        options={options}
-        value={target}
-        onChange={(a) => {
-          setTarget(a);
-          setError(null);
-        }}
-        prices={pricing.plan}
-        labelOf={(a) => (a === branch.activity ? t('account.change.keep', { activity: name(a) }) : null)}
-      />
+      {options === null ? (
+        optionsError ? <ErrorNotice error={optionsError} /> : <Loading />
+      ) : (
+        <>
+          {offered.length > 0 ? (
+            <ActivityCards
+              name={`activity-${branch.id}`}
+              legend={t('account.change.to')}
+              options={offered.map((o) => o.activity)}
+              value={target}
+              onChange={(a) => {
+                setTarget(a);
+                setError(null);
+              }}
+              prices={pricesAfter(offered)}
+              labelOf={(a) => (a === branch.activity ? t('account.change.keep', { activity: name(a) }) : null)}
+            />
+          ) : null}
+          {blockedBy.map((a) => (
+            <Notice key={a} tone="info">
+              {t('account.change.blocked', { activity: name(a) })}
+            </Notice>
+          ))}
+        </>
+      )}
       {explanation ? (
         <div className="stack-tight" aria-live="polite">
           <Notice tone="info">{explanation}</Notice>
-          {fromPriceList ? <p className="muted small">{t('account.change.estimate')}</p> : null}
+          <p className="muted small">{t('account.change.estimate')}</p>
         </div>
       ) : null}
       {error instanceof ApiError && error.code && ACTIVITY_REFUSALS.has(error.code) ? (
@@ -455,7 +499,7 @@ function ActivityChange({
         <ErrorNotice error={error} />
       )}
       <div className="row">
-        <button type="button" className="btn btn-primary" disabled={busy || !target} onClick={() => void send()}>
+        <button type="button" className="btn btn-primary" disabled={busy || !chosen} onClick={() => void send()}>
           {t('account.requests.submit')}
         </button>
         <button type="button" className="btn" onClick={onClose}>
@@ -466,11 +510,14 @@ function ActivityChange({
   );
 }
 
-/** The server's answer to an activity request, in words — read from the row's status, never from the prices. */
+/**
+ * The server's answer to an activity request, in words — read from the row's status, never from the prices.
+ * `monthlyAfter` is the server's own figure for the month after, from the options the change was chosen from.
+ */
 function outcomeOf(
   result: RequestResult,
   branch: SubscriptionBranch & { activity: Activity },
-  renewalPrices: ActivityPrices,
+  monthlyAfter: number | null,
   t: ReturnType<typeof useI18n>['t'],
   lang: ReturnType<typeof useI18n>['lang'],
 ): { tone: Tone; text: string } {
@@ -483,10 +530,11 @@ function outcomeOf(
   const prefix = result.created ? '' : `${t('account.change.outcome.existing')} `;
   if (a.status === 'pending_payment' && a.activityEffective === 'now') {
     const amount = formatMru(a.monthlyAmount, lang);
-    const price = a.activityTo ? activityPrice(renewalPrices, a.activityTo) : null;
     return {
       tone: 'warn',
-      text: prefix + (price !== null ? t('account.change.outcome.due', { amount, price: formatMru(price, lang) }) : t('account.change.outcome.dueNoPrice', { amount })),
+      text:
+        prefix +
+        (monthlyAfter !== null ? t('account.change.outcome.due', { amount, price: formatMru(monthlyAfter, lang) }) : t('account.change.outcome.dueNoPrice', { amount })),
     };
   }
   if (isScheduledActivityChange(a) && a.activityTo) {
@@ -497,12 +545,13 @@ function outcomeOf(
 
 function Requests({
   stores,
-  prices,
+  newStore,
   version,
   onChanged,
 }: {
   stores: { id: string; name: string }[];
-  prices: ActivityPrices;
+  /** What a new store of each activity is charged per month now — the server's figure; null until it is read. */
+  newStore: { activity: Activity; monthly: number }[] | null;
   version: number;
   onChanged: () => Promise<void>;
 }) {
@@ -608,7 +657,7 @@ function Requests({
           <Field label={t('account.requests.store.activity')}>
             <select value={storeActivity} onChange={(e) => setStoreActivity(e.target.value as Activity)}>
               {ACTIVITIES.map((a) => {
-                const price = activityPrice(prices, a);
+                const price = newStore?.find((n) => n.activity === a)?.monthly ?? null;
                 const label = t(`activity.${a}` as Key);
                 return (
                   <option key={a} value={a}>

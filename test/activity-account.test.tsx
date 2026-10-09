@@ -2,15 +2,21 @@ import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import type { Activity, SeatRequest, SubscriptionBranch } from '../src/api/types';
-import { B1, B2, BOTH, BRANCHES, LINES, allocation, mount, serve, subscription, useActivityHarness } from './activity-fixtures';
+import { B1, B2, BOTH, BRANCHES, LINES, activityOptions, allocation, mount, serve, subscription, useActivityHarness } from './activity-fixtures';
 
 useActivityHarness();
 
 describe('Account: a store’s activity and its change', () => {
-  function account(answer: (body: { branchId: string; activity: Activity }) => { status?: number; body: unknown }, branches = BRANCHES, rowsAfter: SeatRequest[] = []) {
+  function account(
+    answer: (body: { branchId: string; activity: Activity }) => { status?: number; body: unknown },
+    branches = BRANCHES,
+    rowsAfter: SeatRequest[] = [],
+    options = activityOptions(),
+  ) {
     let posted = false;
     const sent = serve((url, body) => {
       if (url.endsWith('/platform/my-subscription')) return { body: subscription(branches, LINES) };
+      if (url.endsWith('/platform/my-subscription/activity-options')) return { body: options };
       if (url.endsWith('/platform/my-subscription/seat-requests')) return { body: posted ? rowsAfter : [] };
       if (url.endsWith('/platform/my-subscription/activity-requests')) {
         posted = true;
@@ -42,18 +48,20 @@ describe('Account: a store’s activity and its change', () => {
     expect(within(quote).getByText('300 MRU')).toBeTruthy();
   });
 
-  it('an upgrade explains the difference from the plan, then shows the amount the server recorded', async () => {
+  it('an upgrade is explained by the server’s own answer, then shows the amount the server recorded', async () => {
     const pending = allocation({});
-    const sent = account(() => ({ status: 201, body: { allocation: pending, created: true } }), BRANCHES, [pending]);
+    // The plan says 700 for both; the server says the next period opens at 770 (a new plan by then): the page shows 770.
+    const options = activityOptions({ [B1]: [{ activity: 'electronics', outcome: 'now', dueNow: 200, monthlyAfter: 500 }, { activity: 'both', outcome: 'now', dueNow: 400, monthlyAfter: 770 }] });
+    const sent = account(() => ({ status: 201, body: { allocation: pending, created: true } }), BRANCHES, [pending], options);
     const item = await openChange('Agence Centre');
     const user = userEvent.setup();
     expect(within(item).getByText('Now: Money services agent, 300 MRU per month.')).toBeTruthy();
-    await user.click(within(item).getByRole('radio', { name: /Both/ }));
-    expect(within(item).getByText('400 MRU now for this month, then 700 MRU per month from the next renewal.')).toBeTruthy();
-    expect(within(item).getByText(/The amount due is the one the server records/)).toBeTruthy();
+    await user.click(await within(item).findByRole('radio', { name: /Both/ }));
+    expect(within(item).getByText('400 MRU now for this month, then 770 MRU per month from the next renewal.')).toBeTruthy();
+    expect(within(item).getByText(/the request records exactly these amounts/)).toBeTruthy();
 
     await user.click(within(item).getByRole('button', { name: 'Send the request' }));
-    expect(await within(item).findByText(/^400 MRU due now for this month \(the difference\), then 700 MRU per month\./)).toBeTruthy();
+    expect(await within(item).findByText(/^400 MRU due now for this month \(the difference\), then 770 MRU per month\./)).toBeTruthy();
     expect(sent.find((r) => r.url.endsWith('/activity-requests'))!.body).toEqual({ branchId: B1, activity: 'both' });
 
     // The established pending-payment state: the row in the requests list, with its status and Withdraw.
@@ -70,7 +78,7 @@ describe('Account: a store’s activity and its change', () => {
     const sent = account(() => ({ status: 201, body: { allocation: scheduled, created: true } }), BRANCHES, [scheduled]);
     const item = await openChange('Boutique Ksar');
     const user = userEvent.setup();
-    await user.click(within(item).getByRole('radio', { name: /Money services agent/ }));
+    await user.click(await within(item).findByRole('radio', { name: /Money services agent/ }));
     expect(within(item).getByText('300 MRU per month from the next renewal; nothing is due now.')).toBeTruthy();
     await user.click(within(item).getByRole('button', { name: 'Send the request' }));
     expect(await within(item).findByText('Boutique Ksar changes to Money services agent at the next renewal; nothing is due now.')).toBeTruthy();
@@ -82,12 +90,16 @@ describe('Account: a store’s activity and its change', () => {
     expect(within(requests).getByRole('button', { name: 'Withdraw' })).toBeTruthy();
   });
 
-  it('an upgrade with no paid month running is rendered as the server scheduled it — never "due now"', async () => {
+  it('an upgrade with no paid month running is explained and rendered as the server schedules it — never "due now"', async () => {
     const scheduledUpgrade = allocation({ status: 'granted', activityEffective: 'renewal', monthlyAmount: 0 });
-    account(() => ({ status: 201, body: { allocation: scheduledUpgrade, created: true } }));
+    const options = activityOptions({ [B1]: [{ activity: 'electronics', outcome: 'renewal', dueNow: 0, monthlyAfter: 500 }, { activity: 'both', outcome: 'renewal', dueNow: 0, monthlyAfter: 700 }] });
+    account(() => ({ status: 201, body: { allocation: scheduledUpgrade, created: true } }), BRANCHES, [], options);
     const item = await openChange('Agence Centre');
     const user = userEvent.setup();
-    await user.click(within(item).getByRole('radio', { name: /Both/ }));
+    await user.click(await within(item).findByRole('radio', { name: /Both/ }));
+    // Before sending: the server's answer, not "the difference now".
+    expect(within(item).getByText('700 MRU per month from the next renewal; nothing is due now.')).toBeTruthy();
+    expect(within(item).queryByText(/now for this month/)).toBeNull();
     await user.click(within(item).getByRole('button', { name: 'Send the request' }));
     expect(await within(item).findByText(`Agence Centre changes to ${BOTH} at the next renewal; nothing is due now.`)).toBeTruthy();
     expect(within(item).queryByText(/due now for this month/)).toBeNull();
@@ -96,11 +108,23 @@ describe('Account: a store’s activity and its change', () => {
   it('keeping today’s activity withdraws the scheduled change', async () => {
     const withScheduled = BRANCHES.map((b): SubscriptionBranch => (b.id === B2 ? { ...b, activityNext: 'money_agent' } : b));
     const released = allocation({ branchId: B2, branchName: 'Boutique Ksar', activityFrom: 'both', activityTo: 'money_agent', status: 'released', activityEffective: 'renewal', monthlyAmount: 0, closedAt: '2026-10-09T10:00:00.000Z' });
-    const sent = account(() => ({ status: 201, body: { allocation: released, created: false } }), withScheduled);
+    const options = activityOptions({
+      [B2]: [
+        { activity: 'electronics', outcome: 'refused', code: 'activity_request_pending', blockedBy: 'money_agent', dueNow: 0, monthlyAfter: null },
+        { activity: 'money_agent', outcome: 'requested', dueNow: 0, monthlyAfter: 300 },
+        { activity: 'both', outcome: 'keep', dueNow: 0, monthlyAfter: 700 },
+      ],
+    });
+    const sent = account(() => ({ status: 201, body: { allocation: released, created: false } }), withScheduled, [], options);
     const stores = (await screen.findByRole('heading', { name: 'Stores' })).closest('section')!;
     expect(within(stores).getByText('Changes to Money services agent at the next renewal')).toBeTruthy();
     const item = await openChange('Boutique Ksar');
     const user = userEvent.setup();
+    // What the server would refuse is not offered; it is said why, in words.
+    expect(await within(item).findByText('A change to Money services agent is already requested for this store. To ask for another activity, withdraw that request first from the requests below.')).toBeTruthy();
+    expect(within(item).queryByRole('radio', { name: /Electronics store/ })).toBeNull();
+    await user.click(within(item).getByRole('radio', { name: /Money services agent/ }));
+    expect(within(item).getByText('This request already exists. 300 MRU per month from the next renewal; nothing is due now.')).toBeTruthy();
     await user.click(within(item).getByRole('radio', { name: /Keep Both/ }));
     expect(within(item).getByText(/The change to Money services agent scheduled for the renewal is withdrawn/)).toBeTruthy();
     await user.click(within(item).getByRole('button', { name: 'Send the request' }));
@@ -112,14 +136,21 @@ describe('Account: a store’s activity and its change', () => {
     account(() => ({ status: 409, body: { statusCode: 409, error: 'Conflict', code: 'activity_request_pending', message: 'Agence Centre already has a request to become electronics. Withdraw it first.' } }));
     const item = await openChange('Agence Centre');
     const user = userEvent.setup();
-    await user.click(within(item).getByRole('radio', { name: /Both/ }));
+    await user.click(await within(item).findByRole('radio', { name: /Both/ }));
     await user.click(within(item).getByRole('button', { name: 'Send the request' }));
     expect(await within(item).findByText('This store already has another activity request open. Withdraw it first from the requests below.')).toBeTruthy();
   });
 
-  it('asks the new store’s activity and sends it', async () => {
+  it('asks the new store’s activity and sends it, priced as the server would charge it', async () => {
+    // The running period's own prices (550/330/770), not the plan's 500/300/700: what requestStore will charge.
+    const options = activityOptions({}, [
+      { activity: 'electronics', monthly: 550 },
+      { activity: 'money_agent', monthly: 330 },
+      { activity: 'both', monthly: 770 },
+    ]);
     const sent = serve((url) => {
       if (url.endsWith('/platform/my-subscription')) return { body: subscription(BRANCHES, LINES) };
+      if (url.endsWith('/platform/my-subscription/activity-options')) return { body: options };
       if (url.endsWith('/platform/my-subscription/seat-requests')) return { body: [] };
       if (url.endsWith('/platform/my-subscription/store-requests'))
         return { status: 201, body: { allocation: allocation({ kind: 'store', label: 'Agence Port', activityTo: 'money_agent', activityFrom: null, activityEffective: null, monthlyAmount: 300 }), created: true } };
@@ -129,8 +160,8 @@ describe('Account: a store’s activity and its change', () => {
     const user = userEvent.setup();
     await user.type(await screen.findByLabelText('Name of the new store'), 'Agence Port');
     const select = screen.getByLabelText('What will it do?') as HTMLSelectElement;
-    // The option prices are the plan's.
-    expect([...select.options].map((o) => o.textContent)).toEqual(['Electronics store — 500 MRU per month', 'Money services agent — 300 MRU per month', `${BOTH} — 700 MRU per month`]);
+    expect(await screen.findByText('Electronics store — 550 MRU per month')).toBeTruthy();
+    expect([...select.options].map((o) => o.textContent)).toEqual(['Electronics store — 550 MRU per month', 'Money services agent — 330 MRU per month', `${BOTH} — 770 MRU per month`]);
     await user.selectOptions(select, 'money_agent');
     await user.click(within(select.closest('form')!).getByRole('button', { name: 'Send the request' }));
     await act(async () => undefined);

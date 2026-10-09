@@ -178,8 +178,8 @@ export const fr: Catalogue = {
   'account.change.upgrade': '{difference} maintenant pour ce mois, puis {price} par mois à partir du prochain renouvellement.',
   'account.change.downgrade': '{price} par mois à partir du prochain renouvellement ; rien n’est dû maintenant.',
   'account.change.keepExplain': 'Le passage à {activity} prévu au renouvellement est retiré. Rien n’est dû et rien n’est remboursé.',
-  'account.change.estimate':
-    'Expliqué à partir des tarifs. Le montant dû est celui que le serveur enregistre à l’envoi de la demande : si aucun mois payé n’est en cours, le changement attend le prochain renouvellement et rien n’est dû maintenant.',
+  'account.change.estimate': 'C’est la réponse de la plateforme pour ce magasin en ce moment : la demande enregistre exactement ces montants.',
+  'account.change.blocked': 'Un changement vers {activity} est déjà demandé pour ce magasin. Pour demander une autre activité, retirez d’abord cette demande dans la liste ci-dessous.',
   'account.change.unknown': 'Le serveur calcule le montant à l’envoi de la demande.',
   'account.change.outcome.due': '{amount} dus maintenant pour ce mois (la différence), puis {price} par mois. La demande attend que la plateforme confirme votre paiement.',
   'account.change.outcome.dueNoPrice': '{amount} dus maintenant pour ce mois (la différence). La demande attend que la plateforme confirme votre paiement.',

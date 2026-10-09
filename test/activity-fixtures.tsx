@@ -2,7 +2,7 @@ import { cleanup, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, vi } from 'vitest';
 import { App } from '../src/app';
-import type { Activity, SeatRequest, SubscriptionBranch } from '../src/api/types';
+import type { Activity, ActivityOption, ActivityOptions, SeatRequest, SubscriptionBranch } from '../src/api/types';
 import { I18nProvider } from '../src/i18n';
 import { ThemeProvider } from '../src/theme/theme';
 
@@ -111,6 +111,43 @@ export const BRANCHES: SubscriptionBranch[] = [
   { id: B3, name: 'Dépôt', type: 'warehouse', activity: 'electronics', activityNext: null, activityChangedAt: null },
 ];
 export const LINES = [line(B1, 'Agence Centre', 'money_agent', 300), line(B2, 'Boutique Ksar', 'both', 700), line(B3, 'Dépôt', 'electronics', 500)];
+
+/**
+ * GET my-subscription/activity-options for BRANCHES: the server's answer for each change, and a new store's charge.
+ * A store's options can be replaced to model another state (no paid month, a change already scheduled, a new plan).
+ */
+export function activityOptions(stores: Partial<Record<string, ActivityOption[]>> = {}, newStore?: ActivityOptions['newStore']): ActivityOptions {
+  return {
+    running: true,
+    stores: [
+      {
+        branchId: B1,
+        name: 'Agence Centre',
+        activity: 'money_agent',
+        activityNext: null,
+        options: stores[B1] ?? [
+          { activity: 'electronics', outcome: 'now', dueNow: 200, monthlyAfter: 500 },
+          { activity: 'both', outcome: 'now', dueNow: 400, monthlyAfter: 700 },
+        ],
+      },
+      {
+        branchId: B2,
+        name: 'Boutique Ksar',
+        activity: 'both',
+        activityNext: null,
+        options: stores[B2] ?? [
+          { activity: 'electronics', outcome: 'renewal', dueNow: 0, monthlyAfter: 500 },
+          { activity: 'money_agent', outcome: 'renewal', dueNow: 0, monthlyAfter: 300 },
+        ],
+      },
+    ],
+    newStore: newStore ?? [
+      { activity: 'electronics', monthly: 500 },
+      { activity: 'money_agent', monthly: 300 },
+      { activity: 'both', monthly: 700 },
+    ],
+  };
+}
 
 export function allocation(over: Partial<SeatRequest>): SeatRequest {
   return {
