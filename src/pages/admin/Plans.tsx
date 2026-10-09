@@ -6,11 +6,18 @@ import { useI18n } from '../../i18n';
 import { formatDate, formatInt } from '../../lib/format';
 import { useStepUp } from './useStepUp';
 
+/**
+ * The price list's versions, and scheduling the next one. A version prices
+ * every activity (D154): the electronics store (`branchMonthly`), the money
+ * services agent and a branch doing both — all three required, as the server
+ * requires them. A version from an API older than the activity shows only what
+ * it carries.
+ */
 export function Plans() {
   const { t, lang } = useI18n();
   const [rows, setRows] = useState<PlanVersion[] | null>(null);
   const [error, setError] = useState<unknown>(null);
-  const [form, setForm] = useState({ branchMonthly: '', includedStaffPerBranch: '1', extraStaffMonthly: '', effectiveFrom: '', reason: '' });
+  const [form, setForm] = useState({ branchMonthly: '', agentMonthly: '', bothMonthly: '', includedStaffPerBranch: '1', extraStaffMonthly: '', effectiveFrom: '', reason: '' });
   const [done, setDone] = useState(false);
   const { ask, dialog } = useStepUp();
 
@@ -35,6 +42,8 @@ export function Plans() {
         method: 'POST',
         body: {
           branchMonthly: Number(form.branchMonthly),
+          agentMonthly: Number(form.agentMonthly),
+          bothMonthly: Number(form.bothMonthly),
           includedStaffPerBranch: Number(form.includedStaffPerBranch),
           extraStaffMonthly: Number(form.extraStaffMonthly),
           effectiveFrom: new Date(form.effectiveFrom).toISOString(),
@@ -65,8 +74,19 @@ export function Plans() {
                 <Badge tone={p.state === 'in_force' ? 'ok' : 'info'}>{p.state === 'in_force' ? t('admin.plans.inForce') : t('admin.plans.scheduled')}</Badge>
               </div>
               <div>
-                <Money amount={p.branchMonthly} /> {t('home.pricing.perStore')}
+                <Money amount={p.branchMonthly} /> {t('activity.electronics')}
               </div>
+              {typeof p.agentMonthly === 'number' ? (
+                <div>
+                  <Money amount={p.agentMonthly} /> {t('activity.money_agent')}
+                </div>
+              ) : null}
+              {typeof p.bothMonthly === 'number' ? (
+                <div>
+                  <Money amount={p.bothMonthly} /> {t('activity.both')}
+                </div>
+              ) : null}
+              <div className="muted small">{t('home.pricing.perStore')}</div>
               <div>{t('home.pricing.included', { count: formatInt(p.includedStaffPerBranch, lang) })}</div>
               <div>
                 <Money amount={p.extraStaffMonthly} /> {t('home.pricing.extra')}
@@ -82,6 +102,12 @@ export function Plans() {
         <div className="grid">
           <Field label={t('admin.plans.branchMonthly')}>
             <input required inputMode="numeric" value={form.branchMonthly} onChange={(e) => setForm({ ...form, branchMonthly: e.target.value })} dir="ltr" />
+          </Field>
+          <Field label={t('admin.plans.agentMonthly')}>
+            <input required inputMode="numeric" value={form.agentMonthly} onChange={(e) => setForm({ ...form, agentMonthly: e.target.value })} dir="ltr" />
+          </Field>
+          <Field label={t('admin.plans.bothMonthly')}>
+            <input required inputMode="numeric" value={form.bothMonthly} onChange={(e) => setForm({ ...form, bothMonthly: e.target.value })} dir="ltr" />
           </Field>
           <Field label={t('admin.plans.included')}>
             <input required inputMode="numeric" value={form.includedStaffPerBranch} onChange={(e) => setForm({ ...form, includedStaffPerBranch: e.target.value })} dir="ltr" />

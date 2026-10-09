@@ -3,7 +3,9 @@ import { useParams } from 'react-router-dom';
 import { ApiError } from '../../api/client';
 import type { BusinessDetail, SeatRequest } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
-import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, RequestBadge, StateBadge, Table } from '../../components/ui';
+import { ActivityWithNext } from '../../components/activity';
+import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
+import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, StateBadge, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatDateTime, formatInt } from '../../lib/format';
 import { SeatRequestActions } from './SeatRequestActions';
@@ -63,6 +65,9 @@ export function Business() {
   if (error && !data) return <ErrorNotice error={error} />;
   if (!data) return <Loading />;
   const ent = data.entitlement;
+  // Each branch's activity and scheduled change, and its fee on the server's quote (D154): the price components.
+  const branchOf = (id: string) => data.branches.find((b) => b.id === id);
+  const feeOf = (id: string) => data.pricing?.quote.lines.find((l) => l.branchId === id)?.activityFee;
 
   return (
     <div className="stack">
@@ -92,6 +97,17 @@ export function Business() {
             <Table
               columns={[
                 { label: t('account.quote.store'), render: (s) => s.name },
+                {
+                  label: t('account.stores.activity'),
+                  render: (s) => <ActivityWithNext activity={s.activity ?? branchOf(s.branchId)?.activity} next={s.activityNext ?? branchOf(s.branchId)?.activityNext} />,
+                },
+                {
+                  label: t('account.quote.activityFee'),
+                  render: (s) => {
+                    const fee = feeOf(s.branchId);
+                    return typeof fee === 'number' ? <Money amount={fee} /> : '—';
+                  },
+                },
                 { label: t('account.quote.staff'), render: (s) => formatInt(s.seatsUsed, lang) },
                 { label: t('account.quote.included'), render: (s) => formatInt(s.includedSeats, lang) },
                 { label: t('account.quote.paid'), render: (s) => formatInt(s.paidSeats, lang) },
@@ -104,7 +120,10 @@ export function Business() {
           ) : (
             <ul>
               {data.branches.map((b) => (
-                <li key={b.id}>{b.name}</li>
+                <li key={b.id}>
+                  {b.name}
+                  {b.activity ? <ActivityWithNext activity={b.activity} next={b.activityNext} /> : null}
+                </li>
               ))}
             </ul>
           )}
@@ -177,18 +196,9 @@ export function Business() {
         ) : (
           <Table
             columns={[
-              {
-                label: t('admin.seats.request'),
-                render: (r) => (
-                  <>
-                    {r.kind === 'seat' ? t('account.requests.seat') : t('account.requests.store')}{' '}
-                    {r.kind === 'seat' && r.store ? t('account.requests.at', { store: r.store.name }) : r.label ? `“${r.label}”` : ''}{' '}
-                    {r.person ? t('account.requests.for', { person: r.person.name }) : ''}
-                  </>
-                ),
-              },
-              { label: t('admin.seats.amount'), render: (r) => <Money amount={r.monthlyAmount} /> },
-              { label: t('admin.businesses.state'), render: (r) => <RequestBadge status={r.status} /> },
+              { label: t('admin.seats.request'), render: (r) => <RequestSummary request={r} /> },
+              { label: t('admin.seats.amount'), render: (r) => <RequestAmount request={r} /> },
+              { label: t('admin.businesses.state'), render: (r) => <RequestStatus request={r} /> },
               { label: t('admin.action.reference'), render: (r) => <span className="ltr">{r.payment?.reference ?? '—'}</span> },
               { label: t('admin.seats.requested'), render: (r) => formatDateTime(r.requestedAt, lang) },
               { label: '', render: (r) => <SeatRequestActions companyId={data.id} request={r} ask={ask} onDone={load} /> },

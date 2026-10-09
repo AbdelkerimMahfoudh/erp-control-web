@@ -4,6 +4,7 @@ import type { SeatRequest } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
 import { ErrorNotice, Field, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
+import { isScheduledActivityChange } from '../../lib/activity';
 
 interface ConfirmResult {
   applied: boolean;
@@ -12,10 +13,14 @@ interface ConfirmResult {
 }
 
 /**
- * Confirm, refuse or release one seat/store request. Confirming needs a
- * reference and the administrator's password; the server prices nothing from
+ * Confirm, refuse or release one seat/store/activity request. Confirming needs
+ * a reference and the administrator's password; the server prices nothing from
  * what is typed here — the amount is what was actually paid, recorded as
  * evidence beside the reference.
+ *
+ * An activity upgrade is confirmed like a seat (the branch changes at once);
+ * refusing leaves the branch as it is; only a change still waiting for the
+ * renewal can be released — the server refuses to release one in force.
  */
 export function SeatRequestActions({ companyId, request, ask, onDone }: { companyId: string; request: SeatRequest; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
   const { t } = useI18n();
@@ -31,6 +36,8 @@ export function SeatRequestActions({ companyId, request, ask, onDone }: { compan
   const [outcome, setOutcome] = useState<string[] | null>(null);
 
   const base = `platform/businesses/${companyId}/seat-requests/${request.id}`;
+  const releasable = (request.kind === 'seat' && (request.status === 'paid' || request.status === 'granted')) || isScheduledActivityChange(request);
+  const releaseLabel = request.kind === 'activity' ? t('admin.seats.release.change') : t('admin.seats.release');
 
   const run = async (e: FormEvent) => {
     e.preventDefault();
@@ -46,6 +53,7 @@ export function SeatRequestActions({ companyId, request, ask, onDone }: { compan
         });
         const lines = [r.applied ? t('admin.seats.confirmed', { reference: reference.trim() }) : t('admin.action.noop')];
         if (request.kind === 'store' && r.applied) lines.push(t('admin.seats.storeOpened'));
+        if (request.kind === 'activity' && r.applied) lines.push(t('admin.seats.activityChanged'));
         if (r.activation) {
           lines.push(
             r.activation.activated
@@ -93,9 +101,9 @@ export function SeatRequestActions({ companyId, request, ask, onDone }: { compan
             </button>
           </>
         ) : null}
-        {(request.status === 'paid' || request.status === 'granted') && request.kind === 'seat' ? (
+        {releasable ? (
           <button type="button" className="btn btn-sm" onClick={() => setMode('release')}>
-            {t('admin.seats.release')}
+            {releaseLabel}
           </button>
         ) : null}
         <ErrorNotice error={error} />
@@ -132,7 +140,7 @@ export function SeatRequestActions({ companyId, request, ask, onDone }: { compan
         </>
       ) : (
         <>
-          <h3>{mode === 'refuse' ? t('admin.seats.refuse') : t('admin.seats.release')}</h3>
+          <h3>{mode === 'refuse' ? t('admin.seats.refuse') : releaseLabel}</h3>
           <Field label={t('admin.action.reason')} hint={t('admin.action.reason.required')}>
             <input required maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />
           </Field>

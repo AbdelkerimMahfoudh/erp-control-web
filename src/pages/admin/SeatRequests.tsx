@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { SeatRequest, SeatRequestStatus } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
-import { Empty, ErrorNotice, Loading, Money, RequestBadge, Table } from '../../components/ui';
+import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
+import { Empty, ErrorNotice, Loading, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDateTime } from '../../lib/format';
 import { SeatRequestActions } from './SeatRequestActions';
@@ -10,6 +11,12 @@ import { useStepUp } from './useStepUp';
 
 const STATUSES: SeatRequestStatus[] = ['pending_payment', 'paid', 'granted', 'released', 'refused'];
 
+/**
+ * The platform's queue of seat, store and activity requests (docs/68 §4,
+ * docs/73 §6). An activity change reads "from → to", when it takes effect and
+ * the amount the server recorded; a change waiting for the renewal is listed
+ * under "granted" and says so.
+ */
 export function SeatRequests() {
   const { t, lang } = useI18n();
   const [status, setStatus] = useState<SeatRequestStatus>('pending_payment');
@@ -57,18 +64,9 @@ export function SeatRequests() {
               label: t('admin.seats.business'),
               render: (r) => (r.business ? <Link to={`/admin/businesses/${r.business.id}`}>{r.business.name}</Link> : '—'),
             },
-            {
-              label: t('admin.seats.request'),
-              render: (r) => (
-                <>
-                  {r.kind === 'seat' ? t('account.requests.seat') : t('account.requests.store')}{' '}
-                  {r.kind === 'seat' && r.store ? t('account.requests.at', { store: r.store.name }) : r.label ? `“${r.label}”` : ''}{' '}
-                  {r.person ? t('account.requests.for', { person: r.person.name }) : ''}
-                </>
-              ),
-            },
-            { label: t('admin.seats.amount'), render: (r) => <Money amount={r.monthlyAmount} /> },
-            { label: t('admin.businesses.state'), render: (r) => <RequestBadge status={r.status} /> },
+            { label: t('admin.seats.request'), render: (r) => <RequestSummary request={r} /> },
+            { label: t('admin.seats.amount'), render: (r) => <RequestAmount request={r} /> },
+            { label: t('admin.businesses.state'), render: (r) => <RequestStatus request={r} /> },
             { label: t('admin.seats.requested'), render: (r) => formatDateTime(r.requestedAt, lang) },
             { label: '', render: (r) => (r.business ? <SeatRequestActions companyId={r.business.id} request={r} ask={ask} onDone={load} /> : null) },
           ]}
