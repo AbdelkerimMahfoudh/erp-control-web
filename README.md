@@ -29,11 +29,24 @@ decision lives here and on the server.
   by a provider"), the history, and lets the Owner request an additional seat
   or store — priced by the server, nothing activated until an administrator
   confirms the payment.
+- **Each store has an activity** (D154, `erp-docs/docs/73` §6): an electronics
+  store, a money services agent, or both — priced by the server
+  (`GET platform/plan` carries the three prices; `POST platform/quote` takes
+  `activities[]`). The application asks the first store's activity; the
+  account page lists each store's activity and any change scheduled for the
+  renewal, asks a new store's activity, and lets the Owner ask for another
+  activity per store. Before that request the page *explains* the consequence
+  from the plan's prices (the one subtraction the site does, pinned by
+  `test/source-rules.test.ts`); after it, it renders the row the server
+  recorded — awaiting payment of the difference, waiting for the renewal, or a
+  scheduled change withdrawn — and never infers "upgrade, so pay now".
 - **The console** lists applications and businesses, shows each business's
   stores, seats, people and status, and takes every lifecycle decision
   (approve / refuse with dates, extend, correct the period, suspend, reinstate,
-  cancel, grant) and every seat decision (confirm a payment **with a
-  reference**, refuse, release). Each mutation carries `expectedVersion`; a 409
+  cancel, grant) and every seat, store and activity decision (confirm a
+  payment **with a reference**, refuse, release; an activity change shows
+  from → to, when it takes effect and the amount). Prices are scheduled per
+  activity (electronics, money services agent, both). Each mutation carries `expectedVersion`; a 409
   is shown as "somebody else changed this" and the page reloads.
 - English, French and Arabic with exact key parity (tested); Arabic sets
   `dir="rtl"` on the document. Light and dark themes from one token set.
