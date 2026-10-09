@@ -1,13 +1,18 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { ApiError, request } from '../../api/client';
+import type { Activity, PublicPlan } from '../../api/types';
+import { ActivityCards } from '../../components/activity';
 import { ErrorNotice, Field, Notice } from '../../components/ui';
-import { LANGUAGES, LANGUAGE_LABELS, useI18n, type Language } from '../../i18n';
+import { LANGUAGES, LANGUAGE_LABELS, useI18n, type Key, type Language } from '../../i18n';
+import { ACTIVITIES, isActivity } from '../../lib/activity';
 
 interface RegisterResponse {
   status: string;
   created: boolean;
   publicStoreId: string;
+  /** The first branch's activity as the server recorded it — on a retry, what the first attempt recorded. */
+  activity?: Activity;
   verification: { destination: string; channel: 'email' | 'phone' } | null;
   continuation: { token: string; expiresAt: string; expiresInSeconds: number } | null;
   next: 'verify_contact' | 'sign_in';
@@ -23,6 +28,10 @@ type Step = { kind: 'form' } | { kind: 'verify'; response: RegisterResponse } | 
  *
  * When the server cannot send a code it refuses before saving anything, and
  * this page says so instead of showing a code field no code would fill.
+ *
+ * What the first store does (D154) is a required choice of three cards, each
+ * with its monthly price from `GET platform/plan` — shown only when the server
+ * sent it — and sent as `activity`.
  */
 export function Apply() {
   const { t, lang } = useI18n();
@@ -36,17 +45,34 @@ export function Apply() {
 
 function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<typeof useI18n>['t']; onRegistered: (r: RegisterResponse) => void }) {
   const [form, setForm] = useState({ ownerName: '', businessName: '', branchName: '', city: '', email: '', phone: '', password: '', language: lang });
+  const [activity, setActivity] = useState<Activity | null>(null);
+  const [plan, setPlan] = useState<PublicPlan | null>(null);
   const [idempotencyKey] = useState(() => crypto.randomUUID());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [unavailable, setUnavailable] = useState(false);
   const set = (k: keyof typeof form) => (e: { target: { value: string } }) => setForm({ ...form, [k]: e.target.value });
 
+  // The prices beside the choice. Without them the choice still works; no figure is invented.
+  useEffect(() => {
+    let alive = true;
+    request<PublicPlan>('platform/plan')
+      .then((p) => alive && setPlan(p))
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, []);
+
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
     if (!form.email.trim() && !form.phone.trim()) {
       setError(new ApiError(t('apply.error.contact'), 400, 'contact_required', null));
+      return;
+    }
+    if (!activity) {
+      setError(new ApiError(t('apply.error.activity'), 400, 'activity_required', null));
       return;
     }
     setBusy(true);
@@ -56,6 +82,7 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
         ownerName: form.ownerName.trim(),
         businessName: form.businessName.trim(),
         branchName: form.branchName.trim(),
+        activity,
         ...(form.city.trim() ? { city: form.city.trim() } : {}),
         ...(form.email.trim() ? { email: form.email.trim() } : {}),
         ...(form.phone.trim() ? { phone: form.phone.trim() } : {}),
@@ -97,6 +124,7 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
             <input maxLength={120} autoComplete="address-level2" value={form.city} onChange={set('city')} />
           </Field>
         </div>
+        <ActivityCards name="activity" legend={t('apply.activity')} hint={t('apply.activity.hint')} options={ACTIVITIES} value={activity} onChange={setActivity} prices={plan} />
         <p className="muted small">{t('apply.contact.hint')}</p>
         <div className="grid">
           <Field label={t('apply.email')}>
@@ -198,6 +226,7 @@ function Done({ response }: { response: RegisterResponse }) {
         <p>
           <strong className="ltr">{t('apply.done.storeId', { id: response.publicStoreId })}</strong>
         </p>
+        {isActivity(response.activity) ? <p>{t('apply.done.activity', { activity: t(`activity.${response.activity}` as Key) })}</p> : null}
         <Link className="btn btn-primary" to="/account">
           {t('home.cta.account')}
         </Link>
