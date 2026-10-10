@@ -132,8 +132,11 @@ export const fr: Catalogue = {
   'status.explain.active': 'Tout fonctionne. La période se termine le {date}.',
   'status.explain.grace': 'La période s’est terminée le {date}. L’application continue de fonctionner 72 heures pendant que le paiement s’organise.',
   'status.explain.expired': 'La période s’est terminée le {date}. L’application est en lecture seule jusqu’à la confirmation d’un paiement.',
+  'status.explain.expired.grantEnded': 'L’accès accordé par la plateforme a pris fin le {date}. L’application est en lecture seule jusqu’à la confirmation d’un paiement.',
+  'status.explain.expired.noPeriod': 'Aucune période payée n’a commencé. L’application est en lecture seule jusqu’à la confirmation d’un paiement.',
   'status.explain.complimentary': 'L’accès a été accordé par la plateforme jusqu’au {date}.',
   'status.explain.complimentary.noDate': 'L’accès a été accordé par la plateforme. Aucune date de fin n’est enregistrée.',
+  'status.explain.complimentary.undated': 'L’accès a été accordé par la plateforme.',
   'status.explain.suspended': 'La plateforme a suspendu cette entreprise. Contactez l’assistance.',
   'status.explain.cancelled': 'Cet abonnement a été résilié. L’historique reste consultable.',
   'status.explain.rejected': 'Cette demande a été refusée. Contactez l’assistance si vous pensez qu’il s’agit d’une erreur.',
@@ -226,6 +229,8 @@ export const fr: Catalogue = {
   'account.requests.explain':
     'Une demande est tarifée par le serveur et attend que la plateforme confirme votre paiement. Rien n’est activé avant. Un passage à une activité moins chère ne coûte rien et est prévu au prochain renouvellement. Les instructions de paiement sont transmises par la plateforme ; il n’existe pas encore de paiement en ligne.',
   'account.requests.perMonth': '{amount} par mois',
+  'account.requests.replacementNow': '{amount} maintenant, en remplacement de {store} ; le prix mensuel complet à partir du renouvellement',
+  'account.requests.replacementFree': 'Rien de plus ce mois-ci, en remplacement de {store} ; le prix mensuel complet à partir du renouvellement',
   'account.payment.howto': 'Comment payer',
   'account.payment.none':
     'Aucun prestataire de paiement n’est encore connecté. La plateforme confirme chaque paiement à la main à partir d’une référence que vous lui donnez ; jusque-là votre demande apparaît « en attente de paiement ».',

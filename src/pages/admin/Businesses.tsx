@@ -1,12 +1,23 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { BusinessList, EntitlementState } from '../../api/types';
+import type { BusinessList, BusinessRow, EntitlementState } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
 import { Empty, ErrorNotice, Loading, StateBadge, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatInt } from '../../lib/format';
 
 const STATES: EntitlementState[] = ['pending', 'active', 'grace', 'complimentary', 'suspended', 'expired', 'cancelled', 'rejected'];
+
+/**
+ * When access ends (docs/73 §11.5): for a business on a platform grant, the later of the grant's own end and the paid
+ * period's — a grant over a paid month runs on into that month — never the paid end alone, long past for a shop that
+ * lapsed before the grant. Every other business ends with its paid period.
+ */
+export function accessEnd(r: Pick<BusinessRow, 'state' | 'periodEnd' | 'complimentary'>): string | null {
+  const until = r.state === 'complimentary' ? r.complimentary?.until ?? null : null;
+  if (!until) return r.periodEnd;
+  return r.periodEnd && new Date(r.periodEnd).getTime() > new Date(until).getTime() ? r.periodEnd : until;
+}
 
 export function Businesses() {
   const { t, lang } = useI18n();
@@ -58,7 +69,7 @@ export function Businesses() {
               { label: t('admin.business.storeId'), render: (r) => <span className="ltr">{r.publicStoreId}</span> },
               { label: t('apply.city'), render: (r) => r.city ?? '—' },
               { label: t('admin.businesses.state'), render: (r) => <StateBadge state={r.state} /> },
-              { label: t('account.period.ends', { date: '' }).trim(), render: (r) => formatDate(r.periodEnd, lang) },
+              { label: t('account.period.ends', { date: '' }).trim(), render: (r) => formatDate(accessEnd(r), lang) },
               { label: t('admin.dashboard.stores'), render: (r) => formatInt(r.branches, lang) },
               { label: t('admin.business.people'), render: (r) => formatInt(r.users, lang) },
             ]}

@@ -144,7 +144,15 @@ const EXPLAIN_WITH_DATE = new Set(['active', 'grace', 'expired']);
  */
 function explanation(state: string, periodEnd: string | null, grant: ComplimentaryGrant | undefined, t: (k: Key, p?: Record<string, string>) => string, lang: Language): string {
   if (state === 'complimentary') {
-    return grant?.until ? t('status.explain.complimentary', { date: formatDate(grant.until, lang) }) : t('status.explain.complimentary.noDate');
+    if (grant?.until) return t('status.explain.complimentary', { date: formatDate(grant.until, lang) });
+    // "No end date" only when the server says so; an older API without the grant view gets no claim about the date.
+    return grant?.status === 'indefinite' ? t('status.explain.complimentary.noDate') : t('status.explain.complimentary.undated');
+  }
+  // Expired with no paid period behind it: the grant that ended is the date there is, never "ended on —".
+  if (state === 'expired' && !periodEnd) {
+    return grant?.status === 'ended' && grant.until
+      ? t('status.explain.expired.grantEnded', { date: formatDate(grant.until, lang) })
+      : t('status.explain.expired.noPeriod');
   }
   const key = `status.explain.${state}` as Key;
   return EXPLAIN_WITH_DATE.has(state) ? t(key, { date: formatDate(periodEnd, lang) }) : t(key);

@@ -195,8 +195,14 @@ export interface SeatRequest {
   activityTo?: Activity | null;
   /** `now` once the difference is paid; `renewal` for a change that waits for the next renewal. */
   activityEffective?: 'now' | 'renewal' | null;
-  /** Per month for a seat or a store; for an activity change, the difference for this month. */
+  /**
+   * Per month for a seat or a store; for an activity change, the difference for this month. A store that replaces one
+   * closed this paid month (`replaces`, D158) carries this period's difference instead — 0 when nothing more is due —
+   * and the full monthly price from the renewal.
+   */
   monthlyAmount: number;
+  /** The store a store request replaces, and what this period already paid for it. Absent from an older API. */
+  replaces?: { branchId: string; name: string; credit: number } | null;
   currency: string;
   requestedBy: string;
   requestedAt: string;
@@ -280,6 +286,8 @@ export interface BusinessRow {
   state: EntitlementState;
   status: string;
   periodEnd: string | null;
+  /** The grant with its own dates (docs/73 §11.5). Absent from an API older than 2026-10-10. */
+  complimentary?: ComplimentaryGrant | null;
   version: number;
 }
 

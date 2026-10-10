@@ -138,8 +138,11 @@ export const en = {
   'status.explain.active': 'Everything works. The period ends on {date}.',
   'status.explain.grace': 'The period ended on {date}. The app keeps working for 72 hours while payment is arranged.',
   'status.explain.expired': 'The period ended on {date}. The app is read-only until a payment is confirmed.',
+  'status.explain.expired.grantEnded': 'The platform’s grant ended on {date}. The app is read-only until a payment is confirmed.',
+  'status.explain.expired.noPeriod': 'No paid period has started. The app is read-only until a payment is confirmed.',
   'status.explain.complimentary': 'Access was granted by the platform until {date}.',
   'status.explain.complimentary.noDate': 'Access was granted by the platform. No end date is recorded.',
+  'status.explain.complimentary.undated': 'Access was granted by the platform.',
   'status.explain.suspended': 'The platform suspended this business. Contact support.',
   'status.explain.cancelled': 'This subscription was cancelled. History stays readable.',
   'status.explain.rejected': 'This application was refused. Contact support if you believe this is a mistake.',
@@ -233,6 +236,8 @@ export const en = {
   'account.requests.explain':
     'A request is priced by the server and waits for the platform to confirm your payment. Nothing is activated before that. A change to a lower-priced activity costs nothing and is scheduled for the next renewal. Payment instructions are sent by the platform; no online payment exists yet.',
   'account.requests.perMonth': '{amount} per month',
+  'account.requests.replacementNow': '{amount} now, replacing {store}; the full monthly price from the renewal',
+  'account.requests.replacementFree': 'Nothing more this month, replacing {store}; the full monthly price from the renewal',
   'account.payment.howto': 'How to pay',
   'account.payment.none':
     'No payment provider is connected yet. The platform confirms each payment by hand against a reference you give it; until then your request shows as “awaiting payment”.',

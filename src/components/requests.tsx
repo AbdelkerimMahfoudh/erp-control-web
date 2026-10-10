@@ -39,7 +39,8 @@ export function RequestSummary({ request: r }: { request: SeatRequest }) {
 /**
  * The request's amount, read as the server means it: a seat or a store per
  * month; an activity change the difference for this month once it is paid, or
- * nothing at all when it waits for the renewal.
+ * nothing at all when it waits for the renewal; a store that replaces one closed
+ * this paid month the difference it pays now, never a monthly price (D158).
  */
 export function RequestAmount({ request: r }: { request: SeatRequest }) {
   const { t, lang } = useI18n();
@@ -47,6 +48,15 @@ export function RequestAmount({ request: r }: { request: SeatRequest }) {
   if (r.kind === 'activity') {
     if (r.activityEffective === 'renewal') return <>{t('account.requests.activityRenewal')}</>;
     return <>{t('account.requests.activityNow', { amount })}</>;
+  }
+  if (r.kind === 'store' && r.replaces) {
+    return (
+      <>
+        {r.monthlyAmount === 0
+          ? t('account.requests.replacementFree', { store: r.replaces.name })
+          : t('account.requests.replacementNow', { amount, store: r.replaces.name })}
+      </>
+    );
   }
   return <>{t('account.requests.perMonth', { amount })}</>;
 }

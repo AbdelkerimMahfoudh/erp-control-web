@@ -131,8 +131,11 @@ export const ar: Catalogue = {
   'status.explain.active': 'كل شيء يعمل. تنتهي الفترة في {date}.',
   'status.explain.grace': 'انتهت الفترة في {date}. يستمر التطبيق في العمل 72 ساعة إلى أن يُرتَّب الدفع.',
   'status.explain.expired': 'انتهت الفترة في {date}. التطبيق للقراءة فقط حتى يُؤكَّد دفع.',
+  'status.explain.expired.grantEnded': 'انتهى الوصول الممنوح من المنصة في {date}. التطبيق للقراءة فقط حتى يُؤكَّد دفع.',
+  'status.explain.expired.noPeriod': 'لم تبدأ أي فترة مدفوعة بعد. التطبيق للقراءة فقط حتى يُؤكَّد دفع.',
   'status.explain.complimentary': 'منحت المنصة الوصول حتى {date}.',
   'status.explain.complimentary.noDate': 'منحت المنصة الوصول. لا يوجد تاريخ انتهاء مسجَّل.',
+  'status.explain.complimentary.undated': 'منحت المنصة الوصول.',
   'status.explain.suspended': 'أوقفت المنصة هذه الشركة. تواصل مع الدعم.',
   'status.explain.cancelled': 'أُلغي هذا الاشتراك. يبقى السجل قابلًا للقراءة.',
   'status.explain.rejected': 'رُفض هذا الطلب. تواصل مع الدعم إن كنت تعتقد أن ذلك خطأ.',
@@ -225,6 +228,8 @@ export const ar: Catalogue = {
   'account.requests.explain':
     'يسعّر الخادم الطلب وينتظر أن تؤكد المنصة دفعك. لا يُفعَّل شيء قبل ذلك. التحويل إلى نشاط أرخص لا يكلّف شيئًا ويُقرَّر للتجديد القادم. تعليمات الدفع تصلك من المنصة؛ لا يوجد دفع إلكتروني بعد.',
   'account.requests.perMonth': '{amount} شهريًا',
+  'account.requests.replacementNow': '{amount} الآن، بدلًا من {store}؛ السعر الشهري الكامل ابتداءً من التجديد',
+  'account.requests.replacementFree': 'لا مبلغ إضافي هذا الشهر، بدلًا من {store}؛ السعر الشهري الكامل ابتداءً من التجديد',
   'account.payment.howto': 'كيفية الدفع',
   'account.payment.none':
     'لم يُربط أي مزوّد دفع بعد. تؤكد المنصة كل دفعة يدويًا بمرجع تعطيه لها؛ حتى ذلك يظهر طلبك «في انتظار الدفع».',
