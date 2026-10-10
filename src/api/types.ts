@@ -42,8 +42,20 @@ export interface Entitlement {
   canRead: boolean;
   canWrite: boolean;
   isComplimentary: boolean;
+  /** The platform's grant with its own dates (docs/73 §11.5). Absent from an API older than 2026-10-10. */
+  complimentary?: ComplimentaryGrant;
   status: string;
   calculatedAt: string;
+}
+
+/**
+ * A platform grant as the server tells it: never a paid period's date in its place. `ended` — it ran out and access
+ * follows the paid period; `superseded` — a paid period now runs past it (`paidUntil`); `indefinite` — no end recorded.
+ */
+export interface ComplimentaryGrant {
+  status: 'none' | 'active' | 'ended' | 'superseded' | 'indefinite';
+  until: string | null;
+  paidUntil: string | null;
 }
 
 export interface QuoteLine {
@@ -218,7 +230,19 @@ export type ActivityOption =
 export interface ActivityOptions {
   running: boolean;
   stores: { branchId: string; name: string; activity: Activity; activityNext: Activity | null; options: ActivityOption[] }[];
-  newStore: { activity: Activity; monthly: number }[];
+  newStore: NewStoreOption[];
+}
+
+/**
+ * What a new store of one activity would cost, as the request would decide it now (D158): `monthly` its full price,
+ * `dueNow` what the request would put awaiting payment, and `replaces` the store closed during this paid month whose
+ * month it takes over — then `dueNow` is only the difference, or nothing.
+ */
+export interface NewStoreOption {
+  activity: Activity;
+  monthly: number;
+  dueNow?: number;
+  replaces?: { branchId: string; name: string; credit: number } | null;
 }
 
 export interface Dashboard {

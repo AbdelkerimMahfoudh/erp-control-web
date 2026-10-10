@@ -4,6 +4,7 @@ import { ApiError } from '../../api/client';
 import type { BusinessDetail, SeatRequest } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
 import { ActivityWithNext } from '../../components/activity';
+import { GrantLine } from '../../components/grant';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
 import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, StateBadge, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
@@ -147,6 +148,9 @@ export function Business() {
                 <p className="muted small">{t('account.quote.assessed', { amount: `${formatInt(data.pricing.currentPeriod.assessedTotal, lang)} MRU` })}</p>
               ) : null}
               {ent?.periodEnd ? <p className="muted small">{t('account.period.ends', { date: formatDate(ent.periodEnd, lang) })}</p> : null}
+              <div className="muted small">
+                <GrantLine grant={ent?.complimentary} />
+              </div>
             </>
           ) : (
             <Empty />

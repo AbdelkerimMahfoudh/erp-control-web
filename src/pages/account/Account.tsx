@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { ApiError } from '../../api/client';
-import type { Activity, ActivityOption, ActivityOptions, MySubscription, QuoteLine, RequestResult, SeatRequest, SubscriptionBranch } from '../../api/types';
+import type { Activity, ActivityOption, ActivityOptions, ComplimentaryGrant, MySubscription, NewStoreOption, QuoteLine, RequestResult, SeatRequest, SubscriptionBranch } from '../../api/types';
 import { isUnauthorized, ownerChooseAccount, ownerLogin, ownerLogout, ownerRequest, type AccountChoice } from '../../auth/owner';
 import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
+import { GrantLine } from '../../components/grant';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
 import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, StateBadge, Table, type Tone } from '../../components/ui';
-import { useI18n, type Key } from '../../i18n';
+import { useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, canWithdraw, isScheduledActivityChange, pricesAfter } from '../../lib/activity';
 import { formatDate, formatDateTime, formatInt, formatMru } from '../../lib/format';
 import { paymentProvider } from '../../providers/payment';
@@ -135,14 +136,25 @@ function SignIn({ onSigned }: { onSigned: () => Promise<void> }) {
   );
 }
 
-const EXPLAIN_WITH_DATE = new Set(['active', 'grace', 'expired', 'complimentary']);
+const EXPLAIN_WITH_DATE = new Set(['active', 'grace', 'expired']);
+
+/**
+ * The lead sentence. A grant is told with its own end (docs/73 §11.5) — never the paid period's, and never the
+ * latest billing period's start, which is what this page once showed as "granted until".
+ */
+function explanation(state: string, periodEnd: string | null, grant: ComplimentaryGrant | undefined, t: (k: Key, p?: Record<string, string>) => string, lang: Language): string {
+  if (state === 'complimentary') {
+    return grant?.until ? t('status.explain.complimentary', { date: formatDate(grant.until, lang) }) : t('status.explain.complimentary.noDate');
+  }
+  const key = `status.explain.${state}` as Key;
+  return EXPLAIN_WITH_DATE.has(state) ? t(key, { date: formatDate(periodEnd, lang) }) : t(key);
+}
+
 
 function Subscription({ data, reload, onSignOut }: { data: MySubscription; reload: () => Promise<void>; onSignOut: () => Promise<void> }) {
   const { t, lang } = useI18n();
   const ent = data.entitlement;
   const quote = data.pricing.quote;
-  const date = ent.state === 'complimentary' ? data.pricing.currentPeriod.periodStart : ent.periodEnd;
-  const explainKey = `status.explain.${ent.state}` as Key;
   // Bumped after an activity request, so the requests list below reads the new row.
   const [requestsVersion, setRequestsVersion] = useState(0);
   const afterActivityRequest = useCallback(async () => {
@@ -175,7 +187,7 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
           <h1>{data.business.name}</h1>
           <p className="lead">
             <StateBadge state={ent.state} />{' '}
-            {EXPLAIN_WITH_DATE.has(ent.state) ? t(explainKey, { date: formatDate(date, lang) }) : t(explainKey)}
+            {explanation(ent.state, ent.periodEnd, ent.complimentary, t, lang)}
           </p>
         </div>
         <div className="row">
@@ -213,7 +225,12 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         </div>
         <div className="card">
           <h2>{t('account.period')}</h2>
-          {ent.periodEnd ? <p>{t('account.period.ends', { date: formatDate(ent.periodEnd, lang) })}</p> : <p className="muted">{t('account.period.none')}</p>}
+          <GrantLine grant={ent.complimentary} />
+          {ent.periodEnd ? (
+            <p>{t('account.period.ends', { date: formatDate(ent.periodEnd, lang) })}</p>
+          ) : ent.complimentary && ent.complimentary.status !== 'none' ? null : (
+            <p className="muted">{t('account.period.none')}</p>
+          )}
         </div>
       </section>
 
@@ -312,6 +329,20 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         )}
       </section>
     </div>
+  );
+}
+
+/**
+ * A new store that takes over the month of one closed during this paid month (D158): the server names the store it
+ * replaces and what is due now — the difference between the two activities, or nothing. The page does no arithmetic.
+ */
+function ReplacementNote({ option }: { option: NewStoreOption | null }) {
+  const { t, lang } = useI18n();
+  if (!option?.replaces || typeof option.dueNow !== 'number') return null;
+  return option.dueNow === 0 ? (
+    <Notice tone="info">{t('account.requests.store.replacesFree', { store: option.replaces.name })}</Notice>
+  ) : (
+    <Notice tone="info">{t('account.requests.store.replaces', { store: option.replaces.name, amount: formatMru(option.dueNow, lang) })}</Notice>
   );
 }
 
@@ -551,7 +582,7 @@ function Requests({
 }: {
   stores: { id: string; name: string }[];
   /** What a new store of each activity is charged per month now — the server's figure; null until it is read. */
-  newStore: { activity: Activity; monthly: number }[] | null;
+  newStore: NewStoreOption[] | null;
   version: number;
   onChanged: () => Promise<void>;
 }) {
@@ -667,6 +698,7 @@ function Requests({
               })}
             </select>
           </Field>
+          <ReplacementNote option={newStore?.find((n) => n.activity === storeActivity) ?? null} />
           <button type="submit" className="btn" disabled={busy || !storeName.trim()}>
             {t('account.requests.submit')}
           </button>
