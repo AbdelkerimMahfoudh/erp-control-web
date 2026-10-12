@@ -12,6 +12,8 @@ useActivityHarness();
  */
 
 const ADMIN = { id: 'a1', email: 'admin@example.test', name: 'Admin' };
+const DASHBOARD = { businesses: 0, branches: 0, activeUsers: 0, pendingSeatRequests: 0, pendingStaff: 0, byState: {} };
+const PENDING = { status: 401, body: { code: 'mfa_required', message: 'Enter a code from your authenticator to continue.' } };
 
 beforeEach(() => {
   HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {
@@ -37,8 +39,8 @@ describe('signing in to the console', () => {
         verified = (body as { code?: string }).code === '123456';
         return verified ? { body: { verified: true } } : { status: 403, body: { code: 'mfa_code_invalid', message: 'That code did not match, or was already used. Wait for the next code.' } };
       }
-      if (url.endsWith('/platform/admin/me')) return verified ? { body: ADMIN } : { status: 401, body: { code: 'mfa_required', message: 'x' } };
-      if (url.endsWith('/platform/dashboard')) return { body: {} };
+      if (url.endsWith('/platform/admin/me')) return verified ? { body: ADMIN } : PENDING;
+      if (url.endsWith('/platform/dashboard')) return { body: DASHBOARD };
       return undefined;
     });
     mount('/admin');
@@ -60,11 +62,12 @@ describe('signing in to the console', () => {
   });
 
   it('a recovery code can stand in for the authenticator', async () => {
+    let verified = false;
     const sent = serve((url) => {
       if (url.endsWith('/platform/admin/sign-in')) return { body: { admin: ADMIN, expiresAt: 'x', mfa: 'required' } };
-      if (url.endsWith('/platform/admin/mfa/verify')) return { body: { verified: true } };
-      if (url.endsWith('/platform/admin/me')) return { body: ADMIN };
-      if (url.endsWith('/platform/dashboard')) return { body: {} };
+      if (url.endsWith('/platform/admin/mfa/verify')) return (verified = true), { body: { verified: true } };
+      if (url.endsWith('/platform/admin/me')) return verified ? { body: ADMIN } : PENDING;
+      if (url.endsWith('/platform/dashboard')) return { body: DASHBOARD };
       return undefined;
     });
     mount('/admin');
@@ -78,12 +81,13 @@ describe('signing in to the console', () => {
   });
 
   it('with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once', async () => {
+    let enrolled = false;
     const sent = serve((url) => {
       if (url.endsWith('/platform/admin/sign-in')) return { body: { admin: ADMIN, expiresAt: 'x', mfa: 'enrolment_required' } };
       if (url.endsWith('/platform/admin/mfa/enrolment/start')) return { body: { secret: 'JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP', otpauthUri: 'otpauth://totp/Dukan%20ERP%3Aadmin%40example.test?secret=JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP' } };
-      if (url.endsWith('/platform/admin/mfa/enrolment/confirm')) return { body: { recoveryCodes: ['AAAAA-BBBBB', 'CCCCC-DDDDD'] } };
-      if (url.endsWith('/platform/admin/me')) return { body: ADMIN };
-      if (url.endsWith('/platform/dashboard')) return { body: {} };
+      if (url.endsWith('/platform/admin/mfa/enrolment/confirm')) return (enrolled = true), { body: { recoveryCodes: ['AAAAA-BBBBB', 'CCCCC-DDDDD'] } };
+      if (url.endsWith('/platform/admin/me')) return enrolled ? { body: ADMIN } : PENDING;
+      if (url.endsWith('/platform/dashboard')) return { body: DASHBOARD };
       return undefined;
     });
     mount('/admin');
