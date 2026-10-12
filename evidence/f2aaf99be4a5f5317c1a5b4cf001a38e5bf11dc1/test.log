@@ -1,0 +1,398 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:4:49). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:5:35). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./home" without a file extension (src/content/index.ts:10:22). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:11:26). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:12:40). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:13:52). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1375[2mms[22m[39m
+   [32m✓[39m Account: the platform grant and its own dates [2m(6)[22m
+     [33m[2m✓[22m[39m an active grant says its own end, never the billing period’s start[33m 438[2mms[22m[39m
+ [32m✓[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1979[2mms[22m[39m
+   [32m✓[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 958[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the confirmation’s result on screen after the paid request leaves the queue[33m 376[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 572[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 2089[2mms[22m[39m
+   [32m✓[39m Account: a store’s activity and its change [2m(8)[22m
+     [33m[2m✓[22m[39m lists each store with its activity; a warehouse offers no change[33m 478[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade is explained by the server’s own answer, then shows the amount the server recorded[33m 343[2mms[22m[39m
+ [31m❯[39m test/site-routes.test.ts [2m([22m[2m13 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[32m 27[2mms[22m[39m
+   [31m❯[39m the public routes (docs/74 §2) [2m(4)[22m
+     [32m✓[39m every page exists in every language, and the address names the language[32m 6[2mms[22m[39m
+[31m     [31m×[31m the protected areas are never public routes[39m[32m 8[2mms[22m[39m
+     [32m✓[39m the status page and the sign-in page are reachable but never indexed[32m 0[2mms[22m[39m
+     [32m✓[39m every page has a title and a description in every language[32m 2[2mms[22m[39m
+   [32m✓[39m the head (docs/74 §5) [2m(4)[22m
+     [32m✓[39m names its canonical address and the three language alternates[32m 1[2mms[22m[39m
+     [32m✓[39m a preview and a non-indexable page say noindex and carry no structured data[32m 0[2mms[22m[39m
+     [32m✓[39m structured data states only supplied facts — never a filled test value, a rating, a price or an availability[32m 1[2mms[22m[39m
+     [32m✓[39m escapes what it writes[32m 1[2mms[22m[39m
+   [31m❯[39m the generated files (docs/74 §5–§6) [2m(5)[22m
+     [32m✓[39m robots: the protected areas are not crawled, a preview is not crawled at all[32m 1[2mms[22m[39m
+[31m     [31m×[31m sitemap: every indexable page in every language with its alternates, and nothing else[39m[32m 3[2mms[22m[39m
+     [32m✓[39m headers: a strict policy with no inline script or style, the API allowed, framing refused[32m 1[2mms[22m[39m
+     [32m✓[39m rewrites: only the protected areas load the shell; other unknown addresses stay 404[32m 0[2mms[22m[39m
+     [32m✓[39m security.txt exists only when a security contact was supplied[32m 0[2mms[22m[39m
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+ [32m✓[39m test/site-config.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1864[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 1471[2mms[22m[39m
+   [32m✓[39m The Dukan ERP page: three prices and an estimate by activity (moved from the home page, docs/74) [2m(2)[22m
+     [33m[2m✓[22m[39m lists the three prices and sends one activity per store to the quote[33m 342[2mms[22m[39m
+ [31m❯[39m test/content-parity.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 68[2mms[22m[39m
+   [31m❯[39m the public texts in three languages [2m(6)[22m
+     [32m✓[39m every document has the same sections, blocks and list lengths in every language[32m 4[2mms[22m[39m
+     [32m✓[39m every text carries the same placeholders and blockers, at the same place, in every language[32m 16[2mms[22m[39m
+     [32m✓[39m names only inputs that exist, and only blockers that are registered[32m 19[2mms[22m[39m
+[31m     [31m×[31m never leaves a French or Arabic text merely copied from English[39m[32m 21[2mms[22m[39m
+     [32m✓[39m every legal text names its version, and none is empty[32m 1[2mms[22m[39m
+     [32m✓[39m names no payment provider and makes no availability or endorsement claim[32m 4[2mms[22m[39m
+ [32m✓[39m test/public-pages.test.tsx [2m([22m[2m41 tests[22m[2m)[22m[33m 3678[2mms[22m[39m
+   [32m✓[39m every public page in every language [2m(36)[22m
+     [33m[2m✓[22m[39m / renders in en[33m 397[2mms[22m[39m
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1295[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns (on the Dukan ERP page)[33m 785[2mms[22m[39m
+     [33m[2m✓[22m[39m moves to the same page in Arabic, mirrors the document and keeps the language across visits[33m 401[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 139[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m test/content-parity.test.ts[2m > [22mthe public texts in three languages[2m > [22mnever leaves a French or Arabic text merely copied from English
+[31m[1mAssertionError[22m: expected { name: 'about', i: 2, fr: 'who' } to not deeply equal { name: 'about', i: 2, fr: 'who' }[39m
+
+[2mCompared values have no visual difference.[22m
+
+[36m [2m❯[22m test/content-parity.test.ts:[2m61:44[22m[39m
+    [90m 59|[39m       en.forEach((text, i) => {
+    [90m 60|[39m         if (NAME_ONLY.test(text)) return;
+    [90m 61|[39m         expect({ name, i, fr: fr[i] }).not.toEqual({ name, i, fr: text…
+    [90m   |[39m                                            [31m^[39m
+    [90m 62|[39m         expect({ name, i, ar: ar[i] }).not.toEqual({ name, i, ar: text…
+    [90m 63|[39m       });
+[90m [2m❯[22m test/content-parity.test.ts:[2m59:10[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/site-routes.test.ts[2m > [22mthe public routes (docs/74 §2)[2m > [22mthe protected areas are never public routes
+[31m[1mAssertionError[22m: expected true to be false // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- false[39m
+[31m+ true[39m
+
+[36m [2m❯[22m test/site-routes.test.ts:[2m42:101[22m[39m
+    [90m 40|[39m       expect(publicRouteAt(p)).toBeNull();
+    [90m 41|[39m     }
+    [90m 42|[39m     expect(PUBLIC_ROUTES.some((r) => r.path.startsWith('/account') || …
+    [90m   |[39m                                                                                                     [31m^[39m
+    [90m 43|[39m   });
+    [90m 44|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/site-routes.test.ts[2m > [22mthe generated files (docs/74 §5–§6)[2m > [22msitemap: every indexable page in every language with its alternates, and nothing else
+[31m[1mAssertionError[22m: expected '<?xml version="1.0" encoding="UTF-8"?…' not to match /\/account|\/admin|\/login|ap…/account|\[39m
+
+[32m- Expected:[39m
+/\/account|\/admin|\/login|application-status/
+
+[31m+ Received:[39m
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">
+  <url>
+    <loc>https://www.company-domain.mr/</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/fr</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/ar</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/about</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/about\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/about\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/about\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/about\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/fr/about</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/about\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/about\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/about\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/about\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/ar/about</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/about\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/about\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/about\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/about\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/products</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/fr/products</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/ar/products</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/products/dukan-erp</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products/dukan-erp\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products/dukan-erp\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/fr/products/dukan-erp</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products/dukan-erp\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products/dukan-erp\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/ar/products/dukan-erp</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products/dukan-erp\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products/dukan-erp\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/contact</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/contact\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/contact\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/contact\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/contact\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/fr/contact</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/contact\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/contact\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/contact\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/contact\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/ar/contact</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/contact\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/contact\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/contact\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/contact\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/support</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/support\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/support\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/support\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/support\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/fr/support</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/support\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/support\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/support\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/support\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/ar/support</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/support\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/support\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/support\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/support\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/privacy</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/privacy\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/privacy\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/privacy\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/privacy\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/fr/privacy</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/privacy\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/privacy\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/privacy\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/privacy\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/ar/privacy</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/privacy\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/privacy\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/privacy\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/privacy\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/terms</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/terms\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/terms\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/terms\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/terms\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/fr/terms</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/terms\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/terms\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/terms\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/terms\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/ar/terms</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/terms\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/terms\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/terms\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/terms\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/account-deletion</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/account-deletion\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/account-deletion\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/account-deletion\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/account-deletion\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/fr/account-deletion</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/account-deletion\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/account-deletion\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/account-deletion\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/account-deletion\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/ar/account-deletion</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/account-deletion\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/account-deletion\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/account-deletion\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/account-deletion\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/apply</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/apply\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/apply\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/apply\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/apply\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/fr/apply</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/apply\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/apply\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/apply\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/apply\"/>
+  </url>
+  <url>
+    <loc>https://www.company-domain.mr/ar/apply</loc>
+    <lastmod>2026-10-12</lastmod>
+    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/apply\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/apply\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/apply\"/>
+    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/apply\"/>
+  </url>
+</urlset>
+"
+
+[36m [2m❯[22m test/site-routes.test.ts:[2m117:21[22m[39m
+    [90m115|[39m     expect(locs).toHaveLength(indexable.length * LANGUAGES.length);
+    [90m116|[39m     expect(locs).toContain(`${ORIGIN}/ar/privacy`);
+    [90m117|[39m     expect(xml).not.toMatch(/\/account|\/admin|\/login|application-sta…
+    [90m   |[39m                     [31m^[39m
+    [90m118|[39m     expect(xml).toContain('hreflang="x-default"');
+    [90m119|[39m   });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m10 passed[39m[22m[90m (12)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m112 passed[39m[22m[90m (115)[39m
+[2m   Start at [22m 06:51:57
+[2m   Duration [22m 9.53s[2m (tests 49%, environment 38%, import 7%, transform 5%)[22m
+
+[2m    Isolate [22m [33m12 workers spawned[39m[2m · ~962ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~2.89s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/content-parity.test.ts,title=test/content-parity.test.ts > the public texts in three languages > never leaves a French or Arabic text merely copied from English,line=61,column=44::AssertionError: expected { name: 'about', i: 2, fr: 'who' } to not deeply equal { name: 'about', i: 2, fr: 'who' }%0A%0ACompared values have no visual difference.%0A%0A ❯ test/content-parity.test.ts:61:44%0A ❯ test/content-parity.test.ts:59:10%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/site-routes.test.ts,title=test/site-routes.test.ts > the public routes (docs/74 §2) > the protected areas are never public routes,line=42,column=101::AssertionError: expected true to be false // Object.is equality%0A%0A- Expected%0A+ Received%0A%0A- false%0A+ true%0A%0A ❯ test/site-routes.test.ts:42:101%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/site-routes.test.ts,title=test/site-routes.test.ts > the generated files (docs/74 §5–§6) > sitemap%3A every indexable page in every language with its alternates%2C and nothing else,line=117,column=21::AssertionError: expected '<?xml version="1.0" encoding="UTF-8"?…' not to match /\/account|\/admin|\/login|ap…/account|\%0A%0A- Expected:%0A/\/account|\/admin|\/login|application-status/%0A%0A+ Received:%0A"<?xml version=\"1.0\" encoding=\"UTF-8\"?>%0A<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\" xmlns:xhtml=\"http://www.w3.org/1999/xhtml\">%0A  <url>%0A    <loc>https://www.company-domain.mr/</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/fr</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/ar</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/about</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/about\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/about\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/about\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/about\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/fr/about</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/about\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/about\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/about\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/about\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/ar/about</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/about\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/about\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/about\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/about\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/products</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/fr/products</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/ar/products</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/products/dukan-erp</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products/dukan-erp\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products/dukan-erp\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/fr/products/dukan-erp</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products/dukan-erp\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products/dukan-erp\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/ar/products/dukan-erp</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/products/dukan-erp\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/products/dukan-erp\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/products/dukan-erp\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/contact</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/contact\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/contact\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/contact\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/contact\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/fr/contact</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/contact\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/contact\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/contact\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/contact\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/ar/contact</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/contact\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/contact\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/contact\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/contact\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/support</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/support\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/support\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/support\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/support\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/fr/support</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/support\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/support\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/support\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/support\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/ar/support</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/support\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/support\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/support\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/support\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/privacy</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/privacy\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/privacy\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/privacy\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/privacy\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/fr/privacy</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/privacy\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/privacy\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/privacy\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/privacy\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/ar/privacy</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/privacy\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/privacy\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/privacy\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/privacy\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/terms</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/terms\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/terms\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/terms\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/terms\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/fr/terms</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/terms\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/terms\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/terms\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/terms\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/ar/terms</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/terms\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/terms\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/terms\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/terms\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/account-deletion</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/account-deletion\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/account-deletion\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/account-deletion\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/account-deletion\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/fr/account-deletion</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/account-deletion\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/account-deletion\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/account-deletion\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/account-deletion\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/ar/account-deletion</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/account-deletion\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/account-deletion\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/account-deletion\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/account-deletion\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/apply</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/apply\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/apply\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/apply\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/apply\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/fr/apply</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/apply\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/apply\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/apply\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/apply\"/>%0A  </url>%0A  <url>%0A    <loc>https://www.company-domain.mr/ar/apply</loc>%0A    <lastmod>2026-10-12</lastmod>%0A    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://www.company-domain.mr/apply\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://www.company-domain.mr/fr/apply\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://www.company-domain.mr/ar/apply\"/>%0A    <xhtml:link rel=\"alternate\" hreflang=\"x-default\" href=\"https://www.company-domain.mr/apply\"/>%0A  </url>%0A</urlset>%0A"%0A%0A ❯ test/site-routes.test.ts:117:21%0A%0A
