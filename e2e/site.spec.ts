@@ -64,6 +64,14 @@ async function layout(page: Page) {
     title: document.title,
     robots: document.querySelector('meta[name="robots"]')?.getAttribute('content') ?? null,
     canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? null,
+    // What sticks out sideways, named, so a failure says where (visible elements only).
+    offenders: [...document.querySelectorAll('body *')]
+      .filter((el) => {
+        const r = el.getBoundingClientRect();
+        return r.width > 0 && (r.right > window.innerWidth + 0.5 || r.left < -0.5);
+      })
+      .slice(0, 12)
+      .map((el) => `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ''}.${(el.getAttribute('class') ?? '').split(' ').join('.')} [${Math.round(el.getBoundingClientRect().left)}..${Math.round(el.getBoundingClientRect().right)}]`),
   }));
 }
 
@@ -83,7 +91,7 @@ for (const lang of LANGS) {
       await page.screenshot({ path: shot(`${lang}-375`, lang, path), fullPage: true, type: 'jpeg', quality: 70 });
       await page.setViewportSize({ width: 320, height: 720 });
       const at320 = await layout(page);
-      record({ path, lang, width: 375, layout: l, overflow320: at320.overflow, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length, help: v.help })) });
+      record({ path, lang, width: 375, layout: l, overflow320: at320.overflow, offenders320: at320.offenders, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length, help: v.help })) });
       expect(l.lang).toBe(lang);
       expect(l.dir).toBe(lang === 'ar' ? 'rtl' : 'ltr');
       expect(l.h1).toBe(1);

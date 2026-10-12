@@ -57,15 +57,19 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
             {navList}
           </nav>
           <div className="controls">
-            <Languages area={area} />
+            <Languages area={area} className="languages-wide" />
             <Link className="btn btn-sm btn-primary" to={area === 'public' ? to('login') : '/account'}>
               {t('nav.signIn')}
             </Link>
+            {/* On a phone: the navigation and the languages in one disclosure, so the bar stays one row. */}
             <details className="menu" ref={menu}>
               <summary className="btn btn-sm">{t('nav.menu')}</summary>
-              <nav className="nav nav-narrow" aria-label={t('nav.main')}>
-                {navList}
-              </nav>
+              <div className="nav-narrow">
+                <nav className="nav" aria-label={t('nav.main')}>
+                  {navList}
+                </nav>
+                <Languages area={area} className="languages-narrow" />
+              </div>
             </details>
           </div>
         </div>
@@ -79,12 +83,12 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
 }
 
 /** The current page in each language (a link, so it works without a script); the protected areas switch in place. */
-function Languages({ area }: { area: 'public' | 'protected' }) {
+function Languages({ area, className }: { area: 'public' | 'protected'; className: string }) {
   const { t, lang, setLanguage } = useI18n();
   const { pathname } = useLocation();
   const here = publicRouteAt(pathname);
   return (
-    <ul className="languages" aria-label={t('nav.languages')}>
+    <ul className={`languages ${className}`} aria-label={t('nav.languages')}>
       {LANGUAGES.map((l: Language) => (
         <li key={l}>
           {area === 'public' ? (

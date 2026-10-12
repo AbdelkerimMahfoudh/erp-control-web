@@ -86,12 +86,13 @@ describe('the public site', () => {
   it('moves to the same page in Arabic, mirrors the document and keeps the language across visits', async () => {
     mount('/products/dukan-erp');
     const user = userEvent.setup();
-    await user.click(screen.getByRole('link', { name: 'العربية' }));
+    // The bar and the phone menu each carry the languages; jsdom applies no stylesheet, so both are present.
+    await user.click(screen.getAllByRole('link', { name: 'العربية' })[0]!);
     expect(document.documentElement.dir).toBe('rtl');
     expect(document.documentElement.lang).toBe('ar');
     expect(localStorage.getItem(LANGUAGE_STORAGE_KEY)).toBe('ar');
     expect(await screen.findByText('الأسعار')).toBeTruthy();
-    await user.click(screen.getByRole('link', { name: 'Français' }));
+    await user.click(screen.getAllByRole('link', { name: 'Français' })[0]!);
     expect(document.documentElement.dir).toBe('ltr');
     expect(document.documentElement.lang).toBe('fr');
   });

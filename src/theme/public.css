@@ -139,19 +139,34 @@ main:focus {
   box-shadow: var(--shadow);
   padding: 8px;
 }
-.nav-narrow ul {
+.nav-narrow .nav ul {
   flex-direction: column;
 }
-.nav-narrow a {
+.nav-narrow .nav a {
   display: block;
   padding: 10px 12px;
 }
+.languages-narrow {
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+  padding-top: 8px;
+}
 @media (max-width: 899px) {
-  .nav-wide {
+  .nav-wide,
+  .languages-wide {
     display: none;
   }
   .menu {
     display: block;
+  }
+  .chrome-bar {
+    flex-wrap: nowrap;
+  }
+}
+/* The narrowest phones: the mark alone (the link keeps its accessible name), so the bar stays one row. */
+@media (max-width: 359px) {
+  .chrome-bar .org-mark-name {
+    display: none;
   }
 }
 
