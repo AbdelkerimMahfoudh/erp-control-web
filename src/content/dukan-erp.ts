@@ -1,9 +1,10 @@
 import type { Language } from '../i18n/languages';
 
 /**
- * The Dukan ERP product page (docs/74 §4). The two activities as the code implements them (D154–D157). The
- * commission of an exchange is computed from the rate the Owner configures per provider (docs/73 §4.2) — not typed
- * per exchange. No provider is named: Dukan ERP records what the team enters and is connected to none.
+ * The Dukan ERP product page (docs/74 §4). The two activities as the code implements them (D154–D157, D164). The
+ * commission of an exchange is typed by the employee for every exchange and paid by the customer — there is no rate,
+ * and it never touches the provider credit (D164 supersedes the configured rate of docs/73 §4.2). No provider is named:
+ * Dukan ERP records what the team enters and is connected to none.
  */
 export interface ActivityCard {
   title: string;
@@ -54,8 +55,10 @@ export const dukanErp: Record<Language, DukanErpContent> = {
       lead: 'For agents who exchange cash for mobile-money credit on behalf of their customers.',
       items: [
         'Recording exchanges in both directions: cash received for provider credit sent, and provider credit received for cash paid out',
-        'The commission of each exchange, recorded from the rate the owner configures for each provider',
-        'The employee who recorded each exchange, recorded automatically',
+        'The commission is paid by the customer and typed by the employee for every exchange — there is no fixed rate',
+        'The commission is the business’s own revenue: the provider neither pays nor checks it, and it never changes the provider credit',
+        'Before confirming, the employee sees the principal, the commission, the cash received or handed over, and the credit sent or received',
+        'The employee who recorded each exchange is taken from their own sign-in, never chosen by hand',
         'Activity, floats and commissions followed provider by provider',
         'History and reports by day, week, month and year',
         'Customer numbers masked in lists and visible in full only with the permission',
@@ -112,8 +115,10 @@ export const dukanErp: Record<Language, DukanErpContent> = {
       lead: 'Pour les agents qui échangent des espèces contre du crédit de paiement mobile pour le compte de leurs clients.',
       items: [
         'Enregistrement des échanges dans les deux sens : espèces reçues contre crédit envoyé, et crédit reçu contre espèces versées',
-        'La commission de chaque échange, enregistrée à partir du taux que le propriétaire configure pour chaque opérateur',
-        'L’employé qui a enregistré chaque échange, enregistré automatiquement',
+        'La commission est payée par le client et saisie par l’employé pour chaque échange — il n’existe pas de taux fixe',
+        'La commission est un revenu de l’entreprise : l’opérateur ne la verse ni ne la vérifie, et elle ne modifie jamais le crédit de l’opérateur',
+        'Avant de confirmer, l’employé voit le montant principal, la commission, les espèces reçues ou remises, et le crédit envoyé ou reçu',
+        'L’employé qui enregistre chaque échange est repris de sa propre connexion, jamais choisi à la main',
         'Activité, soldes et commissions suivis opérateur par opérateur',
         'Historique et rapports par jour, semaine, mois et année',
         'Numéros des clients masqués dans les listes et visibles en entier seulement avec l’autorisation',
@@ -170,8 +175,10 @@ export const dukanErp: Record<Language, DukanErpContent> = {
       lead: 'للوكلاء الذين يبادلون النقد برصيد الدفع عبر الهاتف لصالح عملائهم.',
       items: [
         'تسجيل العمليات في الاتجاهين: نقد مستلَم مقابل رصيد مُرسَل، ورصيد مستلَم مقابل نقد مدفوع',
-        'عمولة كل عملية، تُسجَّل وفق النسبة التي يضبطها المالك لكل مزوّد',
-        'الموظف الذي سجّل كل عملية، يُسجَّل تلقائيًا',
+        'يدفع العميل العمولة، ويُدخلها الموظف بنفسه في كل عملية — لا توجد نسبة ثابتة',
+        'العمولة دخل خاص بالشركة: لا يدفعها المزوّد ولا يتحقق منها، ولا تُغيّر رصيد المزوّد أبدًا',
+        'قبل التأكيد، يرى الموظف المبلغ الأساسي والعمولة والنقد المستلَم أو المسلَّم والرصيد المرسَل أو المستلَم',
+        'يُؤخذ اسم الموظف الذي سجّل كل عملية من حساب دخوله نفسه، ولا يُختار يدويًا أبدًا',
         'متابعة النشاط والأرصدة والعمولات لكل مزوّد على حدة',
         'السجل والتقارير حسب اليوم والأسبوع والشهر والسنة',
         'أرقام العملاء مخفية في القوائم، ولا تظهر كاملة إلا لمن يملك الصلاحية',

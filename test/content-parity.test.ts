@@ -83,6 +83,9 @@ describe('the public texts in three languages', () => {
         expect({ name, lang, provider: /bankily|masrivi|sedad|bimbank/i.test(all) }).toEqual({ name, lang, provider: false });
         expect({ name, lang, store: /download on the|get it on|available on the app store/i.test(all) }).toEqual({ name, lang, store: false });
         expect({ name, lang, filler: /lorem|ipsum|todo|tbd/i.test(all) }).toEqual({ name, lang, filler: false });
+        // D164: the commission is typed per exchange and paid by the customer — never a rate the Owner configures.
+        const rateClaim = /rate the owner|configured rate|from the rate|taux que le propriétaire|à partir du taux|النسبة التي يضبطها|وفق النسبة/i;
+        expect({ name, lang, rateClaim: rateClaim.test(all) }).toEqual({ name, lang, rateClaim: false });
       }
     }
   });
