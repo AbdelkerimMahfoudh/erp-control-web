@@ -24,6 +24,8 @@ function deepShape(v: unknown): unknown {
 }
 
 const ALL: [string, Record<(typeof LANGS)[number], unknown>][] = [...Object.entries(DOCUMENTS), ['home', home], ['dukanErp', dukanErp]];
+/** The words of a value: a document's texts (not its section ids or block kinds), or every string of a page. */
+const wordsOf = (name: string, v: unknown): string[] => (name in DOCUMENTS ? textsOf(v as never) : stringsOf(v));
 
 describe('the public texts in three languages', () => {
   it('every document has the same sections, blocks and list lengths in every language', () => {
@@ -53,9 +55,9 @@ describe('the public texts in three languages', () => {
 
   it('never leaves a French or Arabic text merely copied from English', () => {
     for (const [name, value] of ALL) {
-      const en = stringsOf(value.en);
-      const fr = stringsOf(value.fr);
-      const ar = stringsOf(value.ar);
+      const en = wordsOf(name, value.en);
+      const fr = wordsOf(name, value.fr);
+      const ar = wordsOf(name, value.ar);
       en.forEach((text, i) => {
         if (NAME_ONLY.test(text)) return;
         expect({ name, i, fr: fr[i] }).not.toEqual({ name, i, fr: text });

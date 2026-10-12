@@ -39,7 +39,9 @@ describe('the public routes (docs/74 §2)', () => {
       expect(isProtectedPath(p)).toBe(true);
       expect(publicRouteAt(p)).toBeNull();
     }
-    expect(PUBLIC_ROUTES.some((r) => r.path.startsWith('/account') || r.path.startsWith('/admin'))).toBe(false);
+    expect(PUBLIC_ROUTES.some((r) => isProtectedPath(r.path))).toBe(false);
+    // A public page whose name merely begins like a protected area is not one.
+    expect(isProtectedPath('/account-deletion')).toBe(false);
   });
 
   it('the status page and the sign-in page are reachable but never indexed', () => {
