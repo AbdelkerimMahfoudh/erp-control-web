@@ -450,18 +450,23 @@ dialog.modal .body {
   display: grid;
   gap: 10px;
 }
+/* A row that wraps by its content, not by the window: at 200% text it never runs off the side (WCAG 1.4.4, docs/74 §9). */
 .estimate-store {
-  display: grid;
-  grid-template-columns: 1fr auto auto auto;
+  display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   align-items: center;
+}
+.estimate-store > strong {
+  flex: 1 1 8em;
 }
 .estimate-store select {
   width: auto;
 }
 @media (max-width: 719px) {
   .estimate-store {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+    align-items: stretch;
   }
   .estimate-store select {
     width: 100%;
