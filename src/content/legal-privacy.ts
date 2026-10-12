@@ -135,7 +135,7 @@ export const privacy: Record<Language, LegalDocument> = {
         heading: 'Deleting an account',
         blocks: [
           { kind: 'p', text: 'You can delete your account in the app. The account deletion page explains how, and what is removed and kept.' },
-          { kind: 'p', text: '[[blocker:deidentification_gaps]]' },
+          { kind: 'p', text: 'Deletion removes the person’s identity and contact details from the records in use, and every copy the app made of them that can be edited. The sealed audit trail and subscription history, and backups until they expire, are not edited. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
         ],
       },
       {
@@ -290,7 +290,7 @@ export const privacy: Record<Language, LegalDocument> = {
         heading: 'Supprimer un compte',
         blocks: [
           { kind: 'p', text: 'Vous pouvez supprimer votre compte dans l’application. La page sur la suppression de compte explique comment, et ce qui est supprimé ou conservé.' },
-          { kind: 'p', text: '[[blocker:deidentification_gaps]]' },
+          { kind: 'p', text: 'La suppression retire l’identité et les coordonnées de la personne des données en service, et de toutes les copies modifiables que l’application en a faites. Le journal d’audit et l’historique de l’abonnement scellés, ainsi que les sauvegardes jusqu’à leur expiration, ne sont pas modifiés. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
         ],
       },
       {
@@ -445,7 +445,7 @@ export const privacy: Record<Language, LegalDocument> = {
         heading: 'حذف الحساب',
         blocks: [
           { kind: 'p', text: 'يمكنك حذف حسابك من التطبيق. وتشرح صفحة حذف الحساب الطريقة، وما يُحذف وما يُحتفَظ به.' },
-          { kind: 'p', text: '[[blocker:deidentification_gaps]]' },
+          { kind: 'p', text: 'يزيل الحذف هوية الشخص وبيانات الاتصال به من السجلات المستعملة، ومن كل نسخة قابلة للتعديل صنعها التطبيق منها. ولا يُعدَّل سجل التدقيق وسجل الاشتراك المختومان، ولا النسخ الاحتياطية حتى تنتهي صلاحيتها. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
         ],
       },
       {

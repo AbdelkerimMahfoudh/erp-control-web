@@ -15,7 +15,8 @@ export const BLOCKERS: readonly Blocker[] = [
   { id: 'retention_period', summary: 'The legal retention period for business and accounting records (Mauritanian commercial and tax law) is not decided (docs/64 §6).' },
   { id: 'processors', summary: 'Hosting, database, backup and email providers are not selected (docs/45 D4–D7); the policy must name them once contracted.' },
   { id: 'international_transfer', summary: 'Whether personal data is processed outside Mauritania depends on the hosting choice; the policy must say where.' },
-  { id: 'deidentification_gaps', summary: 'Deletion keeps contact details inside the append-only audit trail, money-agent customer numbers, old verification records, receipt photos and branch addresses (docs/74 §6); fix in the backend or approve the disclosure.' },
+  { id: 'sealed_history', summary: 'Deletion cannot edit the hash-chained audit trail, subscription and platform audit events, or append-only money-agent records, which may hold names or contacts written before 2026-10-12 (docs/24); a legal adviser must approve this disclosure.' },
+  { id: 'backup_retention', summary: 'How long backups are kept is not supplied by TSX-MR: deletion removes data from active storage at once, and backups expire on that schedule. Production stays blocked until TSX-MR fixes it.' },
   { id: 'governing_law', summary: 'Governing law, jurisdiction and dispute resolution for the terms of service are not decided.' },
   { id: 'liability', summary: 'Limitation of liability and service-level wording for the terms of service are not decided.' },
 ];

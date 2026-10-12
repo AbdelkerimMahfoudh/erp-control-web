@@ -36,7 +36,7 @@ export const accountDeletion: Record<Language, LegalDocument> = {
         heading: 'Employees, managers and owners',
         blocks: [
           { kind: 'p', text: 'Deleting your account removes your own sign-in only.' },
-          { kind: 'p', text: 'If you are the last owner of the business, deleting your account closes the business: every account of the business is closed and signed out, the contact details of its customers and suppliers are removed, its stores are deactivated, and its subscription is cancelled.' },
+          { kind: 'p', text: 'If you are the last owner of the business, deleting your account closes the business: every account of the business is closed and signed out; the contact details of its customers, its suppliers and the people it lent to are removed, with the numbers its payments came from and the numbers its money services counter served; its notes, receipt photos, store addresses and city are removed; its stores are deactivated, and its subscription is cancelled.' },
         ],
       },
       {
@@ -44,7 +44,8 @@ export const accountDeletion: Record<Language, LegalDocument> = {
         heading: 'What is kept',
         blocks: [
           { kind: 'p', text: 'Sales, purchases, payments, returns, daily closings, the audit trail and subscription records are kept, because the business’s accounts depend on them. [[blocker:retention_period]]' },
-          { kind: 'p', text: 'On the deleted account, the name becomes “Deleted user”, and the email address, the telephone number, the password and the PIN are removed. [[blocker:deidentification_gaps]]' },
+          { kind: 'p', text: 'On the deleted account, the name becomes “Deleted user”; the email address, the telephone number, the sign-in identifier, the password and the PIN are removed, and so are the places and devices it signed in from and the numbers its codes went to. Where its name was copied onto the records it made at the money services counter, it is replaced by “Deleted user” too.' },
+          { kind: 'p', text: 'Some copies cannot be edited. The audit trail and the subscription history are sealed: they may still hold a name or contact detail written into them at the time. Backups keep their copy until they expire. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
         ],
       },
       { id: 'final', heading: 'Deletion cannot be undone', blocks: [{ kind: 'p', text: 'Once completed, a deleted account cannot be restored and can no longer be used to sign in.' }] },
@@ -78,7 +79,7 @@ export const accountDeletion: Record<Language, LegalDocument> = {
         heading: 'Employés, responsables et propriétaires',
         blocks: [
           { kind: 'p', text: 'Supprimer votre compte ne supprime que votre propre accès.' },
-          { kind: 'p', text: 'Si vous êtes le dernier propriétaire de l’entreprise, supprimer votre compte clôture l’entreprise : tous ses comptes sont fermés et déconnectés, les coordonnées de ses clients et fournisseurs sont supprimées, ses magasins sont désactivés et son abonnement est annulé.' },
+          { kind: 'p', text: 'Si vous êtes le dernier propriétaire de l’entreprise, supprimer votre compte clôture l’entreprise : tous ses comptes sont fermés et déconnectés ; les coordonnées de ses clients, de ses fournisseurs et des personnes à qui elle a prêté sont supprimées, avec les numéros d’où venaient ses paiements et ceux servis à son comptoir de services d’argent ; ses notes, photos de reçus, adresses de magasins et sa ville sont supprimées ; ses magasins sont désactivés et son abonnement est annulé.' },
         ],
       },
       {
@@ -86,7 +87,8 @@ export const accountDeletion: Record<Language, LegalDocument> = {
         heading: 'Ce qui est conservé',
         blocks: [
           { kind: 'p', text: 'Les ventes, achats, paiements, retours, clôtures quotidiennes, le journal d’audit et les données d’abonnement sont conservés, car la comptabilité de l’entreprise en dépend. [[blocker:retention_period]]' },
-          { kind: 'p', text: 'Sur le compte supprimé, le nom devient « Utilisateur supprimé », et l’adresse e-mail, le numéro de téléphone, le mot de passe et le code PIN sont effacés. [[blocker:deidentification_gaps]]' },
+          { kind: 'p', text: 'Sur le compte supprimé, le nom devient « Utilisateur supprimé » ; l’adresse e-mail, le numéro de téléphone, l’identifiant de connexion, le mot de passe et le code PIN sont effacés, ainsi que les lieux et appareils depuis lesquels il s’est connecté et les numéros auxquels ses codes ont été envoyés. Là où son nom était recopié sur ce qu’il a enregistré au comptoir de services d’argent, il est aussi remplacé par « Utilisateur supprimé ».' },
+          { kind: 'p', text: 'Certaines copies ne peuvent pas être modifiées. Le journal d’audit et l’historique de l’abonnement sont scellés : ils peuvent encore contenir un nom ou une coordonnée inscrits à l’époque. Les sauvegardes gardent leur copie jusqu’à leur expiration. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
         ],
       },
       { id: 'final', heading: 'La suppression est irréversible', blocks: [{ kind: 'p', text: 'Une fois effectuée, la suppression d’un compte ne peut pas être annulée, et le compte ne permet plus de se connecter.' }] },
@@ -120,7 +122,7 @@ export const accountDeletion: Record<Language, LegalDocument> = {
         heading: 'الموظفون والمسؤولون والمالكون',
         blocks: [
           { kind: 'p', text: 'حذف حسابك لا يزيل إلا تسجيل دخولك أنت.' },
-          { kind: 'p', text: 'إن كنت آخر مالك للشركة، فإن حذف حسابك يُغلق الشركة: تُغلق كل حساباتها ويُسجَّل خروجها، وتُحذف بيانات الاتصال بعملائها ومورّديها، وتُعطَّل متاجرها، ويُلغى اشتراكها.' },
+          { kind: 'p', text: 'إن كنت آخر مالك للشركة، فإن حذف حسابك يُغلق الشركة: تُغلق كل حساباتها ويُسجَّل خروجها؛ وتُحذف بيانات الاتصال بعملائها ومورّديها والأشخاص الذين أقرضتهم، مع الأرقام التي جاءت منها مدفوعاتها والأرقام التي خدمها شباك الخدمات المالية؛ وتُحذف ملاحظاتها وصور إيصالاتها وعناوين متاجرها ومدينتها؛ وتُعطَّل متاجرها، ويُلغى اشتراكها.' },
         ],
       },
       {
@@ -128,7 +130,8 @@ export const accountDeletion: Record<Language, LegalDocument> = {
         heading: 'ما الذي يُحتفَظ به',
         blocks: [
           { kind: 'p', text: 'يُحتفَظ بالمبيعات والمشتريات والمدفوعات والمرتجعات والإغلاقات اليومية وسجل التدقيق وسجلات الاشتراك، لأن حسابات الشركة تعتمد عليها. [[blocker:retention_period]]' },
-          { kind: 'p', text: 'في الحساب المحذوف، يصبح الاسم «مستخدم محذوف»، ويُزال البريد الإلكتروني ورقم الهاتف وكلمة المرور والرمز السري. [[blocker:deidentification_gaps]]' },
+          { kind: 'p', text: 'في الحساب المحذوف، يصبح الاسم «مستخدم محذوف»؛ ويُزال البريد الإلكتروني ورقم الهاتف ومعرّف الدخول وكلمة المرور والرمز السري، وكذلك الأماكن والأجهزة التي سُجّل الدخول منها والأرقام التي أُرسلت إليها رموزه. وحيث نُسخ اسمه على ما سجّله عند شباك الخدمات المالية، يُستبدل أيضًا بـ«مستخدم محذوف».' },
+          { kind: 'p', text: 'بعض النسخ لا يمكن تعديلها. سجل التدقيق وسجل الاشتراك مختومان: قد يحتويان على اسم أو بيان اتصال كُتب فيهما في حينه. وتحتفظ النسخ الاحتياطية بنسختها حتى تنتهي صلاحيتها. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
         ],
       },
       { id: 'final', heading: 'لا يمكن التراجع عن الحذف', blocks: [{ kind: 'p', text: 'بعد إتمام الحذف، لا يمكن استعادة الحساب، ولا يمكن استخدامه لتسجيل الدخول.' }] },
