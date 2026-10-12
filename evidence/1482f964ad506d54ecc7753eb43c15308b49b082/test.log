@@ -1,0 +1,42 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1633[2mms[22m[39m
+   [32m✓[39m Account: the platform grant and its own dates [2m(6)[22m
+     [33m[2m✓[22m[39m an active grant says its own end, never the billing period’s start[33m 544[2mms[22m[39m
+ [32m✓[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2506[2mms[22m[39m
+   [32m✓[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 1199[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the confirmation’s result on screen after the paid request leaves the queue[33m 467[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 776[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 2977[2mms[22m[39m
+   [32m✓[39m Account: a store’s activity and its change [2m(8)[22m
+     [33m[2m✓[22m[39m lists each store with its activity; a warehouse offers no change[33m 570[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade is explained by the server’s own answer, then shows the amount the server recorded[33m 575[2mms[22m[39m
+     [33m[2m✓[22m[39m a downgrade waits for the renewal and asks nothing now[33m 417[2mms[22m[39m
+     [33m[2m✓[22m[39m keeping today’s activity withdraws the scheduled change[33m 407[2mms[22m[39m
+     [33m[2m✓[22m[39m asks the new store’s activity and sends it, priced as the server would charge it[33m 309[2mms[22m[39m
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 2138[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 1678[2mms[22m[39m
+   [32m✓[39m Home: three prices and an estimate by activity [2m(2)[22m
+     [33m[2m✓[22m[39m lists the three prices and sends one activity per store to the quote[33m 406[2mms[22m[39m
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 944[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns[33m 779[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 109[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m8 passed[39m[22m[90m (8)[39m
+[2m      Tests [22m [1m[32m48 passed[39m[22m[90m (48)[39m
+[2m   Start at [22m 06:27:18
+[2m   Duration [22m 8.52s[2m (tests 45%, environment 39%, import 9%, transform 6%)[22m
+
+[2m    Isolate [22m [33m8 workers spawned[39m[2m · ~1.27s startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~2.12s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
