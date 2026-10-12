@@ -1,5 +1,18 @@
 # erp-control-web
 
+**Since 2026-10-12 this is also the official website of TSX-MR and the product site of Dukan ERP**
+(`erp-docs/docs/74`): public pages in English, French and Arabic (`/`, `/fr`, `/ar`), prerendered at build time,
+beside the unchanged business account (`/account`) and console (`/admin`).
+
+- `npm run build` — production; **refuses** until every input in `.env.example` is real and every legal blocker in
+  `src/content` is resolved (`docs/74` §3, §7).
+- `npm run build:preview` — marked test values, a banner, `noindex` everywhere.
+- `npm test` — unit and component tests; `npx playwright test` — browser checks against `dist/` (CI).
+- On the owner's Windows PC only `npm run typecheck` runs (Smart App Control blocks Vite 8's bundler); everything else
+  runs in GitHub Actions, which commits its evidence to the `ci-evidence` branch.
+
+The description below is the portal as built on 2026-10-05, still accurate for `/account` and `/admin`.
+
 The control website of the Electronics Retail Management System: the public
 subscription site, the business Owner's account area and the platform's Super
 Admin console. Built from scratch on 2026-10-05 against the backend's contract
