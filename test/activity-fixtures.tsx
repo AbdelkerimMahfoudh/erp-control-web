@@ -30,6 +30,8 @@ export function serve(handler: Handler) {
     const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { 'Content-Type': 'application/json' } });
     if (answer) return json(answer.body, answer.status ?? 200);
     if (url.endsWith('/platform/admin/me')) return json({ message: 'Unauthorized' }, 401);
+    // The step-up every administrator decision takes first (0094): accepted unless a test answers otherwise.
+    if (url.endsWith('/platform/admin/step-up')) return json({ expiresAt: '2026-10-12T10:05:00.000Z' });
     return json({ message: `unexpected ${url}` }, 500);
   });
   vi.stubGlobal('fetch', fetchMock);

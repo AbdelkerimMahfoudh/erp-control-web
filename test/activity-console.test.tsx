@@ -44,10 +44,15 @@ describe('the platform console', () => {
     await user.type(within(row).getByLabelText(/Reference/), 'BK-2026-1009');
     await user.click(within(row).getByRole('button', { name: 'Confirm' }));
     await user.type(await screen.findByLabelText('Password'), 'step-up-password');
+    await user.type(screen.getByLabelText('Code from your authenticator'), '123456');
     await user.click(within(screen.getByRole('dialog', { hidden: true })).getByRole('button', { name: 'Confirm', hidden: true }));
     expect(await screen.findByText('The store’s activity was changed.')).toBeTruthy();
     const confirm = sent.find((r) => r.url.endsWith('/confirm-payment'))!;
     expect(confirm.body).toMatchObject({ amount: '400', reference: 'BK-2026-1009', expectedVersion: 1, confirmPassword: 'step-up-password' });
+    // The step-up went first, with the password and the code (0094).
+    const stepUp = sent.findIndex((r) => r.url.endsWith('/platform/admin/step-up'));
+    expect(sent[stepUp]!.body).toEqual({ password: 'step-up-password', code: '123456' });
+    expect(stepUp).toBeLessThan(sent.findIndex((r) => r.url.endsWith('/confirm-payment')));
 
     // A downgrade waiting for the renewal: listed under granted, and only cancellable.
     await user.selectOptions(screen.getByDisplayValue('Awaiting payment'), 'granted');
@@ -77,6 +82,7 @@ describe('the platform console', () => {
     await user.type(within(row).getByLabelText(/Reference/), 'BK-2026-1009');
     await user.click(within(row).getByRole('button', { name: 'Confirm' }));
     await user.type(await screen.findByLabelText('Password'), 'step-up-password');
+    await user.type(screen.getByLabelText('Code from your authenticator'), '123456');
     await user.click(within(screen.getByRole('dialog', { hidden: true })).getByRole('button', { name: 'Confirm', hidden: true }));
 
     // The reloaded queue is empty — the row and anything drawn in it are gone — and the result is still there, once.
@@ -110,6 +116,7 @@ describe('the platform console', () => {
     await user.type(screen.getByLabelText(/^Reason/), 'Agent price review');
     await user.click(screen.getByRole('button', { name: 'Schedule a new price' }));
     await user.type(await screen.findByLabelText('Password'), 'step-up-password');
+    await user.type(screen.getByLabelText('Code from your authenticator'), '123456');
     await user.click(within(screen.getByRole('dialog', { hidden: true })).getByRole('button', { name: 'Confirm', hidden: true }));
     await act(async () => undefined);
     const post = sent.find((r) => r.method === 'POST' && r.url.endsWith('/platform/plans'))!;
