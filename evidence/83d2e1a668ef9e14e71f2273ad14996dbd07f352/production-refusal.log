@@ -1,0 +1,50 @@
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:4:49). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:5:35). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./home" without a file extension (src/content/index.ts:10:22). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:11:26). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:12:40). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:13:52). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+[31merror during build:
+Error: This website cannot be built for production yet. Nothing was published.
+  - VITE_PUBLIC_SITE_ORIGIN [missing] Public website origin, e.g. https://<domain>
+  - VITE_API_BASE [missing] API base URL including /api/v1, e.g. https://api.<domain>/api/v1
+  - VITE_ORGANIZATION_LEGAL_NAME [missing] Full registered legal name
+  - VITE_ORGANIZATION_LEGAL_FORM [missing] Legal form
+  - VITE_ORGANIZATION_REGISTRATION_NUMBER [missing] Trade-register number
+  - VITE_ORGANIZATION_CITY [missing] City
+  - VITE_ORGANIZATION_ADDRESS [missing] Registered street address
+  - VITE_SUPPORT_EMAIL [missing] Support email
+  - VITE_PRIVACY_EMAIL [missing] Privacy email
+  - VITE_ACCOUNT_DELETION_CHANNEL [missing] The deletion verification channel configured AND tested in production (whatsapp)
+  - VITE_LEGAL_EFFECTIVE_DATE [missing] Effective date of the published privacy policy and terms (YYYY-MM-DD)
+  - [legal_blocker] deidentification_gaps: Deletion keeps contact details inside the append-only audit trail, money-agent customer numbers, old verification records, receipt photos and branch addresses (docs/74 §6); fix in the backend or approve the disclosure.
+  - [legal_blocker] governing_law: Governing law, jurisdiction and dispute resolution for the terms of service are not decided.
+  - [legal_blocker] international_transfer: Whether personal data is processed outside Mauritania depends on the hosting choice; the policy must say where.
+  - [legal_blocker] legal_review: The privacy policy, terms and deletion page are drafts written from the code; a legal adviser must review and approve them.
+  - [legal_blocker] liability: Limitation of liability and service-level wording for the terms of service are not decided.
+  - [legal_blocker] processors: Hosting, database, backup and email providers are not selected (docs/45 D4–D7); the policy must name them once contracted.
+  - [legal_blocker] retention_period: The legal retention period for business and accounting records (Mauritanian commercial and tax law) is not decided (docs/64 §6).
+Set the values in the hosting provider’s environment (docs/74 §3) or resolve the legal blockers (docs/74 §7); use `npm run build:preview` for a test build.
+    at BasicMinimalPluginContext.configResolved (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/.vite-temp/vite.config.ts.timestamp-1791790185129-b903619be660a.mjs:2753:35)
+    at file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/chunks/node.js:37632:87
+    at Array.map (<anonymous>)
+    at resolveConfig (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/chunks/node.js:37632:68)
+    at async createBuilder (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/chunks/node.js:34886:17)
+    at async CAC.<anonymous> (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/cli.js:769:19)[39m
