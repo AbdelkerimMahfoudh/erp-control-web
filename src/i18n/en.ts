@@ -5,8 +5,6 @@
  */
 export const en = {
   // ── chrome ──
-  'brand.name': 'ERP control',
-  'brand.tagline': 'Subscriptions and administration for the Electronics Retail Management System',
   'nav.home': 'Home',
   'nav.apply': 'Apply',
   'nav.account': 'My business',
@@ -49,17 +47,6 @@ export const en = {
   'activity.next': 'Changes to {activity} at the next renewal',
 
   // ── home ──
-  'home.title': 'Run an electronics shop faster than a notebook.',
-  'home.lead':
-    'The Electronics Retail Management System is the internal app for an electronics business: stock by IMEI, serial or barcode, sales, returns, money and the day’s closing — for the Owner, managers, employees and warehouse staff. It is never a customer app.',
-  'home.business': 'Business only',
-  'home.business.body':
-    'A subscription belongs to a business. The Owner applies here, the platform reviews and approves the application, and the business then signs in to the app. Customers of a shop never create an account.',
-  'home.how': 'How a subscription works',
-  'home.how.1': 'The Owner applies with their identity, contact details and the stores they run.',
-  'home.how.2': 'The platform reviews the application and approves or refuses it. Nothing is activated until then.',
-  'home.how.3': 'Each month covers every store and the seats it holds. Payment is confirmed by the platform; the business then uses the app.',
-  'home.how.4': 'More employees or stores are requested from the business account page and activated once their payment is confirmed.',
   'home.pricing': 'Pricing',
   'home.pricing.loading': 'Loading the price list…',
   'home.pricing.unavailable': 'The price list could not be loaded right now.',
@@ -86,7 +73,6 @@ export const en = {
   'home.estimate.seats': '{count} additional seat(s)',
   'home.estimate.lineIncluded': 'included seat',
   'home.estimate.linePaid': 'paid seat(s)',
-  'home.cta.apply': 'Apply for a business subscription',
   'home.cta.account': 'Open my business account',
 
   // ── apply ──
@@ -352,32 +338,56 @@ export const en = {
   'event.kind': 'Event',
 
   // ── legal / support ──
-  'privacy.title': 'Privacy policy',
-  'privacy.body1':
-    'This site and the app are used only by the staff of an electronics business. They store the business’s own records: products, stock, sales, returns, money, closings, and the staff accounts the Owner creates (name, email address or WhatsApp number, role and stores).',
-  'privacy.body2':
-    'Contact details are used to sign in, to send verification codes and to reach the business about its subscription. Payments are recorded by the platform with the reference the business gives; no card or wallet details are stored here.',
-  'privacy.body3':
-    'Financial records are never hard-deleted — corrections are reversals with an audit trail. Personal contact details are removed when an account is deleted (see “Deleting your account”). Verification codes are stored only as hashes and expire within minutes.',
-  'privacy.body4':
-    'The platform administrators who approve subscriptions see a business’s name, Store Account ID, stores, people and payments — never its sales, stock or customers.',
-  'privacy.contact': 'Questions about privacy: see Support.',
-  'terms.title': 'Terms of service',
-  'terms.body1': 'The service is offered to businesses only, under a monthly subscription per store with one employee seat included and additional seats charged per store.',
-  'terms.body2': 'A month is charged in full when a store or a seat is added and is not refunded when one is removed; the reduction applies at the next renewal. There is no free trial.',
-  'terms.body3': 'When a period ends the app keeps working for 72 hours; after that it becomes read-only until a payment is confirmed. The platform may suspend a business with a recorded reason.',
-  'terms.body4': 'The platform confirms every payment by hand against a reference; the business keeps that reference. No payment provider is connected yet.',
-  'support.title': 'Support',
-  'support.body': 'Support is provided by the platform team to the Owner of a business.',
-  'support.email': 'Email',
-  'support.whatsapp': 'WhatsApp',
-  'support.none': 'A support address has not been configured for this deployment yet.',
-  'support.status': 'To check an application or a subscription, sign in to “My business”.',
-  'deletion.title': 'Deleting your account',
-  'deletion.body1': 'An employee deletes their own login from the app: Account → Delete my account. A code is sent to the account’s verified WhatsApp number and must be entered to confirm.',
-  'deletion.body2': 'The Owner closes the business the same way; the business keeps its name on retained invoices and loses its contact details, logo and discoverability, and nobody in it can sign in afterwards.',
-  'deletion.body3': 'Financial records stay, as required for the business’s own books; personal contact details are removed. A deletion cannot be undone.',
-  'deletion.body4': 'If the app is not available to you, contact Support with the business name and the contact used to sign in.',
+  // ── public site (TSX-MR / Dukan ERP, docs/74) ──
+  'skip.toMain': 'Skip to main content',
+  'nav.main': 'Main navigation',
+  'nav.menu': 'Menu',
+  'nav.about': 'About',
+  'nav.products': 'Products',
+  'nav.dukanErp': 'Dukan ERP',
+  'nav.contact': 'Contact',
+  'nav.signIn': 'Sign in',
+  'nav.languages': 'Languages',
+  'brand.home': '{name} — home page',
+  'footer.company': 'Company',
+  'footer.product': 'Product',
+  'footer.help': 'Help',
+  'footer.legal': 'Legal',
+  'footer.applicationStatus': 'Application status',
+  'footer.relationship': 'Dukan ERP is developed and operated by {name}.',
+  'footer.rights': '© {year} {name}',
+  'org.title': 'Company details',
+  'org.legalName': 'Legal name',
+  'org.legalForm': 'Legal form',
+  'org.registration': 'Registration number',
+  'org.address': 'Address',
+  'org.phone': 'Telephone',
+  'org.supportEmail': 'Support',
+  'org.privacyEmail': 'Privacy',
+  'org.commercialEmail': 'Business enquiries',
+  'org.securityEmail': 'Security',
+  'org.whatsapp': 'WhatsApp',
+  'country.mauritania': 'Mauritania',
+  'preview.banner': 'Preview build — test values are shown and nothing here is for publication.',
+  'pending.decision': 'Pending decision: {id}',
+  'pending.value': 'Value not set: {name}',
+  'legal.version': 'Version {version}',
+  'legal.effective': 'Effective {date}',
+  'legal.effectivePending': 'Effective date not set',
+  'legal.contents': 'On this page',
+  'contact.addresses': 'Addresses',
+  'contact.none': 'No contact address has been configured for this website yet.',
+  'login.cta': 'Sign in to the business account',
+  'notFound.title': 'Page not found',
+  'notFound.body': 'The address may be mistyped, or the page may have moved.',
+  'notFound.home': 'Go to the home page',
+  'app.store.apple': 'App Store',
+  'app.store.google': 'Google Play',
+  'page.apply.title': 'Apply for a business account',
+  'page.apply.description': 'Apply for a Dukan ERP business account. {name} reviews every application before anything is activated.',
+  'page.home.title': '{name} — Practical digital tools for businesses',
+  'page.protected.account': 'Business account — {name}',
+  'page.protected.admin': 'Administration — {name}',
 } as const;
 
 export type Key = keyof typeof en;

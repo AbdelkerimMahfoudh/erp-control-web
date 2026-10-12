@@ -1,17 +1,35 @@
+import { loadEnv, type Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
+import { formatProblems, releaseProblems } from './src/config/schema';
+import { publishedBlockers } from './src/content';
 
 /**
- * The control website: public subscription site, Owner account area and
- * Super Admin console (docs/68). Built from scratch on 2026-10-05.
+ * The control website: the TSX-MR public site, the Owner account area and the Super Admin console (docs/68, docs/74).
  *
- * `VITE_API_BASE` points a build at the API; without it the site talks to the
- * API on its own hostname, port 3010 — the administrator session cookie is
- * `SameSite=Lax`, so a page on `localhost` talking to `127.0.0.1` would be
- * cross-site and the browser would withhold the cookie (docs/38).
+ * `VITE_API_BASE` points a build at the API; without it (a preview) the site talks to the API on its own hostname,
+ * port 3010 — the administrator session cookie is `SameSite=Lax`, so a page on `localhost` talking to `127.0.0.1`
+ * would be cross-site and the browser would withhold the cookie (docs/38).
+ *
+ * Modes: `production` (`npm run build`) refuses to build until every production input is real and every legal blocker
+ * is resolved (`releaseGuard`); `preview` (`npm run build:preview`) builds with marked test values, a banner and
+ * `noindex` everywhere.
  */
+function releaseGuard(): Plugin {
+  return {
+    name: 'tsx-release-guard',
+    apply: 'build',
+    configResolved(config) {
+      if (config.mode !== 'production') return;
+      const env = loadEnv(config.mode, config.root, 'VITE_');
+      const problems = releaseProblems(env, publishedBlockers());
+      if (problems.length > 0) throw new Error(formatProblems(problems));
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), releaseGuard()],
   server: { port: 5173, host: '127.0.0.1' },
   preview: { port: 4173, host: '127.0.0.1' },
   build: { sourcemap: false, target: 'es2022' },

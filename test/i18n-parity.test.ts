@@ -8,7 +8,11 @@ import { ar } from '../src/i18n/ar';
  * no word at all — two placeholders and an arrow (the activity change, docs/73
  * §6); Arabic still writes its own, pointing the way the line reads.
  */
-const SAME_EVERYWHERE = new Set(['WhatsApp', 'E-mail', 'Email', 'MRU', 'Mobile money', 'Action', 'Version {n}', '{from} → {to}']);
+const SAME_EVERYWHERE = new Set([
+  'WhatsApp', 'E-mail', 'Email', 'MRU', 'Mobile money', 'Action', 'Version {n}', '{from} → {to}',
+  // The public site (docs/74): names (the product, the stores) and words French writes as English does.
+  'Dukan ERP', 'App Store', 'Google Play', 'Menu', 'Contact', 'Version {version}', '© {year} {name}', 'Administration — {name}',
+]);
 
 /**
  * The one key allowed to name a provider (D154, docs/73 §6): what a money

@@ -50,7 +50,7 @@ describe('Apply: the first store’s activity', () => {
   });
 });
 
-describe('Home: three prices and an estimate by activity', () => {
+describe('The Dukan ERP page: three prices and an estimate by activity (moved from the home page, docs/74)', () => {
   it('lists the three prices and sends one activity per store to the quote', async () => {
     const sent = serve((url, body) => {
       if (url.endsWith('/platform/plan')) return { body: PLAN_V3 };
@@ -60,7 +60,7 @@ describe('Home: three prices and an estimate by activity', () => {
       }
       return undefined;
     });
-    mount('/');
+    mount('/products/dukan-erp');
     const user = userEvent.setup();
     const pricing = (await screen.findByText('Pricing')).closest('section')!;
     expect(await within(pricing).findByText('Money services agent')).toBeTruthy();
@@ -89,7 +89,7 @@ describe('Home: three prices and an estimate by activity', () => {
 
   it('shows only the electronics price when the API predates the activity', async () => {
     serve((url) => (url.endsWith('/platform/plan') ? { body: { ...PLAN_V3, agentMonthly: undefined, bothMonthly: undefined } } : undefined));
-    mount('/');
+    mount('/products/dukan-erp');
     const pricing = (await screen.findByText('Pricing')).closest('section')!;
     expect(await within(pricing).findByText('Electronics store')).toBeTruthy();
     expect(within(pricing).queryByText('Money services agent')).toBeNull();

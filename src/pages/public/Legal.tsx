@@ -1,72 +1,171 @@
+import { Link } from 'react-router-dom';
+import { about, accountDeletion, applicationStatus, contact, login, privacy, products, support, terms } from '../../content';
 import { useI18n } from '../../i18n';
+import { pathOf } from '../../site/routes';
+import { ContactAddresses, LegalView, OrgDetails, PageIntro, ProductMark, Sections } from '../../components/public/blocks';
+import { RichText } from '../../components/public/RichText';
 
-const SUPPORT_EMAIL = (import.meta.env.VITE_SUPPORT_EMAIL as string | undefined)?.trim() || '';
-const SUPPORT_WHATSAPP = (import.meta.env.VITE_SUPPORT_WHATSAPP as string | undefined)?.trim() || '';
+/**
+ * The text pages of the public site (docs/74 §4): each renders its document from `content/`, so its words are the
+ * same three-language structure the parity test checks; the company details and addresses come from the inputs.
+ */
 
-export function Privacy() {
-  const { t } = useI18n();
+export function About() {
+  const { lang } = useI18n();
+  const doc = about[lang];
   return (
-    <article className="card stack">
-      <h1>{t('privacy.title')}</h1>
-      <p>{t('privacy.body1')}</p>
-      <p>{t('privacy.body2')}</p>
-      <p>{t('privacy.body3')}</p>
-      <p>{t('privacy.body4')}</p>
-      <p className="muted">{t('privacy.contact')}</p>
+    <article className="public-page doc">
+      <PageIntro title={doc.title} summary={doc.summary} />
+      <Sections doc={doc} after={{ details: <OrgDetails /> }} />
     </article>
   );
 }
 
-export function Terms() {
-  const { t } = useI18n();
+export function Products() {
+  const { t, lang } = useI18n();
+  const doc = products[lang];
   return (
-    <article className="card stack">
-      <h1>{t('terms.title')}</h1>
-      <p>{t('terms.body1')}</p>
-      <p>{t('terms.body2')}</p>
-      <p>{t('terms.body3')}</p>
-      <p>{t('terms.body4')}</p>
+    <div className="public-page">
+      <PageIntro title={doc.title} summary={doc.summary} />
+      <ul className="card-grid">
+        {doc.sections.map((s) => (
+          <li key={s.id} className="card product-card">
+            <h2>
+              <ProductMark />
+            </h2>
+            {s.blocks.map((b, i) =>
+              b.kind === 'p' ? (
+                <p key={i}>
+                  <RichText text={b.text} />
+                </p>
+              ) : null,
+            )}
+            <Link className="btn btn-primary" to={pathOf('dukanErp', lang)}>
+              {t('nav.dukanErp')}
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+export function Contact() {
+  const { t, lang } = useI18n();
+  const doc = contact[lang];
+  return (
+    <article className="public-page doc">
+      <PageIntro title={doc.title} summary={doc.summary} />
+      <Sections
+        doc={doc}
+        after={{
+          write: (
+            <>
+              <h3>{t('contact.addresses')}</h3>
+              <ContactAddresses />
+            </>
+          ),
+        }}
+      />
+      <section className="doc-section" aria-labelledby="org-h">
+        <h2 id="org-h">{t('org.title')}</h2>
+        <OrgDetails />
+      </section>
     </article>
   );
 }
 
 export function Support() {
-  const { t } = useI18n();
-  const configured = SUPPORT_EMAIL || SUPPORT_WHATSAPP;
+  const { lang } = useI18n();
+  const doc = support[lang];
   return (
-    <article className="card stack">
-      <h1>{t('support.title')}</h1>
-      <p>{t('support.body')}</p>
-      {configured ? (
-        <ul>
-          {SUPPORT_EMAIL ? (
-            <li>
-              {t('support.email')}: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>
-            </li>
-          ) : null}
-          {SUPPORT_WHATSAPP ? (
-            <li>
-              {t('support.whatsapp')}: <span className="ltr">{SUPPORT_WHATSAPP}</span>
-            </li>
-          ) : null}
-        </ul>
-      ) : (
-        <p className="notice tone-warn">{t('support.none')}</p>
-      )}
-      <p className="muted">{t('support.status')}</p>
+    <article className="public-page doc">
+      <PageIntro title={doc.title} summary={doc.summary} />
+      <Sections
+        doc={doc}
+        after={{
+          deletion: (
+            <p>
+              <Link to={pathOf('accountDeletion', lang)}>
+                <RichText text={accountDeletion[lang].title} />
+              </Link>
+            </p>
+          ),
+          contact: <ContactAddresses />,
+        }}
+      />
     </article>
   );
 }
 
+export function Privacy() {
+  const { lang } = useI18n();
+  return <LegalView doc={privacy[lang]} />;
+}
+
+export function Terms() {
+  const { lang } = useI18n();
+  return <LegalView doc={terms[lang]} />;
+}
+
 export function AccountDeletion() {
-  const { t } = useI18n();
+  const { lang } = useI18n();
+  return <LegalView doc={accountDeletion[lang]} />;
+}
+
+export function ApplicationStatus() {
+  const { t, lang } = useI18n();
+  const doc = applicationStatus[lang];
   return (
-    <article className="card stack">
-      <h1>{t('deletion.title')}</h1>
-      <p>{t('deletion.body1')}</p>
-      <p>{t('deletion.body2')}</p>
-      <p>{t('deletion.body3')}</p>
-      <p>{t('deletion.body4')}</p>
+    <article className="public-page doc">
+      <PageIntro title={doc.title} summary={doc.summary}>
+        <div className="row">
+          <Link className="btn btn-primary" to="/account">
+            {t('login.cta')}
+          </Link>
+        </div>
+      </PageIntro>
+      <Sections doc={doc} />
+    </article>
+  );
+}
+
+export function Login() {
+  const { t, lang } = useI18n();
+  const doc = login[lang];
+  return (
+    <article className="public-page doc">
+      <PageIntro title={doc.title} summary={doc.summary} />
+      <Sections
+        doc={doc}
+        after={{
+          owners: (
+            <div className="row">
+              <Link className="btn btn-primary" to="/account">
+                {t('login.cta')}
+              </Link>
+              <Link className="btn" to={pathOf('applicationStatus', lang)}>
+                {t('footer.applicationStatus')}
+              </Link>
+            </div>
+          ),
+        }}
+      />
+    </article>
+  );
+}
+
+export function NotFound() {
+  const { t, lang } = useI18n();
+  return (
+    <article className="public-page doc">
+      <header className="page-intro">
+        <h1>{t('notFound.title')}</h1>
+        <p className="lead">{t('notFound.body')}</p>
+        <Link className="btn btn-primary" to={pathOf('home', lang)}>
+          {t('notFound.home')}
+        </Link>
+      </header>
     </article>
   );
 }

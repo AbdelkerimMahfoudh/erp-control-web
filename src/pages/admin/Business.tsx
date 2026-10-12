@@ -377,7 +377,7 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
                 <textarea maxLength={500} rows={2} value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} />
               </Field>
               <label className="row">
-                <input type="checkbox" checked={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.checked })} style={{ width: 'auto', minHeight: 0 }} />
+                <input type="checkbox" checked={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.checked })} className="checkbox-inline" />
                 {t('admin.action.confirmNow')}
               </label>
             </>

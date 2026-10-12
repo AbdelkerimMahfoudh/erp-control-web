@@ -1,0 +1,437 @@
+/* The public site (TSX-MR / Dukan ERP, docs/74 §4), loaded after global.css.
+ * Logical properties only (inline-start/end), so Arabic mirrors without a second stylesheet. Nothing moves on its
+ * own; transitions are removed for anyone who asks the system for reduced motion. Every colour is a token.
+ */
+html {
+  scroll-padding-top: 88px;
+}
+.skip-link {
+  position: absolute;
+  inset-inline-start: 12px;
+  top: -100px;
+  z-index: 100;
+  background: var(--surface);
+  color: var(--text);
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 2px solid var(--focus);
+  font-weight: 600;
+}
+.skip-link:focus {
+  top: 12px;
+}
+main:focus {
+  outline: none;
+}
+.preview-banner {
+  background: var(--banner-bg);
+  color: var(--banner-fg);
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 8px 16px;
+}
+
+/* The organization and the product: two marks, two colours */
+.org-mark,
+.product-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+.org-mark-symbol,
+.product-mark-symbol {
+  inline-size: 30px;
+  block-size: 30px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  flex: none;
+}
+.org-mark-symbol {
+  background: var(--org);
+  color: var(--on-org);
+}
+.product-mark-symbol {
+  background: linear-gradient(135deg, var(--product-a), var(--product-b));
+  color: var(--on-product);
+  border-radius: 10px;
+}
+.product-mark-lg .product-mark-symbol {
+  inline-size: 44px;
+  block-size: 44px;
+  font-size: 1.4rem;
+  border-radius: 12px;
+}
+
+/* Header */
+.nav ul {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+}
+.nav ul a {
+  display: inline-block;
+}
+.nav-wide {
+  margin-inline-start: auto;
+}
+.chrome-bar > .controls {
+  margin-inline-start: auto;
+}
+.chrome-bar > .nav-wide + .controls {
+  margin-inline-start: 0;
+}
+.languages {
+  list-style: none;
+  display: flex;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+}
+.languages a,
+.link-button {
+  display: inline-block;
+  padding: 6px 8px;
+  border-radius: 8px;
+  color: var(--text-2);
+  font-size: 0.9rem;
+  text-decoration: none;
+  background: none;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+  min-block-size: 36px;
+}
+.languages a[aria-current='true'],
+.link-button[aria-pressed='true'] {
+  color: var(--text);
+  font-weight: 700;
+  background: var(--surface-2);
+}
+.menu {
+  display: none;
+  position: relative;
+}
+.menu > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.menu > summary::-webkit-details-marker {
+  display: none;
+}
+.nav-narrow {
+  position: absolute;
+  inset-inline-end: 0;
+  top: calc(100% + 8px);
+  z-index: 20;
+  min-inline-size: 220px;
+  max-inline-size: calc(100vw - 32px);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 8px;
+}
+.nav-narrow ul {
+  flex-direction: column;
+}
+.nav-narrow a {
+  display: block;
+  padding: 10px 12px;
+}
+@media (max-width: 899px) {
+  .nav-wide {
+    display: none;
+  }
+  .menu {
+    display: block;
+  }
+}
+
+/* Pages */
+.public-page {
+  display: grid;
+  gap: 40px;
+  padding-block: 8px 24px;
+}
+.public-page > section,
+.doc-section {
+  display: grid;
+  gap: 12px;
+}
+.hero-band {
+  display: grid;
+  gap: 16px;
+  padding: clamp(24px, 5vw, 56px);
+  border-radius: 20px;
+  background: linear-gradient(160deg, var(--surface) 30%, var(--hero-wash));
+  border: 1px solid var(--border);
+}
+.hero-band h1 {
+  font-size: clamp(1.9rem, 3.5vw + 1rem, 3.1rem);
+  max-inline-size: 22ch;
+}
+.lead {
+  font-size: 1.12rem;
+  color: var(--text-2);
+  max-inline-size: 65ch;
+  margin: 0;
+}
+.kicker {
+  margin: 0;
+  color: var(--brand);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.product-feature {
+  padding: clamp(20px, 4vw, 40px);
+  border-radius: 20px;
+  background: var(--brand-wash);
+  border: 1px solid var(--border);
+  justify-items: start;
+}
+.product-feature h2 {
+  margin: 0;
+}
+.card-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+}
+.card-grid-3 {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr));
+}
+.card-grid h3 {
+  font-size: 1.05rem;
+}
+.card-grid .card p {
+  margin: 0;
+  color: var(--text-2);
+}
+.split {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+  align-items: start;
+}
+.check-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.check-list li {
+  position: relative;
+  padding-inline-start: 28px;
+}
+.check-list li::before {
+  content: '\2713';
+  position: absolute;
+  inset-inline-start: 0;
+  color: var(--brand);
+  font-weight: 800;
+}
+.cta-band {
+  padding: clamp(20px, 4vw, 40px);
+  border-radius: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+.page-intro {
+  display: grid;
+  gap: 12px;
+  padding-block: 8px;
+}
+.product-intro h1 {
+  margin: 0;
+}
+.doc {
+  max-inline-size: 78ch;
+}
+.doc h2 {
+  font-size: 1.35rem;
+  margin-top: 8px;
+}
+.doc h3 {
+  font-size: 1.05rem;
+  margin: 8px 0 0;
+}
+.prose-list {
+  margin: 0;
+  padding-inline-start: 1.3em;
+  display: grid;
+  gap: 6px;
+}
+.legal-meta {
+  color: var(--text-3);
+  font-size: 0.95rem;
+  margin: 0;
+}
+.toc {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 20px;
+}
+.toc-title {
+  font-size: 1rem;
+  margin: 0 0 8px;
+}
+.toc ol {
+  margin: 0;
+  padding-inline-start: 1.3em;
+  columns: 2 240px;
+}
+mark.pending {
+  background: var(--pending-bg);
+  color: var(--pending-fg);
+  border: 1px dashed var(--pending-fg);
+  border-radius: 6px;
+  padding: 0 6px;
+  font-weight: 600;
+}
+.test-value {
+  text-decoration: underline dotted;
+}
+.org-details {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+.org-row {
+  display: grid;
+  grid-template-columns: minmax(140px, 200px) 1fr;
+  gap: 12px;
+}
+.org-row dt {
+  color: var(--text-3);
+}
+.org-row dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.contact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.contact-list li {
+  display: grid;
+  gap: 2px;
+}
+.contact-label {
+  color: var(--text-3);
+  font-size: 0.9rem;
+}
+.contact-list a,
+.org-row a {
+  overflow-wrap: anywhere;
+}
+.store-links {
+  list-style: none;
+  display: flex;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+}
+.activity-card h3 {
+  font-size: 1.15rem;
+}
+
+/* Footer */
+.chrome-footer {
+  background: var(--surface);
+}
+.footer-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  padding-block: 8px 24px;
+}
+.footer-org {
+  grid-column: span 2;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  color: var(--text-2);
+}
+.footer-org p {
+  margin: 0;
+}
+.footer-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-3);
+  margin: 0 0 8px;
+}
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.footer-col a {
+  color: var(--text-2);
+  text-decoration: none;
+}
+.footer-col a:hover {
+  color: var(--text);
+  text-decoration: underline;
+}
+.footer-bottom {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+}
+.theme-choice {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+@media (max-width: 559px) {
+  .footer-org {
+    grid-column: auto;
+  }
+  .org-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+/* The one inline style the console had (a checkbox), as a class, so the CSP needs no 'unsafe-inline' */
+.checkbox-inline {
+  inline-size: auto;
+  min-block-size: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

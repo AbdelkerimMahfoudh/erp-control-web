@@ -2,18 +2,11 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { en, type Catalogue, type Key } from './en';
 import { fr } from './fr';
 import { ar } from './ar';
+import { isLanguage, isRtl, LANGUAGE_LABELS, LANGUAGES, type Language } from './languages';
 
-export type Language = 'en' | 'fr' | 'ar';
-export const LANGUAGES: readonly Language[] = ['en', 'fr', 'ar'];
-/** Each language named in its own words, never translated. */
-export const LANGUAGE_LABELS: Record<Language, string> = { en: 'English', fr: 'Français', ar: 'العربية' };
+export { isRtl, LANGUAGE_LABELS, LANGUAGES, type Language };
 export const LANGUAGE_STORAGE_KEY = 'erp.web.language';
 const CATALOGUES: Record<Language, Catalogue> = { en, fr, ar };
-const RTL: ReadonlySet<Language> = new Set<Language>(['ar']);
-
-export function isRtl(lang: Language): boolean {
-  return RTL.has(lang);
-}
 
 export function translate(lang: Language, key: Key, values?: Record<string, string | number>): string {
   const template = CATALOGUES[lang][key] ?? en[key] ?? key;
@@ -21,12 +14,20 @@ export function translate(lang: Language, key: Key, values?: Record<string, stri
   return template.replace(/\{(\w+)\}/g, (m, name: string) => (name in values ? String(values[name]) : m));
 }
 
-function readStored(): Language | null {
+export function readStoredLanguage(): Language | null {
   try {
-    const v = localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    return v === 'en' || v === 'fr' || v === 'ar' ? v : null;
+    const v = typeof localStorage === 'undefined' ? null : localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    return isLanguage(v) ? v : null;
   } catch {
     return null;
+  }
+}
+
+export function storeLanguage(lang: Language): void {
+  try {
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
+  } catch {
+    /* a private window may refuse; the choice simply lasts the visit */
   }
 }
 
@@ -34,7 +35,7 @@ function deviceLanguage(): Language {
   const tags = typeof navigator !== 'undefined' ? navigator.languages ?? [navigator.language] : [];
   for (const tag of tags) {
     const code = tag.toLowerCase().slice(0, 2);
-    if (code === 'ar' || code === 'fr' || code === 'en') return code;
+    if (isLanguage(code)) return code;
   }
   return 'en';
 }
@@ -53,25 +54,38 @@ interface I18n {
   lang: Language;
   rtl: boolean;
   t: (key: Key, values?: Record<string, string | number>) => string;
+  /** The remembered choice — a public page also moves to the address of that language (Chrome). */
   setLanguage: (lang: Language) => void;
+  /** A nested page fixed by its address tells the provider around it, so both set the same document language. */
+  follow: (lang: Language) => void;
 }
 
 const Ctx = createContext<I18n | null>(null);
 
-export function I18nProvider({ children }: { children: ReactNode }) {
-  const [lang, setLang] = useState<Language>(() => readStored() ?? deviceLanguage());
+/**
+ * `fixed` is the language of the address (a public page under `/fr` is French whatever was chosen before); without
+ * it — the account and console areas — the remembered choice, then the device's, applies. A fixed provider inside
+ * another makes the outer one follow it: React runs the outer provider's effects last, and both write the document.
+ */
+export function I18nProvider({ children, fixed }: { children: ReactNode; fixed?: Language }) {
+  const parent = useContext(Ctx);
+  const [chosen, setChosen] = useState<Language>(() => fixed ?? readStoredLanguage() ?? deviceLanguage());
+  const [followed, setFollowed] = useState<Language | null>(null);
+  const lang = fixed ?? followed ?? chosen;
+  const parentFollow = parent?.follow;
+  useEffect(() => {
+    if (fixed && parentFollow) parentFollow(fixed);
+  }, [fixed, parentFollow]);
   useEffect(() => applyDocumentLanguage(lang), [lang]);
   const setLanguage = useCallback((next: Language) => {
-    setLang(next);
-    try {
-      localStorage.setItem(LANGUAGE_STORAGE_KEY, next);
-    } catch {
-      /* a private window may refuse; the choice simply lasts the visit */
-    }
+    setFollowed(null);
+    setChosen(next);
+    storeLanguage(next);
   }, []);
+  const follow = useCallback((next: Language) => setFollowed(next), []);
   const value = useMemo<I18n>(
-    () => ({ lang, rtl: isRtl(lang), t: (key, values) => translate(lang, key, values), setLanguage }),
-    [lang, setLanguage],
+    () => ({ lang, rtl: isRtl(lang), t: (key, values) => translate(lang, key, values), setLanguage, follow }),
+    [lang, setLanguage, follow],
   );
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

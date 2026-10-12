@@ -1,12 +1,14 @@
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
+import { createRoot, hydrateRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { App } from './app';
 import { I18nProvider } from './i18n';
 import { ThemeProvider } from './theme/theme';
 import './theme/global.css';
+import './theme/public.css';
 
-createRoot(document.getElementById('root')!).render(
+const root = document.getElementById('root')!;
+const app = (
   <StrictMode>
     <I18nProvider>
       <ThemeProvider>
@@ -15,5 +17,9 @@ createRoot(document.getElementById('root')!).render(
         </BrowserRouter>
       </ThemeProvider>
     </I18nProvider>
-  </StrictMode>,
+  </StrictMode>
 );
+
+// A public page arrives prerendered (docs/74 §5) and is hydrated; the protected areas arrive as an empty shell.
+if (root.firstElementChild) hydrateRoot(root, app);
+else createRoot(root).render(app);

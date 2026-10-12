@@ -64,8 +64,8 @@ describe('the public site', () => {
     vi.unstubAllGlobals();
   });
 
-  it('renders the price list from the server and the estimate the server returns', async () => {
-    mount('/');
+  it('renders the price list from the server and the estimate the server returns (on the Dukan ERP page)', async () => {
+    mount('/products/dukan-erp');
     expect(await screen.findByText(/500 MRU/)).toBeTruthy();
     const inputs = screen.getAllByLabelText(/Employees/);
     expect(inputs).toHaveLength(1);
@@ -83,22 +83,17 @@ describe('the public site', () => {
     expect(await screen.findByText(/1,100 MRU|1\s100 MRU|1 100 MRU/)).toBeTruthy();
   });
 
-  it('mirrors the document for Arabic and keeps the language across visits', async () => {
-    mount('/');
-    const select = screen.getByLabelText('Language') as HTMLSelectElement;
-    await act(async () => {
-      select.value = 'ar';
-      select.dispatchEvent(new Event('change', { bubbles: true }));
-    });
+  it('moves to the same page in Arabic, mirrors the document and keeps the language across visits', async () => {
+    mount('/products/dukan-erp');
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('link', { name: 'العربية' }));
     expect(document.documentElement.dir).toBe('rtl');
     expect(document.documentElement.lang).toBe('ar');
     expect(localStorage.getItem(LANGUAGE_STORAGE_KEY)).toBe('ar');
     expect(await screen.findByText('الأسعار')).toBeTruthy();
-    await act(async () => {
-      select.value = 'fr';
-      select.dispatchEvent(new Event('change', { bubbles: true }));
-    });
+    await user.click(screen.getByRole('link', { name: 'Français' }));
     expect(document.documentElement.dir).toBe('ltr');
+    expect(document.documentElement.lang).toBe('fr');
   });
 
   it('shows the sign-in form on the account page when the API answers 401, and nothing from storage', async () => {

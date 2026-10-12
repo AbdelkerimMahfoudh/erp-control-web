@@ -18,11 +18,18 @@ interface ThemeCtx {
 }
 const Ctx = createContext<ThemeCtx | null>(null);
 
-/** Light is the default; nobody's screen changes appearance on its own. */
+/**
+ * Light is the default; nobody's screen changes appearance on its own. The first render is always light — the
+ * prerendered page and its hydration must agree — and the stored choice is read right after; `public/theme-boot.js`
+ * has already set `data-theme` before the first paint, so a dark choice never flashes light.
+ */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(readStored);
+  const [theme, setThemeState] = useState<Theme | null>(null);
   useEffect(() => {
-    document.documentElement.dataset.theme = theme;
+    setThemeState(readStored());
+  }, []);
+  useEffect(() => {
+    if (theme) document.documentElement.dataset.theme = theme;
   }, [theme]);
   const setTheme = useCallback((t: Theme) => {
     setThemeState(t);
@@ -32,7 +39,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       /* ignore */
     }
   }, []);
-  const value = useMemo(() => ({ theme, setTheme }), [theme, setTheme]);
+  const value = useMemo(() => ({ theme: theme ?? 'light', setTheme }), [theme, setTheme]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 

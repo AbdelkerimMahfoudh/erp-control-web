@@ -43,8 +43,23 @@ jobs:
         run: set -o pipefail; npm run typecheck 2>&1 | tee "$EV/typecheck.log"
       - name: Unit and component tests
         run: set -o pipefail; npm test 2>&1 | tee "$EV/test.log"
-      - name: Build
-        run: set -o pipefail; npx vite build 2>&1 | tee "$EV/build.log"
+      - name: A production build is refused while inputs or legal decisions are missing (docs/74 §3)
+        run: |
+          set +e
+          npx vite build --mode production > "$EV/production-refusal.log" 2>&1
+          code=$?
+          set -e
+          cat "$EV/production-refusal.log"
+          if [ "$code" -eq 0 ]; then echo "FAIL: a production build succeeded without its inputs"; exit 1; fi
+          grep -q "Nothing was published" "$EV/production-refusal.log"
+          if [ -e dist/index.html ]; then echo "FAIL: the refused build left files"; exit 1; fi
+      - name: Preview build (marked test values, noindex) and prerender
+        env:
+          # The browser checks answer the API from a mock on this origin; a preview's CSP allows it.
+          VITE_API_BASE: http://127.0.0.1:3999/api/v1
+        run: set -o pipefail; npm run build:preview 2>&1 | tee "$EV/build.log"
+      - name: List the built site
+        run: (cd dist && find . -type f | sort) | tee "$EV/dist-files.txt"
       - name: Keep the evidence
         if: always()
         env:
