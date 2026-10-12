@@ -1,5 +1,8 @@
 # The website's checks, on Linux (the owner's Windows PC cannot run Vite 8: Smart App Control blocks its native
 # bundler). Runs on every push of a non-main branch and by hand. It builds and tests; it deploys nothing.
+#
+# Every check's output is kept under `evidence/<commit>/` and committed to the `ci-evidence` branch (never forced),
+# because a job's own logs need repository-admin rights to read, even on a public repository.
 name: ci
 
 on:
@@ -17,17 +20,42 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
+    permissions:
+      contents: write # only to commit the evidence branch
+    env:
+      EV: evidence/${{ github.sha }}
+    defaults:
+      run:
+        shell: bash
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --no-audit --no-fund
+      - run: mkdir -p "$EV"
+      - name: Install
+        run: set -o pipefail; npm ci --no-audit --no-fund 2>&1 | tee "$EV/install.log"
       - name: Typecheck
-        run: npm run typecheck
+        run: set -o pipefail; npm run typecheck 2>&1 | tee "$EV/typecheck.log"
       - name: Unit and component tests
-        run: npm test
+        run: set -o pipefail; npm test 2>&1 | tee "$EV/test.log"
       - name: Build
-        run: npx vite build
+        run: set -o pipefail; npx vite build 2>&1 | tee "$EV/build.log"
+      - name: Keep the evidence
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          printf 'commit %s\nbranch %s\nrun %s\nresult %s\n' "$GITHUB_SHA" "$GITHUB_REF_NAME" "$GITHUB_RUN_ID" "$RESULT" > "$EV/summary.txt"
+          cp -r evidence /tmp/evidence
+          git config user.name "ci-evidence"
+          git config user.email "ci-evidence@users.noreply.github.com"
+          if git fetch -q origin ci-evidence; then git checkout -q -B ci-evidence origin/ci-evidence; else git checkout -q --orphan ci-evidence; git rm -rq --cached . ; git clean -fdq -e node_modules; fi
+          rm -rf evidence/"$GITHUB_SHA"; mkdir -p evidence; cp -r /tmp/evidence/"$GITHUB_SHA" evidence/
+          git add evidence/"$GITHUB_SHA"
+          git commit -qm "evidence: $GITHUB_REF_NAME $GITHUB_SHA ($RESULT)"
+          for i in 1 2 3 4 5; do git push -q origin ci-evidence && break; git fetch -q origin ci-evidence && git rebase -q origin/ci-evidence; done
