@@ -1,5 +1,5 @@
 # The website's checks, on Linux (the owner's Windows PC cannot run Vite 8: Smart App Control blocks its native
-# bundler). Runs on every push of a non-main branch and by hand. It builds and tests; it deploys nothing.
+# bundler). Runs on every push of a non-main branch and by hand. It builds, tests and audits; it deploys nothing.
 #
 # Every check's output is kept under `evidence/<commit>/` and committed to the `ci-evidence` branch (never forced),
 # because a job's own logs need repository-admin rights to read, even on a public repository.
@@ -20,7 +20,7 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 40
     permissions:
       contents: write # only to commit the evidence branch
     env:
@@ -60,15 +60,43 @@ jobs:
         run: set -o pipefail; npm run build:preview 2>&1 | tee "$EV/build.log"
       - name: List the built site
         run: (cd dist && find . -type f | sort) | tee "$EV/dist-files.txt"
+      - name: Broken-link audit
+        run: set -o pipefail; node scripts/audit-links.mjs dist 2>&1 | tee "$EV/audit-links.txt"
+      - name: Exported-bundle audit
+        run: set -o pipefail; node scripts/audit-bundle.mjs dist --preview 2>&1 | tee "$EV/audit-bundle.txt"
+      - name: Dependency audit (recorded, triaged in docs/74 §9)
+        run: |
+          npm audit --json > "$EV/npm-audit.json" || true
+          npm audit > "$EV/npm-audit.txt" 2>&1 || true
+          tail -5 "$EV/npm-audit.txt"
+      - name: Full-history secret scan of this repository, and of the built site
+        run: |
+          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:latest git /repo --redact --no-banner --report-format json --report-path "/repo/$EV/gitleaks-history.json" > "$EV/gitleaks-history.txt" 2>&1; echo "history exit $?" | tee -a "$EV/gitleaks-history.txt"
+          docker run --rm -v "$PWD:/repo" zricethezav/gitleaks:latest dir /repo/dist --redact --no-banner --report-format json --report-path "/repo/$EV/gitleaks-dist.json" > "$EV/gitleaks-dist.txt" 2>&1; echo "dist exit $?" | tee -a "$EV/gitleaks-dist.txt"
+          grep -h "exit\|leaks found\|no leaks" "$EV"/gitleaks-*.txt
+      - name: Browser (Playwright Chromium)
+        run: npx playwright install --with-deps chromium > "$EV/playwright-install.log" 2>&1
+      - name: Brand images (social preview, icons) for review
+        run: node scripts/brand-assets.mjs "$EV/brand-assets"
+      - name: Browser checks — every public page, three languages, 375/320 px, desktop, 200% text, axe, keyboard, headers
+        run: set -o pipefail; npx playwright test 2>&1 | tee "$EV/playwright.log"
+      - name: Contact sheets and the screenshot index
+        if: always()
+        run: node scripts/contact-sheets.mjs "$EV" || true
+      - name: Keep the built preview for review
+        if: always()
+        run: if [ -d dist ]; then cp -r dist "$EV/dist"; fi
       - name: Keep the evidence
         if: always()
         env:
           RESULT: ${{ job.status }}
         run: |
           printf 'commit %s\nbranch %s\nrun %s\nresult %s\n' "$GITHUB_SHA" "$GITHUB_REF_NAME" "$GITHUB_RUN_ID" "$RESULT" > "$EV/summary.txt"
+          rm -rf "$EV/playwright-output"
           cp -r evidence /tmp/evidence
           git config user.name "ci-evidence"
           git config user.email "ci-evidence@users.noreply.github.com"
+          git stash -u -q || true
           if git fetch -q origin ci-evidence; then git checkout -q -B ci-evidence origin/ci-evidence; else git checkout -q --orphan ci-evidence; git rm -rq --cached . ; git clean -fdq -e node_modules; fi
           rm -rf evidence/"$GITHUB_SHA"; mkdir -p evidence; cp -r /tmp/evidence/"$GITHUB_SHA" evidence/
           git add evidence/"$GITHUB_SHA"
