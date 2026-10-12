@@ -1,0 +1,20 @@
+[WebServer] node:fs:560
+[WebServer]   return binding.open(
+[WebServer]                  ^
+[WebServer] 
+[WebServer] Error: ENOENT: no such file or directory, open '/home/runner/work/erp-control-web/erp-control-web/dist/404.html'
+[WebServer]     at Object.openSync (node:fs:560:18)
+[WebServer]     at readFileSync (node:fs:444:35)
+[WebServer]     at Server.<anonymous> (file:///home/runner/work/erp-control-web/erp-control-web/scripts/serve-dist.mjs:94:11)
+[WebServer]     at Server.emit (node:events:519:28)
+[WebServer]     at parserOnIncoming (node:_http_server:1186:12)
+[WebServer]     at HTTPParser.parserOnHeadersComplete (node:_http_common:125:17) {
+[WebServer]   errno: -2,
+[WebServer]   code: 'ENOENT',
+[WebServer]   syscall: 'open',
+[WebServer]   path: '/home/runner/work/erp-control-web/erp-control-web/dist/404.html'
+[WebServer] }
+[WebServer] 
+[WebServer] Node.js v22.23.3
+Error: Process from config.webServer was not able to start. Exit code: 1
+

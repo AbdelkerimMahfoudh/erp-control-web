@@ -1,0 +1,238 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:4:49). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:5:35). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./home" without a file extension (src/content/index.ts:10:22). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:11:26). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:12:40). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:13:52). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1689[2mms[22m[39m
+   [32m✓[39m Account: the platform grant and its own dates [2m(6)[22m
+     [33m[2m✓[22m[39m an active grant says its own end, never the billing period’s start[33m 544[2mms[22m[39m
+ [32m✓[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2365[2mms[22m[39m
+   [32m✓[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 1012[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the confirmation’s result on screen after the paid request leaves the queue[33m 474[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 784[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 2505[2mms[22m[39m
+   [32m✓[39m Account: a store’s activity and its change [2m(8)[22m
+     [33m[2m✓[22m[39m lists each store with its activity; a warehouse offers no change[33m 539[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade is explained by the server’s own answer, then shows the amount the server recorded[33m 502[2mms[22m[39m
+     [33m[2m✓[22m[39m a downgrade waits for the renewal and asks nothing now[33m 368[2mms[22m[39m
+     [33m[2m✓[22m[39m keeping today’s activity withdraws the scheduled change[33m 334[2mms[22m[39m
+ [32m✓[39m test/site-routes.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+[90mstderr[2m | test/admin-mfa.test.tsx[2m > [22m[2msigning in to the console[2m > [22m[2ma password leads to the code screen; the console opens only once the code is accepted
+[22m[39mAn error occurred in the <Dashboard> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+[90mstderr[2m | test/admin-mfa.test.tsx[2m > [22m[2msigning in to the console[2m > [22m[2ma recovery code can stand in for the authenticator
+[22m[39mAn error occurred in the <Dashboard> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 54[2mms[22m[39m
+[90mstderr[2m | test/admin-mfa.test.tsx[2m > [22m[2msigning in to the console[2m > [22m[2mwith no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once
+[22m[39mAn error occurred in the <Dashboard> component.
+
+Consider adding an error boundary to your tree to customize error handling behavior.
+Visit https://react.dev/link/error-boundaries to learn more about error boundaries.
+
+
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1734[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 1344[2mms[22m[39m
+   [32m✓[39m The Dukan ERP page: three prices and an estimate by activity (moved from the home page, docs/74) [2m(2)[22m
+     [33m[2m✓[22m[39m lists the three prices and sends one activity per store to the quote[33m 321[2mms[22m[39m
+ [32m✓[39m test/content-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+ [31m❯[39m test/admin-mfa.test.tsx [2m([22m[2m4 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 4280[2mms[22m[39m
+   [31m❯[39m signing in to the console [2m(3)[22m
+     [33m[2m✓[22m[39m a password leads to the code screen; the console opens only once the code is accepted[33m 1191[2mms[22m[39m
+[31m     [31m×[31m a recovery code can stand in for the authenticator[39m[33m 1050[2mms[22m[39m
+[31m     [31m×[31m with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once[39m[33m 1067[2mms[22m[39m
+   [32m✓[39m a decision’s step-up [2m(1)[22m
+     [33m[2m✓[22m[39m a wrong password or code keeps the dialog open with the reason, and the decision is never sent[33m 967[2mms[22m[39m
+ [32m✓[39m test/site-config.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 128[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1223[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns (on the Dukan ERP page)[33m 706[2mms[22m[39m
+     [33m[2m✓[22m[39m moves to the same page in Arabic, mirrors the document and keeps the language across visits[33m 419[2mms[22m[39m
+ [32m✓[39m test/public-pages.test.tsx [2m([22m[2m41 tests[22m[2m)[22m[33m 3519[2mms[22m[39m
+   [32m✓[39m every public page in every language [2m(36)[22m
+     [33m[2m✓[22m[39m / renders in en[33m 454[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m test/admin-mfa.test.tsx[2m > [22msigning in to the console[2m > [22ma recovery code can stand in for the authenticator
+[31m[1mTestingLibraryElementError[22m: Unable to find a label with the text of: Email address
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div />[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div />[31m
+[36m</body>[31m[39m
+[90m [2m❯[22m waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+[36m [2m❯[22m signIn test/admin-mfa.test.tsx:[2m26:32[22m[39m
+    [90m 24|[39m
+    [90m 25|[39m async function signIn(user: ReturnType<typeof userEvent.setup>) {
+    [90m 26|[39m   await user.type(await screen.findByLabelText('Email address'), 'admi…
+    [90m   |[39m                                [31m^[39m
+    [90m 27|[39m   await user.type(screen.getByLabelText('Password'), 'admin-password');
+    [90m 28|[39m   await user.click(screen.getByRole('button', { name: 'Sign in' }));
+[90m [2m❯[22m test/admin-mfa.test.tsx:[2m72:11[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/admin-mfa.test.tsx[2m > [22msigning in to the console[2m > [22mwith no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once
+[31m[1mTestingLibraryElementError[22m: Unable to find a label with the text of: Email address
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div />[31m
+[36m</body>[31m
+
+Ignored nodes: comments, script, style
+[36m<body>[31m
+  [36m<div />[31m
+[36m</body>[31m[39m
+[90m [2m❯[22m waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+[36m [2m❯[22m signIn test/admin-mfa.test.tsx:[2m26:32[22m[39m
+    [90m 24|[39m
+    [90m 25|[39m async function signIn(user: ReturnType<typeof userEvent.setup>) {
+    [90m 26|[39m   await user.type(await screen.findByLabelText('Email address'), 'admi…
+    [90m   |[39m                                [31m^[39m
+    [90m 27|[39m   await user.type(screen.getByLabelText('Password'), 'admin-password');
+    [90m 28|[39m   await user.click(screen.getByRole('button', { name: 'Sign in' }));
+[90m [2m❯[22m test/admin-mfa.test.tsx:[2m91:11[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Unhandled Errors [49m[22m[31m⎯⎯⎯⎯⎯⎯[39m
+[31m[1m
+Vitest caught 3 unhandled errors during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.[22m[39m
+
+[31m⎯⎯⎯⎯⎯[39m[1m[41m Uncaught Exception [49m[22m[31m⎯⎯⎯⎯⎯[39m
+[31m[1mTypeError[22m: Cannot read properties of undefined (reading 'pending')[39m
+[36m [2m❯[22m src/pages/admin/Dashboard.tsx:[2m42:64[22m[39m
+    [90m 40|[39m           {STATES.map((s) => (
+    [90m 41|[39m             <span key={s} className="row">
+    [90m 42|[39m               <StateBadge state={s} /> <strong>{formatInt(data.byState…
+    [90m   |[39m                                                                [31m^[39m
+    [90m 43|[39m             </span>
+    [90m 44|[39m           ))}
+[90m [2m❯[22m Dashboard src/pages/admin/Dashboard.tsx:[2m40:19[22m[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:[2m28571:20[22m[39m
+[90m [2m❯[22m renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:[2m8030:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:[2m10569:19[22m[39m
+[90m [2m❯[22m beginWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m12205:18[22m[39m
+[90m [2m❯[22m runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:[2m1048:13[22m[39m
+[90m [2m❯[22m performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m19176:22[22m[39m
+[90m [2m❯[22m workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:[2m19004:41[22m[39m
+
+[31mThis error originated in "[1mtest/admin-mfa.test.tsx[22m" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.[39m
+[31mThe last test to run before this error was "[1ma password leads to the code screen; the console opens only once the code is accepted[22m". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.[39m
+
+[31m⎯⎯⎯⎯⎯[39m[1m[41m Uncaught Exception [49m[22m[31m⎯⎯⎯⎯⎯[39m
+[31m[1mTypeError[22m: Cannot read properties of undefined (reading 'pending')[39m
+[36m [2m❯[22m src/pages/admin/Dashboard.tsx:[2m42:64[22m[39m
+    [90m 40|[39m           {STATES.map((s) => (
+    [90m 41|[39m             <span key={s} className="row">
+    [90m 42|[39m               <StateBadge state={s} /> <strong>{formatInt(data.byState…
+    [90m   |[39m                                                                [31m^[39m
+    [90m 43|[39m             </span>
+    [90m 44|[39m           ))}
+[90m [2m❯[22m Dashboard src/pages/admin/Dashboard.tsx:[2m40:19[22m[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:[2m28571:20[22m[39m
+[90m [2m❯[22m renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:[2m8030:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:[2m10569:19[22m[39m
+[90m [2m❯[22m beginWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m12205:18[22m[39m
+[90m [2m❯[22m runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:[2m1048:13[22m[39m
+[90m [2m❯[22m performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m19176:22[22m[39m
+[90m [2m❯[22m workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:[2m19004:41[22m[39m
+
+[31mThis error originated in "[1mtest/admin-mfa.test.tsx[22m" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.[39m
+[31mThe last test to run before this error was "[1ma recovery code can stand in for the authenticator[22m". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.[39m
+
+[31m⎯⎯⎯⎯⎯[39m[1m[41m Uncaught Exception [49m[22m[31m⎯⎯⎯⎯⎯[39m
+[31m[1mTypeError[22m: Cannot read properties of undefined (reading 'pending')[39m
+[36m [2m❯[22m src/pages/admin/Dashboard.tsx:[2m42:64[22m[39m
+    [90m 40|[39m           {STATES.map((s) => (
+    [90m 41|[39m             <span key={s} className="row">
+    [90m 42|[39m               <StateBadge state={s} /> <strong>{formatInt(data.byState…
+    [90m   |[39m                                                                [31m^[39m
+    [90m 43|[39m             </span>
+    [90m 44|[39m           ))}
+[90m [2m❯[22m Dashboard src/pages/admin/Dashboard.tsx:[2m40:19[22m[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:[2m28571:20[22m[39m
+[90m [2m❯[22m renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:[2m8030:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:[2m10569:19[22m[39m
+[90m [2m❯[22m beginWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m12205:18[22m[39m
+[90m [2m❯[22m runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:[2m1048:13[22m[39m
+[90m [2m❯[22m performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m19176:22[22m[39m
+[90m [2m❯[22m workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:[2m19004:41[22m[39m
+
+[31mThis error originated in "[1mtest/admin-mfa.test.tsx[22m" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.[39m
+[31mThe last test to run before this error was "[1mwith no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once[22m". This means either:
+- the error was thrown while Vitest was running this test, or
+- the error was thrown after the test completed, and this was the most recent test at that point.[39m
+[31m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m12 passed[39m[22m[90m (13)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m117 passed[39m[22m[90m (119)[39m
+[2m     Errors [22m [1m[31m3 errors[39m[22m
+[2m   Start at [22m 12:17:22
+[2m   Duration [22m 12.45s[2m (tests 52%, environment 36%, import 7%, transform 4%)[22m
+
+[2m    Isolate [22m [33m13 workers spawned[39m[2m · ~1.10s startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~3.67s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/src/pages/admin/Dashboard.tsx,title=Unhandled error,line=42,column=64::TypeError: Cannot read properties of undefined (reading 'pending')%0A ❯ src/pages/admin/Dashboard.tsx:42:64%0A ❯ Dashboard src/pages/admin/Dashboard.tsx:40:19%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28571:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:8030:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10569:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:12205:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1048:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:19176:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:19004:41%0A%0AThis error originated in "test/admin-mfa.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.%0AThe last test to run before this error was "a password leads to the code screen; the console opens only once the code is accepted". This means either:%0A- the error was thrown while Vitest was running this test, or%0A- the error was thrown after the test completed, and this was the most recent test at that point.%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/src/pages/admin/Dashboard.tsx,title=Unhandled error,line=42,column=64::TypeError: Cannot read properties of undefined (reading 'pending')%0A ❯ src/pages/admin/Dashboard.tsx:42:64%0A ❯ Dashboard src/pages/admin/Dashboard.tsx:40:19%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28571:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:8030:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10569:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:12205:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1048:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:19176:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:19004:41%0A%0AThis error originated in "test/admin-mfa.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.%0AThe last test to run before this error was "a recovery code can stand in for the authenticator". This means either:%0A- the error was thrown while Vitest was running this test, or%0A- the error was thrown after the test completed, and this was the most recent test at that point.%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/src/pages/admin/Dashboard.tsx,title=Unhandled error,line=42,column=64::TypeError: Cannot read properties of undefined (reading 'pending')%0A ❯ src/pages/admin/Dashboard.tsx:42:64%0A ❯ Dashboard src/pages/admin/Dashboard.tsx:40:19%0A ❯ Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:28571:20%0A ❯ renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:8030:22%0A ❯ updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:10569:19%0A ❯ beginWork node_modules/react-dom/cjs/react-dom-client.development.js:12205:18%0A ❯ runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:1048:13%0A ❯ performUnitOfWork node_modules/react-dom/cjs/react-dom-client.development.js:19176:22%0A ❯ workLoopSync node_modules/react-dom/cjs/react-dom-client.development.js:19004:41%0A%0AThis error originated in "test/admin-mfa.test.tsx" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.%0AThe last test to run before this error was "with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once". This means either:%0A- the error was thrown while Vitest was running this test, or%0A- the error was thrown after the test completed, and this was the most recent test at that point.%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/admin-mfa.test.tsx,title=test/admin-mfa.test.tsx > signing in to the console > a recovery code can stand in for the authenticator,line=26,column=32::TestingLibraryElementError: Unable to find a label with the text of: Email address%0A%0AIgnored nodes: comments, script, style%0A<body>%0A  <div />%0A</body>%0A%0AIgnored nodes: comments, script, style%0A<body>%0A  <div />%0A</body>%0A ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27%0A ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33%0A ❯ signIn test/admin-mfa.test.tsx:26:32%0A ❯ test/admin-mfa.test.tsx:72:11%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/admin-mfa.test.tsx,title=test/admin-mfa.test.tsx > signing in to the console > with no authenticator yet%3A the server’s token%2C the key%2C the first code%2C then the recovery codes — shown once,line=26,column=32::TestingLibraryElementError: Unable to find a label with the text of: Email address%0A%0AIgnored nodes: comments, script, style%0A<body>%0A  <div />%0A</body>%0A%0AIgnored nodes: comments, script, style%0A<body>%0A  <div />%0A</body>%0A ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27%0A ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33%0A ❯ signIn test/admin-mfa.test.tsx:26:32%0A ❯ test/admin-mfa.test.tsx:91:11%0A%0A
