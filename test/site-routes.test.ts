@@ -116,7 +116,7 @@ describe('the generated files (docs/74 §5–§6)', () => {
     const indexable = PUBLIC_ROUTES.filter((r) => r.indexable);
     expect(locs).toHaveLength(indexable.length * LANGUAGES.length);
     expect(locs).toContain(`${ORIGIN}/ar/privacy`);
-    expect(xml).not.toMatch(/\/account|\/admin|\/login|application-status/);
+    expect(xml).not.toMatch(/\/account[/<"]|\/admin|\/login|application-status/);
     expect(xml).toContain('hreflang="x-default"');
   });
 

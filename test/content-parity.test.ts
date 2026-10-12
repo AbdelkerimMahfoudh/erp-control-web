@@ -12,8 +12,8 @@ import { INPUTS } from '../src/config/schema';
 const LANGS = ['en', 'fr', 'ar'] as const;
 /** Values a text may name: the inputs, and those derived from them (RichText.textValues). */
 const KNOWN_INPUTS = new Set([...Object.keys(INPUTS), 'deletionChannelName', 'productName']);
-/** Strings that are the same in every language: names, and texts made only of placeholders and blockers. */
-const NAME_ONLY = /^(Dukan ERP|(\s*(\{[a-zA-Z]+\}|\[\[blocker:[a-z_]+\]\])\s*)+)$/;
+/** Strings that are the same in every language: names, words French writes as English does, and texts made only of placeholders and blockers. */
+const NAME_ONLY = /^(Dukan ERP|Contact|(\s*(\{[a-zA-Z]+\}|\[\[blocker:[a-z_]+\]\])\s*)+)$/;
 
 /** A language-free skeleton of any value: object keys, array lengths, and strings reduced to their tokens. */
 function deepShape(v: unknown): unknown {
