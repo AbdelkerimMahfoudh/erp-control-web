@@ -436,6 +436,29 @@ export interface BusinessDetail {
   version: number;
   events: TimelineEvent[];
   payments: PaymentRow[];
+  /** The trial's recorded facts, for the console only. Absent from an API older than the trial. */
+  trial?: BusinessTrial | null;
+}
+
+/**
+ * A business's trial as recorded: the eligibility written when it registered itself (closed once paid access, a grant,
+ * a refusal or a cancellation is decided), and the claim — immutable, its end recorded once it passed. Both null for a
+ * business created from the console or before the trial existed. `timeZone` is the business's, for the dates.
+ */
+export interface BusinessTrial {
+  eligibility: {
+    registrationMethod: 'email' | 'phone' | 'both';
+    createdAt: string;
+    closedAt: string | null;
+    closedReason: 'approved' | 'granted' | 'paid_period' | 'refused' | 'cancelled' | null;
+  } | null;
+  claim: {
+    claimedAt: string;
+    startedAt: string;
+    endsAt: string;
+    expiryRecordedAt: string | null;
+  } | null;
+  timeZone?: string;
 }
 
 export interface AuditEvent {

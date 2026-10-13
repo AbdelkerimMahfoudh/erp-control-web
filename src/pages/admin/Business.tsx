@@ -9,6 +9,7 @@ import { RequestAmount, RequestStatus, RequestSummary } from '../../components/r
 import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, StateBadge, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatDateTime, formatInt } from '../../lib/format';
+import { BusinessTrial } from './BusinessTrial';
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
 
@@ -26,7 +27,13 @@ const ROUTE: Record<Decision, string> = {
   payment: 'payments',
 };
 
-/** Which decisions make sense where the subscription stands. The server refuses the rest anyway. */
+/**
+ * Which decisions make sense where the subscription stands. The server refuses the rest anyway.
+ *
+ * A free trial is not a status (2026-10-13): a business in its trial, or after it, is still `pending_activation`, so
+ * it is offered approve, refuse and grant — and paid or granted access decided while a trial runs starts when the
+ * trial ends, which the server sets. None creates, extends or shortens a trial; there is no decision here that could.
+ */
 function decisionsFor(status: string | undefined): Decision[] {
   switch (status) {
     case 'pending_activation':
@@ -90,6 +97,8 @@ export function Business() {
         </button>
       </section>
       <ErrorNotice error={error} />
+
+      <BusinessTrial business={data} />
 
       <Decisions business={data} ask={ask} onDone={load} />
 

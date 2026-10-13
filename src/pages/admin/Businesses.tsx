@@ -6,7 +6,8 @@ import { Empty, ErrorNotice, Loading, StateBadge, Table } from '../../components
 import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatInt } from '../../lib/format';
 
-const STATES: EntitlementState[] = ['pending', 'active', 'grace', 'complimentary', 'suspended', 'expired', 'cancelled', 'rejected'];
+/** Every state the server computes, in the order a business meets them: the free trial's three (2026-10-13) come before paid access. */
+const STATES: EntitlementState[] = ['pending', 'trial_available', 'trial_active', 'trial_expired', 'active', 'grace', 'complimentary', 'suspended', 'expired', 'cancelled', 'rejected'];
 
 /**
  * When access ends (docs/73 §11.5): for a business on a platform grant, the later of the grant's own end and the paid

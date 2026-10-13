@@ -5,7 +5,8 @@ import { ErrorNotice, Loading, StateBadge } from '../../components/ui';
 import { useI18n } from '../../i18n';
 import { formatInt } from '../../lib/format';
 
-const STATES: EntitlementState[] = ['pending', 'active', 'grace', 'complimentary', 'suspended', 'expired', 'cancelled', 'rejected'];
+/** Every state the server computes, in the order a business meets them: the free trial's three (2026-10-13) come before paid access. */
+const STATES: EntitlementState[] = ['pending', 'trial_available', 'trial_active', 'trial_expired', 'active', 'grace', 'complimentary', 'suspended', 'expired', 'cancelled', 'rejected'];
 
 export function Dashboard() {
   const { t, lang } = useI18n();
