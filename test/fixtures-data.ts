@@ -1,4 +1,4 @@
-import type { Activity, ActivityOption, ActivityOptions, SeatRequest, SubscriptionBranch } from '../src/api/types';
+import type { Activity, ActivityOption, ActivityOptions, SeatRequest, SubscriptionBranch, TrialOffer, TrialSetup, TrialStatus, TrialView } from '../src/api/types';
 
 /*
  * The API answers the activity specs mock (D154, docs/73 §6), shaped as the backend serialises them — data only,
@@ -168,3 +168,57 @@ export function allocation(over: Partial<SeatRequest>): SeatRequest {
     ...over,
   };
 }
+
+/*
+ * The free trial (2026-10-13), as GET platform/my-subscription/trial answers it: UTC instants and the business's zone.
+ * The zone is Africa/Casablanca (GMT+1) on purpose — neither the server's UTC nor the test runner's zone — so a page
+ * that formatted a trial date in either would show another hour: 09:30 UTC is 10:30 there.
+ */
+export const TRIAL_ZONE = 'Africa/Casablanca';
+export const TRIAL_START = '2026-10-13T09:30:00.000Z';
+export const TRIAL_END = '2026-10-20T09:30:00.000Z';
+
+export function trialOffer(over: Partial<TrialOffer> = {}): TrialOffer {
+  return {
+    available: true,
+    reason: null,
+    termsVersion: '2026-10-13',
+    durationHours: 168,
+    wouldStartAt: TRIAL_START,
+    wouldEndAt: TRIAL_END,
+    timeZone: TRIAL_ZONE,
+    requiredContacts: ['email'],
+    missingContacts: [],
+    ...over,
+  };
+}
+
+export function trialSetup(over: Partial<TrialSetup> = {}): TrialSetup {
+  return {
+    delivery: 'sent',
+    sentTo: ['email'],
+    destinations: [{ channel: 'email', masked: 'o•••@example.test' }],
+    lastAttemptAt: '2026-10-13T08:00:00.000Z',
+    canResendNow: true,
+    resendAvailableAt: null,
+    ...over,
+  };
+}
+
+/** A recorded trial: claimed at TRIAL_START, ending exactly 168 hours later — both the server's instants, as sent. */
+export function trialView(status: TrialView['status'], over: Partial<TrialView> = {}): TrialView {
+  const recorded = status === 'available' ? null : { claimedAt: TRIAL_START, startedAt: TRIAL_START, endsAt: TRIAL_END };
+  return { status, durationHours: 168, durationDays: 7, claimedAt: null, startedAt: null, endsAt: null, timeZone: TRIAL_ZONE, ...recorded, ...over };
+}
+
+/** The Owner's trial read: by default, a business that may claim now, its instructions sent to its verified email. */
+export function trialStatus(over: Partial<TrialStatus> = {}): TrialStatus {
+  return { state: 'trial_available', trial: trialView('available'), offer: trialOffer(), setup: trialSetup(), calculatedAt: TRIAL_START, ...over };
+}
+
+/** A business that never had a trial and never can (paid, granted, or created from the console): no card. */
+export const NO_TRIAL: TrialStatus = { state: 'active', trial: null, offer: null, setup: null, calculatedAt: TRIAL_START };
+
+/** A zone's name as this runtime's Intl says it — what a page is asked to show beside a trial date, never to invent. */
+export const zoneName = (zone: string, locale = 'en-GB', iso = TRIAL_END) =>
+  new Intl.DateTimeFormat(locale, { timeZone: zone, timeZoneName: 'long' }).formatToParts(new Date(iso)).find((p) => p.type === 'timeZoneName')!.value;

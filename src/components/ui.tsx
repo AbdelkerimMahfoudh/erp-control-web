@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { Fragment, isValidElement, type ReactNode } from 'react';
 import { ApiError } from '../api/client';
 import type { EntitlementState, SeatRequestStatus } from '../api/types';
 import { useI18n, type Key } from '../i18n';
@@ -19,7 +19,31 @@ const STATE_TONE: Record<EntitlementState, Tone> = {
   suspended: 'danger',
   cancelled: 'muted',
   rejected: 'danger',
+  // Not started is waiting, like pending; a running trial works; an ended one is read-only, like expired.
+  trial_available: 'info',
+  trial_active: 'ok',
+  trial_expired: 'danger',
 };
+
+/**
+ * A catalogue sentence whose values keep their own direction (docs/74 §4): each `{name}` given as text is set in a
+ * `<bdi>`, so a date or a time zone reads in its own order inside an Arabic sentence, and the sentence keeps its own
+ * order around it. A value given as markup is set as it is and isolates its own parts — a list of masked addresses
+ * joined by the sentence's own "and" must flow with the sentence, each address alone kept left to right; inside one
+ * `<bdi>` the first address would turn the Arabic "and" around. `text` is `t(key)` called without values.
+ */
+export function Phrase({ text, values }: { text: string; values: Record<string, ReactNode> }) {
+  const parts: ReactNode[] = [];
+  let last = 0;
+  for (const m of text.matchAll(/\{(\w+)\}/g)) {
+    if (m.index > last) parts.push(<Fragment key={`t${last}`}>{text.slice(last, m.index)}</Fragment>);
+    const value = values[m[1]!] ?? m[0];
+    parts.push(isValidElement(value) ? <Fragment key={`v${m.index}`}>{value}</Fragment> : <bdi key={`v${m.index}`}>{value}</bdi>);
+    last = m.index + m[0].length;
+  }
+  if (last < text.length) parts.push(<Fragment key={`t${last}`}>{text.slice(last)}</Fragment>);
+  return <>{parts}</>;
+}
 
 /** Status by colour AND words, never colour alone. */
 export function StateBadge({ state }: { state: EntitlementState | string | null | undefined }) {

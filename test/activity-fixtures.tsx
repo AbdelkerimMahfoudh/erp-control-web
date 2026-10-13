@@ -15,21 +15,23 @@ import { ThemeProvider } from '../src/theme/theme';
  */
 
 export { B1, B2, B3, BOTH, PLAN_V3, line, quoteOf, subscription, BRANCHES, LINES, activityOptions, allocation } from './fixtures-data';
-import { B1, B2, B3, BOTH, PLAN_V3, line, quoteOf, subscription, BRANCHES, LINES, activityOptions, allocation } from './fixtures-data';
+import { B1, B2, B3, BOTH, PLAN_V3, line, quoteOf, subscription, BRANCHES, LINES, activityOptions, allocation, NO_TRIAL } from './fixtures-data';
 
 export type Handler = (url: string, body: unknown) => { status?: number; body: unknown } | undefined;
 
-/** A fetch that answers by route and remembers every body it was sent. */
+/** A fetch that answers by route and remembers every body it was sent, and the bearer session it carried. */
 export function serve(handler: Handler) {
-  const sent: { url: string; method: string; body: unknown }[] = [];
+  const sent: { url: string; method: string; body: unknown; authorization: string | null }[] = [];
   const fetchMock = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
     const url = String(input);
     const body = init?.body ? JSON.parse(String(init.body)) : undefined;
-    sent.push({ url, method: init?.method ?? 'GET', body });
+    sent.push({ url, method: init?.method ?? 'GET', body, authorization: new Headers(init?.headers).get('Authorization') });
     const answer = handler(url, body);
     const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { 'Content-Type': 'application/json' } });
     if (answer) return json(answer.body, answer.status ?? 200);
     if (url.endsWith('/platform/admin/me')) return json({ message: 'Unauthorized' }, 401);
+    // The account page's free-trial card (2026-10-13): a business with no trial, so no card, unless a test answers otherwise.
+    if (url.endsWith('/platform/my-subscription/trial')) return json(NO_TRIAL);
     // The step-up every administrator decision takes first (0094): accepted unless a test answers otherwise.
     if (url.endsWith('/platform/admin/step-up')) return json({ expiresAt: '2026-10-12T10:05:00.000Z' });
     return json({ message: `unexpected ${url}` }, 500);

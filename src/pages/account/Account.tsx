@@ -1,15 +1,19 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ApiError } from '../../api/client';
-import type { Activity, ActivityOption, ActivityOptions, ComplimentaryGrant, MySubscription, NewStoreOption, QuoteLine, RequestResult, SeatRequest, SubscriptionBranch } from '../../api/types';
+import type { Activity, ActivityOption, ActivityOptions, Entitlement, MySubscription, NewStoreOption, QuoteLine, RequestResult, SeatRequest, SubscriptionBranch } from '../../api/types';
 import { isUnauthorized, ownerChooseAccount, ownerLogin, ownerLogout, ownerRequest, type AccountChoice } from '../../auth/owner';
 import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
-import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, StateBadge, Table, type Tone } from '../../components/ui';
+import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, StateBadge, Table, type Tone } from '../../components/ui';
 import { useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, canWithdraw, isScheduledActivityChange, pricesAfter } from '../../lib/activity';
-import { formatDate, formatDateTime, formatInt, formatMru } from '../../lib/format';
+import { formatDate, formatDateTime, formatInstant, formatInt, formatMru } from '../../lib/format';
+import { isTrialLanding } from '../../lib/trial';
 import { paymentProvider } from '../../providers/payment';
+import { TrialCard } from './TrialCard';
+import { TrialLanding, useSetupToken } from './TrialLanding';
 
 type Session = { kind: 'checking' } | { kind: 'anonymous' } | { kind: 'signed'; data: MySubscription };
 
@@ -18,9 +22,15 @@ type Session = { kind: 'checking' } | { kind: 'anonymous' } | { kind: 'signed'; 
  * session exists — a bearer token from the form here, or the portal cookie set
  * by the app's handoff — and believes the answer; it never gates on what it
  * can see locally.
+ *
+ * `/account/trial` is where the free trial's setup link lands (2026-10-13): the
+ * same sign-in, then the trial alone. The link's token is taken from the
+ * address before anything else happens and is never sent before the sign-in.
  */
 export function Account() {
   const { t } = useI18n();
+  const landing = isTrialLanding(useLocation().pathname);
+  const linkToken = useSetupToken(landing);
   const [session, setSession] = useState<Session>({ kind: 'checking' });
   const [error, setError] = useState<unknown>(null);
 
@@ -44,24 +54,20 @@ export function Account() {
     return (
       <div className="stack">
         <section className="hero">
-          <h1>{t('account.title')}</h1>
-          <p className="lead">{t('account.signin.lead')}</p>
+          <h1>{t(landing ? 'trial.title' : 'account.title')}</h1>
+          <p className="lead">{t(landing ? 'trial.landing.lead' : 'account.signin.lead')}</p>
         </section>
         <ErrorNotice error={error} />
         <SignIn onSigned={load} />
       </div>
     );
   }
-  return (
-    <Subscription
-      data={session.data}
-      reload={load}
-      onSignOut={async () => {
-        await ownerLogout();
-        setSession({ kind: 'anonymous' });
-      }}
-    />
-  );
+  const signOut = async () => {
+    await ownerLogout();
+    setSession({ kind: 'anonymous' });
+  };
+  if (landing) return <TrialLanding token={linkToken} data={session.data} onChanged={load} onSignOut={signOut} />;
+  return <Subscription data={session.data} reload={load} onSignOut={signOut} />;
 }
 
 function SignIn({ onSigned }: { onSigned: () => Promise<void> }) {
@@ -140,9 +146,15 @@ const EXPLAIN_WITH_DATE = new Set(['active', 'grace', 'expired']);
 
 /**
  * The lead sentence. A grant is told with its own end (docs/73 §11.5) — never the paid period's, and never the
- * latest billing period's start, which is what this page once showed as "granted until".
+ * latest billing period's start, which is what this page once showed as "granted until". A trial is told with the end
+ * the server recorded at its claim, in the business's own zone (2026-10-13).
  */
-function explanation(state: string, periodEnd: string | null, grant: ComplimentaryGrant | undefined, t: (k: Key, p?: Record<string, string>) => string, lang: Language): string {
+function explanation(ent: Entitlement, t: (k: Key, p?: Record<string, string>) => string, lang: Language): ReactNode {
+  const { state, periodEnd, complimentary: grant, trial } = ent;
+  if (state === 'trial_active' || state === 'trial_expired') {
+    if (!trial?.endsAt) return t(`status.explain.${state}.undated`);
+    return <Phrase text={t(`status.explain.${state}`)} values={{ date: formatInstant(trial.endsAt, trial.timeZone, lang) }} />;
+  }
   if (state === 'complimentary') {
     if (grant?.until) return t('status.explain.complimentary', { date: formatDate(grant.until, lang) });
     // "No end date" only when the server says so; an older API without the grant view gets no claim about the date.
@@ -194,8 +206,7 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         <div>
           <h1>{data.business.name}</h1>
           <p className="lead">
-            <StateBadge state={ent.state} />{' '}
-            {explanation(ent.state, ent.periodEnd, ent.complimentary, t, lang)}
+            <StateBadge state={ent.state} /> {explanation(ent, t, lang)}
           </p>
         </div>
         <div className="row">
@@ -207,6 +218,8 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
           </button>
         </div>
       </section>
+
+      <TrialCard version={data} onChanged={reload} />
 
       <section className="grid">
         <div className="card">
@@ -234,6 +247,7 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         <div className="card">
           <h2>{t('account.period')}</h2>
           <GrantLine grant={ent.complimentary} />
+          <PeriodStart data={data} />
           {ent.periodEnd ? (
             <p>{t('account.period.ends', { date: formatDate(ent.periodEnd, lang) })}</p>
           ) : ent.complimentary && ent.complimentary.status !== 'none' ? null : (
@@ -338,6 +352,27 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
       </section>
     </div>
   );
+}
+
+/**
+ * A paid period that has not begun (2026-10-13): access approved during a free trial starts when the trial ends, so the
+ * running period's start can lie ahead. It is "ahead" when the server's own start is later than the server's own
+ * reading of the entitlement — two server instants, never this browser's clock. Started at a trial's end, it is told
+ * with that trial's zone, like every trial date.
+ */
+function PeriodStart({ data }: { data: MySubscription }) {
+  const { t, lang } = useI18n();
+  const ent = data.entitlement;
+  const start = data.pricing.currentPeriod.periodStart;
+  if (!start || !(Date.parse(start) > Date.parse(ent.calculatedAt))) return null;
+  if (ent.state === 'trial_active' && ent.trial) {
+    return (
+      <p>
+        <Phrase text={t('trial.paidStart')} values={{ date: formatInstant(start, ent.trial.timeZone, lang) }} />
+      </p>
+    );
+  }
+  return <p>{t('account.period.starts', { date: formatDate(start, lang) })}</p>;
 }
 
 /**

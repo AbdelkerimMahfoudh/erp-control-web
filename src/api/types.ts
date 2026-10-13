@@ -1,6 +1,117 @@
 /** Response shapes, as the API sends them (docs/68). The site renders these and derives none of them. */
 
-export type EntitlementState = 'pending' | 'active' | 'grace' | 'expired' | 'complimentary' | 'suspended' | 'cancelled' | 'rejected';
+/**
+ * The three trial states (2026-10-13) are computed by the server from the trial's own facts, like every other state:
+ * `trial_available` — a self-registered business that may claim its one free trial and has not; `trial_active` — the
+ * seven days are running; `trial_expired` — they ended and no paid access started (read-only, no grace).
+ */
+export type EntitlementState =
+  | 'pending'
+  | 'active'
+  | 'grace'
+  | 'expired'
+  | 'complimentary'
+  | 'suspended'
+  | 'cancelled'
+  | 'rejected'
+  | 'trial_available'
+  | 'trial_active'
+  | 'trial_expired';
+
+/**
+ * The free trial as the server tells it: its instants are UTC values the server recorded at the claim (null while it
+ * is only available), and `timeZone` is the business's configured zone, the one every trial date is shown in. The
+ * site renders these; it never adds the seven days itself.
+ */
+export interface TrialView {
+  status: 'available' | 'active' | 'expired';
+  durationHours: number;
+  durationDays: number;
+  claimedAt: string | null;
+  startedAt: string | null;
+  endsAt: string | null;
+  timeZone: string;
+}
+
+export type TrialContact = 'email' | 'phone';
+
+/**
+ * What a claim made now would record (GET platform/my-subscription/trial): the terms version, and the start and end
+ * the server would set — refreshed while shown, so the end stays honest. `available: false` with a `reason` is a
+ * business that could claim once something is fixed (a contact to verify, a suspension lifted).
+ */
+export interface TrialOffer {
+  available: boolean;
+  reason: TrialRefusalCode | null;
+  termsVersion: string;
+  durationHours: number;
+  wouldStartAt: string;
+  wouldEndAt: string;
+  timeZone: string;
+  requiredContacts: TrialContact[];
+  missingContacts: TrialContact[];
+}
+
+/**
+ * The setup instructions sent automatically once the Owner's contacts are verified, and their resend from this
+ * website only. `destinations` are the Owner's verified contacts, masked by the server; the site never sees one whole.
+ */
+export interface TrialSetup {
+  delivery: 'waiting_for_contact' | 'not_sent' | 'sent' | 'failed' | 'unavailable';
+  sentTo: TrialChannel[];
+  destinations: { channel: TrialChannel; masked: string }[];
+  lastAttemptAt: string | null;
+  canResendNow: boolean;
+  resendAvailableAt: string | null;
+}
+
+export type TrialChannel = 'email' | 'whatsapp';
+
+/** GET platform/my-subscription/trial — the Owner's only (anyone else is refused 403 `owner_only`). */
+export interface TrialStatus {
+  state: EntitlementState;
+  trial: TrialView | null;
+  offer: TrialOffer | null;
+  /** Present only while the state is `trial_available`. */
+  setup: TrialSetup | null;
+  calculatedAt: string;
+}
+
+/** POST platform/my-subscription/trial/link — what the setup link is worth for the signed-in Owner. Never consumes it. */
+export type TrialLinkOutcome = 'valid' | 'expired' | 'used' | 'revoked' | 'invalid' | 'other_account';
+
+export interface TrialLinkCheck {
+  link: TrialLinkOutcome;
+  offer: TrialOffer | null;
+  trial: TrialView | null;
+  state: EntitlementState;
+}
+
+/** POST platform/my-subscription/trial/claim — 201 the first time, 200 when the same attempt is replayed. */
+export interface TrialClaimResult {
+  claimed: true;
+  replayed: boolean;
+  state: 'trial_active';
+  trial: TrialView;
+  subscriptionVersion: number;
+}
+
+/** Every refusal of the claim, by its code; the page says each one in words. */
+export type TrialRefusalCode =
+  | 'owner_only'
+  | 'idempotency_conflict'
+  | 'trial_already_claimed'
+  | 'business_closed'
+  | 'business_suspended'
+  | 'business_refused'
+  | 'trial_not_available'
+  | 'terms_changed'
+  | 'contact_unverified'
+  | 'link_invalid'
+  | 'link_expired'
+  | 'link_used'
+  | 'link_revoked'
+  | 'link_other_account';
 
 /**
  * What a branch is subscribed to do (D154, docs/73 §3): the electronics store,
@@ -44,6 +155,8 @@ export interface Entitlement {
   isComplimentary: boolean;
   /** The platform's grant with its own dates (docs/73 §11.5). Absent from an API older than 2026-10-10. */
   complimentary?: ComplimentaryGrant;
+  /** The free trial, when the business has or may claim one. Absent from an API older than the trial. */
+  trial?: TrialView | null;
   status: string;
   calculatedAt: string;
 }

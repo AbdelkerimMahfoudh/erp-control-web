@@ -49,6 +49,12 @@ export const PUBLIC_ROUTES: readonly PublicRoute[] = [
 /** The areas behind a sign-in: never prerendered, never indexed. */
 export const PROTECTED_PREFIXES = ['/account', '/admin'] as const;
 
+/**
+ * Where the free trial's setup link lands (2026-10-13): inside the account area, so with no language prefix — the
+ * setup message names this one address in every language.
+ */
+export const TRIAL_LANDING = '/account/trial';
+
 export const LANGUAGE_PREFIX: Record<Language, string> = { en: '', fr: '/fr', ar: '/ar' };
 
 export function routeById(id: PublicRouteId): PublicRoute {

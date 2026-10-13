@@ -74,6 +74,75 @@ describe('where credentials live', () => {
   });
 });
 
+/*
+ * The free trial's dates (2026-10-13) are the server's: UTC instants recorded at the claim, shown in the business's
+ * configured zone, which the server names. No source adds the seven days, does arithmetic on a trial instant, or names
+ * a zone of its own — not GMT, not the zone Mauritanian businesses use today — and no trial page formats a date in
+ * this browser's zone. The one comparison with this browser's clock (the resend's countdown) takes a plain instant.
+ */
+const TRIAL_INSTANT = String.raw`claimedAt|startedAt|endsAt|wouldStartAt|wouldEndAt|lastAttemptAt|resendAvailableAt|expiryRecordedAt`;
+const TRIAL_ARITHMETIC = new RegExp(
+  String.raw`\b(${TRIAL_INSTANT})\b\s*[*+\-/]|[*+\-/]\s*[\w.?!]*\b(${TRIAL_INSTANT})\b|\b(${TRIAL_INSTANT})\b[^;]*\.(getTime|valueOf)\(|Date\.parse\([^)]*\b(${TRIAL_INSTANT})\b`,
+);
+const TRIAL_DURATION = /\b(168|604800|604_800|86400|86_400)\b|\b7\s*\*\s*24\b|\b24\s*\*\s*7\b/;
+const ZONE_LITERAL = /timeZone\s*:\s*['"`]|['"`](UTC|GMT|Etc\/[\w+-]+|(Africa|America|Asia|Atlantic|Europe)\/\w+)['"`]/;
+const trialFiles = code.filter((f) => /trial/i.test(relative(SRC, f)));
+const executable = (src: string) => src.split('\n').filter((line) => !line.trim().startsWith('//') && !line.trim().startsWith('*'));
+
+describe('the free trial’s dates are the server’s', () => {
+  it('finds the trial’s sources (the rules below would pass on nothing)', () => {
+    expect(trialFiles.map((f) => relative(SRC, f)).sort()).toEqual(
+      [join('components', 'trial.tsx'), join('lib', 'trial.ts'), join('pages', 'account', 'TrialCard.tsx'), join('pages', 'account', 'TrialLanding.tsx')].sort(),
+    );
+  });
+
+  it('no source does arithmetic on a trial instant', () => {
+    for (const f of code) {
+      const hits = executable(read(f)).filter((line) => TRIAL_ARITHMETIC.test(line));
+      expect({ file: relative(SRC, f), hits }).toEqual({ file: relative(SRC, f), hits: [] });
+    }
+  });
+
+  it('no trial source computes the seven days, and none formats a date in this browser’s zone', () => {
+    for (const f of trialFiles) {
+      const lines = executable(read(f));
+      expect({ file: relative(SRC, f), duration: lines.filter((l) => TRIAL_DURATION.test(l)) }).toEqual({ file: relative(SRC, f), duration: [] });
+      expect({ file: relative(SRC, f), browserZone: lines.filter((l) => /formatDate(Time)?\(|toLocale\w*String|getTimezoneOffset|resolvedOptions/.test(l)) }).toEqual({
+        file: relative(SRC, f),
+        browserZone: [],
+      });
+    }
+  });
+
+  it('no source names a time zone of its own', () => {
+    for (const f of code) {
+      const hits = executable(read(f)).filter((line) => ZONE_LITERAL.test(line));
+      expect({ file: relative(SRC, f), hits }).toEqual({ file: relative(SRC, f), hits: [] });
+    }
+    // The one formatter of a trial instant takes the zone it is given and nothing else.
+    expect(read(join(SRC, 'lib/format.ts'))).toMatch(/export function formatInstant\(iso: string \| null \| undefined, timeZone: string \| null \| undefined, lang: Language\)/);
+  });
+});
+
+describe('the setup link’s token lives in memory only, and only the server decides', () => {
+  it('no source keeps anything in a cookie, IndexedDB or the cache, and no trial source logs or puts the token in an address', () => {
+    for (const f of code) expect({ file: relative(SRC, f), stored: /document\.cookie|indexedDB|\bcaches\./.test(read(f)) }).toEqual({ file: relative(SRC, f), stored: false });
+    for (const f of trialFiles) {
+      const src = read(f);
+      expect({ file: relative(SRC, f), logged: /console\./.test(src), inAddress: /\$\{token\}|[?#&]t=\$\{/.test(src) }).toEqual({ file: relative(SRC, f), logged: false, inAddress: false });
+    }
+    // Sent in a POST body, and only there.
+    expect(read(join(SRC, 'pages/account/TrialLanding.tsx'))).toMatch(/trial\/link', \{ method: 'POST', body: \{ token \} \}/);
+  });
+
+  it('no page reads where a request came from, or sends where it came from (a client can forge both; correction 6)', () => {
+    for (const f of code) {
+      const src = read(f);
+      expect({ file: relative(SRC, f), fromWhere: /document\.referrer|['"](origin|referer|referrer)['"]\s*:/i.test(src) }).toEqual({ file: relative(SRC, f), fromWhere: false });
+    }
+  });
+});
+
 describe('colours are tokens', () => {
   it('no raw hex or rgba outside tokens.css', () => {
     for (const f of files) {

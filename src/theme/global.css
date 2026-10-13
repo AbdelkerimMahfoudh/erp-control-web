@@ -557,3 +557,10 @@ dialog.modal .body {
   border-block-end: 0;
   padding-block-end: 0;
 }
+/* The free trial's terms: a plain list, its markers on the side the language reads from. */
+.terms {
+  margin: 0;
+  padding-inline-start: 1.25rem;
+  display: grid;
+  gap: 6px;
+}
