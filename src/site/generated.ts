@@ -5,7 +5,7 @@
  */
 import { LANGUAGES } from '../i18n/languages';
 import type { SiteInputs } from '../config/schema';
-import { pathOf, PROTECTED_PREFIXES, PUBLIC_ROUTES } from './routes';
+import { pathOf, PROTECTED_PREFIXES, PUBLIC_ROUTES, TRIAL_LANDING } from './routes';
 
 /** The shell the protected areas load: no prerendered content, never indexed. */
 export const APP_SHELL = '/app-shell.html';
@@ -83,6 +83,10 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'>, preview: boolean)
     blocks.push(`${p}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
     blocks.push(`${p}/*\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
   }
+  // The free trial's setup link lands here with its token in the address (`?t=` from WhatsApp): the page's own
+  // scripts and styles load before the token is taken out of it, so no request may carry it as a referrer. The site's
+  // policy is detached first (`! `), or the host would join the two values.
+  blocks.push(`${TRIAL_LANDING}\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer`);
   blocks.push(`${APP_SHELL}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
   // Hashed assets never change; everything else is revalidated.
   blocks.push('/assets/*\n  Cache-Control: public, max-age=31536000, immutable');

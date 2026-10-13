@@ -23,7 +23,10 @@ const TYPES = {
   '.ico': 'image/x-icon',
 };
 
-/** `_headers`: blocks of a path pattern followed by indented `Name: value` lines. */
+/**
+ * `_headers`: blocks of a path pattern followed by indented `Name: value` lines, or `! Name` to detach a header a
+ * broader rule set (Cloudflare Pages' syntax; a value is `null` for a detach).
+ */
 function readHeaders() {
   const file = join(dist, '_headers');
   if (!existsSync(file)) return [];
@@ -34,6 +37,8 @@ function readHeaders() {
     if (!/^\s/.test(line)) {
       current = { pattern: line.trim(), headers: [] };
       rules.push(current);
+    } else if (current && line.trim().startsWith('! ')) {
+      current.headers.push([line.trim().slice(2).trim(), null]);
     } else if (current) {
       const i = line.indexOf(':');
       current.headers.push([line.slice(0, i).trim(), line.slice(i + 1).trim()]);
@@ -86,7 +91,13 @@ createServer((req, res) => {
     file = join(dist, '404.html');
   }
   const headers = { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' };
-  for (const rule of HEADERS) if (matches(rule.pattern, decodeURIComponent(url.pathname))) for (const [k, v] of rule.headers) headers[k] = v;
+  for (const rule of HEADERS) {
+    if (!matches(rule.pattern, decodeURIComponent(url.pathname))) continue;
+    for (const [k, v] of rule.headers) {
+      if (v === null) delete headers[k];
+      else headers[k] = v;
+    }
+  }
   // A local server speaks HTTP: the HTTPS-only directives would break it, and are checked in the header file itself.
   delete headers['Strict-Transport-Security'];
   if (headers['Content-Security-Policy']) headers['Content-Security-Policy'] = headers['Content-Security-Policy'].replace(/;\s*upgrade-insecure-requests/, '');
