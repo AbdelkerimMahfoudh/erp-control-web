@@ -10,7 +10,7 @@ import { ar } from '../src/i18n/ar';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
 import { ThemeProvider } from '../src/theme/theme';
-import { BRANCHES, LINES, activityOptions, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
+import { BRANCHES, LINES, PLAN_V3, activityOptions, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
 import { NO_TRIAL, TRIAL_END, TRIAL_START, TRIAL_ZONE, trialOffer, trialSetup, trialStatus, trialView, zoneName } from './fixtures-data';
 
 useActivityHarness();
@@ -23,9 +23,9 @@ afterEach(async () => {
 
 /*
  * The free trial on the website (2026-10-13): the Owner's card on /account, the setup link's landing at
- * /account/trial — every answer mocked exactly as the SPEC's contract shapes it. The business's zone is
- * Africa/Casablanca (GMT+1) unless a test says otherwise, so a date shown in the server's UTC or in the runner's zone
- * would show another hour than the one asserted.
+ * /account/trial, and Apply ending signed in — every answer mocked exactly as the SPEC's contract shapes it. The
+ * business's zone is Africa/Casablanca (GMT+1) unless a test says otherwise, so a date shown in the server's UTC or in
+ * the runner's zone would show another hour than the one asserted.
  */
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 /** Shaped like the server's (43 base64url characters) and plainly fake. */
@@ -538,5 +538,72 @@ describe('dates in the business’s zone, in every language', () => {
     const c = (await screen.findByRole('heading', { name: fr['trial.title'], level: 2 })).closest('section')!;
     expect(within(c).getByRole('button', { name: 'Démarrer mon essai gratuit de 7 jours' })).toBeTruthy();
     expect(c.textContent).toContain(`Si vous le démarrez maintenant, il se termine le 20 octobre 2026 à 10:30 (${zoneName(TRIAL_ZONE, 'fr-FR')}).`);
+  });
+});
+
+describe('Apply ends signed in', () => {
+  it('keeps the session the confirmation opens and leads to the account, where the eligible Owner sees the trial — Apply claims nothing', async () => {
+    const sent = serve((url) => {
+      if (url.endsWith('/platform/plan')) return { body: PLAN_V3 };
+      if (url.endsWith('/platform/register')) {
+        return {
+          status: 201,
+          body: {
+            status: 'pending',
+            created: true,
+            publicStoreId: 'ST-7Q4K',
+            activity: 'electronics',
+            verification: { destination: 'o•••@example.test', channel: 'email' },
+            continuation: { token: 'continuation-for-tests', expiresAt: '2026-10-13T10:00:00.000Z', expiresInSeconds: 900 },
+            next: 'verify_contact',
+            trialEligible: true,
+          },
+        };
+      }
+      if (url.endsWith('/platform/register/verify/confirm')) return { body: { accessToken: 'new-owner-session', refreshToken: 'refresh-for-tests', expiresIn: 900 } };
+      if (url.endsWith('/platform/my-subscription')) return { body: trialAccount('trial_available', trialView('available')) };
+      if (url.endsWith('/platform/my-subscription/trial')) return { body: trialStatus() };
+      if (url.endsWith('/platform/my-subscription/activity-options')) return { body: activityOptions() };
+      if (url.endsWith('/platform/my-subscription/seat-requests')) return { body: [] };
+      return undefined;
+    });
+    mount('/apply');
+    const user = userEvent.setup();
+    await user.type(await screen.findByLabelText('Your name'), 'Aminetou');
+    await user.type(screen.getByLabelText('Business name'), 'Boutique Test');
+    await user.type(screen.getByLabelText('First store name'), 'Centre');
+    await user.type(screen.getByLabelText(/Email address/), 'owner@example.test');
+    await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
+    await user.click(screen.getByRole('radio', { name: /Electronics store/ }));
+    await user.click(screen.getByRole('button', { name: 'Send my application' }));
+    await user.type(await screen.findByLabelText('Verification code'), '123456');
+    await user.click(screen.getByRole('button', { name: 'Confirm' }));
+    expect(await screen.findByText(en['apply.done.trial'])).toBeTruthy();
+    await user.click(screen.getByRole('link', { name: 'Open my business account' }));
+    expect(await card()).toBeTruthy();
+    // Signed in with the session the confirmation opened: no sign-in form, no password asked again.
+    expect(screen.queryByRole('button', { name: 'Sign in' })).toBeNull();
+    const reads = sent.filter((r) => r.url.endsWith('/platform/my-subscription'));
+    expect(reads.map((r) => r.authorization)).toContain('Bearer new-owner-session');
+    expect(sent.filter((r) => r.url.includes('/trial/claim'))).toEqual([]);
+  });
+
+  it('an application the server does not call eligible says what it always said', async () => {
+    serve((url) => {
+      if (url.endsWith('/platform/plan')) return { body: PLAN_V3 };
+      if (url.endsWith('/platform/register')) return { status: 201, body: { status: 'pending', created: true, publicStoreId: 'ST-7Q4K', verification: null, continuation: null, next: 'sign_in' } };
+      return undefined;
+    });
+    mount('/apply');
+    const user = userEvent.setup();
+    await user.type(await screen.findByLabelText('Your name'), 'Aminetou');
+    await user.type(screen.getByLabelText('Business name'), 'Boutique Test');
+    await user.type(screen.getByLabelText('First store name'), 'Centre');
+    await user.type(screen.getByLabelText(/Email address/), 'owner@example.test');
+    await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
+    await user.click(screen.getByRole('radio', { name: /Electronics store/ }));
+    await user.click(screen.getByRole('button', { name: 'Send my application' }));
+    expect(await screen.findByText(en['apply.done.body'])).toBeTruthy();
+    expect(screen.queryByText(en['apply.done.trial'])).toBeNull();
   });
 });

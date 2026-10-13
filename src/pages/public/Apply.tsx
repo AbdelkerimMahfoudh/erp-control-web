@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { ApiError, request } from '../../api/client';
 import type { Activity, PublicPlan } from '../../api/types';
+import { ownerAdopt } from '../../auth/owner';
 import { ActivityCards } from '../../components/activity';
 import { ErrorNotice, Field, Notice } from '../../components/ui';
 import { LANGUAGES, LANGUAGE_LABELS, useI18n, type Key, type Language } from '../../i18n';
@@ -16,6 +17,8 @@ interface RegisterResponse {
   verification: { destination: string; channel: 'email' | 'phone' } | null;
   continuation: { token: string; expiresAt: string; expiresInSeconds: number } | null;
   next: 'verify_contact' | 'sign_in';
+  /** Whether this new business may claim its one free trial. Absent from an API older than the trial. */
+  trialEligible?: boolean;
 }
 
 type Step = { kind: 'form' } | { kind: 'verify'; response: RegisterResponse } | { kind: 'done'; response: RegisterResponse };
@@ -23,8 +26,10 @@ type Step = { kind: 'form' } | { kind: 'verify'; response: RegisterResponse } | 
 /**
  * The business application (docs/68 §2). Registration creates a PENDING
  * business and a continuation; the Owner proves the contact with the code that
- * went to it, and only then holds a session. Nothing is activated here — the
- * platform reviews every application.
+ * went to it, and only then holds a session — kept, so the application ends
+ * signed in to the business account (2026-10-13). Nothing is activated here:
+ * a self-registered business starts its free trial only when its Owner
+ * confirms it there, and paid access is arranged with the platform.
  *
  * When the server cannot send a code it refuses before saving anything, and
  * this page says so instead of showing a code field no code would fill.
@@ -180,7 +185,7 @@ function Verify({ response, onDone }: { response: RegisterResponse; onDone: (r: 
     setBusy(true);
     setError(null);
     try {
-      await request('platform/register/verify/confirm', { method: 'POST', body: { continuation, code: code.trim() } });
+      ownerAdopt(await request<{ accessToken?: string }>('platform/register/verify/confirm', { method: 'POST', body: { continuation, code: code.trim() } }));
       onDone(response);
     } catch (err) {
       setError(err instanceof ApiError && err.status === 400 ? new ApiError(t('apply.verify.wrong'), 400, 'code_mismatch', null) : err);
@@ -220,7 +225,7 @@ function Done({ response }: { response: RegisterResponse }) {
     <div className="stack">
       <section className="hero">
         <h1>{t('apply.done.title')}</h1>
-        <p className="lead">{t('apply.done.body')}</p>
+        <p className="lead">{response.trialEligible ? t('apply.done.trial') : t('apply.done.body')}</p>
       </section>
       <div className="card stack">
         <p>

@@ -31,7 +31,7 @@ const NAMES_THE_AGENT_TRADE = new Set(['activity.money_agent.body']);
  * arranged apart from it.
  */
 const TRIAL_KEY = /^(trial\.|status\.trial_|status\.explain\.trial_|admin\.trial\.)/;
-const DESCRIBES_THE_TRIAL = new Set(['home.pricing.rules', 'apply.lead', 'page.apply.description']);
+const DESCRIBES_THE_TRIAL = new Set(['home.pricing.rules', 'apply.lead', 'apply.done.trial', 'page.apply.description']);
 const TRIAL_WORD = /\btrial|essai|تجريب/;
 
 const placeholders = (s: string) => [...s.matchAll(/\{(\w+)\}/g)].map((m) => m[1]).sort().join(',');

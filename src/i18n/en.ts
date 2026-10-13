@@ -104,6 +104,8 @@ export const en = {
   'apply.verify.wrong': 'That code did not match. Check it and try again.',
   'apply.done.title': 'Your application is in',
   'apply.done.body': 'Your business is pending review. You can follow its status from your business account; nothing is active until the platform approves it.',
+  'apply.done.trial':
+    'Your business can start one 7-day free trial. Open your business account to start it when you are ready: it starts only when you confirm it there, and no payment is required.',
   'apply.done.storeId': 'Your Store Account ID: {id}',
   'apply.error.contact': 'Give an email address or a WhatsApp number.',
   'apply.activity': 'What does your first store do?',

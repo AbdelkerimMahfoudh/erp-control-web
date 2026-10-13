@@ -40,6 +40,15 @@ export async function ownerLogin(identifier: string, password: string): Promise<
   return { status: 'signed_in' };
 }
 
+/**
+ * The session `register/verify/confirm` opens for a new Owner (2026-10-13), kept the way a sign-in's is — in memory,
+ * for this visit — so an application ends in the business account, where the Owner sees the free trial, rather than
+ * asking again for the password just chosen. An answer without a token (an older API) opens nothing.
+ */
+export function ownerAdopt(result: { accessToken?: string } | null | undefined): void {
+  if (result?.accessToken) accessToken = result.accessToken;
+}
+
 /** The same contact at more than one business: continue as the one chosen. */
 export async function ownerChooseAccount(continuationToken: string, accountRef: string): Promise<void> {
   const result = await request<RawLogin>('auth/choose-account', { method: 'POST', body: { continuationToken, accountRef } });

@@ -99,6 +99,8 @@ export const fr: Catalogue = {
   'apply.verify.wrong': 'Ce code ne correspond pas. Vérifiez-le et réessayez.',
   'apply.done.title': 'Votre demande est enregistrée',
   'apply.done.body': 'Votre entreprise est en attente d’examen. Suivez son statut depuis votre compte entreprise ; rien n’est actif avant l’approbation de la plateforme.',
+  'apply.done.trial':
+    'Votre entreprise peut démarrer un essai gratuit de 7 jours. Ouvrez votre compte entreprise pour le démarrer quand vous êtes prêt : il ne commence que lorsque vous le confirmez, et aucun paiement n’est demandé.',
   'apply.done.storeId': 'Votre identifiant de compte : {id}',
   'apply.error.contact': 'Indiquez une adresse e-mail ou un numéro WhatsApp.',
   'apply.activity': 'Que fait votre premier magasin ?',
