@@ -13,7 +13,7 @@ beside the unchanged business account (`/account`) and console (`/admin`).
 
 The description below is the portal as built on 2026-10-05, still accurate for `/account` and `/admin`.
 
-The control website of the Electronics Retail Management System: the public
+The control website of Dukan ERP, developed and operated by TSX-MR: the public
 subscription site, the business Owner's account area and the platform's Super
 Admin console. Built from scratch on 2026-10-05 against the backend's contract
 (`erp-docs/docs/68`); it replaces the earlier `retail-erp-control-web`, which
