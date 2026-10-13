@@ -1,0 +1,308 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:4:49). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:5:35). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./home" without a file extension (src/content/index.ts:10:22). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:11:26). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:12:40). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:13:52). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 110[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 2237[2mms[22m[39m
+   [32m✓[39m Account: a store’s activity and its change [2m(8)[22m
+     [33m[2m✓[22m[39m lists each store with its activity; a warehouse offers no change[33m 402[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade is explained by the server’s own answer, then shows the amount the server recorded[33m 482[2mms[22m[39m
+     [33m[2m✓[22m[39m a downgrade waits for the renewal and asks nothing now[33m 331[2mms[22m[39m
+ [32m✓[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2207[2mms[22m[39m
+   [32m✓[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 978[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the confirmation’s result on screen after the paid request leaves the queue[33m 453[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 707[2mms[22m[39m
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1394[2mms[22m[39m
+   [32m✓[39m Account: the platform grant and its own dates [2m(6)[22m
+     [33m[2m✓[22m[39m an active grant says its own end, never the billing period’s start[33m 425[2mms[22m[39m
+ [32m✓[39m test/site-routes.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m test/admin-mfa.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2878[2mms[22m[39m
+   [32m✓[39m signing in to the console [2m(3)[22m
+     [33m[2m✓[22m[39m a password leads to the code screen; the console opens only once the code is accepted[33m 984[2mms[22m[39m
+     [33m[2m✓[22m[39m a recovery code can stand in for the authenticator[33m 483[2mms[22m[39m
+     [33m[2m✓[22m[39m with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once[33m 754[2mms[22m[39m
+   [32m✓[39m a decision’s step-up [2m(1)[22m
+     [33m[2m✓[22m[39m a wrong password or code keeps the dialog open with the reason, and the decision is never sent[33m 654[2mms[22m[39m
+ [31m❯[39m test/trial-console.test.tsx [2m([22m[2m4 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[33m 1211[2mms[22m[39m
+   [31m❯[39m the console: a business’s trial, recorded [2m(4)[22m
+[31m     [31m×[31m shows the eligibility and the claim with their exact instants, and that no decision creates or extends a trial[39m[33m 540[2mms[22m[39m
+[31m     [31m×[31m a closed eligibility says when and why; an ended trial says its end was recorded[39m[32m 196[2mms[22m[39m
+     [32m✓[39m a business created from the console has no trial, and says so[32m 165[2mms[22m[39m
+     [33m[2m✓[22m[39m the overview and the list name the three trial states[33m 305[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 164[2mms[22m[39m
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1658[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 1332[2mms[22m[39m
+ [31m❯[39m test/trial-account.test.tsx [2m([22m[2m38 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[33m 10279[2mms[22m[39m
+   [31m❯[39m the Owner’s trial card on /account [2m(6)[22m
+[31m     [31m×[31m an Owner who may claim sees the terms, the end the server would set — in the business’s zone — and one button[39m[33m 678[2mms[22m[39m
+     [32m✓[39m a contact still to verify: says which and where, and offers no button[32m 202[2mms[22m[39m
+     [32m✓[39m a suspended business: no button, and why[32m 162[2mms[22m[39m
+[31m     [31m×[31m a running trial: its recorded start and exact end, in the business’s zone — the hero says the same[39m[32m 181[2mms[22m[39m
+[31m     [31m×[31m an ended trial: when it ended, and that the business is read-only until paid access starts[39m[32m 136[2mms[22m[39m
+     [33m[2m✓[22m[39m no offer and no trial, a paid business after its trial, another role (403), an older API (404): no card, no error[33m 371[2mms[22m[39m
+   [31m❯[39m the setup instructions on the card [2m(6)[22m
+[31m     [31m×[31m sent: to the verified contacts the server masked, on the instant it recorded, in the business’s zone[39m[32m 123[2mms[22m[39m
+     [32m✓[39m names only the contacts a message reached[32m 90[2mms[22m[39m
+     [33m[2m✓[22m[39m could not be sent, cannot be sent, not sent: each said honestly[33m 411[2mms[22m[39m
+     [32m✓[39m a send again waits out the server’s limit, counted down to its instant, then sends an empty body[32m 149[2mms[22m[39m
+[31m     [31m×[31m a long wait is told as the instant it ends, in the business’s zone[39m[32m 114[2mms[22m[39m
+     [33m[2m✓[22m[39m a refused send is said in words: too soon (with the server’s instant), nothing can be sent, no trial any more[33m 395[2mms[22m[39m
+   [32m✓[39m the claim [2m(13)[22m
+     [32m✓[39m runs only when the button is pressed, says the end the server recorded, and reads the account again[32m 152[2mms[22m[39m
+     [32m✓[39m a retry of the same attempt sends the same key, so the server replays its answer instead of refusing a second claim[32m 171[2mms[22m[39m
+     [32m✓[39m a refusal (owner_only) is said in words, never as its code or the server’s sentence[32m 100[2mms[22m[39m
+     [32m✓[39m a refusal (idempotency_conflict) is said in words, never as its code or the server’s sentence[32m 121[2mms[22m[39m
+     [32m✓[39m a refusal (trial_already_claimed) is said in words, never as its code or the server’s sentence[32m 168[2mms[22m[39m
+     [32m✓[39m a refusal (business_closed) is said in words, never as its code or the server’s sentence[32m 140[2mms[22m[39m
+     [32m✓[39m a refusal (business_suspended) is said in words, never as its code or the server’s sentence[32m 162[2mms[22m[39m
+     [32m✓[39m a refusal (business_refused) is said in words, never as its code or the server’s sentence[32m 155[2mms[22m[39m
+     [32m✓[39m a refusal (trial_not_available) is said in words, never as its code or the server’s sentence[32m 132[2mms[22m[39m
+     [32m✓[39m a refusal (terms_changed) is said in words, never as its code or the server’s sentence[32m 116[2mms[22m[39m
+     [32m✓[39m a refusal (contact_unverified) is said in words, never as its code or the server’s sentence[32m 117[2mms[22m[39m
+     [32m✓[39m a refusal the card then explains is said once: the contact still to verify[32m 149[2mms[22m[39m
+     [32m✓[39m terms the server changed since this text: no button, and why[32m 158[2mms[22m[39m
+   [31m❯[39m the setup link’s landing (/account/trial) [2m(7)[22m
+     [33m[2m✓[22m[39m takes the token from the email’s #t= out of the address at once, keeps it in memory only, and sends nothing before sign-in[33m 430[2mms[22m[39m
+     [33m[2m✓[22m[39m takes the token from the WhatsApp button’s ?t= out of the address at once, keeps it in memory only, and sends nothing before sign-in[33m 394[2mms[22m[39m
+     [33m[2m✓[22m[39m says what a link is worth when it no longer works, and offers the claim without it while the business can still claim[33m 1471[2mms[22m[39m
+[31m     [31m×[31m a used link of a business already in its trial: says so, and shows the trial instead of a button[39m[32m 220[2mms[22m[39m
+     [32m✓[39m a token not even shaped like one is invalid, and is sent nowhere[32m 198[2mms[22m[39m
+     [33m[2m✓[22m[39m a link refused at the claim (it expired since it was checked): said, and the claim offered again without it — a new attempt, a new key[33m 341[2mms[22m[39m
+     [32m✓[39m a Manager or an Employee signed in on the link: told only the Owner can start it[32m 251[2mms[22m[39m
+   [31m❯[39m dates in the business’s zone, in every language [2m(4)[22m
+     [32m✓[39m the same instant is 10:30 in Casablanca and 13:30 in Dubai — never the server’s UTC, never this browser’s zone[32m 144[2mms[22m[39m
+[31m     [31m×[31m a paid period approved during the trial starts when it ends — said in the trial’s zone[39m[32m 68[2mms[22m[39m
+     [32m✓[39m in Arabic the card reads right to left, the button names the trial in Arabic, and each date and address is isolated[32m 131[2mms[22m[39m
+[31m     [31m×[31m in French the button says it as the setup message does[39m[32m 141[2mms[22m[39m
+   [32m✓[39m Apply ends signed in [2m(2)[22m
+     [33m[2m✓[22m[39m keeps the session the confirmation opens and leads to the account, where the eligible Owner sees the trial — Apply claims nothing[33m 1059[2mms[22m[39m
+     [33m[2m✓[22m[39m an application the server does not call eligible says what it always said[33m 573[2mms[22m[39m
+ [32m✓[39m test/content-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 55[2mms[22m[39m
+ [32m✓[39m test/site-config.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 887[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns (on the Dukan ERP page)[33m 525[2mms[22m[39m
+ [32m✓[39m test/public-pages.test.tsx [2m([22m[2m41 tests[22m[2m)[22m[33m 2436[2mms[22m[39m
+   [32m✓[39m every public page in every language [2m(36)[22m
+     [33m[2m✓[22m[39m / renders in en[33m 459[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 10 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m test/trial-account.test.tsx[2m > [22mthe Owner’s trial card on /account[2m > [22man Owner who may claim sees the terms, the end the server would set — in the business’s zone — and one button
+[31m[1mAssertionError[22m: expected '7-day free trialNo payment is require…' to contain 'If you start it now, it ends on 20 Oc…'[39m
+
+Expected: [32m"If you start it now, it ends on 20 October 2026 at 10:30 (Western European Standard Time)."[39m
+Received: [31m"7-day free trialNo payment is required.It starts immediately when you claim it and lasts exactly 7 days (168 hours).If you start it now, it ends on 20 October 2026 at 09:30 (Western European Standard Time).It can be claimed only once per business.When it ends, your business becomes read-only: you can still sign in, read and export everything, manage your security and delete your account, but new sales, stock and money cannot be recorded until paid access starts.Paid access after the trial is arranged on this website.Start my 7-day free trialSetup instructionsThe instructions for completing your business setup were sent to o•••@example.test on 13 October 2026 at 08:00 (Western European Standard Time).You do not need them to start your trial: you can start it here.Send the setup instructions again"[39m
+
+[36m [2m❯[22m test/trial-account.test.tsx:[2m82:27[22m[39m
+    [90m 80|[39m     const c = await card();
+    [90m 81|[39m     for (const key of ['trial.terms.free', 'trial.terms.start', 'trial…
+    [90m 82|[39m     expect(c.textContent).toContain(`If you start it now, it ends on 2…
+    [90m   |[39m                           [31m^[39m
+    [90m 83|[39m     // The date is isolated, so it keeps its own order inside an Arabi…
+    [90m 84|[39m     expect([...c.querySelectorAll('bdi')].map((b) => b.textContent)).t…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/trial-account.test.tsx[2m > [22mthe Owner’s trial card on /account[2m > [22ma running trial: its recorded start and exact end, in the business’s zone — the hero says the same
+[31m[1mAssertionError[22m: expected '7-day free trialYour free trial ends …' to contain 'Your free trial ends on 20 October 20…'[39m
+
+Expected: [32m"Your free trial ends on 20 October 2026 at [7m10:30 (Western European Standard Time)[27m."[39m
+Received: [31m"[7m7-day free trial[27mYour free trial ends on 20 October 2026 at [7m09:30 (Western European Standard Time).It started on 13 October 2026 at 09:30 (Western European Standard Time).When it ends, your business becomes read-only: you can still sign in, read and export everything, manage your security and delete your account, but new sales, stock and money cannot be recorded until paid access starts.Paid access after the trial is arranged on this website[27m."[39m
+
+[36m [2m❯[22m test/trial-account.test.tsx:[2m118:27[22m[39m
+    [90m116|[39m     account('trial_active', { state: 'trial_active', trial: trialView(…
+    [90m117|[39m     const c = await card();
+    [90m118|[39m     expect(c.textContent).toContain(`Your free trial ends on 20 Octobe…
+    [90m   |[39m                           [31m^[39m
+    [90m119|[39m     expect(c.textContent).toContain(`It started on 13 October 2026 at …
+    [90m120|[39m     expect(within(c).queryByRole('button')).toBeNull();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/trial-account.test.tsx[2m > [22mthe Owner’s trial card on /account[2m > [22man ended trial: when it ended, and that the business is read-only until paid access starts
+[31m[1mAssertionError[22m: expected '7-day free trialYour free trial ended…' to contain 'Your free trial ended on 20 October 2…'[39m
+
+Expected: [32m"Your free trial ended on 20 October 2026 at [7m1[27m0:30 (Western European Standard Time)."[39m
+Received: [31m"[7m7-day free trial[27mYour free trial ended on 20 October 2026 at 0[7m9[27m:30 (Western European Standard Time).[7mYour business is read-only now: you can still sign in, read and export everything, manage your security and delete your account. New sales, stock and money can be recorded again once paid access starts; it is arranged on this website.[27m"[39m
+
+[36m [2m❯[22m test/trial-account.test.tsx:[2m129:27[22m[39m
+    [90m127|[39m     account('trial_expired', { state: 'trial_expired', trial: trialVie…
+    [90m128|[39m     const c = await card();
+    [90m129|[39m     expect(c.textContent).toContain(`Your free trial ended on 20 Octob…
+    [90m   |[39m                           [31m^[39m
+    [90m130|[39m     expect(within(c).getByText(en['trial.expired.readOnly'])).toBeTrut…
+    [90m131|[39m     expect(within(c).queryByRole('button')).toBeNull();
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/trial-account.test.tsx[2m > [22mthe setup instructions on the card[2m > [22msent: to the verified contacts the server masked, on the instant it recorded, in the business’s zone
+[31m[1mAssertionError[22m: expected '7-day free trialNo payment is require…' to contain 'The instructions for completing your …'[39m
+
+Expected: [32m"The instructions for completing your business setup were sent to o•••@example.test and +222••••1234 on 13 October 2026 at 0[7m9[27m:00 (Western European Standard Time)."[39m
+Received: [31m"[7m7-day free trialNo payment is required.It starts immediately when you claim it and lasts exactly 7 days (168 hours).If you start it now, it ends on 20 October 2026 at 09:30 (Western European Standard Time).It can be claimed only once per business.When it ends, your business becomes read-only: you can still sign in, read and export everything, manage your security and delete your account, but new sales, stock and money cannot be recorded until paid access starts.Paid access after the trial is arranged on this website.Start my 7-day free trialSetup instructions[27mThe instructions for completing your business setup were sent to o•••@example.test and +222••••1234 on 13 October 2026 at 0[7m8[27m:00 (Western European Standard Time).[7mYou do not need them to start your trial: you can start it here.Send the setup instructions again[27m"[39m
+
+[36m [2m❯[22m test/trial-account.test.tsx:[2m161:27[22m[39m
+    [90m159|[39m     account('trial_available', trialStatus({ setup }));
+    [90m160|[39m     const c = await card();
+    [90m161|[39m     expect(c.textContent).toContain(
+    [90m   |[39m                           [31m^[39m
+    [90m162|[39m       `The instructions for completing your business setup were sent t…
+    [90m163|[39m     );
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/trial-account.test.tsx[2m > [22mthe setup instructions on the card[2m > [22ma long wait is told as the instant it ends, in the business’s zone
+[31m[1mAssertionError[22m: expected '7-day free trialNo payment is require…' to contain 'You can send them again on 13 October…'[39m
+
+Expected: [32m"[7mYou can send them again on 13 October 2026 at 12[27m:00 (Western European Standard Time)."[39m
+Received: [31m"[7m7-day free trialNo payment is required.It starts immediately when you claim it and lasts exactly 7 days (168 hours).If you start it now, it ends on 20 October 2026 at 09:30 (Western European Standard Time).It can be claimed only once per business.When it ends, your business becomes read-only: you can still sign in, read and export everything, manage your security and delete your account, but new sales, stock and money cannot be recorded until paid access starts.Paid access after the trial is arranged on this website.Start my 7-day free trialSetup instructionsThe instructions for completing your business setup were sent to o•••@example.test on 13 October 2026 at 08:00 (Western European Standard Time).You do not need them to start your trial: you can start it here.Send the setup instructions againYou can send them again on 13 October 2026 at 11[27m:00 (Western European Standard Time)."[39m
+
+[36m [2m❯[22m test/trial-account.test.tsx:[2m222:27[22m[39m
+    [90m220|[39m     account('trial_available', trialStatus({ setup: trialSetup({ canRe…
+    [90m221|[39m     const c = await card();
+    [90m222|[39m     expect(c.textContent).toContain(`You can send them again on 13 Oct…
+    [90m   |[39m                           [31m^[39m
+    [90m223|[39m   });
+    [90m224|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/trial-account.test.tsx[2m > [22mthe setup link’s landing (/account/trial)[2m > [22ma used link of a business already in its trial: says so, and shows the trial instead of a button
+[31m[1mAssertionError[22m: expected 'Skip to main contentPreview build — t…' to contain 'Your free trial ends on 20 October 20…'[39m
+
+Expected: [32m"Your free trial ends on 20 October 2026 at 10:30 (Western European Standard Time)."[39m
+Received: [31m"Skip to main contentPreview build — test values are shown and nothing here is for publication.TTSX-MRDukan ERPProductsAboutSupportContactEnglishFrançaisالعربيةSign inMenuDukan ERPProductsAboutSupportContactEnglishFrançaisالعربية7-day free trialFree trial Boutique TestOpen my business accountSign outThis link has already been used.Your free trial ends on 20 October 2026 at 09:30 (Western European Standard Time).It started on 13 October 2026 at 09:30 (Western European Standard Time).When it ends, your business becomes read-only: you can still sign in, read and export everything, manage your security and delete your account, but new sales, stock and money cannot be recorded until paid access starts.Paid access after the trial is arranged on this website.TTSX-MRDukan ERP is developed and operated by TSX-MR.[TEST] Registered legal name · [TEST] Legal form · [TEST] Registration numberFor businesses only. Customers of a shop never use this site or the app.CompanyAboutContactProductDukan ERPProductsApplyHelpSupportApplication statusDeleting your accountLegalPrivacyTerms© 2026 TSX-MRAppearanceLightDark"[39m
+
+[36m [2m❯[22m test/trial-account.test.tsx:[2m452:39[22m[39m
+    [90m450|[39m     await signIn();
+    [90m451|[39m     expect(await screen.findByText(en['trial.error.link_used'])).toBeT…
+    [90m452|[39m     expect(document.body.textContent).toContain(`Your free trial ends …
+    [90m   |[39m                                       [31m^[39m
+    [90m453|[39m     expect(screen.queryByRole('button', { name: CLAIM })).toBeNull();
+    [90m454|[39m     expect(screen.queryByText(en['trial.landing.withoutLink'])).toBeNu…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/trial-account.test.tsx[2m > [22mdates in the business’s zone, in every language[2m > [22ma paid period approved during the trial starts when it ends — said in the trial’s zone
+[31m[1mAssertionError[22m: expected 'Current periodPaid access starts when…' to contain 'Paid access starts when the free tria…'[39m
+
+Expected: [32m"Paid access starts when the free trial ends, on 20 October 2026 at [7m1[27m0:30 (Western European Standard Time)."[39m
+Received: [31m"[7mCurrent period[27mPaid access starts when the free trial ends, on 20 October 2026 at 0[7m9[27m:30 (Western European Standard Time).[7mEnds 20 Nov 2026[27m"[39m
+
+[36m [2m❯[22m test/trial-account.test.tsx:[2m514:32[22m[39m
+    [90m512|[39m     });
+    [90m513|[39m     const period = (await screen.findByRole('heading', { name: 'Curren…
+    [90m514|[39m     expect(period.textContent).toContain(`Paid access starts when the …
+    [90m   |[39m                                [31m^[39m
+    [90m515|[39m     expect(period.textContent).toMatch(/Ends 20 Nov 2026/);
+    [90m516|[39m   });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/trial-account.test.tsx[2m > [22mdates in the business’s zone, in every language[2m > [22min French the button says it as the setup message does
+[31m[1mAssertionError[22m: expected 'Essai gratuit de 7 joursAucun paiemen…' to contain 'Si vous le démarrez maintenant, il se…'[39m
+
+Expected: [32m"Si vous le démarrez maintenant, il se termine le 20 octobre 2026 à 10:30 (heure normale d’Europe de l’Ouest)."[39m
+Received: [31m"Essai gratuit de 7 joursAucun paiement n’est demandé.Il commence dès que vous le demandez et dure exactement 7 jours (168 heures).Si vous le démarrez maintenant, il se termine le 20 octobre 2026 à 09:30 (heure normale d’Europe de l’Ouest).Il ne peut être demandé qu’une seule fois par entreprise.À sa fin, votre entreprise passe en lecture seule : vous pouvez toujours vous connecter, tout consulter et tout exporter, gérer votre sécurité et supprimer votre compte, mais aucune vente, aucun stock et aucun mouvement d’argent ne peut être enregistré avant le début de l’accès payant.L’accès payant après l’essai s’organise sur ce site.Démarrer mon essai gratuit de 7 joursInstructions de configurationLes instructions pour finaliser la configuration de votre commerce ont été envoyées à o•••@example.test le 13 octobre 2026 à 08:00 (heure normale d’Europe de l’Ouest).Elles ne sont pas nécessaires pour démarrer votre essai : vous pouvez le démarrer ici.Renvoyer les instructions de configuration"[39m
+
+[36m [2m❯[22m test/trial-account.test.tsx:[2m540:27[22m[39m
+    [90m538|[39m     const c = (await screen.findByRole('heading', { name: fr['trial.ti…
+    [90m539|[39m     expect(within(c).getByRole('button', { name: 'Démarrer mon essai g…
+    [90m540|[39m     expect(c.textContent).toContain(`Si vous le démarrez maintenant, i…
+    [90m   |[39m                           [31m^[39m
+    [90m541|[39m   });
+    [90m542|[39m });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/trial-console.test.tsx[2m > [22mthe console: a business’s trial, recorded[2m > [22mshows the eligibility and the claim with their exact instants, and that no decision creates or extends a trial
+[31m[1mAssertionError[22m: expected 'Free trialEligible since 12 October 2…' to contain 'Eligible since 12 October 2026 at 11:…'[39m
+
+Expected: [32m"Eligible since 12 October 2026 at 1[7m1[27m:00 (Western European Standard Time); registered with an email address and a WhatsApp number."[39m
+Received: [31m"[7mFree trial[27mEligible since 12 October 2026 at 1[7m0[27m:00 (Western European Standard Time); registered with an email address and a WhatsApp number.[7mThe eligibility is open: the Owner can still claim the trial.Claimed by the Owner on 13 October 2026 at 09:30 (Western European Standard Time).From 13 October 2026 at 09:30 (Western European Standard Time) to 20 October 2026 at 09:30 (Western European Standard Time).Its end is recorded at the first check after it.Paid access or a grant approved during the trial starts when the trial ends. No decision on this page creates, extends or shortens a trial.[27m"[39m
+
+[36m [2m❯[22m test/trial-console.test.tsx:[2m58:27[22m[39m
+    [90m 56|[39m     const c = await trialCard();
+    [90m 57|[39m     const at = (iso: string) => zoneName(TRIAL_ZONE, 'en-GB', iso);
+    [90m 58|[39m     expect(c.textContent).toContain(`Eligible since 12 October 2026 at…
+    [90m   |[39m                           [31m^[39m
+    [90m 59|[39m     expect(c.textContent).toContain(en['admin.trial.open']);
+    [90m 60|[39m     expect(c.textContent).toContain(`Claimed by the Owner on 13 Octobe…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/10]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/trial-console.test.tsx[2m > [22mthe console: a business’s trial, recorded[2m > [22ma closed eligibility says when and why; an ended trial says its end was recorded
+[31m[1mAssertionError[22m: expected 'Free trialEligible since 12 October 2…' to contain 'The eligibility closed on 21 October …'[39m
+
+Expected: [32m"The eligibility closed on 21 October 2026 at 10:00"[39m
+Received: [31m"Free trialEligible since 12 October 2026 at 10:00 (Western European Standard Time); registered with an email address.The eligibility closed on 21 October 2026 at 09:00 (Western European Standard Time): the business was approved.Claimed by the Owner on 13 October 2026 at 09:30 (Western European Standard Time).From 13 October 2026 at 09:30 (Western European Standard Time) to 20 October 2026 at 09:30 (Western European Standard Time).Its end was recorded on 20 October 2026 at 09:31 (Western European Standard Time).Paid access or a grant approved during the trial starts when the trial ends. No decision on this page creates, extends or shortens a trial."[39m
+
+[36m [2m❯[22m test/trial-console.test.tsx:[2m81:27[22m[39m
+    [90m 79|[39m     );
+    [90m 80|[39m     const c = await trialCard();
+    [90m 81|[39m     expect(c.textContent).toContain('The eligibility closed on 21 Octo…
+    [90m   |[39m                           [31m^[39m
+    [90m 82|[39m     expect(c.textContent).toContain(': the business was approved.');
+    [90m 83|[39m     expect(c.textContent).toContain('Its end was recorded on 20 Octobe…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/10]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m13 passed[39m[22m[90m (15)[39m
+[2m      Tests [22m [1m[31m10 failed[39m[22m[2m | [22m[1m[32m159 passed[39m[22m[90m (169)[39m
+[2m   Start at [22m 07:37:24
+[2m   Duration [22m 15.74s[2m (tests 61%, environment 29%, import 7%, transform 3%)[22m
+
+[2m    Isolate [22m [33m15 workers spawned[39m[2m · ~953ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~3.81s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/trial-account.test.tsx,title=test/trial-account.test.tsx > the Owner’s trial card on /account > an Owner who may claim sees the terms%2C the end the server would set — in the business’s zone — and one button,line=82,column=27::AssertionError: expected '7-day free trialNo payment is require…' to contain 'If you start it now, it ends on 20 Oc…'%0A%0AExpected: "If you start it now, it ends on 20 October 2026 at 10:30 (Western European Standard Time)."%0AReceived: "7-day free trialNo payment is required.It starts immediately when you claim it and lasts exactly 7 days (168 hours).If you start it now, it ends on 20 October 2026 at 09:30 (Western European Standard Time).It can be claimed only once per business.When it ends, your business becomes read-only: you can still sign in, read and export everything, manage your security and delete your account, but new sales, stock and money cannot be recorded until paid access starts.Paid access after the trial is arranged on this website.Start my 7-day free trialSetup instructionsThe instructions for completing your business setup were sent to o•••@example.test on 13 October 2026 at 08:00 (Western European Standard Time).You do not need them to start your trial: you can start it here.Send the setup instructions again"%0A%0A ❯ test/trial-account.test.tsx:82:27%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/trial-account.test.tsx,title=test/trial-account.test.tsx > the Owner’s trial card on /account > a running trial%3A its recorded start and exact end%2C in the business’s zone — the hero says the same,line=118,column=27::AssertionError: expected '7-day free trialYour free trial ends …' to contain 'Your free trial ends on 20 October 20…'%0A%0AExpected: "Your free trial ends on 20 October 2026 at 10:30 (Western European Standard Time)."%0AReceived: "7-day free trialYour free trial ends on 20 October 2026 at 09:30 (Western European Standard Time).It started on 13 October 2026 at 09:30 (Western European Standard Time).When it ends, your business becomes read-only: you can still sign in, read and export everything, manage your security and delete your account, but new sales, stock and money cannot be recorded until paid access starts.Paid access after the trial is arranged on this website."%0A%0A ❯ test/trial-account.test.tsx:118:27%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/trial-account.test.tsx,title=test/trial-account.test.tsx > the Owner’s trial card on /account > an ended trial%3A when it ended%2C and that the business is read-only until paid access starts,line=129,column=27::AssertionError: expected '7-day free trialYour free trial ended…' to contain 'Your free trial ended on 20 October 2…'%0A%0AExpected: "Your free trial ended on 20 October 2026 at 10:30 (Western European Standard Time)."%0AReceived: "7-day free trialYour free trial ended on 20 October 2026 at 09:30 (Western European Standard Time).Your business is read-only now: you can still sign in, read and export everything, manage your security and delete your account. New sales, stock and money can be recorded again once paid access starts; it is arranged on this website."%0A%0A ❯ test/trial-account.test.tsx:129:27%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/trial-account.test.tsx,title=test/trial-account.test.tsx > the setup instructions on the card > sent%3A to the verified contacts the server masked%2C on the instant it recorded%2C in the business’s zone,line=161,column=27::AssertionError: expected '7-day free trialNo payment is require…' to contain 'The instructions for completing your …'%0A%0AExpected: "The instructions for completing your business setup were sent to o•••@example.test and +222••••1234 on 13 October 2026 at 09:00 (Western European Standard Time)."%0AReceived: "7-day free trialNo payment is required.It starts immediately when you claim it and lasts exactly 7 days (168 hours).If you start it now, it ends on 20 October 2026 at 09:30 (Western European Standard Time).It can be claimed only once per business.When it ends, your business becomes read-only: you can still sign in, read and export everything, manage your security and delete your account, but new sales, stock and money cannot be recorded until paid access starts.Paid access after the trial is arranged on this website.Start my 7-day free trialSetup instructionsThe instructions for completing your business setup were sent to o•••@example.test and +222••••1234 on 13 October 2026 at 08:00 (Western European Standard Time).You do not need them to start your trial: you can start it here.Send the setup instructions again"%0A%0A ❯ test/trial-account.test.tsx:161:27%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/trial-account.test.tsx,title=test/trial-account.test.tsx > the setup instructions on the card > a long wait is told as the instant it ends%2C in the business’s zone,line=222,column=27::AssertionError: expected '7-day free trialNo payment is require…' to contain 'You can send them again on 13 October…'%0A%0AExpected: "You can send them again on 13 October 2026 at 12:00 (Western European Standard Time)."%0AReceived: "7-day free trialNo payment is required.It starts immediately when you claim it and lasts exactly 7 days (168 hours).If you start it now, it ends on 20 October 2026 at 09:30 (Western European Standard Time).It can be claimed only once per business.When it ends, your business becomes read-only: you can still sign in, read and export everything, manage your security and delete your account, but new sales, stock and money cannot be recorded until paid access starts.Paid access after the trial is arranged on this website.Start my 7-day free trialSetup instructionsThe instructions for completing your business setup were sent to o•••@example.test on 13 October 2026 at 08:00 (Western European Standard Time).You do not need them to start your trial: you can start it here.Send the setup instructions againYou can send them again on 13 October 2026 at 11:00 (Western European Standard Time)."%0A%0A ❯ test/trial-account.test.tsx:222:27%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/trial-account.test.tsx,title=test/trial-account.test.tsx > the setup link’s landing (/account/trial) > a used link of a business already in its trial%3A says so%2C and shows the trial instead of a button,line=452,column=39::AssertionError: expected 'Skip to main contentPreview build — t…' to contain 'Your free trial ends on 20 October 20…'%0A%0AExpected: "Your free trial ends on 20 October 2026 at 10:30 (Western European Standard Time)."%0AReceived: "Skip to main contentPreview build — test values are shown and nothing here is for publication.TTSX-MRDukan ERPProductsAboutSupportContactEnglishFrançaisالعربيةSign inMenuDukan ERPProductsAboutSupportContactEnglishFrançaisالعربية7-day free trialFree trial Boutique TestOpen my business accountSign outThis link has already been used.Your free trial ends on 20 October 2026 at 09:30 (Western European Standard Time).It started on 13 October 2026 at 09:30 (Western European Standard Time).When it ends, your business becomes read-only: you can still sign in, read and export everything, manage your security and delete your account, but new sales, stock and money cannot be recorded until paid access starts.Paid access after the trial is arranged on this website.TTSX-MRDukan ERP is developed and operated by TSX-MR.[TEST] Registered legal name · [TEST] Legal form · [TEST] Registration numberFor businesses only. Customers of a shop never use this site or the app.CompanyAboutContactProductDukan ERPProductsApplyHelpSupportApplication statusDeleting your accountLegalPrivacyTerms© 2026 TSX-MRAppearanceLightDark"%0A%0A ❯ test/trial-account.test.tsx:452:39%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/trial-account.test.tsx,title=test/trial-account.test.tsx > dates in the business’s zone%2C in every language > a paid period approved during the trial starts when it ends — said in the trial’s zone,line=514,column=32::AssertionError: expected 'Current periodPaid access starts when…' to contain 'Paid access starts when the free tria…'%0A%0AExpected: "Paid access starts when the free trial ends, on 20 October 2026 at 10:30 (Western European Standard Time)."%0AReceived: "Current periodPaid access starts when the free trial ends, on 20 October 2026 at 09:30 (Western European Standard Time).Ends 20 Nov 2026"%0A%0A ❯ test/trial-account.test.tsx:514:32%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/trial-account.test.tsx,title=test/trial-account.test.tsx > dates in the business’s zone%2C in every language > in French the button says it as the setup message does,line=540,column=27::AssertionError: expected 'Essai gratuit de 7 joursAucun paiemen…' to contain 'Si vous le démarrez maintenant, il se…'%0A%0AExpected: "Si vous le démarrez maintenant, il se termine le 20 octobre 2026 à 10:30 (heure normale d’Europe de l’Ouest)."%0AReceived: "Essai gratuit de 7 joursAucun paiement n’est demandé.Il commence dès que vous le demandez et dure exactement 7 jours (168 heures).Si vous le démarrez maintenant, il se termine le 20 octobre 2026 à 09:30 (heure normale d’Europe de l’Ouest).Il ne peut être demandé qu’une seule fois par entreprise.À sa fin, votre entreprise passe en lecture seule : vous pouvez toujours vous connecter, tout consulter et tout exporter, gérer votre sécurité et supprimer votre compte, mais aucune vente, aucun stock et aucun mouvement d’argent ne peut être enregistré avant le début de l’accès payant.L’accès payant après l’essai s’organise sur ce site.Démarrer mon essai gratuit de 7 joursInstructions de configurationLes instructions pour finaliser la configuration de votre commerce ont été envoyées à o•••@example.test le 13 octobre 2026 à 08:00 (heure normale d’Europe de l’Ouest).Elles ne sont pas nécessaires pour démarrer votre essai : vous pouvez le démarrer ici.Renvoyer les instructions de configuration"%0A%0A ❯ test/trial-account.test.tsx:540:27%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/trial-console.test.tsx,title=test/trial-console.test.tsx > the console%3A a business’s trial%2C recorded > shows the eligibility and the claim with their exact instants%2C and that no decision creates or extends a trial,line=58,column=27::AssertionError: expected 'Free trialEligible since 12 October 2…' to contain 'Eligible since 12 October 2026 at 11:…'%0A%0AExpected: "Eligible since 12 October 2026 at 11:00 (Western European Standard Time); registered with an email address and a WhatsApp number."%0AReceived: "Free trialEligible since 12 October 2026 at 10:00 (Western European Standard Time); registered with an email address and a WhatsApp number.The eligibility is open: the Owner can still claim the trial.Claimed by the Owner on 13 October 2026 at 09:30 (Western European Standard Time).From 13 October 2026 at 09:30 (Western European Standard Time) to 20 October 2026 at 09:30 (Western European Standard Time).Its end is recorded at the first check after it.Paid access or a grant approved during the trial starts when the trial ends. No decision on this page creates, extends or shortens a trial."%0A%0A ❯ test/trial-console.test.tsx:58:27%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/trial-console.test.tsx,title=test/trial-console.test.tsx > the console%3A a business’s trial%2C recorded > a closed eligibility says when and why; an ended trial says its end was recorded,line=81,column=27::AssertionError: expected 'Free trialEligible since 12 October 2…' to contain 'The eligibility closed on 21 October …'%0A%0AExpected: "The eligibility closed on 21 October 2026 at 10:00"%0AReceived: "Free trialEligible since 12 October 2026 at 10:00 (Western European Standard Time); registered with an email address.The eligibility closed on 21 October 2026 at 09:00 (Western European Standard Time): the business was approved.Claimed by the Owner on 13 October 2026 at 09:30 (Western European Standard Time).From 13 October 2026 at 09:30 (Western European Standard Time) to 20 October 2026 at 09:30 (Western European Standard Time).Its end was recorded on 20 October 2026 at 09:31 (Western European Standard Time).Paid access or a grant approved during the trial starts when the trial ends. No decision on this page creates, extends or shortens a trial."%0A%0A ❯ test/trial-console.test.tsx:81:27%0A%0A
