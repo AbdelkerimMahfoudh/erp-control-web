@@ -79,7 +79,7 @@ export const home: Record<Language, HomeContent> = {
     },
     cta: {
       title: 'Bring your business onto Dukan ERP',
-      body: 'Businesses apply for an account online. The {displayName} team reviews each application before anything is activated.',
+      body: 'Businesses apply for an account online. A new business can start one 7-day free trial from its business account; paid access afterwards is arranged with the {displayName} team.',
       apply: 'Apply for a business account',
       signIn: 'Sign in',
       contact: 'Contact {displayName}',
@@ -144,7 +144,7 @@ export const home: Record<Language, HomeContent> = {
     },
     cta: {
       title: 'Passez votre entreprise sur Dukan ERP',
-      body: 'Les entreprises demandent un compte en ligne. L’équipe de {displayName} examine chaque demande avant toute activation.',
+      body: 'Les entreprises demandent un compte en ligne. Une nouvelle entreprise peut démarrer un essai gratuit de 7 jours depuis son compte entreprise ; l’accès payant qui suit s’organise avec l’équipe de {displayName}.',
       apply: 'Demander un compte entreprise',
       signIn: 'Se connecter',
       contact: 'Contacter {displayName}',
@@ -209,7 +209,7 @@ export const home: Record<Language, HomeContent> = {
     },
     cta: {
       title: 'انقل أعمال شركتك إلى Dukan ERP',
-      body: 'تتقدّم الشركات بطلب حساب عبر الإنترنت، ويراجع فريق {displayName} كل طلب قبل تفعيل أي شيء.',
+      body: 'تتقدّم الشركات بطلب حساب عبر الإنترنت، ويمكن لكل شركة جديدة بدء فترة تجريبية مجانية لمدة 7 أيام من حساب شركتها، ثم يُرتَّب الوصول المدفوع مع فريق {displayName}.',
       apply: 'اطلب حساب شركة',
       signIn: 'تسجيل الدخول',
       contact: 'تواصل مع {displayName}',

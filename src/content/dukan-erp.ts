@@ -73,8 +73,8 @@ export const dukanErp: Record<Language, DukanErpContent> = {
       title: 'How a business starts',
       steps: [
         'The owner applies on this website with the business details and its first store.',
-        'The contact details are verified, and {displayName} reviews the application. Nothing is activated before approval.',
-        'Once the application is approved and the subscription is arranged, the owner and the team sign in to the mobile app.',
+        'The contact details are verified. The owner can then start the business’s one 7-day free trial from the business account on this website; it starts only when the owner confirms it, and no payment is required.',
+        'During the trial, and once paid access is arranged with {displayName}, the owner and the team sign in to the mobile app.',
         'More stores, staff seats or activities are requested from the business account and activated once confirmed.',
       ],
     },
@@ -133,8 +133,8 @@ export const dukanErp: Record<Language, DukanErpContent> = {
       title: 'Comment une entreprise démarre',
       steps: [
         'Le propriétaire fait sa demande sur ce site, avec les informations de l’entreprise et de son premier magasin.',
-        'Les coordonnées sont vérifiées et {displayName} examine la demande. Rien n’est activé avant l’approbation.',
-        'Une fois la demande approuvée et l’abonnement convenu, le propriétaire et l’équipe se connectent à l’application mobile.',
+        'Les coordonnées sont vérifiées. Le propriétaire peut alors démarrer l’essai gratuit unique de 7 jours de l’entreprise depuis le compte entreprise sur ce site ; il ne commence qu’à la confirmation du propriétaire, et aucun paiement n’est demandé.',
+        'Pendant l’essai, puis une fois l’accès payant convenu avec {displayName}, le propriétaire et l’équipe se connectent à l’application mobile.',
         'Des magasins, des postes ou des activités supplémentaires se demandent depuis le compte de l’entreprise et sont activés après confirmation.',
       ],
     },
@@ -193,8 +193,8 @@ export const dukanErp: Record<Language, DukanErpContent> = {
       title: 'كيف تبدأ الشركة',
       steps: [
         'يتقدّم المالك بطلبه على هذا الموقع مع بيانات الشركة ومتجرها الأول.',
-        'يُتحقَّق من بيانات الاتصال، وتراجع {displayName} الطلب. ولا يُفعَّل أي شيء قبل الموافقة.',
-        'بعد الموافقة على الطلب والاتفاق على الاشتراك، يسجّل المالك والفريق الدخول إلى تطبيق الهاتف.',
+        'يُتحقَّق من بيانات الاتصال، ثم يمكن للمالك بدء الفترة التجريبية المجانية الوحيدة للشركة لمدة 7 أيام من حساب الشركة على هذا الموقع؛ ولا تبدأ إلا عندما يؤكّدها المالك، ولا يلزم أي دفع.',
+        'خلال الفترة التجريبية، ثم بعد الاتفاق على الوصول المدفوع مع {displayName}، يسجّل المالك والفريق الدخول إلى تطبيق الهاتف.',
         'تُطلب المتاجر أو مقاعد الموظفين أو الأنشطة الإضافية من حساب الشركة، وتُفعَّل بعد التأكيد.',
       ],
     },

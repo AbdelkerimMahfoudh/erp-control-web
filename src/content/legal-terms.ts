@@ -2,13 +2,14 @@ import type { Language } from '../i18n/languages';
 import type { LegalDocument } from './types';
 
 /**
- * The Dukan ERP terms of service — a DRAFT built from the approved commercial decisions (D135, D154, D158; docs/68)
- * and the implemented access rules (72-hour grace, then read-only). No price is written here: prices are the
- * server's, shown on the product page. Law, liability and legal review are blockers, never invented.
+ * The Dukan ERP terms of service — a DRAFT built from the approved commercial decisions (D135, D154, D158; docs/68),
+ * the free trial (2026-10-13: one 7-day trial per self-registered business, claimed on this website by its owner,
+ * nothing paid) and the implemented access rules (72-hour grace, then read-only). No price is written here: prices
+ * are the server's, shown on the product page. Law, liability and legal review are blockers, never invented.
  */
 export const terms: Record<Language, LegalDocument> = {
   en: {
-    version: '1.0 (draft)',
+    version: '1.1 (draft)',
     title: 'Dukan ERP terms of service',
     summary: 'The terms on which {displayName} provides Dukan ERP to businesses.',
     sections: [
@@ -21,7 +22,7 @@ export const terms: Record<Language, LegalDocument> = {
           {
             kind: 'list',
             items: [
-              'The owner applies for the business. {displayName} reviews each application and may refuse it; nothing is activated before approval.',
+              'The owner applies for the business. {displayName} reviews each business and may refuse it. Paid access starts only once {displayName} has approved it; until then, a business that registered itself may use the one free trial described below.',
               'The owner is responsible for the staff accounts of the business and for the permissions given to each person.',
               'Each person keeps their password and verification codes to themselves and gives accurate contact details.',
             ],
@@ -36,7 +37,8 @@ export const terms: Record<Language, LegalDocument> = {
             kind: 'list',
             items: [
               'Each store has a monthly subscription for its activity, with staff seats included; additional seats are charged per store. The current prices are shown on the Dukan ERP page and confirmed in the business account.',
-              'There is no free trial.',
+              'A business that registered itself may have one free trial of 7 days (168 hours), once. Its owner claims it on this website, and it starts at that moment. No payment is required, and nothing is charged or renewed when it ends.',
+              'When the free trial ends, the business is read-only until paid access starts; paid access approved during the trial starts when the trial ends.',
               'A store or a seat added during a month is charged for that month. A removal, or a change to a lower-priced activity, takes effect at the next renewal.',
               'A change to a higher-priced activity is charged for the difference when it is confirmed.',
             ],
@@ -75,7 +77,7 @@ export const terms: Record<Language, LegalDocument> = {
     ],
   },
   fr: {
-    version: '1.0 (projet)',
+    version: '1.1 (projet)',
     title: 'Conditions d’utilisation de Dukan ERP',
     summary: 'Les conditions dans lesquelles {displayName} fournit Dukan ERP aux entreprises.',
     sections: [
@@ -88,7 +90,7 @@ export const terms: Record<Language, LegalDocument> = {
           {
             kind: 'list',
             items: [
-              'Le propriétaire fait la demande pour l’entreprise. {displayName} examine chaque demande et peut la refuser ; rien n’est activé avant l’approbation.',
+              'Le propriétaire fait la demande pour l’entreprise. {displayName} examine chaque entreprise et peut la refuser. L’accès payant ne commence qu’après son approbation par {displayName} ; d’ici là, une entreprise qui s’est inscrite elle-même peut utiliser l’essai gratuit unique décrit ci-dessous.',
               'Le propriétaire est responsable des comptes du personnel de l’entreprise et des autorisations données à chacun.',
               'Chacun garde pour lui son mot de passe et ses codes de vérification, et fournit des coordonnées exactes.',
             ],
@@ -103,7 +105,8 @@ export const terms: Record<Language, LegalDocument> = {
             kind: 'list',
             items: [
               'Chaque magasin a un abonnement mensuel pour son activité, avec des postes inclus pour le personnel ; les postes supplémentaires sont facturés par magasin. Les prix en vigueur figurent sur la page Dukan ERP et sont confirmés dans le compte de l’entreprise.',
-              'Il n’y a pas d’essai gratuit.',
+              'Une entreprise qui s’est inscrite elle-même peut bénéficier, une seule fois, d’un essai gratuit de 7 jours (168 heures). Son propriétaire le demande sur ce site, et il commence à ce moment-là. Aucun paiement n’est demandé, et rien n’est facturé ni renouvelé à sa fin.',
+              'À la fin de l’essai gratuit, l’entreprise passe en lecture seule jusqu’au début de l’accès payant ; un accès payant approuvé pendant l’essai commence à la fin de l’essai.',
               'Un magasin ou un poste ajouté en cours de mois est facturé pour ce mois. Une suppression, ou le passage à une activité moins chère, prend effet au renouvellement suivant.',
               'Le passage à une activité plus chère est facturé pour la différence lorsqu’il est confirmé.',
             ],
@@ -142,7 +145,7 @@ export const terms: Record<Language, LegalDocument> = {
     ],
   },
   ar: {
-    version: '1.0 (مسودة)',
+    version: '1.1 (مسودة)',
     title: 'شروط استخدام Dukan ERP',
     summary: 'الشروط التي تقدّم بموجبها {displayName} خدمة Dukan ERP للشركات.',
     sections: [
@@ -155,7 +158,7 @@ export const terms: Record<Language, LegalDocument> = {
           {
             kind: 'list',
             items: [
-              'يتقدّم المالك بالطلب باسم الشركة. وتراجع {displayName} كل طلب ويجوز لها رفضه، ولا يُفعَّل أي شيء قبل الموافقة.',
+              'يتقدّم المالك بالطلب باسم الشركة. وتراجع {displayName} كل شركة ويجوز لها رفضها. ولا يبدأ الوصول المدفوع إلا بعد موافقة {displayName}؛ وإلى ذلك الحين يمكن للشركة التي سجّلت نفسها استخدام الفترة التجريبية المجانية الوحيدة الموصوفة أدناه.',
               'المالك مسؤول عن حسابات موظفي الشركة وعن الصلاحيات الممنوحة لكل شخص.',
               'يحتفظ كل شخص بكلمة مروره ورموز التحقق لنفسه، ويقدّم بيانات اتصال صحيحة.',
             ],
@@ -170,7 +173,8 @@ export const terms: Record<Language, LegalDocument> = {
             kind: 'list',
             items: [
               'لكل متجر اشتراك شهري لنشاطه يشمل مقاعد للموظفين، وتُحتسب المقاعد الإضافية لكل متجر. وتظهر الأسعار السارية في صفحة Dukan ERP وتُؤكَّد في حساب الشركة.',
-              'لا توجد فترة تجريبية مجانية.',
+              'يمكن للشركة التي سجّلت نفسها الاستفادة مرة واحدة من فترة تجريبية مجانية مدتها 7 أيام (168 ساعة). يطلبها مالكها على هذا الموقع، وتبدأ في تلك اللحظة. ولا يلزم أي دفع، ولا يُحتسب أي مبلغ ولا يُجدَّد أي شيء عند انتهائها.',
+              'عند انتهاء الفترة التجريبية المجانية تصبح الشركة للقراءة فقط إلى أن يبدأ الوصول المدفوع؛ ويبدأ الوصول المدفوع الذي تتم الموافقة عليه خلال الفترة التجريبية عند انتهائها.',
               'يُحتسب المتجر أو المقعد المضاف خلال الشهر عن ذلك الشهر. أما الإزالة، أو التحويل إلى نشاط أقل سعرًا، فيسري عند التجديد التالي.',
               'يُحتسب التحويل إلى نشاط أعلى سعرًا بقيمة الفرق عند تأكيده.',
             ],

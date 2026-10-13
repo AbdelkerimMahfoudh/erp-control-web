@@ -216,7 +216,7 @@ export const applicationStatus: Docs = {
     title: 'Application status',
     summary: 'How to follow a business application after applying.',
     sections: [
-      { id: 'where', heading: 'Where to see the status', blocks: [{ kind: 'p', text: 'After applying, sign in to the business account with the contact and the password chosen in the application. The account page shows whether the application is waiting for review, approved or refused, and what happens next.' }] },
+      { id: 'where', heading: 'Where to see the status', blocks: [{ kind: 'p', text: 'After applying, sign in to the business account with the contact and the password chosen in the application. The account page shows the business’s status — its free trial not started, running or ended, approved or refused — and what happens next.' }] },
       {
         id: 'expect',
         heading: 'What to expect',
@@ -224,7 +224,7 @@ export const applicationStatus: Docs = {
           {
             kind: 'list',
             items: [
-              '{displayName} reviews each application. Nothing is activated before it is approved.',
+              'A business that registered itself can start its one 7-day free trial from the business account; it starts only when the owner confirms it. Paid access starts once {displayName} has approved it.',
               'Once it is approved, the subscription period and any requests appear in the business account.',
               'A question about an application can be sent to the support address on the contact page.',
             ],
@@ -237,7 +237,7 @@ export const applicationStatus: Docs = {
     title: 'Suivi de la demande',
     summary: 'Comment suivre une demande de compte entreprise après l’avoir déposée.',
     sections: [
-      { id: 'where', heading: 'Où voir le statut', blocks: [{ kind: 'p', text: 'Après votre demande, connectez-vous au compte de l’entreprise avec le contact et le mot de passe choisis dans la demande. La page du compte indique si la demande est en attente d’examen, approuvée ou refusée, et la suite.' }] },
+      { id: 'where', heading: 'Où voir le statut', blocks: [{ kind: 'p', text: 'Après votre demande, connectez-vous au compte de l’entreprise avec le contact et le mot de passe choisis dans la demande. La page du compte indique le statut de l’entreprise — essai gratuit non commencé, en cours ou terminé, approuvée ou refusée — et la suite.' }] },
       {
         id: 'expect',
         heading: 'À quoi s’attendre',
@@ -245,7 +245,7 @@ export const applicationStatus: Docs = {
           {
             kind: 'list',
             items: [
-              '{displayName} examine chaque demande. Rien n’est activé avant son approbation.',
+              'Une entreprise qui s’est inscrite elle-même peut démarrer son essai gratuit unique de 7 jours depuis le compte de l’entreprise ; il ne commence qu’à la confirmation du propriétaire. L’accès payant commence une fois approuvé par {displayName}.',
               'Une fois la demande approuvée, la période d’abonnement et les éventuelles demandes apparaissent dans le compte de l’entreprise.',
               'Une question sur une demande peut être envoyée à l’adresse de l’assistance indiquée sur la page de contact.',
             ],
@@ -258,7 +258,7 @@ export const applicationStatus: Docs = {
     title: 'حالة الطلب',
     summary: 'كيف تتابع طلب حساب الشركة بعد تقديمه.',
     sections: [
-      { id: 'where', heading: 'أين تظهر الحالة', blocks: [{ kind: 'p', text: 'بعد تقديم الطلب، سجّل الدخول إلى حساب الشركة بجهة الاتصال وكلمة المرور اللتين اخترتهما في الطلب. وتُظهر صفحة الحساب ما إذا كان الطلب بانتظار المراجعة أو مقبولًا أو مرفوضًا، وما الخطوة التالية.' }] },
+      { id: 'where', heading: 'أين تظهر الحالة', blocks: [{ kind: 'p', text: 'بعد تقديم الطلب، سجّل الدخول إلى حساب الشركة بجهة الاتصال وكلمة المرور اللتين اخترتهما في الطلب. وتُظهر صفحة الحساب حالة الشركة — فترتها التجريبية المجانية لم تبدأ أو جارية أو منتهية، أو مقبولة أو مرفوضة — وما الخطوة التالية.' }] },
       {
         id: 'expect',
         heading: 'ما الذي تتوقعه',
@@ -266,7 +266,7 @@ export const applicationStatus: Docs = {
           {
             kind: 'list',
             items: [
-              'تراجع {displayName} كل طلب، ولا يُفعَّل أي شيء قبل الموافقة عليه.',
+              'يمكن للشركة التي سجّلت نفسها بدء فترتها التجريبية المجانية الوحيدة لمدة 7 أيام من حساب الشركة، ولا تبدأ إلا عندما يؤكّدها المالك. ويبدأ الوصول المدفوع بعد موافقة {displayName}.',
               'بعد الموافقة، تظهر فترة الاشتراك وأي طلبات في حساب الشركة.',
               'يمكن إرسال أي سؤال عن الطلب إلى عنوان الدعم المذكور في صفحة التواصل.',
             ],
