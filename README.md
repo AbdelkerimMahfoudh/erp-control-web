@@ -28,7 +28,7 @@ decision lives here and on the server.
 | Area | Route | Who | How it signs in |
 | --- | --- | --- | --- |
 | Public | `/`, `/apply`, `/privacy`, `/terms`, `/support`, `/account-deletion` | anybody | — |
-| Business | `/account` | the business Owner | email or WhatsApp number + password (bearer token in memory), or the portal cookie set by the app's handoff |
+| Business | `/account`, `/account/trial` (the free trial's setup link) | the business Owner | email or WhatsApp number + password (bearer token in memory), or the portal cookie set by the app's handoff |
 | Platform | `/admin` | a platform administrator | a separate realm: HttpOnly cookie, password re-asked for every decision |
 
 - **Prices and estimates come from the server.** `GET platform/plan` and
@@ -36,7 +36,22 @@ decision lives here and on the server.
   line that multiplies or adds a price field.
 - **Applications** go through `POST platform/register`; the server refuses
   before saving anything when no verification message can be sent, and the page
-  says so.
+  says so. The session the contact's confirmation opens is kept (in memory), so
+  an application ends signed in to the business account.
+- **The free trial** (2026-10-13): one 7-day trial per self-registered
+  business, claimed here only, by its Owner. `/account` shows the Owner's card
+  (`GET platform/my-subscription/trial`; any other role is refused and sees no
+  card): the terms, the end the server would set if started now, the single
+  **Start my 7-day free trial** button, and the setup instructions with their
+  resend, which exists only on this site. `/account/trial` is where the emailed
+  or WhatsApp setup link lands: the token leaves the address at once, is kept in
+  memory only, is checked only after sign-in, and goes with a claim only when
+  the Owner presses the button (the page is served with
+  `Referrer-Policy: no-referrer`). Every trial date is
+  the server's UTC instant shown in the business's configured zone; the site
+  computes none and names no zone of its own (`test/source-rules.test.ts`). The
+  console shows each business's eligibility and claim; no decision creates or
+  extends a trial.
 - **The account page** shows the application/subscription status, the period,
   the per-store seat quote, payments ("recorded by the platform, not confirmed
   by a provider"), the history, and lets the Owner request an additional seat
