@@ -1,0 +1,79 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:4:49). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:5:35). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./home" without a file extension (src/content/index.ts:10:22). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:11:26). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:12:40). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:13:52). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1921[2mms[22m[39m
+   [32m✓[39m Account: the platform grant and its own dates [2m(6)[22m
+     [33m[2m✓[22m[39m an active grant says its own end, never the billing period’s start[33m 579[2mms[22m[39m
+ [32m✓[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2853[2mms[22m[39m
+   [32m✓[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 1366[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the confirmation’s result on screen after the paid request leaves the queue[33m 632[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 778[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 2908[2mms[22m[39m
+   [32m✓[39m Account: a store’s activity and its change [2m(8)[22m
+     [33m[2m✓[22m[39m lists each store with its activity; a warehouse offers no change[33m 538[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade is explained by the server’s own answer, then shows the amount the server recorded[33m 576[2mms[22m[39m
+     [33m[2m✓[22m[39m a downgrade waits for the renewal and asks nothing now[33m 446[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade with no paid month running is explained and rendered as the server schedules it — never "due now"[33m 375[2mms[22m[39m
+     [33m[2m✓[22m[39m keeping today’s activity withdraws the scheduled change[33m 318[2mms[22m[39m
+ [32m✓[39m test/site-routes.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1769[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 1384[2mms[22m[39m
+   [32m✓[39m The Dukan ERP page: three prices and an estimate by activity (moved from the home page, docs/74) [2m(2)[22m
+     [33m[2m✓[22m[39m lists the three prices and sends one activity per store to the quote[33m 303[2mms[22m[39m
+ [32m✓[39m test/admin-mfa.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2919[2mms[22m[39m
+   [32m✓[39m signing in to the console [2m(3)[22m
+     [33m[2m✓[22m[39m a password leads to the code screen; the console opens only once the code is accepted[33m 942[2mms[22m[39m
+     [33m[2m✓[22m[39m a recovery code can stand in for the authenticator[33m 541[2mms[22m[39m
+     [33m[2m✓[22m[39m with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once[33m 709[2mms[22m[39m
+   [32m✓[39m a decision’s step-up [2m(1)[22m
+     [33m[2m✓[22m[39m a wrong password or code keeps the dialog open with the reason, and the decision is never sent[33m 724[2mms[22m[39m
+ [32m✓[39m test/content-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32m✓[39m test/site-config.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 152[2mms[22m[39m
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1420[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns (on the Dukan ERP page)[33m 764[2mms[22m[39m
+     [33m[2m✓[22m[39m moves to the same page in Arabic, mirrors the document and keeps the language across visits[33m 491[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m test/public-pages.test.tsx [2m([22m[2m41 tests[22m[2m)[22m[33m 3233[2mms[22m[39m
+   [32m✓[39m every public page in every language [2m(36)[22m
+     [33m[2m✓[22m[39m / renders in en[33m 500[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m13 passed[39m[22m[90m (13)[39m
+[2m      Tests [22m [1m[32m119 passed[39m[22m[90m (119)[39m
+[2m   Start at [22m 04:04:47
+[2m   Duration [22m 12.95s[2m (tests 51%, environment 37%, import 8%, transform 4%)[22m
+
+[2m    Isolate [22m [33m13 workers spawned[39m[2m · ~1.14s startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~3.81s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
