@@ -65,8 +65,8 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
   const [activity, setActivity] = useState<Activity | null>(null);
   const [plan, setPlan] = useState<PublicPlan | null>(null);
   // One attempt keeps one key, so a retry after a lost answer is replayed rather than registered twice. A form changed
-  // since — a field corrected after a failure — is a new attempt with a new key: the old one would have the server
-  // replay the first registration, with what was corrected.
+  // since — a field corrected after a failure — is a new attempt with a new key: under the old one the server would
+  // replay the first registration and drop the correction.
   const attempt = useRef<{ key: string; payload: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
