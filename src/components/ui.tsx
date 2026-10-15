@@ -122,7 +122,7 @@ export function Empty({ text }: { text?: string }) {
   return <p className="muted">{text ?? t('state.empty')}</p>;
 }
 
-export function Field({ label, hint, children }: { label: string; hint?: string; children: ReactNode }) {
+export function Field({ label, hint, children }: { label: string; hint?: ReactNode; children: ReactNode }) {
   return (
     <label className="field">
       {label}

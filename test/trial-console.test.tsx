@@ -1,9 +1,10 @@
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import type { BusinessDetail, EntitlementState } from '../src/api/types';
 import { en } from '../src/i18n/en';
-import { BRANCHES, LINES, mount, serve, subscription, useActivityHarness } from './activity-fixtures';
+import { fr } from '../src/i18n/fr';
+import { BRANCHES, LINES, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
 import { TRIAL_END, TRIAL_START, TRIAL_ZONE, trialView, zoneName } from './fixtures-data';
 
 useActivityHarness();
@@ -19,7 +20,7 @@ describe('the console: a business’s trial, recorded', () => {
   const ADMIN = { id: 'a1', email: 'admin@example.test', name: 'Admin' };
   const ID = '0192f000-0000-7000-8000-0000000000b1';
 
-  function business(trial: BusinessDetail['trial'], state: EntitlementState = 'trial_active', events: BusinessDetail['events'] = []) {
+  function business(trial: BusinessDetail['trial'], state: EntitlementState = 'trial_active', events: BusinessDetail['events'] = [], extra?: Handler) {
     const sub = subscription(BRANCHES, LINES);
     const detail: BusinessDetail = {
       id: ID,
@@ -36,13 +37,16 @@ describe('the console: a business’s trial, recorded', () => {
       payments: [],
       trial,
     };
-    serve((url) => {
+    const sent = serve((url, body) => {
+      const own = extra?.(url, body);
+      if (own) return own;
       if (url.endsWith('/platform/admin/me')) return { body: ADMIN };
       if (url.endsWith(`/platform/businesses/${ID}`)) return { body: detail };
       if (url.endsWith(`/platform/businesses/${ID}/seat-requests`)) return { body: [] };
       return undefined;
     });
     mount(`/admin/businesses/${ID}`);
+    return sent;
   }
 
   const trialCard = async () => (await screen.findByRole('heading', { name: 'Free trial', level: 2 })).closest('section')!;
@@ -116,6 +120,75 @@ describe('the console: a business’s trial, recorded', () => {
     expect(text).not.toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:|trial claimed|trial_/);
     const times = [...history.querySelectorAll('time')].map((t) => t.textContent);
     expect(times.slice(1)).toEqual([`13 October 2026 at 10:30 (${at(TRIAL_START)})`, `12 October 2026 at 11:00 (${at('2026-10-12T10:00:00.000Z')})`]);
+  });
+
+  describe('an end date inside a running trial (R4-05)', () => {
+    beforeEach(() => {
+      // jsdom has no <dialog> behaviour; the step-up dialog only needs open/close.
+      HTMLDialogElement.prototype.showModal = function showModal(this: HTMLDialogElement) {
+        this.setAttribute('open', '');
+      };
+      HTMLDialogElement.prototype.close = function close(this: HTMLDialogElement) {
+        this.removeAttribute('open');
+      };
+    });
+    const RUNNING = {
+      eligibility: { registrationMethod: 'email' as const, createdAt: '2026-10-12T10:00:00.000Z', closedAt: null, closedReason: null },
+      claim: { claimedAt: TRIAL_START, startedAt: TRIAL_START, endsAt: TRIAL_END, expiryRecordedAt: null },
+      timeZone: TRIAL_ZONE,
+    };
+    /** The server's refusal, its sentence English with a raw UTC instant — never what the console shows. */
+    const refusal = (detail: Record<string, unknown> = {}): Handler => (url) =>
+      url.endsWith(`/platform/businesses/${ID}/approve`)
+        ? { status: 400, body: { statusCode: 400, error: 'Bad Request', code: 'period_ends_before_trial_end', message: `The end date must be after the free trial ends on ${TRIAL_END}.`, ...detail } }
+        : undefined;
+
+    async function approveWithEndDate(date: string) {
+      const user = userEvent.setup();
+      const decisions = (await screen.findByRole('heading', { name: /Decisions|Décisions/ })).closest('section')!;
+      await user.click(within(decisions).getByRole('button', { name: /^(Approve|Approuver)$/ }));
+      await user.type(decisions.querySelector('input[type="date"]') as HTMLInputElement, date);
+      await user.click(within(decisions).getByRole('button', { name: /^(Confirm|Confirmer)$/ }));
+      await user.type(await screen.findByLabelText(/^(Password|Mot de passe)$/), 'step-up-password');
+      await user.type(screen.getByLabelText(/authenticator|authentification/i), '123456');
+      await user.click(within(screen.getByRole('dialog', { hidden: true })).getByRole('button', { name: /^(Confirm|Confirmer)$/, hidden: true }));
+      return decisions;
+    }
+
+    it('the date field says the end must be after the trial’s, in the business’s zone, before anything is sent', async () => {
+      business(RUNNING);
+      const decisions = (await screen.findByRole('heading', { name: 'Decisions' })).closest('section')!;
+      await userEvent.setup().click(within(decisions).getByRole('button', { name: 'Approve' }));
+      const field = (decisions.querySelector('input[type="date"]') as HTMLInputElement).closest('label')!;
+      expect(field.textContent).toContain(`A free trial is running: the end date must be after it ends, on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+      expect(field.querySelector('bdi')?.textContent).toBe(`20 October 2026 at 10:30 (${CASABLANCA})`);
+    });
+
+    it('refused: a title of its own and the trial’s end in the business’s zone — not "something went wrong", not the server’s UTC sentence', async () => {
+      business(RUNNING, 'trial_active', [], refusal());
+      const decisions = await approveWithEndDate('2026-10-15');
+      await waitFor(() => expect(decisions.textContent).toContain(en['admin.trial.periodEnd.title']));
+      expect(decisions.textContent).toContain(`The end date must be after the free trial ends, on 20 October 2026 at 10:30 (${CASABLANCA}). Choose a later date.`);
+      expect(decisions.textContent).not.toContain(en['error.generic']);
+      expect(decisions.textContent).not.toContain(TRIAL_END);
+      expect(decisions.textContent).not.toContain('period_ends_before_trial_end');
+    });
+
+    it('the end the server names in its refusal comes first, said in French in the business’s zone', async () => {
+      localStorage.setItem('erp.web.language', 'fr');
+      business(RUNNING, 'trial_active', [], refusal({ trialEndsAt: '2026-10-21T09:30:00.000Z' }));
+      const decisions = await approveWithEndDate('2026-10-15');
+      await waitFor(() => expect(decisions.textContent).toContain(fr['admin.trial.periodEnd.title']));
+      expect(decisions.textContent).toContain(`le 21 octobre 2026 à 10:30 (${zoneName(TRIAL_ZONE, 'fr-FR', '2026-10-21T09:30:00.000Z')})`);
+      expect(decisions.textContent).not.toMatch(/2026-10-2\dT/);
+    });
+
+    it('no trial running: no hint on the date', async () => {
+      business({ eligibility: null, claim: null, timeZone: TRIAL_ZONE }, 'pending');
+      const decisions = (await screen.findByRole('heading', { name: 'Decisions' })).closest('section')!;
+      await userEvent.setup().click(within(decisions).getByRole('button', { name: 'Approve' }));
+      expect(decisions.textContent).not.toContain('A free trial is running');
+    });
   });
 
   it('the overview and the list name the three trial states', async () => {

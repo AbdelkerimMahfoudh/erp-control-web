@@ -7,9 +7,10 @@ import { ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
 import { Timeline, type TimelineTrial } from '../../components/timeline';
-import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, StateBadge, Table } from '../../components/ui';
+import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, StateBadge, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
-import { formatDate, formatDateTime, formatInt } from '../../lib/format';
+import { formatDate, formatDateTime, formatInstant, formatInt } from '../../lib/format';
+import { detailOf } from '../../lib/trial';
 import { BusinessTrial } from './BusinessTrial';
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
@@ -268,8 +269,34 @@ function timelineTrial(business: BusinessDetail): TimelineTrial | null {
   return { timeZone, startedAt: claim?.startedAt ?? null, endsAt: claim?.endsAt ?? null };
 }
 
+/** The business's zone, the one its trial dates are shown in. */
+function trialZone(business: BusinessDetail): string | null {
+  return business.trial?.timeZone ?? business.entitlement?.trial?.timeZone ?? null;
+}
+
+/** The end of a trial still running: paid access decided now starts there, so an end date must lie after it. */
+function runningTrialEnd(business: BusinessDetail): string | null {
+  return business.entitlement?.trial?.status === 'active' ? (business.trial?.claim?.endsAt ?? business.entitlement.trial.endsAt) : null;
+}
+
+/**
+ * A decision the server refused, in words. An end date inside a running trial (`period_ends_before_trial_end`) is a
+ * date to choose again, not something to try again: it names the trial's end — the server's, when it sends it — in the
+ * business's zone. Every other refusal is said the way every page says one.
+ */
+function DecisionRefusal({ error, business }: { error: unknown; business: BusinessDetail }) {
+  const { t, lang } = useI18n();
+  if (!(error instanceof ApiError) || error.code !== 'period_ends_before_trial_end') return <ErrorNotice error={error} />;
+  const end = detailOf<string>(error, 'trialEndsAt') ?? business.trial?.claim?.endsAt ?? business.entitlement?.trial?.endsAt ?? null;
+  return (
+    <Notice tone="danger" title={t('admin.trial.periodEnd.title')}>
+      {end ? <Phrase text={t('admin.trial.periodEnd.refused')} values={{ date: formatInstant(end, trialZone(business), lang) }} /> : t('admin.trial.periodEnd.refusedUndated')}
+    </Notice>
+  );
+}
+
 function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   const [open, setOpen] = useState<Decision | null>(null);
   const [form, setForm] = useState({ months: '1', periodEnd: '', days: '14', reason: '', amount: '', paidAt: new Date().toISOString().slice(0, 10), channel: 'bank_transfer', reference: '', note: '', confirm: true });
   const [busy, setBusy] = useState(false);
@@ -328,6 +355,7 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
   };
 
   const needsReason = open === 'reject' || open === 'suspend' || open === 'reinstate' || open === 'cancel' || open === 'grant';
+  const trialEnd = runningTrialEnd(business);
 
   return (
     <section className="card stack">
@@ -349,7 +377,10 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
             </Field>
           ) : null}
           {open === 'approve' || open === 'period' ? (
-            <Field label={open === 'approve' ? t('admin.action.approve.periodEnd') : t('admin.action.period')}>
+            <Field
+              label={open === 'approve' ? t('admin.action.approve.periodEnd') : t('admin.action.period')}
+              hint={trialEnd ? <Phrase text={t('admin.trial.periodEnd.hint')} values={{ date: formatInstant(trialEnd, trialZone(business), lang) }} /> : undefined}
+            >
               <input type="date" required={open === 'period'} value={form.periodEnd} onChange={(e) => setForm({ ...form, periodEnd: e.target.value })} />
             </Field>
           ) : null}
@@ -391,7 +422,7 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
               <input required={needsReason} maxLength={500} value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} />
             </Field>
           )}
-          <ErrorNotice error={error} />
+          <DecisionRefusal error={error} business={business} />
           <div className="row">
             <button type="submit" className="btn btn-primary" disabled={busy}>
               {t('action.confirm')}
