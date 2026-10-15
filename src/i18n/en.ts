@@ -95,6 +95,7 @@ export const en = {
   'apply.unavailable.title': 'Applications cannot be completed right now',
   'apply.unavailable.body':
     'No verification message can be sent at the moment, so nothing was saved. Please try again later or contact support.',
+  'apply.unavailable.whatsapp': 'WhatsApp verification is not available right now. Remove the WhatsApp number to continue with your email address, or try again later.',
   'apply.verify.title': 'Prove your contact',
   'apply.verify.body': 'A code was sent to {destination}. Enter it to finish your application.',
   'apply.verify.code': 'Verification code',

@@ -89,6 +89,7 @@ export const ar: Catalogue = {
   'apply.sending': 'جارٍ الإرسال…',
   'apply.unavailable.title': 'لا يمكن إتمام الطلبات الآن',
   'apply.unavailable.body': 'لا يمكن إرسال رسالة تحقق في الوقت الحالي، لذلك لم يُحفظ شيء. حاول لاحقًا أو تواصل مع الدعم.',
+  'apply.unavailable.whatsapp': 'التحقق عبر واتساب غير متاح حاليًا. احذف رقم واتساب لتتابع ببريدك الإلكتروني، أو حاول لاحقًا.',
   'apply.verify.title': 'أثبت وسيلة الاتصال',
   'apply.verify.body': 'أُرسل رمز إلى {destination}. أدخله لإتمام طلبك.',
   'apply.verify.code': 'رمز التحقق',

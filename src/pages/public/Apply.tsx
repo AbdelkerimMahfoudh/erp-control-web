@@ -7,6 +7,7 @@ import { ActivityCards } from '../../components/activity';
 import { ErrorNotice, Field, Notice } from '../../components/ui';
 import { LANGUAGES, LANGUAGE_LABELS, useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, isActivity } from '../../lib/activity';
+import { detailOf } from '../../lib/trial';
 
 interface RegisterResponse {
   status: string;
@@ -22,6 +23,17 @@ interface RegisterResponse {
 }
 
 type Step = { kind: 'form' } | { kind: 'verify'; response: RegisterResponse } | { kind: 'done'; response: RegisterResponse };
+
+/**
+ * Why the server could not take the application (503 `registration_unavailable`): every contact given must be
+ * verified, so it refuses before saving anything when any of them cannot receive its code now, and names those
+ * (`unavailableContacts`, C10). The WhatsApp number alone, beside an email address, can simply be left out; anything
+ * else waits.
+ */
+function unavailableOf(e: ApiError, emailGiven: boolean): 'whatsapp' | 'all' {
+  const named = detailOf<unknown>(e, 'unavailableContacts');
+  return emailGiven && Array.isArray(named) && named.length === 1 && named[0] === 'phone' ? 'whatsapp' : 'all';
+}
 
 /**
  * The business application (docs/68 §2). Registration creates a PENDING
@@ -55,7 +67,7 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
   const [idempotencyKey] = useState(() => crypto.randomUUID());
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
-  const [unavailable, setUnavailable] = useState(false);
+  const [unavailable, setUnavailable] = useState<'whatsapp' | 'all' | null>(null);
   const set = (k: keyof typeof form) => (e: { target: { value: string } }) => setForm({ ...form, [k]: e.target.value });
 
   // The prices beside the choice. Without them the choice still works; no figure is invented.
@@ -72,6 +84,7 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
+    setUnavailable(null);
     if (!form.email.trim() && !form.phone.trim()) {
       setError(new ApiError(t('apply.error.contact'), 400, 'contact_required', null));
       return;
@@ -96,7 +109,7 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
       };
       onRegistered(await request<RegisterResponse>('platform/register', { method: 'POST', body }));
     } catch (err) {
-      if (err instanceof ApiError && err.status === 503 && err.code === 'registration_unavailable') setUnavailable(true);
+      if (err instanceof ApiError && err.status === 503 && err.code === 'registration_unavailable') setUnavailable(unavailableOf(err, form.email.trim() !== ''));
       else setError(err);
     } finally {
       setBusy(false);
@@ -109,7 +122,9 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
         <h1>{t('apply.title')}</h1>
         <p className="lead">{t('apply.lead')}</p>
       </section>
-      {unavailable ? (
+      {unavailable === 'whatsapp' ? (
+        <Notice tone="warn">{t('apply.unavailable.whatsapp')}</Notice>
+      ) : unavailable ? (
         <Notice tone="warn" title={t('apply.unavailable.title')}>
           {t('apply.unavailable.body')}
         </Notice>

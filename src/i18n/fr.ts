@@ -90,6 +90,7 @@ export const fr: Catalogue = {
   'apply.sending': 'Envoi…',
   'apply.unavailable.title': 'Les demandes ne peuvent pas aboutir pour le moment',
   'apply.unavailable.body': 'Aucun message de vérification ne peut être envoyé actuellement, donc rien n’a été enregistré. Réessayez plus tard ou contactez l’assistance.',
+  'apply.unavailable.whatsapp': 'La vérification par WhatsApp n’est pas disponible pour le moment. Retirez le numéro WhatsApp pour continuer avec votre adresse e-mail, ou réessayez plus tard.',
   'apply.verify.title': 'Prouvez votre contact',
   'apply.verify.body': 'Un code a été envoyé à {destination}. Saisissez-le pour terminer votre demande.',
   'apply.verify.code': 'Code de vérification',
