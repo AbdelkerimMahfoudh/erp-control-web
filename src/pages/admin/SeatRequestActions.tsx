@@ -1,15 +1,49 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type ReactNode } from 'react';
 import { ApiError } from '../../api/client';
-import type { SeatRequest } from '../../api/types';
+import type { SeatActivation, SeatRequest } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
-import { ErrorNotice, Field, Notice } from '../../components/ui';
+import { ErrorNotice, Field, Notice, Phrase } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { isScheduledActivityChange } from '../../lib/activity';
+import { formatInstant } from '../../lib/format';
 
+/**
+ * The answer to a confirmation: the row as it now stands — `allocation.activation` is when a store or seat paid for
+ * during a free trial starts (D176) — and `activation`, whether the seat's person could be activated (another thing).
+ */
 interface ConfirmResult {
   applied: boolean;
   allocation: SeatRequest;
   activation: { activated: boolean; pending: string[] } | null;
+}
+
+/**
+ * When a store or seat whose payment was just confirmed during a free trial starts (D176): when the business's trial
+ * ends — the server's instant, in the row's own zone — or with its first paid month, while no paid access is approved
+ * for then. Either way nothing is in force or charged to a period before, and this payment is its first month's.
+ */
+function ScheduledConfirmation({ activation }: { activation: SeatActivation }) {
+  const { t, lang } = useI18n();
+  if (activation.waitsFor === 'paid_access') return <>{t('admin.trial.addonWaits')}</>;
+  return <Phrase text={t('admin.trial.addonScheduled')} values={{ date: formatInstant(activation.startsAt, activation.timeZone, lang) }} />;
+}
+
+/**
+ * A confirmation the server refused, in words. `paid_period_not_started` (D176): a business with free trial facts, no
+ * paid period ever started and no trial running — a payment recorded now would be charged again by its first paid
+ * period, so nothing was recorded and the request still awaits payment; it is not something to "try again".
+ */
+function ConfirmRefusal({ error }: { error: unknown }) {
+  const { t } = useI18n();
+  if (error instanceof ApiError && error.code === 'reference_required') return <Notice tone="danger">{t('admin.action.reference.required')}</Notice>;
+  if (error instanceof ApiError && error.code === 'paid_period_not_started') {
+    return (
+      <Notice tone="danger" title={t('admin.trial.paidPeriodNotStarted.title')}>
+        {t('admin.trial.paidPeriodNotStarted.refused')}
+      </Notice>
+    );
+  }
+  return <ErrorNotice error={error} />;
 }
 
 /**
@@ -21,6 +55,12 @@ interface ConfirmResult {
  * An activity upgrade is confirmed like a seat (the branch changes at once);
  * refusing leaves the branch as it is; only a change still waiting for the
  * renewal can be released — the server refuses to release one in force.
+ *
+ * What a confirmation did is read from the row the server answered with, never
+ * assumed from the request: a store is "opened" only when it is paid; a store or
+ * seat paid for during a free trial is scheduled (D176) — nothing opens, and the
+ * outcome says when it starts. A scheduled row offers no action at all: it can be
+ * neither confirmed again, refused nor released.
  *
  * `onOutcome` hands the result to the page before the list is reloaded: a
  * decided request usually leaves the list it was in ("Awaiting payment"), and
@@ -37,7 +77,7 @@ export function SeatRequestActions({
   request: SeatRequest;
   ask: () => Promise<string | null>;
   onDone: () => Promise<void>;
-  onOutcome?: (lines: string[]) => void;
+  onOutcome?: (lines: ReactNode[]) => void;
 }) {
   const { t } = useI18n();
   const [mode, setMode] = useState<'none' | 'confirm' | 'refuse' | 'release'>('none');
@@ -49,9 +89,9 @@ export function SeatRequestActions({
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
-  const [outcome, setOutcome] = useState<string[] | null>(null);
+  const [outcome, setOutcome] = useState<ReactNode[] | null>(null);
   // Shown once: by the page when it keeps the result, otherwise in this row.
-  const report = (lines: string[]) => (onOutcome ? onOutcome(lines) : setOutcome(lines));
+  const report = (lines: ReactNode[]) => (onOutcome ? onOutcome(lines) : setOutcome(lines));
 
   const base = `platform/businesses/${companyId}/seat-requests/${request.id}`;
   const releasable = (request.kind === 'seat' && (request.status === 'paid' || request.status === 'granted')) || isScheduledActivityChange(request);
@@ -69,9 +109,11 @@ export function SeatRequestActions({
           method: 'POST',
           body: { amount, paidAt: new Date(paidAt).toISOString(), channel, reference: reference.trim(), note: note.trim() || undefined, expectedVersion: request.version, confirmPassword },
         });
-        const lines = [r.applied ? t('admin.seats.confirmed', { reference: reference.trim() }) : t('admin.action.noop')];
-        if (request.kind === 'store' && r.applied) lines.push(t('admin.seats.storeOpened'));
-        if (request.kind === 'activity' && r.applied) lines.push(t('admin.seats.activityChanged'));
+        const now = r.allocation;
+        const lines: ReactNode[] = [r.applied ? t('admin.seats.confirmed', { reference: reference.trim() }) : t('admin.action.noop')];
+        if (r.applied && now.status === 'scheduled' && now.activation) lines.push(<ScheduledConfirmation activation={now.activation} />);
+        if (r.applied && now.status === 'paid' && now.kind === 'store') lines.push(t('admin.seats.storeOpened'));
+        if (r.applied && now.status === 'paid' && now.kind === 'activity') lines.push(t('admin.seats.activityChanged'));
         if (r.activation) {
           lines.push(
             r.activation.activated
@@ -99,8 +141,8 @@ export function SeatRequestActions({
   if (outcome) {
     return (
       <Notice tone="ok">
-        {outcome.map((l) => (
-          <div key={l}>{l}</div>
+        {outcome.map((l, i) => (
+          <div key={i}>{l}</div>
         ))}
       </Notice>
     );
@@ -164,7 +206,7 @@ export function SeatRequestActions({
           </Field>
         </>
       )}
-      {error instanceof ApiError && error.code === 'reference_required' ? <Notice tone="danger">{t('admin.action.reference.required')}</Notice> : <ErrorNotice error={error} />}
+      <ConfirmRefusal error={error} />
       <div className="row">
         <button type="submit" className="btn btn-primary" disabled={busy || (mode === 'confirm' ? reference.trim().length < 3 : !reason.trim())}>
           {t('action.confirm')}

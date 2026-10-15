@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import type { SeatRequest, SeatRequestStatus } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
@@ -9,13 +9,15 @@ import { formatDateTime } from '../../lib/format';
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
 
-const STATUSES: SeatRequestStatus[] = ['pending_payment', 'paid', 'granted', 'released', 'refused'];
+const STATUSES: SeatRequestStatus[] = ['pending_payment', 'scheduled', 'paid', 'granted', 'released', 'refused'];
 
 /**
  * The platform's queue of seat, store and activity requests (docs/68 §4,
  * docs/73 §6). An activity change reads "from → to", when it takes effect and
  * the amount the server recorded; a change waiting for the renewal is listed
- * under "granted" and says so.
+ * under "granted" and says so. A store or seat paid for during a free trial is
+ * listed under "Paid · scheduled" until it starts (D176), each row with its
+ * start in its own business's zone.
  */
 export function SeatRequests() {
   const { t, lang } = useI18n();
@@ -23,7 +25,7 @@ export function SeatRequests() {
   const [rows, setRows] = useState<SeatRequest[] | null>(null);
   const [error, setError] = useState<unknown>(null);
   /** The last decision's result, kept above the list: the decided row usually leaves the list it was shown in. */
-  const [outcome, setOutcome] = useState<string[] | null>(null);
+  const [outcome, setOutcome] = useState<ReactNode[] | null>(null);
   const { ask, dialog } = useStepUp();
 
   const load = useCallback(async () => {
@@ -57,8 +59,8 @@ export function SeatRequests() {
       <ErrorNotice error={error} />
       {outcome ? (
         <Notice tone="ok">
-          {outcome.map((l) => (
-            <div key={l}>{l}</div>
+          {outcome.map((l, i) => (
+            <div key={i}>{l}</div>
           ))}
         </Notice>
       ) : null}

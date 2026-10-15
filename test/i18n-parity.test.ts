@@ -95,8 +95,14 @@ describe('the three catalogues', () => {
       // "Paid · scheduled" is not "Scheduled for the renewal": an activity change keeps that key to itself.
       expect(cat['account.requests.status.paidScheduled']).not.toBe(cat['account.requests.status.scheduled']);
       expect(TRIAL_WORD.test(cat['account.requests.status.paidScheduled'].toLowerCase())).toBe(false);
-      for (const key of ['trial.addons.storeAtEnd', 'trial.addons.seatAtEnd', 'trial.addons.note'] as const) expect({ key, placeholders: placeholders(cat[key]) }).toEqual({ key, placeholders: 'date' });
-      for (const key of ['trial.addons.waitsForPaidAccess', 'trial.addons.paidNote'] as const) expect({ key, placeholders: placeholders(cat[key]) }).toEqual({ key, placeholders: '' });
+      for (const key of ['trial.addons.storeAtEnd', 'trial.addons.seatAtEnd', 'trial.addons.note', 'admin.trial.addonScheduled'] as const) {
+        expect({ key, placeholders: placeholders(cat[key]) }).toEqual({ key, placeholders: 'date' });
+      }
+      for (const key of ['trial.addons.waitsForPaidAccess', 'trial.addons.paidNote', 'admin.trial.addonWaits', 'admin.trial.paidPeriodNotStarted.title', 'admin.trial.paidPeriodNotStarted.refused'] as const) {
+        expect({ key, placeholders: placeholders(cat[key]) }).toEqual({ key, placeholders: '' });
+      }
+      // What a person waits for is said without the trial: the console lists it among the other reasons.
+      expect({ reason: cat['pending.seat_scheduled'], trial: TRIAL_WORD.test(cat['pending.seat_scheduled'].toLowerCase()) }).toEqual({ reason: cat['pending.seat_scheduled'], trial: false });
     }
   });
 

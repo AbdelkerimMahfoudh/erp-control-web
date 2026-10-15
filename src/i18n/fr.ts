@@ -472,10 +472,16 @@ export const fr: Catalogue = {
   'admin.trial.periodEnd.title': 'Cette date de fin est trop proche',
   'admin.trial.periodEnd.refused': 'La date de fin doit être postérieure à la fin de l’essai gratuit, le {date}. Choisissez une date plus tardive.',
   'admin.trial.periodEnd.refusedUndated': 'La date de fin doit être postérieure à la fin de l’essai gratuit. Choisissez une date plus tardive.',
+  'admin.trial.addonScheduled': 'Il commence à la fin de l’essai gratuit de l’entreprise, le {date}. Rien n’est actif ni facturé à une période avant cette date ; ce paiement couvre son premier mois payant.',
+  'admin.trial.addonWaits': 'Il commence avec le premier mois payant de l’entreprise, une fois l’accès payant approuvé. Rien n’est actif ni facturé à une période avant cela ; ce paiement couvre son premier mois payant.',
+  'admin.trial.paidPeriodNotStarted.title': 'Non enregistré : aucune période payante n’a commencé',
+  'admin.trial.paidPeriodNotStarted.refused':
+    'Cette entreprise n’a ni période payante ni essai gratuit en cours : un paiement confirmé maintenant serait facturé une seconde fois par sa première période payante. Rien n’a été enregistré ; la demande attend toujours son paiement. Confirmez-le une fois l’accès payant commencé, ou pendant l’essai gratuit de l’entreprise : il commence alors à la fin de l’essai.',
   'pending.email_verification': 'l’adresse e-mail',
   'pending.phone_verification': 'le numéro WhatsApp',
   'pending.seat_payment': 'le paiement de la place',
   'pending.seat_unavailable': 'une place libre',
+  'pending.seat_scheduled': 'le début de la place',
   'event.kind': 'Événement',
   // ── l’historique de l’abonnement : chaque type d’événement dit en mots, jamais par son code ──
   'event.created': 'Abonnement créé',

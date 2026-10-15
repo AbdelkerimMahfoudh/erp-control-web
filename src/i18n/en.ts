@@ -480,10 +480,17 @@ export const en = {
   'admin.trial.periodEnd.title': 'This end date is too early',
   'admin.trial.periodEnd.refused': 'The end date must be after the free trial ends, on {date}. Choose a later date.',
   'admin.trial.periodEnd.refusedUndated': 'The end date must be after the free trial ends. Choose a later date.',
+  // A store or seat confirmed during the trial (D176): scheduled to its end; and a confirmation that would charge twice.
+  'admin.trial.addonScheduled': 'It starts when the business’s free trial ends, on {date}. Nothing is active or charged to a period before then; this payment covers its first paid month.',
+  'admin.trial.addonWaits': 'It starts with the business’s first paid month, once paid access is approved. Nothing is active or charged to a period before then; this payment covers its first paid month.',
+  'admin.trial.paidPeriodNotStarted.title': 'Not recorded: no paid period has started',
+  'admin.trial.paidPeriodNotStarted.refused':
+    'This business has no paid period and no free trial running, so a payment confirmed now would be charged again by its first paid period. Nothing was recorded; the request still awaits payment. Confirm it once paid access has started, or while the business’s free trial runs: it then starts when the trial ends.',
   'pending.email_verification': 'email address',
   'pending.phone_verification': 'WhatsApp number',
   'pending.seat_payment': 'seat payment',
   'pending.seat_unavailable': 'a free seat',
+  'pending.seat_scheduled': 'the seat to start',
   'event.kind': 'Event',
   // ── the subscription's history: every kind the server records, said in words — never its code ──
   'event.created': 'Subscription created',

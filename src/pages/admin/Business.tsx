@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { useParams } from 'react-router-dom';
 import { ApiError } from '../../api/client';
 import type { BusinessDetail, SeatRequest } from '../../api/types';
@@ -57,7 +57,7 @@ export function Business() {
   const [requests, setRequests] = useState<SeatRequest[]>([]);
   const [error, setError] = useState<unknown>(null);
   /** The last decision's result, kept above the requests: the decided row may leave or change in the reloaded list. */
-  const [outcome, setOutcome] = useState<string[] | null>(null);
+  const [outcome, setOutcome] = useState<ReactNode[] | null>(null);
   const { ask, dialog } = useStepUp();
 
   const load = useCallback(async () => {
@@ -216,8 +216,8 @@ export function Business() {
         <h2>{t('admin.seats.title')}</h2>
         {outcome ? (
           <Notice tone="ok">
-            {outcome.map((l) => (
-              <div key={l}>{l}</div>
+            {outcome.map((l, i) => (
+              <div key={i}>{l}</div>
             ))}
           </Notice>
         ) : null}
