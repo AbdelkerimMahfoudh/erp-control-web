@@ -80,7 +80,7 @@ describe('where credentials live', () => {
  * a zone of its own — not GMT, not the zone Mauritanian businesses use today — and no trial page formats a date in
  * this browser's zone. The one comparison with this browser's clock (the resend's countdown) takes a plain instant.
  */
-const TRIAL_INSTANT = String.raw`claimedAt|startedAt|endsAt|wouldStartAt|wouldEndAt|lastAttemptAt|resendAvailableAt|expiryRecordedAt`;
+const TRIAL_INSTANT = String.raw`claimedAt|startedAt|endsAt|wouldStartAt|wouldEndAt|lastAttemptAt|resendAvailableAt|expiryRecordedAt|startsAt|effectiveAt`;
 const TRIAL_ARITHMETIC = new RegExp(
   String.raw`\b(${TRIAL_INSTANT})\b\s*[*+\-/]|[*+\-/]\s*[\w.?!]*\b(${TRIAL_INSTANT})\b|\b(${TRIAL_INSTANT})\b[^;]*\.(getTime|valueOf)\(|Date\.parse\([^)]*\b(${TRIAL_INSTANT})\b`,
 );
@@ -121,6 +121,51 @@ describe('the free trial’s dates are the server’s', () => {
     }
     // The one formatter of a trial instant takes the zone it is given and nothing else.
     expect(read(join(SRC, 'lib/format.ts'))).toMatch(/export function formatInstant\(iso: string \| null \| undefined, timeZone: string \| null \| undefined, lang: Language\)/);
+  });
+});
+
+/*
+ * A store or seat paid for during the free trial (D176, 2026-10-15) starts when the trial ends: the server sends that
+ * start as `activation.startsAt` with the zone the row belongs to (`activation.timeZone`, the business's). It is told
+ * like every trial date — through formatInstant, with that row's own zone and the zone's name — never in this browser's
+ * zone, never in a zone the page holds for something else (the queue lists many businesses), and never worked out here.
+ * `effectiveAt` is a fact the page reads, never a date it formats.
+ */
+describe('a scheduled store or seat starts on the server’s instant, told in the row’s own zone (D176)', () => {
+  /** Every read of an activation's start: `<base>.startsAt` where the base is the row's `activation`. */
+  const activationReads = (line: string) => [...line.matchAll(/([\w.?]*\bactivation)\??\.startsAt\b/g)].map((m) => m[1]!.replace(/\?/g, ''));
+
+  it('requests.tsx tells the start only through formatInstant, with the row’s own zone', () => {
+    const lines = executable(read(join(SRC, 'components', 'requests.tsx')));
+    const reads = lines.filter((line) => /\bstartsAt\b/.test(line));
+    expect(reads).toEqual([expect.stringContaining('formatInstant(activation.startsAt, activation.timeZone, lang)')]);
+    // The activation is the row's own, and nothing in the file formats a date any other way.
+    expect(lines.filter((line) => /\bactivation = /.test(line))).toEqual([expect.stringMatching(/const activation = r\.activation;$/)]);
+    expect(lines.filter((line) => /formatDate(Time)?\(|toLocale\w*String|getTimezoneOffset|resolvedOptions|new Date\(/.test(line))).toEqual([]);
+  });
+
+  it('no source formats an activation’s start except with that same activation’s zone, and none formats `effectiveAt`', () => {
+    let found = 0;
+    for (const f of code) {
+      for (const line of executable(read(f))) {
+        for (const base of activationReads(line)) {
+          found += 1;
+          expect({ file: relative(SRC, f), line: line.trim() }).toEqual({ file: relative(SRC, f), line: expect.stringContaining(`formatInstant(${base}.startsAt, ${base}.timeZone, lang)`) });
+        }
+        expect({ file: relative(SRC, f), formatsEffectiveAt: /format\w*\([^)]*\beffectiveAt\b/.test(line) }).toEqual({ file: relative(SRC, f), formatsEffectiveAt: false });
+      }
+    }
+    expect(found).toBeGreaterThan(0);
+  });
+
+  it('a request’s status is put into words by one mapping, so a paid add-on never borrows the renewal’s "scheduled"', () => {
+    const MAPPING = join('components', 'ui.tsx');
+    for (const f of code) {
+      if (relative(SRC, f) === MAPPING) continue;
+      const hits = executable(read(f)).filter((line) => /account\.requests\.status\.\$\{/.test(line));
+      expect({ file: relative(SRC, f), hits }).toEqual({ file: relative(SRC, f), hits: [] });
+    }
+    expect(read(join(SRC, MAPPING))).toMatch(/status === 'scheduled' \? 'account\.requests\.status\.paidScheduled' : /);
   });
 });
 

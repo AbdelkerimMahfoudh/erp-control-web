@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import type { SeatRequest, SeatRequestStatus } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
-import { Empty, ErrorNotice, Loading, Notice, Table } from '../../components/ui';
-import { useI18n, type Key } from '../../i18n';
+import { Empty, ErrorNotice, Loading, Notice, requestStatusKey, Table } from '../../components/ui';
+import { useI18n } from '../../i18n';
 import { formatDateTime } from '../../lib/format';
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
@@ -48,7 +48,7 @@ export function SeatRequests() {
           <select className="compact" value={status} onChange={(e) => setStatus(e.target.value as SeatRequestStatus)}>
             {STATUSES.map((s) => (
               <option key={s} value={s}>
-                {t(`account.requests.status.${s}` as Key)}
+                {t(requestStatusKey(s))}
               </option>
             ))}
           </select>

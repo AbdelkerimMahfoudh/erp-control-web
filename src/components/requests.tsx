@@ -1,8 +1,8 @@
 import type { SeatRequest } from '../api/types';
 import { useI18n, type Key } from '../i18n';
 import { isScheduledActivityChange } from '../lib/activity';
-import { formatMru } from '../lib/format';
-import { Badge, RequestBadge } from './ui';
+import { formatInstant, formatMru } from '../lib/format';
+import { Badge, Phrase, RequestBadge } from './ui';
 
 /**
  * One seat, store or activity request in words, as the server described it —
@@ -61,9 +61,43 @@ export function RequestAmount({ request: r }: { request: SeatRequest }) {
   return <>{t('account.requests.perMonth', { amount })}</>;
 }
 
-/** The status in words and colour; a change waiting for the renewal says so rather than "Granted". */
+/**
+ * The status in words and colour; a change waiting for the renewal says so rather than "Granted". A store or seat paid
+ * for during a free trial is "Paid · scheduled", with when it starts (D176).
+ */
 export function RequestStatus({ request: r }: { request: SeatRequest }) {
   const { t } = useI18n();
   if (isScheduledActivityChange(r)) return <Badge tone="info">{t('account.requests.status.scheduled')}</Badge>;
+  if (r.status === 'scheduled') {
+    return (
+      <span className="stack-tight">
+        <span>
+          <RequestBadge status={r.status} />
+        </span>
+        <ScheduledStart request={r} />
+      </span>
+    );
+  }
   return <RequestBadge status={r.status} />;
+}
+
+/**
+ * When a scheduled store or seat starts, as the server computed it (D176): when the trial ends, at the instant its
+ * claim recorded — told in the row's own zone, the business's, with the zone's name, isolated — or, while no paid access
+ * is approved for then, with the first paid month. The same sentence on the Owner's page and in the platform's queue,
+ * where each row carries its own business's zone. Nothing here works a date out.
+ */
+function ScheduledStart({ request: r }: { request: SeatRequest }) {
+  const { t, lang } = useI18n();
+  const activation = r.activation;
+  if (!activation) return null;
+  if (activation.waitsFor === 'paid_access') return <span className="small">{t('trial.addons.waitsForPaidAccess')}</span>;
+  return (
+    <span className="small">
+      <Phrase
+        text={t(r.kind === 'store' ? 'trial.addons.storeAtEnd' : 'trial.addons.seatAtEnd')}
+        values={{ date: formatInstant(activation.startsAt, activation.timeZone, lang) }}
+      />
+    </span>
+  );
 }

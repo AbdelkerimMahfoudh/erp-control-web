@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../src/app';
-import type { EntitlementState, MySubscription, TimelineEvent, TrialClaimResult, TrialLinkOutcome, TrialStatus, TrialView } from '../src/api/types';
+import type { EntitlementState, MySubscription, SeatRequest, TimelineEvent, TrialClaimResult, TrialLinkOutcome, TrialStatus, TrialView } from '../src/api/types';
 import { ownerLogout } from '../src/auth/owner';
 import { I18nProvider } from '../src/i18n';
 import { ar } from '../src/i18n/ar';
@@ -11,7 +11,7 @@ import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
 import { ThemeProvider } from '../src/theme/theme';
 import { BRANCHES, LINES, PLAN_V3, SLOW_WAIT, activityOptions, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
-import { NO_TRIAL, TRIAL_END, TRIAL_START, TRIAL_ZONE, trialOffer, trialSetup, trialStatus, trialView, zoneName } from './fixtures-data';
+import { B2, NO_TRIAL, TRIAL_END, TRIAL_START, TRIAL_ZONE, allocation, scheduledRequest, trialOffer, trialSetup, trialStatus, trialView, zoneName } from './fixtures-data';
 
 useActivityHarness();
 afterEach(async () => {
@@ -1158,6 +1158,134 @@ describe('the history: every event in words, the trial’s own from its facts in
       await ownerLogout();
       cleanup();
     }
+  });
+});
+
+/*
+ * A store or seat paid for during the trial (D176, the owner's correction of 2026-10-15): the platform confirms the
+ * payment while the trial runs, and the request is "scheduled" — paid, in force nowhere — until it starts with the
+ * first paid month, when the trial ends. Its row says so, with the server's instant in the row's own zone.
+ */
+describe('a store or seat paid for during the trial: "Paid · scheduled", and when it starts (D176)', () => {
+  const RUNNING: TrialStatus = { state: 'trial_active', trial: trialView('active'), offer: null, setup: null, calculatedAt: TRIAL_START };
+  /** The Owner's requests as GET my-subscription/seat-requests lists them. */
+  const listing = (rows: SeatRequest[]): Handler => (url) => (url.endsWith('/platform/my-subscription/seat-requests') ? { body: rows } : undefined);
+  const PENDING_STORE = allocation({
+    id: '0192f000-0000-7000-8000-0000000000d4',
+    kind: 'store',
+    store: null,
+    label: 'Boutique Sud',
+    branchId: null,
+    branchName: null,
+    activityFrom: null,
+    activityTo: 'electronics',
+    activityEffective: null,
+    monthlyAmount: 500,
+  });
+  const requestsCard = async (heading: string = en['account.requests']) => (await screen.findByRole('heading', { name: heading, level: 2 }, SLOW_WAIT)).closest('section')!;
+  /** The listed row naming `text`, once the list was read. */
+  async function rowOf(card: HTMLElement, text: string): Promise<HTMLElement> {
+    await waitFor(() => expect(card.textContent).toContain(text), SLOW_WAIT);
+    return [...card.querySelectorAll('tbody tr')].find((tr) => tr.textContent!.includes(text)) as HTMLElement;
+  }
+  /** The trial's end as a page must show it: in the zone the server named, with that zone's name — never UTC or this browser's. */
+  const inZone = (locale: string, zone = TRIAL_ZONE, iso = TRIAL_END) =>
+    `${new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeStyle: 'short', timeZone: zone }).format(new Date(iso))} (${zoneName(zone, locale, iso)})`;
+  const AT_END = `20 October 2026 at 10:30 (${CASABLANCA})`;
+
+  it('a store opens, a seat starts, when the trial ends — the server’s instant in the business’s zone, isolated; no withdraw, the payment’s reference instead', async () => {
+    account('trial_active', RUNNING, listing([scheduledRequest('store'), scheduledRequest('seat'), PENDING_STORE]));
+    const card = await requestsCard();
+    const store = await rowOf(card, 'Boutique Nord');
+    expect(within(store).getByText('Paid · scheduled')).toBeTruthy();
+    expect(store.textContent).toContain(`Opens when the free trial ends, on ${AT_END}`);
+    expect([...store.querySelectorAll('bdi')].map((b) => b.textContent)).toEqual([AT_END]);
+    expect(store.textContent).toContain('500 MRU per month');
+    expect(within(store).queryByRole('button')).toBeNull();
+    expect(store.querySelector('.ltr')?.textContent).toBe('BK-1');
+    const seat = await rowOf(card, 'Additional seat at Agence Centre');
+    expect(within(seat).getByText('Paid · scheduled')).toBeTruthy();
+    expect(seat.textContent).toContain(`Starts when the free trial ends, on ${AT_END}`);
+    expect(within(seat).queryByRole('button')).toBeNull();
+    expect(seat.querySelector('.ltr')?.textContent).toBe('BK-2');
+    // Never the server's UTC hour, never the renewal's "scheduled"; a request still awaiting payment keeps its Withdraw.
+    for (const row of [store, seat]) {
+      expect(row.textContent).not.toMatch(/09:30/);
+      expect(row.textContent).not.toContain(en['account.requests.status.scheduled']);
+    }
+    const pending = await rowOf(card, 'Boutique Sud');
+    expect(within(pending).getByText('Awaiting payment')).toBeTruthy();
+    expect(within(pending).getByRole('button', { name: 'Withdraw' })).toBeTruthy();
+  });
+
+  it('nothing approved for after the trial: it starts with the first paid month, once paid access is approved — no date is promised', async () => {
+    account('trial_active', RUNNING, listing([scheduledRequest('store', {}, { waitsFor: 'paid_access' }), scheduledRequest('seat', {}, { waitsFor: 'paid_access' })]));
+    const card = await requestsCard();
+    for (const name of ['Boutique Nord', 'Additional seat at Agence Centre']) {
+      const row = await rowOf(card, name);
+      expect(within(row).getByText('Paid · scheduled')).toBeTruthy();
+      expect(row.textContent).toContain('Starts with the first paid month, once paid access is approved');
+      expect(row.querySelectorAll('bdi')).toHaveLength(0);
+      expect(row.textContent).not.toContain('October');
+      expect(within(row).queryByRole('button')).toBeNull();
+    }
+  });
+
+  it('the date is told in the zone the row itself carries: a Dubai business’s 09:30 UTC is 13:30 there', async () => {
+    account('trial_active', RUNNING, listing([scheduledRequest('store', {}, { timeZone: 'Asia/Dubai' })]));
+    const store = await rowOf(await requestsCard(), 'Boutique Nord');
+    expect(store.textContent).toContain(`Opens when the free trial ends, on 20 October 2026 at 13:30 (${zoneName('Asia/Dubai')})`);
+    expect(store.textContent).not.toMatch(/09:30|10:30/);
+  });
+
+  it('every status in its own words and colour, in English, French and Arabic — a paid add-on never reads as the renewal’s "scheduled"', async () => {
+    const rows = [
+      PENDING_STORE,
+      scheduledRequest('store'),
+      allocation({ id: '0192f000-0000-7000-8000-0000000000d5', kind: 'seat', status: 'paid', activityFrom: null, activityTo: null, activityEffective: null, monthlyAmount: 100 }),
+      allocation({ id: '0192f000-0000-7000-8000-0000000000d6', kind: 'seat', status: 'granted', activityFrom: null, activityTo: null, activityEffective: null, monthlyAmount: 100 }),
+      allocation({ id: '0192f000-0000-7000-8000-0000000000d7', kind: 'seat', status: 'released', activityFrom: null, activityTo: null, activityEffective: null, monthlyAmount: 100 }),
+      allocation({ id: '0192f000-0000-7000-8000-0000000000d8', kind: 'seat', status: 'refused', activityFrom: null, activityTo: null, activityEffective: null, monthlyAmount: 100 }),
+    ];
+    for (const [lang, cat] of [['en', en], ['fr', fr], ['ar', ar]] as const) {
+      localStorage.setItem('erp.web.language', lang);
+      account('trial_active', RUNNING, listing(rows));
+      const card = await requestsCard(cat['account.requests']);
+      await waitFor(() => expect(card.querySelectorAll('tbody tr')).toHaveLength(rows.length), SLOW_WAIT);
+      const badges = [...card.querySelectorAll('tbody .badge')].map((b) => [b.textContent, b.className]);
+      expect(badges).toEqual([
+        [cat['account.requests.status.pending_payment'], 'badge tone-warn'],
+        [cat['account.requests.status.paidScheduled'], 'badge tone-info'],
+        [cat['account.requests.status.paid'], 'badge tone-ok'],
+        [cat['account.requests.status.granted'], 'badge tone-ok'],
+        [cat['account.requests.status.released'], 'badge tone-muted'],
+        [cat['account.requests.status.refused'], 'badge tone-danger'],
+      ]);
+      expect(cat['account.requests.status.paidScheduled']).not.toBe(cat['account.requests.status.scheduled']);
+      expect(card.textContent).not.toContain(cat['account.requests.status.scheduled']);
+      // Only what is still unpaid can be withdrawn.
+      expect(within(card).getAllByRole('button', { name: cat['account.requests.withdraw'] })).toHaveLength(1);
+      await ownerLogout();
+      cleanup();
+    }
+  });
+
+  it('in French and Arabic: the same sentences, each date in the business’s zone with its name, isolated', async () => {
+    const rows = [scheduledRequest('store'), scheduledRequest('seat'), scheduledRequest('seat', { id: '0192f000-0000-7000-8000-0000000000d9', store: { id: B2, name: 'Boutique Ksar' }, branchId: B2, branchName: 'Boutique Ksar' }, { waitsFor: 'paid_access' })];
+    for (const [lang, cat, locale] of [['fr', fr, 'fr-FR'], ['ar', ar, 'ar-MR']] as const) {
+      localStorage.setItem('erp.web.language', lang);
+      account('trial_active', RUNNING, listing(rows));
+      const card = await requestsCard(cat['account.requests']);
+      const date = inZone(locale);
+      await waitFor(() => expect(card.textContent).toContain(cat['trial.addons.storeAtEnd'].replace('{date}', date)), SLOW_WAIT);
+      expect(card.textContent).toContain(cat['trial.addons.seatAtEnd'].replace('{date}', date));
+      expect(card.textContent).toContain(cat['trial.addons.waitsForPaidAccess']);
+      expect([...card.querySelectorAll('tbody bdi')].map((b) => b.textContent)).toEqual([date, date]);
+      expect(card.textContent).not.toContain(cat['account.requests.status.scheduled']);
+      await ownerLogout();
+      cleanup();
+    }
+    expect(inZone('fr-FR')).toBe(`20 octobre 2026 à 10:30 (${zoneName(TRIAL_ZONE, 'fr-FR')})`);
   });
 });
 

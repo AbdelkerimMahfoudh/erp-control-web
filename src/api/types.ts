@@ -323,7 +323,24 @@ export interface MySubscription {
   payments: PaymentRow[];
 }
 
-export type SeatRequestStatus = 'pending_payment' | 'paid' | 'granted' | 'released' | 'refused';
+/**
+ * `scheduled` (D176, 2026-10-15): a store or seat whose payment the platform confirmed while the business's free trial
+ * ran. It is paid, but in force nowhere and counted nowhere until it starts — when the trial ends, with the first paid
+ * month — so it is never charged at once and again by that month. It cannot be withdrawn, refused or released.
+ */
+export type SeatRequestStatus = 'pending_payment' | 'paid' | 'granted' | 'released' | 'refused' | 'scheduled';
+
+/**
+ * When a scheduled store or seat starts (D176), as the server computes it: `startsAt` is its UTC instant — the end the
+ * trial's claim recorded — and `timeZone` the business's zone, the one it is shown in. `waitsFor` says what it waits
+ * for: `trial_end` — paid access is approved for when the trial ends, so it starts then; `paid_access` — nothing is
+ * approved yet, so it starts with the first paid month, once paid access is.
+ */
+export interface SeatActivation {
+  startsAt: string;
+  timeZone: string;
+  waitsFor: 'trial_end' | 'paid_access';
+}
 
 export interface SeatRequest {
   id: string;
@@ -356,6 +373,13 @@ export interface SeatRequest {
   closedBy: string | null;
   reason: string | null;
   payment: { id: string; amount: string; reference: string | null; paidAt: string; channel: string } | null;
+  /**
+   * When a store or seat paid for during a free trial took effect, or will (D176): for a scheduled row, the trial's
+   * end; once it started, the instant it did. Null for every other row — those took effect when they were confirmed.
+   */
+  effectiveAt: string | null;
+  /** A scheduled row's start, as the server computes it (D176); null for every other row. */
+  activation: SeatActivation | null;
   version: number;
   providerVerified: false;
   business?: { id: string; name: string; publicStoreId: string };

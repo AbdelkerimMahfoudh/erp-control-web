@@ -90,6 +90,16 @@ describe('the three catalogues', () => {
     ]);
   });
 
+  it('says a store or seat paid for during the trial as its own status, never the renewal’s, and its start by date alone (D176)', () => {
+    for (const cat of [en, fr, ar]) {
+      // "Paid · scheduled" is not "Scheduled for the renewal": an activity change keeps that key to itself.
+      expect(cat['account.requests.status.paidScheduled']).not.toBe(cat['account.requests.status.scheduled']);
+      expect(TRIAL_WORD.test(cat['account.requests.status.paidScheduled'].toLowerCase())).toBe(false);
+      for (const key of ['trial.addons.storeAtEnd', 'trial.addons.seatAtEnd'] as const) expect({ key, placeholders: placeholders(cat[key]) }).toEqual({ key, placeholders: 'date' });
+      expect(placeholders(cat['trial.addons.waitsForPaidAccess'])).toBe('');
+    }
+  });
+
   it('never calls an independent agent a bank employee (D154, D157)', () => {
     for (const cat of [en, fr, ar]) {
       for (const [key, value] of Object.entries(cat)) {

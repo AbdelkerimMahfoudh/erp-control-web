@@ -71,11 +71,21 @@ const REQUEST_TONE: Record<SeatRequestStatus, Tone> = {
   granted: 'ok',
   released: 'muted',
   refused: 'danger',
+  // Paid, and waiting to start (D176): neither in force nor owed.
+  scheduled: 'info',
 };
+
+/**
+ * A request's status in words. A store or seat paid for during a free trial reads "Paid · scheduled" (D176) — never
+ * `account.requests.status.scheduled`, which is an activity change's "Scheduled for the renewal".
+ */
+export function requestStatusKey(status: SeatRequestStatus): Key {
+  return status === 'scheduled' ? 'account.requests.status.paidScheduled' : (`account.requests.status.${status}` as Key);
+}
 
 export function RequestBadge({ status }: { status: SeatRequestStatus }) {
   const { t } = useI18n();
-  return <Badge tone={REQUEST_TONE[status]}>{t(`account.requests.status.${status}` as Key)}</Badge>;
+  return <Badge tone={REQUEST_TONE[status]}>{t(requestStatusKey(status))}</Badge>;
 }
 
 /** A server amount, formatted. This component never multiplies anything. */

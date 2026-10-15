@@ -217,6 +217,7 @@ export const en = {
   'account.requests.activityNow': '{amount} for this month (the difference)',
   'account.requests.activityRenewal': 'Nothing due now',
   'account.requests.status.scheduled': 'Scheduled for the renewal',
+  'account.requests.status.paidScheduled': 'Paid · scheduled',
   'account.requests.status.pending_payment': 'Awaiting payment',
   'account.requests.status.paid': 'Paid',
   'account.requests.status.granted': 'Granted',
@@ -265,6 +266,10 @@ export const en = {
   'trial.grantStart': 'Access granted by the platform starts when the free trial ends, on {date}.',
   'trial.access.paid': 'When it ends, on {date}, paid access starts at once.',
   'trial.access.granted': 'When it ends, on {date}, the access granted to your business starts at once.',
+  // A store or seat paid for during the trial (D176): scheduled, it starts when the trial ends — never during it.
+  'trial.addons.storeAtEnd': 'Opens when the free trial ends, on {date}',
+  'trial.addons.seatAtEnd': 'Starts when the free trial ends, on {date}',
+  'trial.addons.waitsForPaidAccess': 'Starts with the first paid month, once paid access is approved',
   'trial.verify.phone': 'Before you can start it, verify your WhatsApp number in the Dukan ERP app, under Your account → WhatsApp number.',
   'trial.verify.email': 'Before you can start it, your email address must be verified. Contact Dukan ERP support.',
   'trial.blocked.other': 'The free trial cannot be started right now.',

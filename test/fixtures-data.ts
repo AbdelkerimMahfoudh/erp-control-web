@@ -1,4 +1,4 @@
-import type { Activity, ActivityOption, ActivityOptions, SeatRequest, SubscriptionBranch, TrialOffer, TrialSetup, TrialStatus, TrialView } from '../src/api/types';
+import type { Activity, ActivityOption, ActivityOptions, SeatActivation, SeatRequest, SubscriptionBranch, TrialOffer, TrialSetup, TrialStatus, TrialView } from '../src/api/types';
 
 /*
  * The API answers the activity specs mock (D154, docs/73 §6), shaped as the backend serialises them — data only,
@@ -163,6 +163,8 @@ export function allocation(over: Partial<SeatRequest>): SeatRequest {
     closedBy: null,
     reason: null,
     payment: null,
+    effectiveAt: null,
+    activation: null,
     version: 1,
     providerVerified: false,
     ...over,
@@ -221,6 +223,38 @@ export function trialStatus(over: Partial<TrialStatus> = {}): TrialStatus {
 
 /** A business that never had a trial and never can (paid, granted, or created from the console): no card. */
 export const NO_TRIAL: TrialStatus = { state: 'active', trial: null, offer: null, setup: null, calculatedAt: TRIAL_START };
+
+/**
+ * A store or seat paid for during the free trial (D176, 2026-10-15), as the server lists it once the platform confirmed
+ * its payment: scheduled — paid, in force nowhere — its start the end the trial's claim recorded, in the business's
+ * zone, waiting for that end (paid access approved for it) unless the activation says it waits for paid access. Shaped
+ * as `SeatAllocationService.view` serialises a row: a store has no branch yet, only its label and activity.
+ */
+export function scheduledRequest(kind: 'store' | 'seat', over: Partial<SeatRequest> = {}, activation: Partial<SeatActivation> = {}): SeatRequest {
+  const store = kind === 'store';
+  return allocation({
+    id: store ? '0192f000-0000-7000-8000-0000000000d1' : '0192f000-0000-7000-8000-0000000000d2',
+    kind,
+    status: 'scheduled',
+    store: store ? null : { id: B1, name: 'Agence Centre' },
+    person: null,
+    label: store ? 'Boutique Nord' : null,
+    branchId: store ? null : B1,
+    branchName: store ? null : 'Agence Centre',
+    activityFrom: null,
+    activityTo: store ? 'electronics' : null,
+    activityEffective: null,
+    monthlyAmount: store ? 500 : 100,
+    requestedAt: '2026-10-14T09:00:00.000Z',
+    confirmedBy: 'admin@example.test',
+    confirmedAt: '2026-10-15T08:00:00.000Z',
+    payment: { id: store ? '0192f000-0000-7000-8000-0000000000e1' : '0192f000-0000-7000-8000-0000000000e2', amount: store ? '500' : '100', reference: store ? 'BK-1' : 'BK-2', paidAt: '2026-10-15T00:00:00.000Z', channel: 'bank_transfer' },
+    effectiveAt: TRIAL_END,
+    activation: { startsAt: TRIAL_END, timeZone: TRIAL_ZONE, waitsFor: 'trial_end', ...activation },
+    version: 2,
+    ...over,
+  });
+}
 
 /** A zone's name as this runtime's Intl says it — what a page is asked to show beside a trial date, never to invent. */
 export const zoneName = (zone: string, locale = 'en-GB', iso = TRIAL_END) =>

@@ -7,7 +7,7 @@ import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/
 import { GrantLine } from '../../components/grant';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
 import { Timeline } from '../../components/timeline';
-import { Badge, DatedPhrase, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, StateBadge, Table, type Tone } from '../../components/ui';
+import { Badge, DatedPhrase, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, requestStatusKey, StateBadge, Table, type Tone } from '../../components/ui';
 import { useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, canWithdraw, isScheduledActivityChange, pricesAfter } from '../../lib/activity';
 import { formatDate, formatInstant, formatInt, formatMru } from '../../lib/format';
@@ -602,7 +602,7 @@ function outcomeOf(
   if (isScheduledActivityChange(a) && a.activityTo) {
     return { tone: 'info', text: prefix + t('account.change.outcome.renewal', { store, activity: name(a.activityTo) }) };
   }
-  return { tone: 'info', text: prefix + t('account.change.outcome.other', { status: t(`account.requests.status.${a.status}` as Key) }) };
+  return { tone: 'info', text: prefix + t('account.change.outcome.other', { status: t(requestStatusKey(a.status)) }) };
 }
 
 function Requests({
