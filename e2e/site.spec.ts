@@ -2,7 +2,10 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import type { EntitlementState, SeatRequest, TrialStatus } from '../src/api/types';
+import type { BusinessRow, EntitlementState, SeatRequest, TrialStatus } from '../src/api/types';
+import { ar } from '../src/i18n/ar';
+import { en } from '../src/i18n/en';
+import { fr } from '../src/i18n/fr';
 import { pathOf, PUBLIC_ROUTES } from '../src/site/routes';
 import { B1, B2, BRANCHES, LINES, NO_TRIAL, TRIAL_END, TRIAL_START, TRIAL_ZONE, allocation, scheduledRequest, subscription, trialOffer, trialSetup, trialStatus, trialView } from '../test/fixtures-data';
 
@@ -483,3 +486,137 @@ for (const lang of LANGS) {
     });
   }
 }
+
+/*
+ * The registration's code check after a confirmation that got no answer (R2-1 / C14 on the website), in a real browser:
+ * the request fails on the network, then the same code is refused as a finished registration is. The page never says
+ * the code did not match; it says the account may be ready and offers sign-in. The console's businesses list tells a
+ * trial business's end in the business's zone, isolated (C18). Every language at both widths, with no sideways scroll,
+ * no unexpected console error and no serious accessibility violation.
+ */
+const CATALOGUES = { en, fr, ar } as const;
+/** The two failures these pages are shown on purpose: the request with no answer, and the server's refusal. */
+const EXPECTED_FAILURES = /Failed to load resource: (net::ERR_FAILED|the server responded with a status of 400)/;
+for (const lang of LANGS) {
+  for (const width of [1280, 375]) {
+    test(`R2-1 on the website: a code check with no answer is never "did not match", and offers sign-in, ${lang} at ${width} px`, async ({ page }) => {
+      const cat = CATALOGUES[lang];
+      const errors = watchConsole(page);
+      await mockApi(page);
+      let confirmations = 0;
+      await page.route(new RegExp(`^${API}/platform/register(/verify/confirm)?$`), async (route) => {
+        const json = (body: unknown, status: number) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
+        if (route.request().url().endsWith('/platform/register')) {
+          return json(
+            {
+              status: 'pending',
+              created: true,
+              publicStoreId: 'ST-7Q4K',
+              activity: 'electronics',
+              verification: { destination: 'o•••@preview.invalid', channel: 'email' },
+              continuation: { token: 'continuation-for-browser-checks', expiresAt: '2026-10-15T10:00:00.000Z', expiresInSeconds: 900 },
+              next: 'verify_contact',
+            },
+            201,
+          );
+        }
+        confirmations += 1;
+        // The first confirmation never gets an answer; the same code again is refused as a finished registration is.
+        if (confirmations === 1) return route.abort('failed');
+        return json({ statusCode: 400, message: 'That code did not match.', error: 'Bad Request' }, 400);
+      });
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(pathOf('apply', lang));
+      await page.getByLabel(cat['apply.owner'], { exact: true }).fill('Aminetou');
+      await page.getByLabel(cat['apply.business'], { exact: true }).fill('Boutique Test');
+      await page.getByLabel(cat['apply.branch'], { exact: true }).fill('Centre');
+      await page.getByLabel(cat['apply.email'], { exact: true }).fill('owner@preview.invalid');
+      await page.getByLabel(cat['apply.password']).fill('a-long-password');
+      await page.getByRole('radio', { name: cat['activity.electronics'] }).check();
+      await page.getByRole('button', { name: cat['apply.submit'] }).click();
+      const form = page.locator('form:has(input[autocomplete="one-time-code"])');
+      await form.getByLabel(cat['apply.verify.code']).fill('123456');
+      const confirm = form.getByRole('button', { name: cat['apply.verify.submit'], exact: true });
+      await confirm.click();
+      await expect(form.getByText(cat['apply.verify.lost'])).toBeVisible();
+      await confirm.click();
+      await expect.poll(() => confirmations).toBe(2);
+      await expect(confirm).toBeEnabled();
+      await page.waitForLoadState('networkidle');
+      const said = await form.textContent();
+      const signIn = await form.getByRole('link', { name: cat['action.signIn'], exact: true }).getAttribute('href');
+      const l = await layout(page);
+      const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+      const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+      await page.screenshot({ path: join(EV, 'screenshots', 'code-check', `apply-lost-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 70 });
+      await page.setViewportSize({ width: 320, height: 900 });
+      const at320 = await layout(page);
+      const unexpected = errors.filter((e) => !EXPECTED_FAILURES.test(e));
+      record({ test: 'code-check-lost', lang, width, confirmations, signIn, layout: l, overflow320: at320.overflow, offenders320: at320.offenders, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
+      expect(said).toContain(cat['apply.verify.lost']);
+      expect(said).not.toContain(cat['apply.verify.wrong']);
+      expect(said).not.toContain('did not match');
+      expect(said).not.toContain(cat['error.network']);
+      expect(signIn).toBe('/account');
+      expect([l.lang, l.dir]).toEqual([lang, lang === 'ar' ? 'rtl' : 'ltr']);
+      expect(l.overflow, 'no sideways scroll').toBeLessThanOrEqual(0);
+      expect(at320.overflow, 'no sideways scroll at 320 px').toBeLessThanOrEqual(0);
+      expect(unexpected).toEqual([]);
+      expect(serious.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+    });
+
+    test(`C18: the businesses list tells a trial business's end in its zone, isolated, ${lang} at ${width} px`, async ({ page }) => {
+      const cat = CATALOGUES[lang];
+      const errors = watchConsole(page);
+      await mockApi(page, { admin: true, lang });
+      const row = (id: string, name: string, extra: Partial<BusinessRow>): BusinessRow => ({
+        id: `0192f000-0000-7000-8000-0000000000${id}`,
+        name,
+        publicStoreId: `ST-${id.toUpperCase()}`,
+        city: 'Nouakchott',
+        createdAt: '2026-10-12T10:00:00.000Z',
+        branches: 1,
+        users: 2,
+        state: 'active',
+        status: 'activated',
+        // 23:30 UTC on 20 November: already 21 November in Dubai.
+        periodEnd: '2026-11-20T23:30:00.000Z',
+        complimentary: null,
+        version: 3,
+        ...extra,
+      });
+      const rows = [
+        row('f1', 'Boutique Dubai', { trial: { status: 'expired', endsAt: '2026-10-20T23:30:00.000Z', timeZone: 'Asia/Dubai' } }),
+        row('f4', 'Boutique Console', { trial: null }),
+      ];
+      await page.route(new RegExp(`^${API}/platform/businesses\\?`), (route) =>
+        route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ rows, total: rows.length, page: 1, pageSize: 25 }) }),
+      );
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/admin/businesses');
+      const label = cat['account.period.ends'].replace('{date}', '').trim();
+      const ends = (name: string) => page.locator('table.data tbody tr', { hasText: name }).locator(`td[data-label="${label}"]`);
+      await expect(ends('Boutique Dubai')).toBeVisible();
+      await page.waitForLoadState('networkidle');
+      const dubai = await ends('Boutique Dubai').locator('bdi').allTextContents();
+      const plain = { text: await ends('Boutique Console').textContent(), isolated: await ends('Boutique Console').locator('bdi').count() };
+      const l = await layout(page);
+      const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+      const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+      await page.screenshot({ path: join(EV, 'screenshots', 'trial-zone', `console-businesses-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 70 });
+      record({ test: 'businesses-ends-zone', lang, width, dubai, plain, layout: l, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
+      // The Dubai business ends on the 21st at 03:30 there, with the zone named — never the 20th of this browser's UTC.
+      expect(dubai).toHaveLength(1);
+      expect(dubai[0]).toMatch(/(\b21\b|٢١).*(0?3:30|٣:٣٠)/);
+      expect(dubai[0]).toMatch(/\(.+\)$/);
+      // A business with no trial keeps the date the list always showed: no time, no zone, nothing isolated.
+      expect(plain.isolated).toBe(0);
+      expect(plain.text).not.toMatch(/0?3:30|٣:٣٠|\(/);
+      expect([l.lang, l.dir]).toEqual([lang, lang === 'ar' ? 'rtl' : 'ltr']);
+      expect(l.overflow, 'no sideways scroll').toBeLessThanOrEqual(0);
+      expect(errors).toEqual([]);
+      expect(serious.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+    });
+  }
+}
+
