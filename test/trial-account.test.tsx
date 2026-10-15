@@ -687,6 +687,46 @@ describe('the setup link’s landing (/account/trial)', () => {
     }
   });
 
+  it('another account’s link: said, and one button signs out and keeps the link for the account it belongs to (R4-08)', async () => {
+    let session = 0;
+    const sent = landing(`/account/trial#t=${TOKEN}`, (url) => {
+      if (url.endsWith('/auth/login')) {
+        session += 1;
+        return { body: { accessToken: `session-${session}` } };
+      }
+      if (url.endsWith('/auth/logout') || url.endsWith('/platform/portal-sign-out')) return { body: {} };
+      if (url.endsWith('/platform/my-subscription')) return session > 0 ? { body: trialAccount('trial_available', trialView('available')) } : { status: 401, body: { message: 'Unauthorized' } };
+      if (url.endsWith('/platform/my-subscription/trial/link')) {
+        // The link was sent to the second Owner: the first one signed in is told so.
+        const link: TrialLinkOutcome = session === 1 ? 'other_account' : 'valid';
+        return { body: { link, offer: trialOffer(), trial: trialView('available'), state: 'trial_available' } };
+      }
+      if (url.endsWith('/platform/my-subscription/trial')) return { body: trialStatus() };
+      if (url.endsWith('/platform/my-subscription/trial/claim')) return { status: 201, body: claimResult() };
+      return undefined;
+    });
+    await signIn();
+    expect(await screen.findByText('This link belongs to another business account.')).toBeTruthy();
+    await userEvent.setup().click(screen.getByRole('button', { name: 'Sign out and use the other account' }));
+    // Signed out, the token waits in memory only — not in the address, not in storage.
+    expect(await screen.findByRole('button', { name: 'Sign in' })).toBeTruthy();
+    nothingKept();
+    expect(sent.filter((r) => r.url.endsWith('/auth/logout')).map((r) => r.authorization)).toEqual(['Bearer session-1']);
+    await signIn();
+    expect(await screen.findByRole('button', { name: CLAIM })).toBeTruthy();
+    expect(screen.queryByText('This link belongs to another business account.')).toBeNull();
+    // The same link, checked again for the account now signed in — and it goes with the claim only when pressed.
+    expect(sent.filter((r) => r.url.endsWith('/trial/link')).map((r) => [r.body, r.authorization])).toEqual([
+      [{ token: TOKEN }, 'Bearer session-1'],
+      [{ token: TOKEN }, 'Bearer session-2'],
+    ]);
+    expect(sent.filter((r) => r.url.endsWith('/trial/claim'))).toEqual([]);
+    await userEvent.setup().click(screen.getByRole('button', { name: CLAIM }));
+    await screen.findByText(/Your free trial has started/);
+    expect(sent.filter((r) => r.url.endsWith('/trial/claim')).map((r) => [(r.body as { token?: string }).token, r.authorization])).toEqual([[TOKEN, 'Bearer session-2']]);
+    nothingKept();
+  });
+
   it('a used link of a business already in its trial: says so, and shows the trial instead of a button', async () => {
     landing(`/account/trial#t=${TOKEN}`, signedOut('used', (url) => (url.endsWith('/trial/link') ? { body: { link: 'used', offer: null, trial: trialView('active'), state: 'trial_active' } } : undefined)));
     await signIn();

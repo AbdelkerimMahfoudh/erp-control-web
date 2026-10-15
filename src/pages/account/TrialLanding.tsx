@@ -159,6 +159,14 @@ export function TrialLanding({ token, data, onChanged, onSignOut }: { token: str
           <>
             <ClaimOutcome claimed={claimed} refused={refused} offer={view.offer} />
             {linkRefused ? <Notice tone="warn">{t(`trial.error.link_${link}` as Key)}</Notice> : null}
+            {link === 'other_account' ? (
+              // The token stays in this page's memory: signed in as the account it belongs to, the link is checked again.
+              <div className="row">
+                <button type="button" className="btn" onClick={() => void onSignOut()}>
+                  {t('trial.landing.switchAccount')}
+                </button>
+              </div>
+            ) : null}
             {unchecked ? <Notice tone="warn">{t('trial.landing.unchecked')}</Notice> : null}
             {(linkRefused || unchecked) && view.offer?.available ? <p>{t('trial.landing.withoutLink')}</p> : null}
             {!view.offer && !view.trial ? <Notice tone="info">{t('trial.error.trial_not_available')}</Notice> : null}
