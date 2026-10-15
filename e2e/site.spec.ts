@@ -620,3 +620,80 @@ for (const lang of LANGS) {
   }
 }
 
+
+/*
+ * The registration's code check refused by the API's rate limit, in a real browser: the limiter answers a request for
+ * a new code and a confirmation with no code and its class name for a sentence ("ThrottlerException: Too Many
+ * Requests"). The page says, in its own words, to wait a minute — no lost answer, no wrong code, nothing of the
+ * limiter's. Every language at both widths (and 320 px), with no sideways scroll and no serious accessibility violation.
+ */
+const LIMITED = { statusCode: 429, error: 'TOO_MANY_REQUESTS', message: 'ThrottlerException: Too Many Requests' };
+for (const lang of LANGS) {
+  for (const width of [1280, 375]) {
+    test(`the rate limit at the code check is said in the page's words, never the limiter's, ${lang} at ${width} px`, async ({ page }) => {
+      const cat = CATALOGUES[lang];
+      const errors = watchConsole(page);
+      await mockApi(page);
+      const asked = { resends: 0, confirmations: 0 };
+      await page.route(new RegExp(`^${API}/platform/register(/verify/(confirm|start))?$`), async (route) => {
+        const json = (body: unknown, status: number) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
+        const url = route.request().url();
+        if (url.endsWith('/platform/register')) {
+          return json(
+            {
+              status: 'pending',
+              created: true,
+              publicStoreId: 'ST-7Q4K',
+              activity: 'electronics',
+              verification: { destination: 'o•••@preview.invalid', channel: 'email' },
+              continuation: { token: 'continuation-for-browser-checks', expiresAt: '2026-10-15T10:00:00.000Z', expiresInSeconds: 900 },
+              next: 'verify_contact',
+            },
+            201,
+          );
+        }
+        if (url.endsWith('/verify/start')) asked.resends += 1;
+        else asked.confirmations += 1;
+        return json(LIMITED, 429);
+      });
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(pathOf('apply', lang));
+      await page.getByLabel(cat['apply.owner'], { exact: true }).fill('Aminetou');
+      await page.getByLabel(cat['apply.business'], { exact: true }).fill('Boutique Test');
+      await page.getByLabel(cat['apply.branch'], { exact: true }).fill('Centre');
+      await page.getByLabel(cat['apply.email'], { exact: true }).fill('owner@preview.invalid');
+      await page.getByLabel(cat['apply.password']).fill('a-long-password');
+      await page.getByRole('radio', { name: cat['activity.electronics'] }).check();
+      await page.getByRole('button', { name: cat['apply.submit'] }).click();
+      const form = page.locator('form:has(input[autocomplete="one-time-code"])');
+      await form.getByRole('button', { name: cat['apply.verify.resend'], exact: true }).click();
+      await expect(form.getByText(cat['error.tooManyRequests'])).toBeVisible();
+      await form.getByLabel(cat['apply.verify.code']).fill('123456');
+      const confirm = form.getByRole('button', { name: cat['apply.verify.submit'], exact: true });
+      await confirm.click();
+      await expect.poll(() => asked.confirmations).toBe(1);
+      await expect(confirm).toBeEnabled();
+      await page.waitForLoadState('networkidle');
+      const said = await form.textContent();
+      const l = await layout(page);
+      const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+      const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+      await page.screenshot({ path: join(EV, 'screenshots', 'code-check', `apply-throttled-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 70 });
+      await page.setViewportSize({ width: 320, height: 900 });
+      const at320 = await layout(page);
+      const unexpected = errors.filter((e) => !/Failed to load resource: the server responded with a status of 429/.test(e));
+      record({ test: 'code-check-throttled', lang, width, asked, said, layout: l, overflow320: at320.overflow, offenders320: at320.offenders, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
+      expect(asked).toEqual({ resends: 1, confirmations: 1 });
+      expect(said).toContain(cat['error.tooManyRequests']);
+      expect(said).not.toMatch(/Throttler|Too Many Requests/i);
+      expect(said).not.toContain(cat['error.generic']);
+      expect(said).not.toContain(cat['apply.verify.lost']);
+      expect(said).not.toContain(cat['apply.verify.wrong']);
+      expect([l.lang, l.dir]).toEqual([lang, lang === 'ar' ? 'rtl' : 'ltr']);
+      expect(l.overflow, 'no sideways scroll').toBeLessThanOrEqual(0);
+      expect(at320.overflow, 'no sideways scroll at 320 px').toBeLessThanOrEqual(0);
+      expect(unexpected).toEqual([]);
+      expect(serious.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+    });
+  }
+}
