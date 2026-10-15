@@ -228,13 +228,82 @@ describe('the setup instructions on the card', () => {
       ['not_sent', en['trial.setup.notSent'], null],
     ] as const) {
       const canResendNow = resendBlockedBy === null;
-      account('trial_available', trialStatus({ setup: trialSetup({ delivery, sentTo: [], canResendNow, resendBlockedBy }) }));
+      // Not sent, and never was: no attempt recorded (one that went out is told otherwise — R4-10, below).
+      const never = delivery === 'not_sent' ? { lastAttemptAt: null, history: [] } : {};
+      account('trial_available', trialStatus({ setup: trialSetup({ delivery, sentTo: [], canResendNow, resendBlockedBy, ...never }) }));
       const c = await card();
       expect(within(c).getByText(text)).toBeTruthy();
       expect(c.textContent).not.toMatch(/were sent to/);
       expect(within(c).getByRole('button', { name: RESEND })).toHaveProperty('disabled', !canResendNow);
       await ownerLogout();
       cleanup();
+    }
+  });
+
+  it('a message that went out before the Owner’s account details changed is not "never sent": when it went, and why its link no longer works (R4-10)', async () => {
+    // The WhatsApp message went out; the number (or the password) changed since, so the server no longer counts it (C2).
+    const at = '2026-10-13T08:00:00.000Z';
+    const setup = trialSetup({
+      delivery: 'not_sent',
+      sentTo: [],
+      destinations: [{ channel: 'whatsapp', masked: '+222••••9999' }],
+      lastAttemptAt: at,
+      history: [{ at, trigger: 'automatic', email: 'not_applicable', whatsapp: 'accepted' }],
+    });
+    const sent = account('trial_available', trialStatus({ setup }));
+    const c = await card();
+    const when = `13 October 2026 at 09:00 (${zoneName(TRIAL_ZONE, 'en-GB', at)})`;
+    const line = [...c.querySelectorAll('.notice')].find((n) => n.textContent!.startsWith('The setup instructions were sent'));
+    expect(line?.textContent).toBe(`The setup instructions were sent on ${when}, but their link no longer works: your account details have changed since.`);
+    expect(line?.querySelector('bdi')?.textContent).toBe(when);
+    expect(c.textContent).not.toContain(en['trial.setup.notSent']);
+    // No contact named: the server no longer says the message reached one of this Owner's.
+    expect(c.textContent).not.toContain('+222••••9999');
+    // The history still lists it, the instructions can be sent again, and the claim stands.
+    expect(within(c).getByText('WhatsApp: sent')).toBeTruthy();
+    expect(within(c).getByRole('button', { name: RESEND })).toHaveProperty('disabled', false);
+    expect(within(c).getByRole('button', { name: CLAIM })).toHaveProperty('disabled', false);
+    expect(sent.filter((r) => r.url.includes('/trial/claim'))).toEqual([]);
+  });
+
+  it('a later send lost on the way, after one the server still counts: where and when that one went, and that the latest did not (R4-10, C1)', async () => {
+    // The automatic message reached the email; a send asked for later failed, and the one after it was never recorded.
+    const accepted = '2026-10-13T08:00:00.000Z';
+    const setup = trialSetup({
+      delivery: 'not_sent',
+      sentTo: ['email'],
+      lastAttemptAt: '2026-10-13T10:00:00.000Z',
+      history: [
+        { at: '2026-10-13T10:00:00.000Z', trigger: 'resend', email: 'failed', whatsapp: 'not_applicable' },
+        { at: accepted, trigger: 'automatic', email: 'accepted', whatsapp: 'not_applicable' },
+      ],
+    });
+    account('trial_available', trialStatus({ setup }));
+    const c = await card();
+    // Dated by the attempt that went out, not by the newest one.
+    const when = `13 October 2026 at 09:00 (${zoneName(TRIAL_ZONE, 'en-GB', accepted)})`;
+    const line = [...c.querySelectorAll('.notice')].find((n) => n.textContent!.startsWith('The setup instructions were sent'));
+    expect(line?.textContent).toBe(`The setup instructions were sent to o•••@example.test on ${when}, but the most recent ones have not been sent.`);
+    expect([...(line?.querySelectorAll('.ltr') ?? [])].map((e) => e.textContent)).toEqual(['o•••@example.test']);
+    expect(c.textContent).not.toContain(en['trial.setup.notSent']);
+  });
+
+  it('a message that went out, then no longer counted, in French and Arabic: the same sentences, each date isolated in the business’s zone', async () => {
+    const at = '2026-10-13T08:00:00.000Z';
+    const history = [{ at, trigger: 'automatic' as const, email: 'accepted' as const, whatsapp: 'not_applicable' as const }];
+    for (const [lang, cat, locale] of [['fr', fr, 'fr-FR'], ['ar', ar, 'ar-MR']] as const) {
+      for (const [key, sentTo] of [['trial.setup.outdated', []], ['trial.setup.latestNotSent', ['email']]] as const) {
+        localStorage.setItem('erp.web.language', lang);
+        account('trial_available', trialStatus({ setup: trialSetup({ delivery: 'not_sent', sentTo: [...sentTo], history }) }));
+        const c = (await screen.findByRole('heading', { name: cat['trial.title'], level: 2 })).closest('section')!;
+        const [before, after] = cat[key].replace('{destinations}', 'o•••@example.test').split('{date}');
+        const line = [...c.querySelectorAll('.notice')].find((n) => n.textContent!.startsWith(before!));
+        expect(line?.textContent?.endsWith(after!)).toBe(true);
+        expect(line?.querySelector('bdi')?.textContent).toContain(zoneName(TRIAL_ZONE, locale, at));
+        expect(c.textContent).not.toContain(cat['trial.setup.notSent']);
+        await ownerLogout();
+        cleanup();
+      }
     }
   });
 
@@ -399,6 +468,8 @@ describe('the setup instructions on the card', () => {
     const c = await card();
     expect(within(c).queryByRole('button', { name: RESEND })).toBeNull();
     expect(within(c).getByText(en['trial.verify.phone'])).toBeTruthy();
+    // The message the automatic send delivered went to details since changed: said so, never "not sent".
+    expect(c.textContent).toContain('but their link no longer works: your account details have changed since.');
   });
 
   it('instructions still on their way: being sent to the one verified contact, read again a few seconds later until recorded (C1)', async () => {

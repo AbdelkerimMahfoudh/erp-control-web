@@ -299,6 +299,8 @@ export const en = {
   'trial.setup.waiting.phone': 'The setup instructions will be sent automatically once your WhatsApp number is verified.',
   'trial.setup.waiting.email': 'The setup instructions will be sent automatically once your email address is verified.',
   'trial.setup.notSent': 'The setup instructions have not been sent.',
+  'trial.setup.outdated': 'The setup instructions were sent on {date}, but their link no longer works: your account details have changed since.',
+  'trial.setup.latestNotSent': 'The setup instructions were sent to {destinations} on {date}, but the most recent ones have not been sent.',
   'trial.setup.optional': 'You do not need them to start your trial: you can start it here.',
   'trial.setup.resend': 'Send the setup instructions again',
   'trial.setup.wait': 'You can send them again in {time}.',

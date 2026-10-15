@@ -258,12 +258,7 @@ function DeliveryLine({ setup, missing, timeZone, lang }: { setup: TrialSetup; m
       );
     }
     case 'sent': {
-      // Where the server says it went (C2: only while that is still the Owner's contact): each channel reached, by the
-      // Owner's contact on it — or by the channel, when the server names none there; never a blank.
-      const to = setup.sentTo.map((channel) => {
-        const masked = setup.destinations.find((d) => d.channel === channel)?.masked;
-        return masked ? { text: masked, masked: true } : { text: t(`trial.setup.to.${channel}`), masked: false };
-      });
+      const to = reached(setup, t);
       const date = formatInstant(setup.lastAttemptAt, timeZone, lang);
       return (
         <p>
@@ -288,9 +283,37 @@ function DeliveryLine({ setup, missing, timeZone, lang }: { setup: TrialSetup; m
       return <Notice tone="warn">{t('trial.setup.failed')}</Notice>;
     case 'unavailable':
       return <Notice tone="warn">{t('trial.setup.unavailable')}</Notice>;
-    default:
-      return <Notice tone="warn">{t('trial.setup.notSent')}</Notice>;
+    default: {
+      // Not sent — but not "never sent" when the history lists a message that went out. Either its link no longer binds
+      // to the Owner as they are now — their account details changed since, and the server names no destination (C2) —
+      // or the server still names where it went and a later send was lost on the way (C1). The card says which, dated
+      // by the newest attempt a provider accepted.
+      const accepted = setup.history.find((a) => a.email === 'accepted' || a.whatsapp === 'accepted');
+      if (!accepted) return <Notice tone="warn">{t('trial.setup.notSent')}</Notice>;
+      const date = formatInstant(accepted.at, timeZone, lang);
+      const to = reached(setup, t);
+      return (
+        <Notice tone="warn">
+          {to.length > 0 ? (
+            <Phrase text={t('trial.setup.latestNotSent')} values={{ destinations: <Destinations items={to} lang={lang} />, date }} />
+          ) : (
+            <Phrase text={t('trial.setup.outdated')} values={{ date }} />
+          )}
+        </Notice>
+      );
+    }
   }
+}
+
+/**
+ * Where the server says the instructions went (C2: only while that is still the Owner's contact): each channel reached,
+ * by the Owner's contact on it — or by the channel, when the server names none there; never a blank.
+ */
+function reached(setup: TrialSetup, t: ReturnType<typeof useI18n>['t']): { text: string; masked: boolean }[] {
+  return setup.sentTo.map((channel) => {
+    const masked = setup.destinations.find((d) => d.channel === channel)?.masked;
+    return masked ? { text: masked, masked: true } : { text: t(`trial.setup.to.${channel}`), masked: false };
+  });
 }
 
 /**

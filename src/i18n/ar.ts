@@ -291,6 +291,8 @@ export const ar: Catalogue = {
   'trial.setup.waiting.phone': 'سيتم إرسال تعليمات الإعداد تلقائيًا بمجرد التحقق من رقم واتساب الخاص بك.',
   'trial.setup.waiting.email': 'سيتم إرسال تعليمات الإعداد تلقائيًا بمجرد التحقق من بريدك الإلكتروني.',
   'trial.setup.notSent': 'لم تُرسل تعليمات الإعداد.',
+  'trial.setup.outdated': 'أُرسلت تعليمات الإعداد في {date}، لكن رابطها لم يعد يعمل: تغيّرت بيانات حسابك منذ ذلك الحين.',
+  'trial.setup.latestNotSent': 'أُرسلت تعليمات الإعداد إلى {destinations} في {date}، لكن التعليمات الأحدث لم تُرسل.',
   'trial.setup.optional': 'لا تحتاج إليها لبدء فترتك التجريبية: يمكنك بدؤها هنا.',
   'trial.setup.resend': 'إرسال تعليمات الإعداد مرة أخرى',
   'trial.setup.wait': 'يمكنك إرسالها مرة أخرى بعد {time}.',

@@ -292,6 +292,8 @@ export const fr: Catalogue = {
   'trial.setup.waiting.phone': 'Les instructions de configuration seront envoyées automatiquement dès que votre numéro WhatsApp sera vérifié.',
   'trial.setup.waiting.email': 'Les instructions de configuration seront envoyées automatiquement dès que votre adresse e-mail sera vérifiée.',
   'trial.setup.notSent': 'Les instructions de configuration n’ont pas été envoyées.',
+  'trial.setup.outdated': 'Les instructions de configuration ont été envoyées le {date}, mais leur lien ne fonctionne plus : les informations de votre compte ont changé depuis.',
+  'trial.setup.latestNotSent': 'Les instructions de configuration ont été envoyées à {destinations} le {date}, mais les plus récentes n’ont pas été envoyées.',
   'trial.setup.optional': 'Elles ne sont pas nécessaires pour démarrer votre essai : vous pouvez le démarrer ici.',
   'trial.setup.resend': 'Renvoyer les instructions de configuration',
   'trial.setup.wait': 'Vous pourrez les renvoyer dans {time}.',
