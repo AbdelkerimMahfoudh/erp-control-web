@@ -1,0 +1,174 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/playwright.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/3b6cdc7bdcd359b2f40c51768fe38035c5331643",
+        "commitHash": "3b6cdc7bdcd359b2f40c51768fe38035c5331643",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/38800779667"
+      },
+      "gitCommit": {
+        "shortHash": "3b6cdc7",
+        "hash": "3b6cdc7bdcd359b2f40c51768fe38035c5331643",
+        "subject": "Tests: this browser's zone is UTC wherever they run",
+        "body": "Tests: this browser's zone is UTC wherever they run\n\nFour tests that show a business's dates in its own zone also pin how the same instant\nreads in \"this browser's zone\", taken to be UTC as on CI's runners. On a machine in\nanother zone they failed although the product was right (269/273 under\nPacific/Kiritimati). Vitest now runs in UTC; the full suite passes in both zones.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+        "author": {
+          "name": "CLAUDE-B",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1792095371000
+        },
+        "committer": {
+          "name": "Claude",
+          "email": "noreply@anthropic.com",
+          "time": 1792095371000
+        },
+        "branch": "tsx-public-site"
+      }
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/3b6cdc7bdcd359b2f40c51768fe38035c5331643/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/3b6cdc7bdcd359b2f40c51768fe38035c5331643",
+            "commitHash": "3b6cdc7bdcd359b2f40c51768fe38035c5331643",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/38800779667"
+          },
+          "gitCommit": {
+            "shortHash": "3b6cdc7",
+            "hash": "3b6cdc7bdcd359b2f40c51768fe38035c5331643",
+            "subject": "Tests: this browser's zone is UTC wherever they run",
+            "body": "Tests: this browser's zone is UTC wherever they run\n\nFour tests that show a business's dates in its own zone also pin how the same instant\nreads in \"this browser's zone\", taken to be UTC as on CI's runners. On a machine in\nanother zone they failed although the product was right (269/273 under\nPacific/Kiritimati). Vitest now runs in UTC; the full suite passes in both zones.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE-B",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792095371000
+            },
+            "committer": {
+              "name": "Claude",
+              "email": "noreply@anthropic.com",
+              "time": 1792095371000
+            },
+            "branch": "tsx-public-site"
+          }
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/3b6cdc7bdcd359b2f40c51768fe38035c5331643/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/3b6cdc7bdcd359b2f40c51768fe38035c5331643",
+            "commitHash": "3b6cdc7bdcd359b2f40c51768fe38035c5331643",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/38800779667"
+          },
+          "gitCommit": {
+            "shortHash": "3b6cdc7",
+            "hash": "3b6cdc7bdcd359b2f40c51768fe38035c5331643",
+            "subject": "Tests: this browser's zone is UTC wherever they run",
+            "body": "Tests: this browser's zone is UTC wherever they run\n\nFour tests that show a business's dates in its own zone also pin how the same instant\nreads in \"this browser's zone\", taken to be UTC as on CI's runners. On a machine in\nanother zone they failed although the product was right (269/273 under\nPacific/Kiritimati). Vitest now runs in UTC; the full suite passes in both zones.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE-B",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792095371000
+            },
+            "committer": {
+              "name": "Claude",
+              "email": "noreply@anthropic.com",
+              "time": 1792095371000
+            },
+            "branch": "tsx-public-site"
+          }
+        },
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/3b6cdc7bdcd359b2f40c51768fe38035c5331643/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
+      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-10-15T20:19:15.322Z",
+    "duration": 159.80200000000002,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
