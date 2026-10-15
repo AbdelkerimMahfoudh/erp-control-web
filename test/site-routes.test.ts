@@ -138,15 +138,18 @@ describe('the generated files (docs/74 §5–§6)', () => {
     expect(headersFile(SITE, true)).toMatch(/^\/\*\n[\s\S]*X-Robots-Tag: noindex, nofollow/);
   });
 
-  it('headers: the setup link’s landing sends no referrer — the site’s policy detached, never joined to it', () => {
+  it('headers: the setup link’s landing sends no referrer, with or without a trailing slash — the site’s policy detached, never joined to it', () => {
     for (const preview of [false, true]) {
       const blocks = headersFile(SITE, preview).split('\n\n');
-      const landing = blocks.filter((b) => b.startsWith('/account/trial\n'));
-      expect(landing).toEqual(['/account/trial\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer']);
-      // After the catch-all and the account blocks, so the host applies it last; every other address keeps the site's.
-      expect(blocks.indexOf(landing[0]!)).toBeGreaterThan(blocks.findIndex((b) => b.startsWith('/account/*\n')));
+      const landing = blocks.filter((b) => b.startsWith('/account/trial\n') || b.startsWith('/account/trial/*\n'));
+      expect(landing).toEqual([
+        '/account/trial\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer',
+        '/account/trial/*\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer',
+      ]);
+      // After the catch-all and the account blocks, so the host applies them last; every other address keeps the site's.
+      for (const block of landing) expect(blocks.indexOf(block)).toBeGreaterThan(blocks.findIndex((b) => b.startsWith('/account/*\n')));
       expect(blocks[0]).toContain('Referrer-Policy: strict-origin-when-cross-origin');
-      expect(blocks.filter((b) => b.includes('no-referrer'))).toHaveLength(1);
+      expect(blocks.filter((b) => b.includes('no-referrer'))).toEqual(landing);
     }
   });
 

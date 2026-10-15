@@ -85,8 +85,10 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'>, preview: boolean)
   }
   // The free trial's setup link lands here with its token in the address (`?t=` from WhatsApp): the page's own
   // scripts and styles load before the token is taken out of it, so no request may carry it as a referrer. The site's
-  // policy is detached first (`! `), or the host would join the two values.
-  blocks.push(`${TRIAL_LANDING}\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer`);
+  // policy is detached first (`! `), or the host would join the two values. The landing answers with a trailing slash
+  // too (`/account/trial/?t=`), so that address is covered by its own rule: refusing the token there would not help,
+  // as the page's files are asked for — with the address as referrer — before any script could refuse anything.
+  for (const path of [TRIAL_LANDING, `${TRIAL_LANDING}/*`]) blocks.push(`${path}\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer`);
   blocks.push(`${APP_SHELL}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
   // Hashed assets never change; everything else is revalidated.
   blocks.push('/assets/*\n  Cache-Control: public, max-age=31536000, immutable');

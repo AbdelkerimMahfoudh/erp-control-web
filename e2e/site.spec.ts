@@ -211,10 +211,20 @@ test('the host files: robots, sitemap, security headers, protected areas noindex
   const home = await request.get('/');
   const account = await request.get('/account');
   const landing = await request.get('/account/trial');
+  const landingSlash = await request.get('/account/trial/');
   const admin = await request.get('/admin/businesses');
   const missing = await request.get('/no-such-page');
   const csp = home.headers()['content-security-policy'] ?? '';
-  record({ robots, csp, homeHeaders: home.headers(), accountRobots: account.headers()['x-robots-tag'], landingHeaders: landing.headers(), adminRobots: admin.headers()['x-robots-tag'], missingStatus: missing.status() });
+  record({
+    robots,
+    csp,
+    homeHeaders: home.headers(),
+    accountRobots: account.headers()['x-robots-tag'],
+    landingHeaders: landing.headers(),
+    landingSlashHeaders: landingSlash.headers(),
+    adminRobots: admin.headers()['x-robots-tag'],
+    missingStatus: missing.status(),
+  });
   expect(robots).toBe('User-agent: *\nDisallow: /\n');
   expect(csp).toContain("script-src 'self'");
   expect(csp).not.toContain('unsafe-inline');
@@ -226,6 +236,9 @@ test('the host files: robots, sitemap, security headers, protected areas noindex
   expect(landing.status()).toBe(200);
   expect(landing.headers()['x-robots-tag']).toBe('noindex, nofollow');
   expect(landing.headers()['referrer-policy']).toBe('no-referrer');
+  // The landing answers with a trailing slash too, and sends no referrer there either (review R4-12).
+  expect(landingSlash.status()).toBe(200);
+  expect(landingSlash.headers()['referrer-policy']).toBe('no-referrer');
   expect(home.headers()['referrer-policy']).toBe('strict-origin-when-cross-origin');
   expect(account.headers()['referrer-policy']).toBe('strict-origin-when-cross-origin');
   expect(admin.headers()['x-robots-tag']).toBe('noindex, nofollow');
@@ -270,6 +283,24 @@ for (const [name, path, signedIn, width] of PROTECTED) {
     if (signedIn.lang) expect([l.lang, l.dir]).toEqual([signedIn.lang, signedIn.lang === 'ar' ? 'rtl' : 'ltr']);
   });
 }
+
+test('the setup link with a trailing slash: no later request carries its token, in its address or as referrer (R4-12)', async ({ page }) => {
+  const errors = watchConsole(page);
+  const token = 'z'.repeat(43);
+  const requests: { url: string; referer: string | null }[] = [];
+  page.on('request', (r) => requests.push({ url: r.url(), referer: r.headers()['referer'] ?? null }));
+  await mockApi(page);
+  const response = await page.goto(`/account/trial/?t=${token}`);
+  expect(response?.headers()['referrer-policy']).toBe('no-referrer');
+  await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  const after = requests.slice(1);
+  record({ test: 'setup-link-trailing-slash', requests: after.map((r) => ({ url: r.url.replace(token, '<token>'), referer: r.referer?.replace(token, '<token>') ?? null })), consoleErrors: errors });
+  expect(after.length).toBeGreaterThan(0);
+  expect(after.filter((r) => r.url.includes(token) || (r.referer ?? '').includes(token))).toEqual([]);
+  expect(new URL(page.url()).search).toBe('');
+  expect(errors).toEqual([]);
+});
 
 test('the setup link: its token leaves the address at once, rides in no request’s address or referrer, and nothing is claimed by opening it', async ({ page }) => {
   const errors = watchConsole(page);
