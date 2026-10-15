@@ -2,9 +2,9 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import type { EntitlementState, TrialStatus } from '../src/api/types';
+import type { EntitlementState, SeatRequest, TrialStatus } from '../src/api/types';
 import { pathOf, PUBLIC_ROUTES } from '../src/site/routes';
-import { BRANCHES, LINES, NO_TRIAL, TRIAL_END, TRIAL_START, subscription, trialOffer, trialSetup, trialStatus, trialView } from '../test/fixtures-data';
+import { B1, B2, BRANCHES, LINES, NO_TRIAL, TRIAL_END, TRIAL_START, TRIAL_ZONE, allocation, scheduledRequest, subscription, trialOffer, trialSetup, trialStatus, trialView } from '../test/fixtures-data';
 
 /**
  * The built site in a real browser (docs/74 §9): every public page in every language, at a desktop width and at
@@ -50,7 +50,20 @@ const TRIALS: Record<'available' | 'active' | 'paidAfter' | 'expired', TrialStat
   paidAfter: { state: 'trial_active', trial: trialView('active', { accessAfterTrial: { kind: 'paid', startsAt: TRIAL_END } }), offer: null, setup: null, calculatedAt: TRIAL_START },
   expired: { state: 'trial_expired', trial: trialView('expired'), offer: null, setup: null, calculatedAt: TRIAL_END },
 };
-type Session = { owner?: boolean; admin?: boolean; trial?: keyof typeof TRIALS; lang?: 'en' | 'fr' | 'ar' };
+/**
+ * Stores and seats asked for during the trial (D176), as the Owner's list and the console read them: a store and a seat
+ * paid for during it, scheduled to its end — or, with no paid access approved yet, to the first paid month — and a
+ * seat still awaiting payment.
+ */
+const BUSINESS = { id: '0192f000-0000-7000-8000-0000000000b1', name: 'Boutique Test', publicStoreId: 'ST-7Q4K' };
+function addons(waitsFor: 'trial_end' | 'paid_access'): SeatRequest[] {
+  return [
+    scheduledRequest('store', {}, { waitsFor }),
+    scheduledRequest('seat', {}, { waitsFor }),
+    allocation({ id: '0192f000-0000-7000-8000-0000000000d3', kind: 'seat', store: { id: B2, name: 'Boutique Ksar' }, branchId: B2, branchName: 'Boutique Ksar', activityFrom: null, activityTo: null, activityEffective: null, monthlyAmount: 100 }),
+  ].map((r) => ({ ...r, business: BUSINESS }));
+}
+type Session = { owner?: boolean; admin?: boolean; trial?: keyof typeof TRIALS; lang?: 'en' | 'fr' | 'ar'; addons?: 'trial_end' | 'paid_access' };
 
 /** The Owner's account for a business whose trial is `trial`, or the paid business of the other fixtures. */
 function ownerAccount(trial: Session['trial']) {
@@ -76,8 +89,41 @@ async function mockApi(page: Page, signedIn: Session = {}) {
     if (url.endsWith('/platform/dashboard'))
       return json({ byState: { pending: 2, active: 7, grace: 1, complimentary: 3, suspended: 0, expired: 1, cancelled: 0, rejected: 1 }, businesses: 15, branches: 21, activeUsers: 48, pendingSeatRequests: 2, pendingStaff: 1, revenue: null, calculatedAt: '2026-10-12T08:00:00.000Z' });
     if (url.includes('/platform/my-subscription/activity-options')) return json({ stores: [], newStore: [] });
+    // Stores and seats asked for during the trial (D176): the Owner's list, the console's queue and the business page.
+    if (signedIn.addons) {
+      const rows = addons(signedIn.addons);
+      if (url.endsWith('/platform/my-subscription/seat-requests') && signedIn.owner) return json(rows);
+      if (url.includes('/platform/seat-requests?status=') && signedIn.admin) return json(rows.filter((r) => r.status === new URL(url).searchParams.get('status')));
+      if (url.endsWith(`/platform/businesses/${BUSINESS.id}/seat-requests`) && signedIn.admin) return json(rows);
+      if (url.endsWith(`/platform/businesses/${BUSINESS.id}`) && signedIn.admin) return json(trialBusiness());
+    }
     return json({ message: 'Unauthorized' }, 401);
   });
+}
+
+/** The console's page for the business whose trial runs, with paid access approved for its end. */
+function trialBusiness() {
+  const sub = subscription(BRANCHES, LINES);
+  return {
+    ...BUSINESS,
+    city: 'Nouakchott',
+    createdAt: '2026-10-12T10:00:00.000Z',
+    branches: [
+      { id: B1, name: 'Agence Centre', type: 'store', activity: 'money_agent', activityNext: null },
+      { id: B2, name: 'Boutique Ksar', type: 'store', activity: 'both', activityNext: null },
+    ],
+    people: [],
+    entitlement: { ...sub.entitlement, state: 'trial_active', status: 'pending_activation', periodEnd: '2026-11-20T09:30:00.000Z', trial: TRIALS.paidAfter.trial },
+    pricing: sub.pricing,
+    version: 4,
+    events: [],
+    payments: [],
+    trial: {
+      eligibility: { registrationMethod: 'email', createdAt: '2026-10-12T10:00:00.000Z', closedAt: '2026-10-14T08:00:00.000Z', closedReason: 'approved' },
+      claim: { claimedAt: TRIAL_START, startedAt: TRIAL_START, endsAt: TRIAL_END, expiryRecordedAt: null },
+      timeZone: TRIAL_ZONE,
+    },
+  };
 }
 
 /** Console errors include Content Security Policy refusals; a page may produce none. */
@@ -88,6 +134,15 @@ function watchConsole(page: Page) {
   });
   page.on('pageerror', (e) => errors.push(String(e)));
   return errors;
+}
+
+/** One region of the full-page render — no sticky header stitched across it, as an element screenshot taller than the window has. */
+async function shotOf(page: Page, selector: string, path: string) {
+  const clip = await page.locator(selector).first().evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    return { x: r.left + window.scrollX, y: r.top + window.scrollY, width: r.width, height: r.height };
+  });
+  await page.screenshot({ path, fullPage: true, clip, type: 'jpeg', quality: 80 });
 }
 
 async function layout(page: Page) {
@@ -267,6 +322,17 @@ const PROTECTED: [string, string, Session, number][] = [
   ['account-trial-link-signed-out-375', SETUP_LINK, {}, 375],
   ['account-trial-link-signed-in', SETUP_LINK, { owner: true, trial: 'available' }, 1280],
   ['account-trial-link-signed-in-ar-375', SETUP_LINK, { owner: true, trial: 'available', lang: 'ar' }, 375],
+  // Stores and seats asked for during the trial (D176): paid, scheduled to its end — in every language, at both widths.
+  ['account-trial-addons', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end' }, 1280],
+  ['account-trial-addons-375', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end' }, 375],
+  ['account-trial-addons-fr', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'fr' }, 1280],
+  ['account-trial-addons-fr-375', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'fr' }, 375],
+  ['account-trial-addons-ar', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'ar' }, 1280],
+  ['account-trial-addons-ar-375', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'ar' }, 375],
+  // No paid access approved yet: they start with the first paid month.
+  ['account-trial-addons-waiting-375', '/account', { owner: true, trial: 'active', addons: 'paid_access' }, 375],
+  ['admin-business-trial-addons', `/admin/businesses/${BUSINESS.id}`, { admin: true, addons: 'trial_end' }, 1280],
+  ['admin-business-trial-addons-ar-375', `/admin/businesses/${BUSINESS.id}`, { admin: true, addons: 'trial_end', lang: 'ar' }, 375],
   ['admin-sign-in', '/admin', {}, 1280],
   ['admin-dashboard', '/admin', { admin: true }, 1280],
   ['admin-dashboard-375', '/admin', { admin: true }, 375],
@@ -353,3 +419,67 @@ test('the setup link: its token leaves the address at once, rides in no request�
   expect(after.filter((r) => r.url.includes('/trial/claim'))).toEqual([]);
   expect(errors).toEqual([]);
 });
+
+/*
+ * Stores and seats paid for during the trial (D176) in a real browser: the Owner's rows say "Paid · scheduled" and
+ * when each starts, in the business's zone; the console lists them under their own filter. Every language at both
+ * widths, with no sideways scroll, no console error and no serious accessibility violation.
+ */
+const SCHEDULED_WORDS = { en: 'Paid · scheduled', fr: 'Payé · programmé', ar: 'مدفوع · مجدول' } as const;
+const QUEUE_FILTER = { en: 'Show', fr: 'Afficher', ar: 'عرض' } as const;
+for (const lang of LANGS) {
+  for (const width of [1280, 375]) {
+    test(`D176: the Owner's scheduled store and seat, ${lang} at ${width} px`, async ({ page }) => {
+      const errors = watchConsole(page);
+      await mockApi(page, { owner: true, trial: 'paidAfter', addons: 'trial_end', lang });
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/account');
+      await expect(page.getByText(SCHEDULED_WORDS[lang]).first()).toBeVisible();
+      await page.waitForLoadState('networkidle');
+      const rows = page.locator('section:has(form) table.data tbody tr');
+      await expect(rows).toHaveCount(3);
+      const dates = await rows.locator('bdi').allTextContents();
+      const l = await layout(page);
+      const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+      const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+      await page.screenshot({ path: join(EV, 'screenshots', 'addons', `account-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 70 });
+      await shotOf(page, 'section:has(form)', join(EV, 'screenshots', 'addons', `account-requests-${lang}-${width}.jpg`));
+      // The narrowest phone too: a long status (French "En attente de paiement") wraps in its cell, never sideways.
+      await page.setViewportSize({ width: 320, height: 900 });
+      const at320 = await layout(page);
+      record({ test: 'addons-account', lang, width, dates, layout: l, overflow320: at320.overflow, offenders320: at320.offenders, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
+      // Both scheduled rows dated with the trial's end, in the business's zone (Casablanca: 10:30), never UTC's 09:30.
+      expect(dates).toHaveLength(2);
+      for (const d of dates) expect(d).toMatch(/10:30|١٠:٣٠/);
+      expect(dates.join(' ')).not.toMatch(/09:30|٠٩:٣٠/);
+      expect([l.lang, l.dir]).toEqual([lang, lang === 'ar' ? 'rtl' : 'ltr']);
+      expect(l.overflow, 'no sideways scroll').toBeLessThanOrEqual(0);
+      expect(at320.overflow, 'no sideways scroll at 320 px').toBeLessThanOrEqual(0);
+      expect(errors).toEqual([]);
+      expect(serious.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+    });
+
+    test(`D176: the console's scheduled queue, ${lang} at ${width} px`, async ({ page }) => {
+      const errors = watchConsole(page);
+      await mockApi(page, { admin: true, addons: 'trial_end', lang });
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto('/admin/seat-requests');
+      await page.getByRole('combobox', { name: QUEUE_FILTER[lang], exact: true }).selectOption('scheduled');
+      const rows = page.locator('table.data tbody tr');
+      await expect(rows).toHaveCount(2);
+      await page.waitForLoadState('networkidle');
+      const l = await layout(page);
+      const buttons = await rows.locator('button').count();
+      const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+      const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+      await page.screenshot({ path: join(EV, 'screenshots', 'addons', `console-queue-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 70 });
+      await shotOf(page, 'table.data', join(EV, 'screenshots', 'addons', `console-queue-table-${lang}-${width}.jpg`));
+      record({ test: 'addons-console-queue', lang, width, buttons, layout: l, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
+      await expect(rows.first()).toContainText(SCHEDULED_WORDS[lang]);
+      expect(buttons, 'a scheduled row offers no action').toBe(0);
+      expect(l.overflow, 'no sideways scroll').toBeLessThanOrEqual(0);
+      expect(errors).toEqual([]);
+      expect(serious.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+    });
+  }
+}
