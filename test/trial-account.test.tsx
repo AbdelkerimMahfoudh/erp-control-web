@@ -238,6 +238,39 @@ describe('the setup instructions on the card', () => {
     }
   });
 
+  it('a failed, unavailable or never-sent delivery still leaves the claim there and enabled — delivery is never a condition (R4-09)', async () => {
+    for (const delivery of ['failed', 'unavailable', 'not_sent'] as const) {
+      const sent = account(
+        'trial_available',
+        trialStatus({
+          setup: trialSetup({
+            delivery,
+            sentTo: [],
+            lastAttemptAt: delivery === 'not_sent' ? null : '2026-10-13T08:00:00.000Z',
+            history: delivery === 'not_sent' ? [] : [{ at: '2026-10-13T08:00:00.000Z', trigger: 'automatic', email: delivery, whatsapp: 'not_applicable' }],
+            canResendNow: false,
+            resendBlockedBy: 'unavailable',
+          }),
+        }),
+      );
+      const c = await card();
+      expect(within(c).getByRole('button', { name: CLAIM })).toHaveProperty('disabled', false);
+      expect(within(c).getByText(en['trial.setup.optional'])).toBeTruthy();
+      expect(sent.filter((r) => r.url.includes('/trial/claim'))).toEqual([]);
+      await ownerLogout();
+      cleanup();
+    }
+  });
+
+  it('a setup status the server could not read: the offer and the claim stand, without the instructions (C3)', async () => {
+    account('trial_available', trialStatus({ setup: null }));
+    const c = await card();
+    expect(c.textContent).toContain(`If you start it now, it ends on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(within(c).getByRole('button', { name: CLAIM })).toHaveProperty('disabled', false);
+    expect(within(c).queryByRole('heading', { name: en['trial.setup.title'] })).toBeNull();
+    expect(within(c).queryByRole('button', { name: RESEND })).toBeNull();
+  });
+
   it('lists the latest attempts: each date in the business’s zone, automatic or at the Owner’s request, each channel’s outcome in words (R4-02)', async () => {
     const setup = trialSetup({
       delivery: 'failed',
