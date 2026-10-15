@@ -262,6 +262,9 @@ export const fr: Catalogue = {
   'trial.addons.storeAtEnd': 'Ouvre à la fin de l’essai gratuit, le {date}',
   'trial.addons.seatAtEnd': 'Commence à la fin de l’essai gratuit, le {date}',
   'trial.addons.waitsForPaidAccess': 'Commence avec le premier mois payant, une fois l’accès payant approuvé',
+  'trial.addons.note':
+    'Pendant votre essai gratuit, un magasin ou une place que vous demandez peut déjà être payé. Il ne commence jamais pendant l’essai : il commence à la fin de l’essai gratuit, le {date} — ou, si l’accès payant n’est pas approuvé d’ici là, avec le premier mois payant, une fois qu’il l’est.',
+  'trial.addons.paidNote': 'Un magasin ou une place payé pendant l’essai gratuit n’est payé qu’une fois : le total de votre premier mois payant l’inclut, et son propre paiement est ce que ce mois facture pour lui.',
   'trial.verify.phone': 'Avant de pouvoir le démarrer, vérifiez votre numéro WhatsApp dans l’application Dukan ERP, sous Votre compte → Numéro WhatsApp.',
   'trial.verify.email': 'Avant de pouvoir le démarrer, votre adresse e-mail doit être vérifiée. Contactez l’assistance Dukan ERP.',
   'trial.blocked.other': 'L’essai gratuit ne peut pas être démarré pour le moment.',

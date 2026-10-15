@@ -270,6 +270,9 @@ export const en = {
   'trial.addons.storeAtEnd': 'Opens when the free trial ends, on {date}',
   'trial.addons.seatAtEnd': 'Starts when the free trial ends, on {date}',
   'trial.addons.waitsForPaidAccess': 'Starts with the first paid month, once paid access is approved',
+  'trial.addons.note':
+    'During your free trial, a store or seat you request can already be paid for. It never starts during the trial: it starts when the free trial ends, on {date} — or, if paid access is not approved by then, with the first paid month, once it is.',
+  'trial.addons.paidNote': 'A store or seat paid for during the free trial is paid for once: your first paid month’s total includes it, and its own payment is that month’s charge for it.',
   'trial.verify.phone': 'Before you can start it, verify your WhatsApp number in the Dukan ERP app, under Your account → WhatsApp number.',
   'trial.verify.email': 'Before you can start it, your email address must be verified. Contact Dukan ERP support.',
   'trial.blocked.other': 'The free trial cannot be started right now.',

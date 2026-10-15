@@ -95,8 +95,8 @@ describe('the three catalogues', () => {
       // "Paid · scheduled" is not "Scheduled for the renewal": an activity change keeps that key to itself.
       expect(cat['account.requests.status.paidScheduled']).not.toBe(cat['account.requests.status.scheduled']);
       expect(TRIAL_WORD.test(cat['account.requests.status.paidScheduled'].toLowerCase())).toBe(false);
-      for (const key of ['trial.addons.storeAtEnd', 'trial.addons.seatAtEnd'] as const) expect({ key, placeholders: placeholders(cat[key]) }).toEqual({ key, placeholders: 'date' });
-      expect(placeholders(cat['trial.addons.waitsForPaidAccess'])).toBe('');
+      for (const key of ['trial.addons.storeAtEnd', 'trial.addons.seatAtEnd', 'trial.addons.note'] as const) expect({ key, placeholders: placeholders(cat[key]) }).toEqual({ key, placeholders: 'date' });
+      for (const key of ['trial.addons.waitsForPaidAccess', 'trial.addons.paidNote'] as const) expect({ key, placeholders: placeholders(cat[key]) }).toEqual({ key, placeholders: '' });
     }
   });
 

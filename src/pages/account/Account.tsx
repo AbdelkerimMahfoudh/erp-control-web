@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { useLocation } from 'react-router-dom';
 import { ApiError } from '../../api/client';
-import type { Activity, ActivityOption, ActivityOptions, Entitlement, MySubscription, NewStoreOption, QuoteLine, RequestResult, SeatRequest, SubscriptionBranch } from '../../api/types';
+import type { Activity, ActivityOption, ActivityOptions, Entitlement, MySubscription, NewStoreOption, QuoteLine, RequestResult, SeatRequest, SubscriptionBranch, TrialView } from '../../api/types';
 import { isUnauthorized, ownerChooseAccount, ownerLogin, ownerLogout, ownerRequest, type AccountChoice } from '../../auth/owner';
 import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
@@ -305,7 +305,13 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         <p className="muted small">{t('account.quote.next', { amount: `${formatInt(data.pricing.nextRenewalEstimate.monthlyTotal, lang)} MRU` })}</p>
       </section>
 
-      <Requests stores={ent.seatsByStore.map((s) => ({ id: s.branchId, name: s.name }))} newStore={options?.newStore ?? null} version={requestsVersion} onChanged={reload} />
+      <Requests
+        stores={ent.seatsByStore.map((s) => ({ id: s.branchId, name: s.name }))}
+        newStore={options?.newStore ?? null}
+        trial={ent.trial ?? null}
+        version={requestsVersion}
+        onChanged={reload}
+      />
 
       <section className="card stack">
         <h2>{t('account.payment.howto')}</h2>
@@ -605,15 +611,23 @@ function outcomeOf(
   return { tone: 'info', text: prefix + t('account.change.outcome.other', { status: t(requestStatusKey(a.status)) }) };
 }
 
+/**
+ * The Owner's seat, store and activity requests, and the forms to ask for more. While the free trial runs, a store or
+ * seat asked for here can be paid for at once and starts when the trial ends, never during it (D176): the forms say so,
+ * with the trial's end in the business's zone, and a list holding one paid for that way says it is paid for once.
+ */
 function Requests({
   stores,
   newStore,
+  trial,
   version,
   onChanged,
 }: {
   stores: { id: string; name: string }[];
   /** What a new store of each activity is charged per month now — the server's figure; null until it is read. */
   newStore: NewStoreOption[] | null;
+  /** The business's free trial as the entitlement tells it, or null. */
+  trial: TrialView | null;
   version: number;
   onChanged: () => Promise<void>;
 }) {
@@ -681,6 +695,7 @@ function Requests({
           keyOf={(r) => r.id}
         />
       )}
+      {rows?.some((r) => r.status === 'scheduled') ? <p className="small">{t('trial.addons.paidNote')}</p> : null}
       <ErrorNotice error={error} />
       <div className="grid">
         <form
@@ -735,6 +750,11 @@ function Requests({
           </button>
         </form>
       </div>
+      {trial?.status === 'active' && trial.endsAt ? (
+        <Notice tone="info">
+          <Phrase text={t('trial.addons.note')} values={{ date: formatInstant(trial.endsAt, trial.timeZone, lang) }} />
+        </Notice>
+      ) : null}
     </section>
   );
 }

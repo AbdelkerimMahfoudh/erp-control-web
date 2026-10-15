@@ -1287,6 +1287,62 @@ describe('a store or seat paid for during the trial: "Paid · scheduled", and wh
     }
     expect(inZone('fr-FR')).toBe(`20 octobre 2026 à 10:30 (${zoneName(TRIAL_ZONE, 'fr-FR')})`);
   });
+
+  const NOTE = `During your free trial, a store or seat you request can already be paid for. It never starts during the trial: it starts when the free trial ends, on ${AT_END} — or, if paid access is not approved by then, with the first paid month, once it is.`;
+
+  it('while the trial runs, the forms say what a request made now does: never started during the trial, the trial’s end in the business’s zone', async () => {
+    account('trial_active', RUNNING, listing([PENDING_STORE]));
+    const card = await requestsCard();
+    await rowOf(card, 'Boutique Sud');
+    expect(card.textContent).toContain(NOTE);
+    // Under the forms, its date isolated; and no word of a payment counted once while no row was paid for that way.
+    const note = within(card).getByText(/During your free trial/).closest('.notice')!;
+    const forms = [...card.querySelectorAll('form')];
+    expect(forms).toHaveLength(2);
+    expect(forms[1]!.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect([...note.querySelectorAll('bdi')].map((b) => b.textContent)).toEqual([AT_END]);
+    expect(note.textContent).not.toMatch(/MRU|09:30/);
+    expect(card.textContent).not.toContain(en['trial.addons.paidNote']);
+  });
+
+  it('a business suspended while its trial runs is told the same: its trial still runs', async () => {
+    account('suspended', { state: 'suspended', trial: trialView('active'), offer: null, setup: null, calculatedAt: TRIAL_START }, listing([]));
+    const card = await requestsCard();
+    await waitFor(() => expect(card.textContent).toContain(en['account.requests.none']), SLOW_WAIT);
+    expect(card.textContent).toContain(NOTE);
+  });
+
+  it('no such note before the trial is claimed, once it ended, or for a business that never had one', async () => {
+    const cases: [EntitlementState, TrialStatus][] = [
+      ['trial_available', trialStatus()],
+      ['trial_expired', { state: 'trial_expired', trial: trialView('expired'), offer: null, setup: null, calculatedAt: TRIAL_END }],
+      ['active', NO_TRIAL],
+    ];
+    for (const [state, trial] of cases) {
+      account(state, trial, listing([]));
+      const card = await requestsCard();
+      await waitFor(() => expect(card.textContent).toContain(en['account.requests.none']), SLOW_WAIT);
+      expect({ state, note: card.textContent!.includes('During your free trial') }).toEqual({ state, note: false });
+      await ownerLogout();
+      cleanup();
+    }
+  });
+
+  it('a list holding a store or seat paid for during the trial says it is paid for once; the note, in French and Arabic too', async () => {
+    for (const [lang, cat, locale] of [['en', en, 'en-GB'], ['fr', fr, 'fr-FR'], ['ar', ar, 'ar-MR']] as const) {
+      localStorage.setItem('erp.web.language', lang);
+      account('trial_active', RUNNING, listing([scheduledRequest('seat'), PENDING_STORE]));
+      const card = await requestsCard(cat['account.requests']);
+      await waitFor(() => expect(card.textContent).toContain(cat['trial.addons.paidNote']), SLOW_WAIT);
+      expect(card.textContent).toContain(cat['trial.addons.note'].replace('{date}', inZone(locale)));
+      // Said once, under the list and above the forms.
+      const paid = within(card).getByText(cat['trial.addons.paidNote']);
+      expect(card.querySelector('table')!.compareDocumentPosition(paid) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      expect(paid.compareDocumentPosition(card.querySelector('form')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      await ownerLogout();
+      cleanup();
+    }
+  });
 });
 
 describe('Apply ends signed in', () => {
