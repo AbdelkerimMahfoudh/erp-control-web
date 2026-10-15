@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { ApiError, request } from '../../api/client';
 import type { Activity, PublicPlan } from '../../api/types';
@@ -64,7 +64,10 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
   const [form, setForm] = useState({ ownerName: '', businessName: '', branchName: '', city: '', email: '', phone: '', password: '', language: lang });
   const [activity, setActivity] = useState<Activity | null>(null);
   const [plan, setPlan] = useState<PublicPlan | null>(null);
-  const [idempotencyKey] = useState(() => crypto.randomUUID());
+  // One attempt keeps one key, so a retry after a lost answer is replayed rather than registered twice. A form changed
+  // since — a field corrected after a failure — is a new attempt with a new key: the old one would have the server
+  // replay the first registration, with what was corrected.
+  const attempt = useRef<{ key: string; payload: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [unavailable, setUnavailable] = useState<'whatsapp' | 'all' | null>(null);
@@ -95,8 +98,7 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
     }
     setBusy(true);
     try {
-      const body = {
-        idempotencyKey,
+      const payload = {
         ownerName: form.ownerName.trim(),
         businessName: form.businessName.trim(),
         branchName: form.branchName.trim(),
@@ -107,7 +109,9 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
         password: form.password,
         language: form.language,
       };
-      onRegistered(await request<RegisterResponse>('platform/register', { method: 'POST', body }));
+      const sent = JSON.stringify(payload);
+      if (attempt.current?.payload !== sent) attempt.current = { key: crypto.randomUUID(), payload: sent };
+      onRegistered(await request<RegisterResponse>('platform/register', { method: 'POST', body: { idempotencyKey: attempt.current.key, ...payload } }));
     } catch (err) {
       if (err instanceof ApiError && err.status === 503 && err.code === 'registration_unavailable') setUnavailable(unavailableOf(err, form.email.trim() !== ''));
       else setError(err);

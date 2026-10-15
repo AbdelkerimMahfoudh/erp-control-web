@@ -7,9 +7,10 @@ import { PLAN_V3, mount, serve, useActivityHarness, type Handler } from './activ
 useActivityHarness();
 
 /*
- * The application's refusals (2026-10-15): every contact given at registration must be verified, so the server refuses
- * before saving anything when any of them cannot receive its code now, and names those (C10). The server accepts
- * idempotency keys of /^[A-Za-z0-9._:-]{1,80}$/ only (C11): the page's are UUIDs.
+ * The application's refusals and retries (2026-10-15): every contact given at registration must be verified, so the
+ * server refuses before saving anything when any of them cannot receive its code now, and names those (C10); and one
+ * attempt keeps one idempotency key — a retry is replayed — while a form changed since is a new attempt with a new key
+ * (the twin of the app's R5-7). The server accepts keys of /^[A-Za-z0-9._:-]{1,80}$/ only (C11): the page's are UUIDs.
  */
 const SERVER_KEY = /^[A-Za-z0-9._:-]{1,80}$/;
 
@@ -85,5 +86,30 @@ describe('Apply: a contact whose code cannot be sent now (C10)', () => {
       expect(screen.queryByText(en['apply.unavailable.whatsapp'])).toBeNull();
       cleanup();
     }
+  });
+});
+
+describe('Apply: one attempt, one key (C11; the app’s R5-7)', () => {
+  it('a retry of the same form keeps its key, so the server replays; a corrected field is a new attempt with a new key', async () => {
+    let calls = 0;
+    const registrations = apply(() => {
+      calls += 1;
+      if (calls === 1) throw new TypeError('Failed to fetch');
+      return calls === 2 ? { status: 502, body: { message: 'Bad gateway' } } : verifying;
+    });
+    const user = await fill({ email: 'owner@example.test' });
+    await user.click(screen.getByRole('button', { name: 'Send my application' }));
+    expect(await screen.findByText(en['error.network'])).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: 'Send my application' }));
+    expect(await screen.findByText(en['error.generic'])).toBeTruthy();
+    await user.type(screen.getByLabelText('Business name'), ' Ksar');
+    await user.click(screen.getByRole('button', { name: 'Send my application' }));
+    expect(await screen.findByLabelText('Verification code')).toBeTruthy();
+    const keys = registrations().map((b) => b.idempotencyKey);
+    expect(keys).toHaveLength(3);
+    expect(keys[1]).toBe(keys[0]);
+    expect(keys[2]).not.toBe(keys[0]);
+    expect(registrations()[2]).toMatchObject({ businessName: 'Boutique Test Ksar' });
+    for (const key of keys) expect(key).toMatch(SERVER_KEY);
   });
 });
