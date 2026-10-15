@@ -60,7 +60,16 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
     throw new ApiError('network', 0, 'network', null);
   }
 
-  const text = await res.text();
+  // The status arrived but the body was cut off on its way. A success whose body never came is a request that got no
+  // answer: the server did what was asked, and what it answered (a session, a record) is lost, so a caller must treat
+  // it as one whose outcome is unknown, never as a refusal. A refusal stays the refusal its status says, as when its
+  // body is not JSON.
+  let text = '';
+  try {
+    text = await res.text();
+  } catch {
+    if (res.ok) throw new ApiError('network', 0, 'network', null);
+  }
   let payload: unknown = null;
   try {
     payload = text ? JSON.parse(text) : null;

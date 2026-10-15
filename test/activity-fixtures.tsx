@@ -17,7 +17,8 @@ import { ThemeProvider } from '../src/theme/theme';
 export { B1, B2, B3, BOTH, PLAN_V3, line, quoteOf, subscription, BRANCHES, LINES, activityOptions, allocation } from './fixtures-data';
 import { B1, B2, B3, BOTH, PLAN_V3, line, quoteOf, subscription, BRANCHES, LINES, activityOptions, allocation, NO_TRIAL } from './fixtures-data';
 
-export type Handler = (url: string, body: unknown) => { status?: number; body: unknown } | undefined;
+/** A route's answer: a status and a JSON body, or a whole Response for what JSON cannot say (a body cut off on its way). */
+export type Handler = (url: string, body: unknown) => { status?: number; body: unknown } | Response | undefined;
 
 /**
  * A wait for what a busy machine shows slowly — a file's first render, an answer after a form typed key by key: five
@@ -34,6 +35,7 @@ export function serve(handler: Handler) {
     sent.push({ url, method: init?.method ?? 'GET', body, authorization: new Headers(init?.headers).get('Authorization') });
     const answer = handler(url, body);
     const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { 'Content-Type': 'application/json' } });
+    if (answer instanceof Response) return answer;
     if (answer) return json(answer.body, answer.status ?? 200);
     if (url.endsWith('/platform/admin/me')) return json({ message: 'Unauthorized' }, 401);
     // The account page's free-trial card (2026-10-13): a business with no trial, so no card, unless a test answers otherwise.

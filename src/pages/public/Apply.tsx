@@ -182,9 +182,9 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
 }
 
 /**
- * Proving the contact finishes the application. A confirmation that got no answer — the network failed, or the request
- * was aborted or timed out on its way — is not a wrong code: the server may have received it and made the account with
- * that code, which is then spent. The server refuses a registration it has already finished exactly as it refuses a
+ * Proving the contact finishes the application. A confirmation that got no answer — the network failed, the request was
+ * aborted or timed out on its way, or a success came back without its body — is not a wrong code: the server may have
+ * received it and made the account with that code, which is then spent. The server refuses a registration it has already finished exactly as it refuses a
  * wrong code (one answer for every refusal of a continuation), so the same code confirmed again cannot tell the two
  * apart. From the first lost answer until the page closes, the page says the account may be ready and offers to sign
  * in with the password just chosen; a code whose answer was lost is never called wrong, and any other code refused is,

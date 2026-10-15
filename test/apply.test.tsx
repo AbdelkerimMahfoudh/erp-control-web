@@ -133,9 +133,23 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
     ['Arabic', ar, '/ar'],
   ] as const;
   const literally = (text: string) => new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  /**
+   * An answer whose status arrived and whose body was cut off on its way: a success — the account made, its session
+   * issued — that the page never got to read, or a refusal whose words never came.
+   */
+  const cutOff = (status: number, start: string) =>
+    new Response(
+      new ReadableStream({
+        start(controller) {
+          controller.enqueue(new TextEncoder().encode(start));
+          controller.error(new TypeError('network error'));
+        },
+      }),
+      { status, headers: { 'Content-Type': 'application/json' } },
+    );
 
   /** The application in the address's language, filled and sent, at its code check; each confirmation answered by `confirm`. */
-  async function atCodeCheck(cat: Catalogue, prefix: string, confirm: (code: string) => { status?: number; body: unknown }) {
+  async function atCodeCheck(cat: Catalogue, prefix: string, confirm: (code: string) => { status?: number; body: unknown } | Response) {
     const sent = serve((url, body) => {
       if (url.endsWith('/platform/plan')) return { body: PLAN_V3 };
       if (url.endsWith('/platform/register')) return verifying;
@@ -223,6 +237,21 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
       expect(confirmations()).toEqual(['123456', '123456', '654321', '123456']);
     }, FILLING);
 
+    it(`in ${name}: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong`, async () => {
+      let calls = 0;
+      const { form, confirmCode, confirmations } = await atCodeCheck(cat, prefix, () => {
+        calls += 1;
+        return calls === 1 ? cutOff(200, '{"accessToken":"new-owner-se') : refused;
+      });
+      await confirmCode('123456');
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+      expect(form.textContent).not.toContain(cat['error.generic']);
+      await confirmCode('123456');
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+      expect(form.textContent).not.toContain(cat['error.generic']);
+      expect(confirmations()).toEqual(['123456', '123456']);
+    }, FILLING);
+
     it(`in ${name}: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account`, async () => {
       const { form, confirmCode } = await atCodeCheck(cat, prefix, () => refused);
       await confirmCode('654321');
@@ -248,6 +277,16 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
     const { form, confirmCode } = await atCodeCheck(en, '', () => ({ status: 500, body: { statusCode: 500, message: 'Internal server error' } }));
     await confirmCode('123456');
     expect(said(form, en)).toEqual({ lost: false, signIn: null, wrong: false, serverEnglish: false });
+    expect(form.textContent).toContain(en['error.generic']);
+  }, FILLING);
+
+  it.each([
+    ['a refusal is still a refusal: the code is wrong', 400, '{"statusCode":400,"message":"That co', true],
+    ['a server error is still an error', 500, '{"statusCode":500,"mes', false],
+  ] as const)('an answer whose body was cut off keeps its status — %s, and no account is promised', async (_case, status, start, wrong) => {
+    const { form, confirmCode } = await atCodeCheck(en, '', () => cutOff(status, start));
+    await confirmCode('654321');
+    expect(said(form, en)).toEqual({ lost: false, signIn: null, wrong, serverEnglish: false });
     expect(form.textContent).toContain(en['error.generic']);
   }, FILLING);
 });
