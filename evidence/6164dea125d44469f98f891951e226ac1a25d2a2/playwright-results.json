@@ -1,0 +1,174 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/playwright.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/6164dea125d44469f98f891951e226ac1a25d2a2",
+        "commitHash": "6164dea125d44469f98f891951e226ac1a25d2a2",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/38750087569"
+      },
+      "gitCommit": {
+        "shortHash": "6164dea",
+        "hash": "6164dea125d44469f98f891951e226ac1a25d2a2",
+        "subject": "Tests: a busy machine slows the waits, it does not fail them",
+        "body": "Tests: a busy machine slows the waits, it does not fail them\n\nWith another build loading the machine, four tests failed for time\nalone (verifier's new issue): the application's \"every other case\"\ntest filled the form four times and ran out of its five seconds; the\none-key test, and the first render of the trial card and of the\nconsole's trial, missed Testing Library's one-second wait.\n\n- The \"every other case\" refusals are four tests, one form each.\n- Each test that types the form has fifteen seconds.\n- Those waits, and the first render the two trial files wait for, are\n  given five seconds (SLOW_WAIT, in the shared harness).\n\nProof: the three files run on one CPU with three workers — the old\ntests failed 4 and 5 of 83 in two runs (the same tests the verifier\nsaw fail), the new ones passed 86 of 86 twice.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+        "author": {
+          "name": "CLAUDE-B",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1792073194000
+        },
+        "committer": {
+          "name": "Claude",
+          "email": "noreply@anthropic.com",
+          "time": 1792073847000
+        },
+        "branch": "tsx-public-site"
+      }
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/6164dea125d44469f98f891951e226ac1a25d2a2/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/6164dea125d44469f98f891951e226ac1a25d2a2",
+            "commitHash": "6164dea125d44469f98f891951e226ac1a25d2a2",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/38750087569"
+          },
+          "gitCommit": {
+            "shortHash": "6164dea",
+            "hash": "6164dea125d44469f98f891951e226ac1a25d2a2",
+            "subject": "Tests: a busy machine slows the waits, it does not fail them",
+            "body": "Tests: a busy machine slows the waits, it does not fail them\n\nWith another build loading the machine, four tests failed for time\nalone (verifier's new issue): the application's \"every other case\"\ntest filled the form four times and ran out of its five seconds; the\none-key test, and the first render of the trial card and of the\nconsole's trial, missed Testing Library's one-second wait.\n\n- The \"every other case\" refusals are four tests, one form each.\n- Each test that types the form has fifteen seconds.\n- Those waits, and the first render the two trial files wait for, are\n  given five seconds (SLOW_WAIT, in the shared harness).\n\nProof: the three files run on one CPU with three workers — the old\ntests failed 4 and 5 of 83 in two runs (the same tests the verifier\nsaw fail), the new ones passed 86 of 86 twice.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE-B",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792073194000
+            },
+            "committer": {
+              "name": "Claude",
+              "email": "noreply@anthropic.com",
+              "time": 1792073847000
+            },
+            "branch": "tsx-public-site"
+          }
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/6164dea125d44469f98f891951e226ac1a25d2a2/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/6164dea125d44469f98f891951e226ac1a25d2a2",
+            "commitHash": "6164dea125d44469f98f891951e226ac1a25d2a2",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/38750087569"
+          },
+          "gitCommit": {
+            "shortHash": "6164dea",
+            "hash": "6164dea125d44469f98f891951e226ac1a25d2a2",
+            "subject": "Tests: a busy machine slows the waits, it does not fail them",
+            "body": "Tests: a busy machine slows the waits, it does not fail them\n\nWith another build loading the machine, four tests failed for time\nalone (verifier's new issue): the application's \"every other case\"\ntest filled the form four times and ran out of its five seconds; the\none-key test, and the first render of the trial card and of the\nconsole's trial, missed Testing Library's one-second wait.\n\n- The \"every other case\" refusals are four tests, one form each.\n- Each test that types the form has fifteen seconds.\n- Those waits, and the first render the two trial files wait for, are\n  given five seconds (SLOW_WAIT, in the shared harness).\n\nProof: the three files run on one CPU with three workers — the old\ntests failed 4 and 5 of 83 in two runs (the same tests the verifier\nsaw fail), the new ones passed 86 of 86 twice.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE-B",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792073194000
+            },
+            "committer": {
+              "name": "Claude",
+              "email": "noreply@anthropic.com",
+              "time": 1792073847000
+            },
+            "branch": "tsx-public-site"
+          }
+        },
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/6164dea125d44469f98f891951e226ac1a25d2a2/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
+      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-10-15T14:18:41.236Z",
+    "duration": 149.60200000000003,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
