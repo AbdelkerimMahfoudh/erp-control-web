@@ -221,6 +221,7 @@ export function Business() {
             ))}
           </Notice>
         ) : null}
+        {requests.some(paidDuringTrial) ? <Notice tone="info">{t('admin.trial.addonsPaidNote')}</Notice> : null}
         {requests.length === 0 ? (
           <Empty text={t('account.requests.none')} />
         ) : (
@@ -265,6 +266,15 @@ export function Business() {
       </section>
     </div>
   );
+}
+
+/**
+ * A store or seat paid for during a free trial (D176): still scheduled, or in force since it was — the server sets
+ * `effectiveAt` on no other row (an API older than it sends none). Its own payment covers what the first paid period
+ * charges for it, so that charge must not be collected again.
+ */
+function paidDuringTrial(r: SeatRequest): boolean {
+  return r.status === 'scheduled' || r.effectiveAt != null;
 }
 
 /** The trial facts the console holds, for the trial's own events in the history: the recorded claim, in the business's zone. */

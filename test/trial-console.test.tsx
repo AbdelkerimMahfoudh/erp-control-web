@@ -477,4 +477,74 @@ describe('the console: a store or seat paid for during a trial (D176)', () => {
     expect(outcome.textContent).toContain(ar['admin.trial.addonScheduled'].replace('{date}', date));
     expect([...outcome.querySelectorAll('bdi')].map((b) => b.textContent)).toEqual([date]);
   });
+
+  /** A business whose trial runs, its requests as the server lists them on its page. */
+  function businessPage(requests: SeatRequest[]) {
+    const sub = subscription(BRANCHES, LINES);
+    const detail: BusinessDetail = {
+      ...BUSINESS,
+      city: 'Nouakchott',
+      createdAt: '2026-10-12T10:00:00.000Z',
+      branches: [],
+      people: [],
+      entitlement: { ...(sub.entitlement as BusinessDetail['entitlement'] & object), state: 'trial_active', status: 'pending_activation', trial: trialView('active') },
+      pricing: null,
+      version: 4,
+      events: [],
+      payments: [],
+      trial: {
+        eligibility: { registrationMethod: 'email', createdAt: '2026-10-12T10:00:00.000Z', closedAt: null, closedReason: null },
+        claim: { claimedAt: TRIAL_START, startedAt: TRIAL_START, endsAt: TRIAL_END, expiryRecordedAt: null },
+        timeZone: TRIAL_ZONE,
+      },
+    };
+    serve((url) => {
+      if (url.endsWith('/platform/admin/me')) return { body: ADMIN };
+      if (url.endsWith(`/platform/businesses/${BUSINESS.id}`)) return { body: detail };
+      if (url.endsWith(`/platform/businesses/${BUSINESS.id}/seat-requests`)) return { body: requests };
+      return undefined;
+    });
+    mount(`/admin/businesses/${BUSINESS.id}`);
+  }
+  const requestsSection = async (heading: string = en['admin.seats.title']) => (await screen.findByRole('heading', { name: heading, level: 2 }, SLOW_WAIT)).closest('section')!;
+
+  it('the business page says, above its requests, that what was paid for during the trial is not collected again — while one is scheduled, and once one started', async () => {
+    const IMMEDIATE = allocation({ id: '0192f000-0000-7000-8000-0000000000d6', kind: 'seat', status: 'paid', activityFrom: null, activityTo: null, activityEffective: null, monthlyAmount: 100 });
+    // Started from scheduled: paid, in force since the trial's end — the server sets `effectiveAt` on such a row only.
+    const STARTED = { ...scheduledRequest('seat'), status: 'paid' as const, activation: null };
+    const cases: [string, SeatRequest[], boolean][] = [
+      ['scheduled', [scheduledRequest('store'), PENDING_SEAT], true],
+      ['started from scheduled', [STARTED], true],
+      ['only paid at once, or awaiting payment', [IMMEDIATE, PENDING_STORE], false],
+    ];
+    for (const [name, requests, shown] of cases) {
+      businessPage(requests);
+      const section = await requestsSection();
+      await waitFor(() => expect(section.querySelectorAll('tbody tr')).toHaveLength(requests.length), SLOW_WAIT);
+      expect({ name, shown: section.textContent!.includes(en['admin.trial.addonsPaidNote']) }).toEqual({ name, shown });
+      if (shown) {
+        const note = within(section).getByText(en['admin.trial.addonsPaidNote']);
+        expect(note.compareDocumentPosition(section.querySelector('table')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      }
+      cleanup();
+    }
+  });
+
+  it('on the business page a scheduled row says when it starts and offers no action; the note in French and Arabic', async () => {
+    businessPage([scheduledRequest('store')]);
+    const section = await requestsSection();
+    const row = (await within(section).findByText(/Boutique Nord/, undefined, SLOW_WAIT)).closest('tr')!;
+    expect(row.textContent).toContain(`Opens when the free trial ends, on ${AT_END}`);
+    expect(row.textContent).toContain('BK-1');
+    expect(within(row).queryByRole('button')).toBeNull();
+    cleanup();
+    for (const [lang, cat] of [['fr', fr], ['ar', ar]] as const) {
+      localStorage.setItem('erp.web.language', lang);
+      businessPage([scheduledRequest('seat')]);
+      const translated = await requestsSection(cat['admin.seats.title']);
+      await waitFor(() => expect(translated.textContent).toContain(cat['admin.trial.addonsPaidNote']), SLOW_WAIT);
+      expect(translated.textContent).toContain(cat['account.requests.status.paidScheduled']);
+      cleanup();
+    }
+  });
 });

@@ -98,7 +98,7 @@ describe('the three catalogues', () => {
       for (const key of ['trial.addons.storeAtEnd', 'trial.addons.seatAtEnd', 'trial.addons.note', 'admin.trial.addonScheduled'] as const) {
         expect({ key, placeholders: placeholders(cat[key]) }).toEqual({ key, placeholders: 'date' });
       }
-      for (const key of ['trial.addons.waitsForPaidAccess', 'trial.addons.paidNote', 'admin.trial.addonWaits', 'admin.trial.paidPeriodNotStarted.title', 'admin.trial.paidPeriodNotStarted.refused'] as const) {
+      for (const key of ['trial.addons.waitsForPaidAccess', 'trial.addons.paidNote', 'admin.trial.addonWaits', 'admin.trial.addonsPaidNote', 'admin.trial.paidPeriodNotStarted.title', 'admin.trial.paidPeriodNotStarted.refused'] as const) {
         expect({ key, placeholders: placeholders(cat[key]) }).toEqual({ key, placeholders: '' });
       }
       // What a person waits for is said without the trial: the console lists it among the other reasons.

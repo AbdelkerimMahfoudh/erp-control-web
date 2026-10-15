@@ -483,6 +483,8 @@ export const en = {
   // A store or seat confirmed during the trial (D176): scheduled to its end; and a confirmation that would charge twice.
   'admin.trial.addonScheduled': 'It starts when the business’s free trial ends, on {date}. Nothing is active or charged to a period before then; this payment covers its first paid month.',
   'admin.trial.addonWaits': 'It starts with the business’s first paid month, once paid access is approved. Nothing is active or charged to a period before then; this payment covers its first paid month.',
+  'admin.trial.addonsPaidNote':
+    'Stores and seats paid for during the free trial join the first paid period when it starts. Their own payments cover that period’s charge for them: do not collect them again.',
   'admin.trial.paidPeriodNotStarted.title': 'Not recorded: no paid period has started',
   'admin.trial.paidPeriodNotStarted.refused':
     'This business has no paid period and no free trial running, so a payment confirmed now would be charged again by its first paid period. Nothing was recorded; the request still awaits payment. Confirm it once paid access has started, or while the business’s free trial runs: it then starts when the trial ends.',
