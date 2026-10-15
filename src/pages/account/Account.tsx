@@ -6,7 +6,7 @@ import { isUnauthorized, ownerChooseAccount, ownerLogin, ownerLogout, ownerReque
 import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
-import { Timeline } from '../../components/timeline';
+import { Timeline, type TimelineTrial } from '../../components/timeline';
 import { Badge, DatedPhrase, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, requestStatusKey, StateBadge, Table, type Tone } from '../../components/ui';
 import { useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, canWithdraw, isScheduledActivityChange, pricesAfter } from '../../lib/activity';
@@ -340,10 +340,21 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
 
       <section className="card stack">
         <h2>{t('account.timeline')}</h2>
-        <Timeline events={data.events} trial={ent.trial ?? null} />
+        <Timeline events={data.events} trial={historyTrial(data)} />
       </section>
     </div>
   );
+}
+
+/**
+ * The trial facts the history is told with: the trial's view, or — when the server gives none (a business whose chance
+ * to claim closed unused, or one suspended before it claimed) — the business's zone alone (C18), so the trial's own
+ * rows are dated in that zone, as the console dates them. An API older than C18 sends no zone, and those rows keep the
+ * date they had.
+ */
+function historyTrial(data: MySubscription): TimelineTrial | null {
+  if (data.entitlement.trial) return data.entitlement.trial;
+  return data.timeZone ? { timeZone: data.timeZone, startedAt: null, endsAt: null } : null;
 }
 
 /**

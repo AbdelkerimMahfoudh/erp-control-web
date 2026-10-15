@@ -4,7 +4,7 @@ import type { BusinessList, BusinessRow, EntitlementState } from '../../api/type
 import { adminRequest } from '../../auth/admin';
 import { Empty, ErrorNotice, Loading, StateBadge, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
-import { formatDate, formatInt } from '../../lib/format';
+import { formatDate, formatInstant, formatInt } from '../../lib/format';
 
 /** Every state the server computes, in the order a business meets them: the free trial's three (2026-10-13) come before paid access. */
 const STATES: EntitlementState[] = ['pending', 'trial_available', 'trial_active', 'trial_expired', 'active', 'grace', 'complimentary', 'suspended', 'expired', 'cancelled', 'rejected'];
@@ -18,6 +18,19 @@ export function accessEnd(r: Pick<BusinessRow, 'state' | 'periodEnd' | 'complime
   const until = r.state === 'complimentary' ? r.complimentary?.until ?? null : null;
   if (!until) return r.periodEnd;
   return r.periodEnd && new Date(r.periodEnd).getTime() > new Date(until).getTime() ? r.periodEnd : until;
+}
+
+/**
+ * A row's access end. A business with a free trial (C18) has it told as its own page tells it: in the business's zone,
+ * with the zone's name, isolated — access decided during the trial runs from the trial's end, so its end is a trial
+ * date too, and this browser's zone could name another day. Every other row, and every row of an API older than C18,
+ * keeps the date it had.
+ */
+function AccessEndCell({ row }: { row: BusinessRow }) {
+  const { lang } = useI18n();
+  const end = accessEnd(row);
+  if (!row.trial || !end) return <>{formatDate(end, lang)}</>;
+  return <bdi>{formatInstant(end, row.trial.timeZone, lang)}</bdi>;
 }
 
 export function Businesses() {
@@ -70,7 +83,7 @@ export function Businesses() {
               { label: t('admin.business.storeId'), render: (r) => <span className="ltr">{r.publicStoreId}</span> },
               { label: t('apply.city'), render: (r) => r.city ?? '—' },
               { label: t('admin.businesses.state'), render: (r) => <StateBadge state={r.state} /> },
-              { label: t('account.period.ends', { date: '' }).trim(), render: (r) => formatDate(accessEnd(r), lang) },
+              { label: t('account.period.ends', { date: '' }).trim(), render: (r) => <AccessEndCell row={r} /> },
               { label: t('admin.dashboard.stores'), render: (r) => formatInt(r.branches, lang) },
               { label: t('admin.business.people'), render: (r) => formatInt(r.users, lang) },
             ]}

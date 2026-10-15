@@ -54,9 +54,10 @@ export interface TimelineTrial {
  * A subscription's history, one way for the account page and the console: each event's kind in words, then its note.
  * The free trial's events (2026-10-13) are told from catalogue sentences, their dates the server's UTC instants shown
  * in the business's zone with the zone's name — the server's own note, in English with raw instants, is never shown
- * for them. Every other kind keeps the note the server wrote. A page that holds no trial zone (a business that never
- * claimed, after its chance to claim closed) has none to show the trial's eligibility in, and dates that row as it
- * dates every other one.
+ * for them. Every other kind keeps the note the server wrote. A business that never claimed has no trial view once its
+ * chance to claim closed: the console still holds its zone with the trial's recorded facts, and the account page has
+ * it from the business itself (C18). A page given no zone — an API older than both — dates the trial's eligibility as it
+ * dates every other row.
  */
 export function Timeline({ events, trial, actors = false }: { events: TimelineEvent[]; trial: TimelineTrial | null; actors?: boolean }) {
   const { t, lang } = useI18n();

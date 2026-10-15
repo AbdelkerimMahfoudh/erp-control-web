@@ -1,7 +1,7 @@
 import { cleanup, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { BusinessDetail, EntitlementState, PendingApplication, SeatRequest } from '../src/api/types';
+import type { BusinessDetail, BusinessRow, EntitlementState, PendingApplication, SeatRequest } from '../src/api/types';
 import { ar } from '../src/i18n/ar';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
@@ -310,6 +310,92 @@ describe('the console: a business’s trial, recorded', () => {
     const filter = (await screen.findByLabelText('State')) as HTMLSelectElement;
     expect([...filter.options].map((o) => o.value)).toEqual(expect.arrayContaining(['trial_available', 'trial_active', 'trial_expired']));
   });
+});
+
+/*
+ * The businesses list's "Ends" (C18): a business with a free trial has its end told as its own page tells it — in the
+ * business's zone, with the zone's name, isolated — since access decided during the trial runs from the trial's end.
+ * Dubai's paid month ends at 23:30 UTC, already 21 November there; a grant ends at 23:30 UTC, already 4 November in
+ * Casablanca. The runner's zone is UTC, so a date told in this browser's zone would name the day before. A business
+ * with no trial, and every row of an API older than C18, keeps the date it had.
+ */
+describe('the businesses list: a business with a trial ends in its own zone (C18)', () => {
+  const ADMIN = { id: 'a1', email: 'admin@example.test', name: 'Admin' };
+  const PERIOD_END = '2026-11-20T23:30:00.000Z';
+  const GRANT_END = '2026-11-03T23:30:00.000Z';
+  const row = (id: string, name: string, extra: Partial<BusinessRow>): BusinessRow => ({
+    id: `0192f000-0000-7000-8000-0000000000${id}`,
+    name,
+    publicStoreId: `ST-${id.toUpperCase()}`,
+    city: null,
+    createdAt: '2026-10-12T10:00:00.000Z',
+    branches: 1,
+    users: 1,
+    state: 'active',
+    status: 'activated',
+    periodEnd: PERIOD_END,
+    complimentary: null,
+    version: 3,
+    ...extra,
+  });
+  const ROWS: BusinessRow[] = [
+    row('f1', 'Boutique Dubai', { trial: { status: 'expired', endsAt: '2026-10-20T23:30:00.000Z', timeZone: 'Asia/Dubai' } }),
+    row('f2', 'Boutique Cadeau', {
+      state: 'complimentary',
+      periodEnd: null,
+      complimentary: { status: 'active', until: GRANT_END, paidUntil: null },
+      trial: { status: 'expired', endsAt: '2026-10-20T23:30:00.000Z', timeZone: TRIAL_ZONE },
+    }),
+    row('f3', 'Boutique Essai', { state: 'trial_active', status: 'pending_activation', periodEnd: null, trial: { status: 'active', endsAt: TRIAL_END, timeZone: TRIAL_ZONE } }),
+    row('f4', 'Boutique Console', { trial: null }),
+    // An API older than C18 sends no trial at all.
+    row('f5', 'Boutique Ancienne', {}),
+  ];
+  /** A server instant in a zone, with the zone's name — what formatInstant is asked to show. */
+  const inZone = (locale: string, zone: string, iso: string) =>
+    `${new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeStyle: 'short', timeZone: zone }).format(new Date(iso))} (${zoneName(zone, locale, iso)})`;
+  /** The date as the list has always shown it: this browser's zone (the runner's UTC), no time, no zone. */
+  const asBefore = (locale: string, iso: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium' }).format(new Date(iso));
+
+  for (const [lang, cat, locale, dubai, cadeau, before] of [
+    ['en', en, 'en-GB', '21 November 2026 at 03:30', '4 November 2026 at 00:30', '20 Nov 2026'],
+    ['fr', fr, 'fr-FR', '21 novembre 2026 à 03:30', '4 novembre 2026 à 00:30', '20 nov. 2026'],
+    ['ar', ar, 'ar-MR', null, null, null],
+  ] as const) {
+    it(`in ${lang === 'en' ? 'English' : lang === 'fr' ? 'French' : 'Arabic'}: the row’s zone and its name, isolated, for a business with a trial — the date it had for any other row`, async () => {
+      localStorage.setItem('erp.web.language', lang);
+      serve((url) => {
+        if (url.endsWith('/platform/admin/me')) return { body: ADMIN };
+        if (url.includes('/platform/businesses?')) return { body: { rows: ROWS, total: ROWS.length, page: 1, pageSize: 25 } };
+        return undefined;
+      });
+      mount('/admin/businesses');
+      await screen.findByText('Boutique Ancienne', undefined, SLOW_WAIT);
+      const label = cat['account.period.ends'].replace('{date}', '').trim();
+      const ends = (name: string) => screen.getByText(name).closest('tr')!.querySelector(`td[data-label="${label}"]`)!;
+      const isolated = (name: string) => [...ends(name).querySelectorAll('bdi')].map((b) => b.textContent);
+
+      const inDubai = inZone(locale, 'Asia/Dubai', PERIOD_END);
+      const inCasablanca = inZone(locale, TRIAL_ZONE, GRANT_END);
+      if (dubai && cadeau) {
+        expect(inDubai).toBe(`${dubai} (${zoneName('Asia/Dubai', locale, PERIOD_END)})`);
+        expect(inCasablanca).toBe(`${cadeau} (${zoneName(TRIAL_ZONE, locale, GRANT_END)})`);
+      }
+      expect({ dubai: ends('Boutique Dubai').textContent, isolated: isolated('Boutique Dubai') }).toEqual({ dubai: inDubai, isolated: [inDubai] });
+      // A grant decided during the trial ends on the day it ends in Casablanca.
+      expect({ cadeau: ends('Boutique Cadeau').textContent, isolated: isolated('Boutique Cadeau') }).toEqual({ cadeau: inCasablanca, isolated: [inCasablanca] });
+      // A trial with no paid period yet has no end here; nothing is isolated for a dash.
+      expect({ essai: ends('Boutique Essai').textContent, isolated: isolated('Boutique Essai') }).toEqual({ essai: '—', isolated: [] });
+      // No trial, and an API that sends none: the date this list always showed.
+      const unchanged = asBefore(locale, PERIOD_END);
+      if (before) expect(unchanged).toBe(before);
+      for (const name of ['Boutique Console', 'Boutique Ancienne']) {
+        expect({ name, ends: ends(name).textContent, isolated: isolated(name) }).toEqual({ name, ends: unchanged, isolated: [] });
+      }
+      // Told in the business's zone, the trial rows never show the day before that this browser's zone would.
+      expect(ends('Boutique Dubai').textContent).not.toContain(unchanged);
+    });
+  }
 });
 
 /*

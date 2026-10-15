@@ -321,6 +321,12 @@ export interface MySubscription {
   pricing: Pricing;
   events: TimelineEvent[];
   payments: PaymentRow[];
+  /**
+   * The business's configured zone, checked as the trial's is: an unknown zone reads UTC (C18). The history dates the
+   * trial's own rows in it when no trial view carries a zone — a business whose chance to claim closed unused. Absent
+   * from an API older than it.
+   */
+  timeZone?: string;
 }
 
 /**
@@ -444,8 +450,19 @@ export interface PendingApplication {
   status: string;
   /** The state the server computes for the business, a free trial's included (C8). Absent from an API older than it. */
   state?: EntitlementState;
-  /** The business's free trial, when it has or may claim one: its status, its end once claimed, its zone (C8). */
-  trial?: { status: 'available' | 'active' | 'expired'; endsAt: string | null; timeZone: string } | null;
+  /** The business's free trial, when it has or may claim one (C8). Absent from an API older than it. */
+  trial?: TrialSummary | null;
+}
+
+/**
+ * A business's free trial as a console list carries it, one way for the applications queue (C8) and the businesses
+ * list (C18): its status, its end once claimed, and the business's zone — the one the row's dates are told in. Null
+ * for a business with no trial it has or may claim.
+ */
+export interface TrialSummary {
+  status: 'available' | 'active' | 'expired';
+  endsAt: string | null;
+  timeZone: string;
 }
 
 export interface BusinessRow {
@@ -461,6 +478,8 @@ export interface BusinessRow {
   periodEnd: string | null;
   /** The grant with its own dates (docs/73 §11.5). Absent from an API older than 2026-10-10. */
   complimentary?: ComplimentaryGrant | null;
+  /** The business's free trial, when it has or may claim one (C18). Absent from an API older than it. */
+  trial?: TrialSummary | null;
   version: number;
 }
 

@@ -1177,6 +1177,67 @@ describe('the history: every event in words, the trial’s own from its facts in
       cleanup();
     }
   });
+
+  /*
+   * A business that registered itself and was approved before it claimed (C18): the server gives no trial view, yet the
+   * history holds the trial's eligibility. Its date is the business's — Dubai, where 22:00 UTC is already the next day —
+   * from the zone the account carries; every other row keeps the date it had (this browser's zone, the runner's UTC),
+   * and an API older than C18, which sends no zone, dates the eligibility as it always did.
+   */
+  describe('no trial view, the chance to claim closed unused: the eligibility in the business’s zone (C18)', () => {
+    const ELIGIBLE_AT = '2026-10-12T22:00:00.000Z';
+    const APPROVED_AT = '2026-10-13T08:00:00.000Z';
+    const CLOSED: TimelineEvent[] = [
+      { id: 'c3', kind: 'approved', note: 'Approved for 1 month(s).', actor: 'admin@example.test', periodEndAfter: null, createdAt: APPROVED_AT },
+      { id: 'c2', kind: 'trial_eligible', note: SERVER_NOTES[0]!, actor: 'self-service', periodEndAfter: null, createdAt: ELIGIBLE_AT },
+      { id: 'c1', kind: 'registered', note: 'Registered on the website.', actor: 'self-service', periodEndAfter: null, createdAt: ELIGIBLE_AT },
+    ];
+    const approvedAccount = (timeZone?: string) =>
+      account('active', NO_TRIAL, undefined, (sub) => {
+        sub.entitlement = { ...sub.entitlement, state: 'active', periodEnd: '2026-11-13T08:00:00.000Z', trial: null };
+        sub.events = CLOSED;
+        if (timeZone) sub.timeZone = timeZone;
+      });
+    const historyTimes = async (heading: string) => {
+      const history = (await screen.findByRole('heading', { name: heading, level: 2 }, SLOW_WAIT)).closest('section')!;
+      return { history, times: [...history.querySelectorAll('time')].map((t) => t.textContent) };
+    };
+    /** A server instant in a zone, with the zone's name — what formatInstant is asked to show. */
+    const inZone = (locale: string, zone: string, iso: string) =>
+      `${new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeStyle: 'short', timeZone: zone }).format(new Date(iso))} (${zoneName(zone, locale, iso)})`;
+    /** An event's date as the history has always shown a row of another kind: this browser's zone, no zone named. */
+    const asBefore = (locale: string, iso: string) => new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(iso));
+
+    for (const [lang, cat, locale, eligible, before] of [
+      ['en', en, 'en-GB', '13 October 2026 at 02:00', '12 Oct 2026, 22:00'],
+      ['fr', fr, 'fr-FR', '13 octobre 2026 à 02:00', '12 oct. 2026, 22:00'],
+      ['ar', ar, 'ar-MR', null, null],
+    ] as const) {
+      it(`in ${lang === 'en' ? 'English' : lang === 'fr' ? 'French' : 'Arabic'}: the eligibility on the day the business lived it, with its zone’s name; the other rows as before`, async () => {
+        localStorage.setItem('erp.web.language', lang);
+        approvedAccount('Asia/Dubai');
+        const { history, times } = await historyTimes(cat['account.timeline']);
+        const inDubai = inZone(locale, 'Asia/Dubai', ELIGIBLE_AT);
+        if (eligible) expect(inDubai).toBe(`${eligible} (${zoneName('Asia/Dubai', locale, ELIGIBLE_AT)})`);
+        if (before) expect(asBefore(locale, ELIGIBLE_AT)).toBe(before);
+        expect(times).toEqual([asBefore(locale, APPROVED_AT), inDubai, asBefore(locale, ELIGIBLE_AT)]);
+        // The eligibility is told in the catalogue's words, never the server's English note.
+        expect(history.textContent).toContain(`${cat['event.trial_eligible']} — ${cat['event.trial_eligible.note']}`);
+        expect(history.textContent).not.toContain(SERVER_NOTES[0]);
+      });
+    }
+
+    it('an API older than C18 sends no zone: the eligibility keeps the date it had, in every language', async () => {
+      for (const [lang, cat, locale] of [['en', en, 'en-GB'], ['fr', fr, 'fr-FR'], ['ar', ar, 'ar-MR']] as const) {
+        localStorage.setItem('erp.web.language', lang);
+        approvedAccount();
+        const { times } = await historyTimes(cat['account.timeline']);
+        expect({ lang, times }).toEqual({ lang, times: [asBefore(locale, APPROVED_AT), asBefore(locale, ELIGIBLE_AT), asBefore(locale, ELIGIBLE_AT)] });
+        await ownerLogout();
+        cleanup();
+      }
+    });
+  });
 });
 
 /*
