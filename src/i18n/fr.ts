@@ -31,6 +31,7 @@ export const fr: Catalogue = {
   'error.unauthorized': 'Vous n’êtes pas connecté, ou votre session a expiré.',
   'error.conflict': 'Quelqu’un d’autre vient de modifier ceci. Actualisez et réessayez.',
   'error.forbidden': 'Votre compte n’est pas autorisé à faire cela.',
+  'error.tooManyRequests': 'Trop de tentatives en peu de temps. Attendez une minute, puis réessayez.',
 
   // ── activités (D154, docs/73 §6) : ce que fait un magasin, tarifé par le serveur ──
   'activity.electronics': 'Magasin d’électronique',

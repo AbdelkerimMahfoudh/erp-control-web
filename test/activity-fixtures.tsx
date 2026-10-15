@@ -26,6 +26,12 @@ export type Handler = (url: string, body: unknown) => { status?: number; body: u
  */
 export const SLOW_WAIT = { timeout: 5_000 };
 
+/**
+ * The API's rate limit refusing a request, as its exception filter answers: no code, and the limiter's class name for
+ * a sentence (@nestjs/throttler's own message).
+ */
+export const THROTTLED = { status: 429, body: { statusCode: 429, error: 'TOO_MANY_REQUESTS', message: 'ThrottlerException: Too Many Requests' } };
+
 /** A fetch that answers by route and remembers every body it was sent, and the bearer session it carried. */
 export function serve(handler: Handler) {
   const sent: { url: string; method: string; body: unknown; authorization: string | null }[] = [];

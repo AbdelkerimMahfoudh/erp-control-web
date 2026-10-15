@@ -34,6 +34,7 @@ export const en = {
   'error.unauthorized': 'You are not signed in, or your session ended.',
   'error.conflict': 'Somebody else changed this a moment ago. Refresh and try again.',
   'error.forbidden': 'Your account is not allowed to do this.',
+  'error.tooManyRequests': 'Too many attempts in a short while. Wait a minute, then try again.',
 
   // ── activities (D154, docs/73 §6): what a store does, priced by the server ──
   'activity.electronics': 'Electronics store',

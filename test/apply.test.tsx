@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { ar } from '../src/i18n/ar';
 import { en, type Catalogue } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
-import { PLAN_V3, SLOW_WAIT, mount, serve, useActivityHarness, type Handler } from './activity-fixtures';
+import { PLAN_V3, SLOW_WAIT, THROTTLED, mount, serve, useActivityHarness, type Handler } from './activity-fixtures';
 
 useActivityHarness();
 
@@ -148,12 +148,21 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
       { status, headers: { 'Content-Type': 'application/json' } },
     );
 
-  /** The application in the address's language, filled and sent, at its code check; each confirmation answered by `confirm`. */
-  async function atCodeCheck(cat: Catalogue, prefix: string, confirm: (code: string) => { status?: number; body: unknown } | Response) {
+  /**
+   * The application in the address's language, filled and sent, at its code check; each confirmation answered by
+   * `confirm`, and each request for a new code by `resend` when one is given.
+   */
+  async function atCodeCheck(
+    cat: Catalogue,
+    prefix: string,
+    confirm: (code: string) => { status?: number; body: unknown } | Response,
+    resend?: () => { status?: number; body: unknown },
+  ) {
     const sent = serve((url, body) => {
       if (url.endsWith('/platform/plan')) return { body: PLAN_V3 };
       if (url.endsWith('/platform/register')) return verifying;
       if (url.endsWith('/platform/register/verify/confirm')) return confirm((body as { code: string }).code);
+      if (url.endsWith('/platform/register/verify/start') && resend) return resend();
       return undefined;
     });
     mount(`${prefix}/apply`);
@@ -176,7 +185,8 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
       await waitFor(() => expect(button.disabled).toBe(false), SLOW_WAIT);
     };
     const confirmations = () => sent.filter((r) => r.url.endsWith('/platform/register/verify/confirm')).map((r) => (r.body as { code: string }).code);
-    return { form, confirmCode, confirmations };
+    const resends = () => sent.filter((r) => r.url.endsWith('/platform/register/verify/start')).length;
+    return { form, user, confirmCode, confirmations, resends };
   }
 
   /**
@@ -289,5 +299,42 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
     expect(said(form, en)).toEqual({ lost: false, signIn: null, wrong, serverEnglish: false });
     expect(form.textContent).toContain(en['error.generic']);
   }, FILLING);
+
+  /*
+   * The API's rate limit refuses with no code and its class name for a sentence ("ThrottlerException: Too Many
+   * Requests"), which the page showed under its error title in every language. Every limit counts one minute, and the
+   * page says so in its own words. A refused request is no lost answer and no wrong code.
+   */
+  describe('a request the rate limit refused', () => {
+    const LIMITER = /Throttler|Too Many Requests/i;
+
+    for (const [name, cat, prefix] of LANGS) {
+      it(`in ${name}: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s`, async () => {
+        const { form, user, confirmCode, confirmations, resends } = await atCodeCheck(cat, prefix, () => THROTTLED, () => THROTTLED);
+        await user.click(within(form).getByRole('button', { name: cat['apply.verify.resend'] }));
+        expect(await within(form).findByText(cat['error.tooManyRequests'], {}, SLOW_WAIT)).toBeTruthy();
+        expect(form.textContent).not.toMatch(LIMITER);
+        expect(form.textContent).not.toContain(cat['error.generic']);
+        await confirmCode('123456');
+        expect(within(form).getByText(cat['error.tooManyRequests'])).toBeTruthy();
+        expect(form.textContent).not.toMatch(LIMITER);
+        expect(form.textContent).not.toContain(cat['error.generic']);
+        expect(said(form, cat)).toEqual({ lost: false, signIn: null, wrong: false, serverEnglish: false });
+        expect([resends(), confirmations()]).toEqual([1, ['123456']]);
+      }, FILLING);
+    }
+
+    it('the application itself refused by the limit: wait a minute, the form kept as it was', async () => {
+      const registrations = apply(() => THROTTLED);
+      const user = await fill({ email: 'owner@example.test' });
+      await user.click(screen.getByRole('button', { name: 'Send my application' }));
+      expect(await screen.findByText(en['error.tooManyRequests'], {}, SLOW_WAIT)).toBeTruthy();
+      expect(document.body.textContent).not.toMatch(LIMITER);
+      expect(screen.queryByText(en['error.generic'])).toBeNull();
+      expect(screen.queryByLabelText('Verification code')).toBeNull();
+      expect((screen.getByLabelText('Business name') as HTMLInputElement).value).toBe('Boutique Test');
+      expect(registrations()).toHaveLength(1);
+    }, FILLING);
+  });
 });
 

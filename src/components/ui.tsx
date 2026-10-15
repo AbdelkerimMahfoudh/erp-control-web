@@ -114,6 +114,9 @@ export function errorKey(e: unknown): Key {
     if (e.status === 401) return 'error.unauthorized';
     if (e.status === 403) return 'error.forbidden';
     if (e.status === 409) return 'error.conflict';
+    // The API's rate limit refuses with no code and its class name for a sentence ("ThrottlerException: Too Many
+    // Requests"); every limit it sets counts one minute. A refusal of its own, with a code, keeps the server's words.
+    if (e.status === 429 && e.code === null) return 'error.tooManyRequests';
   }
   return 'error.generic';
 }
@@ -123,7 +126,7 @@ export function ErrorNotice({ error }: { error: unknown }) {
   const { t } = useI18n();
   if (!error) return null;
   const key = errorKey(error);
-  const detail = error instanceof ApiError && error.status >= 400 && error.status < 500 && error.status !== 401 ? error.message : null;
+  const detail = key !== 'error.tooManyRequests' && error instanceof ApiError && error.status >= 400 && error.status < 500 && error.status !== 401 ? error.message : null;
   return (
     <Notice tone="danger" title={t(key)}>
       {detail && detail !== t(key) ? detail : null}
