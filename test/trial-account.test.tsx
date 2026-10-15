@@ -1013,12 +1013,13 @@ describe('the history: every event in words, the trial’s own from its facts in
     expect(times.slice(1, 4)).toEqual([`20 octobre 2026 à 10:31 (${fr2(RECORDED)})`, `13 octobre 2026 à 10:30 (${fr2(TRIAL_START)})`, `12 octobre 2026 à 11:00 (${fr2('2026-10-12T10:00:00.000Z')})`]);
   });
 
-  it('in Arabic each date of the trial’s sentence is isolated, so it keeps its own order', async () => {
+  it('in Arabic each date of the trial’s sentence is isolated, so it keeps its own order — and so is a note the server wrote in English', async () => {
     localStorage.setItem('erp.web.language', 'ar');
     expiredAccount();
     const history = (await screen.findByRole('heading', { name: ar['account.timeline'], level: 2 })).closest('section')!;
     const dates = [...history.querySelectorAll('bdi')].map((b) => b.textContent ?? '');
     expect(dates.filter((d) => d.includes(zoneName(TRIAL_ZONE, 'ar-MR')))).toHaveLength(3);
+    expect(dates).toContain('Registered on the website.');
     expect(history.textContent).toContain(ar['event.trial_claimed']);
     expect(history.textContent).not.toContain('_');
   });

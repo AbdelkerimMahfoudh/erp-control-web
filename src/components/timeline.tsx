@@ -111,6 +111,12 @@ function EventNote({ event, trial }: { event: TimelineEvent; trial: TimelineTria
         <> — {t('event.trial_expired.note.undated')}</>
       );
     default:
-      return event.note ? <> — {event.note}</> : null;
+      // The server writes its notes in English: isolated, so an Arabic line does not turn their punctuation around.
+      return event.note ? (
+        <>
+          {' — '}
+          <bdi>{event.note}</bdi>
+        </>
+      ) : null;
   }
 }

@@ -148,7 +148,7 @@ describe('the history says every event in words, and the trial’s in the busine
   it('the trial’s events are told from catalogue sentences, dated in the business’s zone; only other kinds print their note', () => {
     const src = read(join(SRC, 'components', 'timeline.tsx'));
     expect(src.match(/event\.note/g)).toHaveLength(2);
-    expect(src).toMatch(/default:\s*\n\s*return event\.note \? <> — \{event\.note\}<\/> : null;/);
+    expect(src).toMatch(/default:\s*\n(\s*\/\/.*\n)?\s*return event\.note \? \(\s*<>\s*\{' — '\}\s*<bdi>\{event\.note\}<\/bdi>/);
     expect(src).toMatch(/TRIAL_KINDS\.has\(e\.kind\) && trial \? formatInstant\(e\.createdAt, trial\.timeZone, lang\)/);
     for (const kind of ['trial_eligible', 'trial_claimed', 'trial_expired']) expect(src).toContain(`case '${kind}':`);
   });
