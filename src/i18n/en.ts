@@ -103,6 +103,7 @@ export const en = {
   'apply.verify.resend': 'Send the code again',
   'apply.verify.sent': 'A new code was sent.',
   'apply.verify.wrong': 'That code did not match. Check it and try again.',
+  'apply.verify.lost': 'We could not confirm your code in time. If the code was right, your business account is ready — sign in with your password.',
   'apply.done.title': 'Your application is in',
   'apply.done.body': 'Your business is pending review. You can follow its status from your business account; nothing is active until the platform approves it.',
   'apply.done.trial':

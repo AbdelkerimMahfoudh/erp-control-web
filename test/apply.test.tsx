@@ -1,7 +1,9 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { en } from '../src/i18n/en';
+import { ar } from '../src/i18n/ar';
+import { en, type Catalogue } from '../src/i18n/en';
+import { fr } from '../src/i18n/fr';
 import { PLAN_V3, SLOW_WAIT, mount, serve, useActivityHarness, type Handler } from './activity-fixtures';
 
 useActivityHarness();
@@ -113,3 +115,140 @@ describe('Apply: one attempt, one key (C11; the app’s R5-7)', () => {
     for (const key of keys) expect(key).toMatch(SERVER_KEY);
   }, FILLING);
 });
+
+/*
+ * The code check after a confirmation that got no answer (the website's twin of R2-1 / C14; the app's 5e7fe7e): the
+ * server may have made the account with that code and spent it, and it refuses a registration it has already finished
+ * exactly as it refuses a wrong code — one 400, "That code did not match." — so that code refused again is never called
+ * wrong. The page says the account may be ready and offers sign-in, for as long as it is open. Any other code refused
+ * is wrong, said in the page's own words in every language — never the server's English sentence.
+ */
+describe('Apply: a code check that got no answer is never called a wrong code (R2-1 / C14 on the website)', () => {
+  const SERVER_WRONG = 'That code did not match.';
+  const refused = { status: 400, body: { statusCode: 400, message: SERVER_WRONG, error: 'Bad Request' } };
+  const session = { body: { accessToken: 'new-owner-session', refreshToken: 'refresh-for-tests', expiresIn: 900 } };
+  const LANGS = [
+    ['English', en, ''],
+    ['French', fr, '/fr'],
+    ['Arabic', ar, '/ar'],
+  ] as const;
+  const literally = (text: string) => new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+
+  /** The application in the address's language, filled and sent, at its code check; each confirmation answered by `confirm`. */
+  async function atCodeCheck(cat: Catalogue, prefix: string, confirm: (code: string) => { status?: number; body: unknown }) {
+    const sent = serve((url, body) => {
+      if (url.endsWith('/platform/plan')) return { body: PLAN_V3 };
+      if (url.endsWith('/platform/register')) return verifying;
+      if (url.endsWith('/platform/register/verify/confirm')) return confirm((body as { code: string }).code);
+      return undefined;
+    });
+    mount(`${prefix}/apply`);
+    const user = userEvent.setup();
+    await user.type(await screen.findByLabelText(cat['apply.owner'], {}, SLOW_WAIT), 'Aminetou');
+    await user.type(screen.getByLabelText(cat['apply.business']), 'Boutique Test');
+    await user.type(screen.getByLabelText(cat['apply.branch']), 'Centre');
+    await user.type(screen.getByLabelText(literally(cat['apply.email'])), 'owner@example.test');
+    await user.type(screen.getByLabelText(new RegExp(`^${literally(cat['apply.password']).source}`)), 'a-long-password');
+    await user.click(screen.getByRole('radio', { name: literally(cat['activity.electronics']) }));
+    await user.click(screen.getByRole('button', { name: cat['apply.submit'] }));
+    const form = (await screen.findByLabelText(cat['apply.verify.code'], {}, SLOW_WAIT)).closest('form')!;
+    /** Types `code` in place of what the field holds and confirms it; resolves once the page has the answer. */
+    const confirmCode = async (code: string) => {
+      const field = within(form).getByLabelText(cat['apply.verify.code']);
+      await user.clear(field);
+      await user.type(field, code);
+      const button = within(form).getByRole('button', { name: cat['apply.verify.submit'] }) as HTMLButtonElement;
+      await user.click(button);
+      await waitFor(() => expect(button.disabled).toBe(false), SLOW_WAIT);
+    };
+    const confirmations = () => sent.filter((r) => r.url.endsWith('/platform/register/verify/confirm')).map((r) => (r.body as { code: string }).code);
+    return { form, confirmCode, confirmations };
+  }
+
+  /**
+   * What the code check says now: the lost answer's notice and its sign-in, whether a code is called wrong in the page's
+   * words, and whether the server's own sentence shows anywhere else (in English the page's sentence begins with it).
+   */
+  function said(form: HTMLElement, cat: Catalogue) {
+    const text = form.textContent!;
+    const signIn = within(form).queryByRole('link', { name: cat['action.signIn'] });
+    return {
+      lost: within(form).queryByText(cat['apply.verify.lost']) !== null,
+      signIn: signIn?.getAttribute('href') ?? null,
+      wrong: text.includes(cat['apply.verify.wrong']),
+      serverEnglish: text.replace(cat['apply.verify.wrong'], '').includes(SERVER_WRONG),
+    };
+  }
+
+  it.each([
+    ['the network failed', () => new TypeError('Failed to fetch')],
+    ['the request was aborted', () => new DOMException('The operation was aborted.', 'AbortError')],
+    ['the request timed out', () => new DOMException('The operation timed out.', 'TimeoutError')],
+  ])('no answer (%s), then the same code refused: never "That code did not match." — the account may be ready, sign in', async (_case, failure) => {
+    let calls = 0;
+    const { form, confirmCode, confirmations } = await atCodeCheck(en, '', () => {
+      calls += 1;
+      if (calls === 1) throw failure();
+      return refused;
+    });
+    await confirmCode('123456');
+    // Not "the server could not be reached": it may well have been, and made the account.
+    expect(said(form, en)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+    expect(form.textContent).not.toContain(en['error.network']);
+    await confirmCode('123456');
+    expect(said(form, en)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+    expect(form.textContent).not.toContain('did not match');
+    expect(confirmations()).toEqual(['123456', '123456']);
+  }, FILLING);
+
+  for (const [name, cat, prefix] of LANGS) {
+    it(`in ${name}: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered`, async () => {
+      let calls = 0;
+      const { form, confirmCode, confirmations } = await atCodeCheck(cat, prefix, () => {
+        calls += 1;
+        if (calls === 1) throw new TypeError('Failed to fetch');
+        return refused;
+      });
+      await confirmCode('123456');
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+      // The same code again: refused as a finished registration is — still not wrong.
+      await confirmCode('123456');
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+      // Another code refused is wrong, in this language; the way to sign in stays.
+      await confirmCode('654321');
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: true, serverEnglish: false });
+      // And the first code once more: never wrong, whatever came between.
+      await confirmCode('123456');
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+      expect(confirmations()).toEqual(['123456', '123456', '654321', '123456']);
+    }, FILLING);
+
+    it(`in ${name}: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account`, async () => {
+      const { form, confirmCode } = await atCodeCheck(cat, prefix, () => refused);
+      await confirmCode('654321');
+      expect(said(form, cat)).toEqual({ lost: false, signIn: null, wrong: true, serverEnglish: false });
+      if (cat !== en) expect(form.textContent).not.toMatch(/did not match|Bad Request/);
+    }, FILLING);
+  }
+
+  it('a lost answer, then the same code accepted after all: the application ends signed in, as it always does', async () => {
+    let calls = 0;
+    const { confirmCode } = await atCodeCheck(en, '', () => {
+      calls += 1;
+      if (calls === 1) throw new TypeError('Failed to fetch');
+      return session;
+    });
+    await confirmCode('123456');
+    const user = userEvent.setup();
+    await user.click(screen.getByRole('button', { name: en['apply.verify.submit'] }));
+    expect(await screen.findByText(en['apply.done.title'], {}, SLOW_WAIT)).toBeTruthy();
+  }, FILLING);
+
+  it('an answer is an answer: a server error is said as one, and no account is promised', async () => {
+    const { form, confirmCode } = await atCodeCheck(en, '', () => ({ status: 500, body: { statusCode: 500, message: 'Internal server error' } }));
+    await confirmCode('123456');
+    expect(said(form, en)).toEqual({ lost: false, signIn: null, wrong: false, serverEnglish: false });
+    expect(form.textContent).toContain(en['error.generic']);
+  }, FILLING);
+});
+

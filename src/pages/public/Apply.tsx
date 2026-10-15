@@ -181,12 +181,23 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
   );
 }
 
+/**
+ * Proving the contact finishes the application. A confirmation that got no answer — the network failed, or the request
+ * was aborted or timed out on its way — is not a wrong code: the server may have received it and made the account with
+ * that code, which is then spent. The server refuses a registration it has already finished exactly as it refuses a
+ * wrong code (one answer for every refusal of a continuation), so the same code confirmed again cannot tell the two
+ * apart. From the first lost answer until the page closes, the page says the account may be ready and offers to sign
+ * in with the password just chosen; a code whose answer was lost is never called wrong, and any other code refused is,
+ * in this page's own words — never the server's English sentence.
+ */
 function Verify({ response, onDone }: { response: RegisterResponse; onDone: (r: RegisterResponse) => void }) {
   const { t, lang } = useI18n();
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [sent, setSent] = useState<string | null>(null);
+  /** Every code whose confirmation got no answer: the account may already exist, made with it. */
+  const [unanswered, setUnanswered] = useState<string[]>([]);
   const continuation = response.continuation!.token;
 
   const start = async () => {
@@ -201,13 +212,17 @@ function Verify({ response, onDone }: { response: RegisterResponse; onDone: (r: 
 
   const confirm = async (e: FormEvent) => {
     e.preventDefault();
+    const tried = code.trim();
     setBusy(true);
     setError(null);
     try {
-      ownerAdopt(await request<{ accessToken?: string }>('platform/register/verify/confirm', { method: 'POST', body: { continuation, code: code.trim() } }));
+      ownerAdopt(await request<{ accessToken?: string }>('platform/register/verify/confirm', { method: 'POST', body: { continuation, code: tried } }));
       onDone(response);
     } catch (err) {
-      setError(err instanceof ApiError && err.status === 400 ? new ApiError(t('apply.verify.wrong'), 400, 'code_mismatch', null) : err);
+      if (err instanceof ApiError && err.status === 0) setUnanswered((codes) => (codes.includes(tried) ? codes : [...codes, tried]));
+      else if (err instanceof ApiError && err.status === 400) {
+        if (!unanswered.includes(tried)) setError(new ApiError(t('apply.verify.wrong'), 400, 'code_mismatch', null));
+      } else setError(err);
     } finally {
       setBusy(false);
     }
@@ -224,6 +239,16 @@ function Verify({ response, onDone }: { response: RegisterResponse; onDone: (r: 
           <input inputMode="numeric" autoComplete="one-time-code" maxLength={12} value={code} onChange={(e) => setCode(e.target.value)} dir="ltr" />
         </Field>
         {sent ? <Notice tone="ok">{sent}</Notice> : null}
+        {unanswered.length > 0 ? (
+          <>
+            <Notice tone="warn">{t('apply.verify.lost')}</Notice>
+            <div className="row">
+              <Link className="btn" to="/account">
+                {t('action.signIn')}
+              </Link>
+            </div>
+          </>
+        ) : null}
         <ErrorNotice error={error} />
         <div className="row">
           <button type="submit" className="btn btn-primary" disabled={busy || !code.trim()}>

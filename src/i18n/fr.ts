@@ -98,6 +98,7 @@ export const fr: Catalogue = {
   'apply.verify.resend': 'Renvoyer le code',
   'apply.verify.sent': 'Un nouveau code a été envoyé.',
   'apply.verify.wrong': 'Ce code ne correspond pas. Vérifiez-le et réessayez.',
+  'apply.verify.lost': 'Nous n’avons pas pu confirmer votre code à temps. Si le code était bon, votre compte entreprise est prêt — connectez-vous avec votre mot de passe.',
   'apply.done.title': 'Votre demande est enregistrée',
   'apply.done.body': 'Votre entreprise est en attente d’examen. Suivez son statut depuis votre compte entreprise ; rien n’est actif avant l’approbation de la plateforme.',
   'apply.done.trial':
