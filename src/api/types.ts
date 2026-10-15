@@ -31,6 +31,12 @@ export interface TrialView {
   startedAt: string | null;
   endsAt: string | null;
   timeZone: string;
+  /**
+   * Access approved during the trial, waiting for its end (C6): a paid billing period, or the platform's grant, that
+   * starts at `startsAt` — the trial's own end. Null when none is (the business turns read-only at the end) and while
+   * the trial is only available. Absent from an API older than it.
+   */
+  accessAfterTrial?: { kind: 'paid' | 'granted'; startsAt: string } | null;
 }
 
 export type TrialContact = 'email' | 'phone';

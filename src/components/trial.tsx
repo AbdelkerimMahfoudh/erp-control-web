@@ -126,11 +126,16 @@ export function ClaimOutcome({ claimed, refused, offer }: { claimed: TrialClaimR
   return <TrialRefusal error={refused} />;
 }
 
-/** The recorded trial: its exact end and its start, or when it ended — and, while that leaves the business read-only, what that means. */
+/**
+ * The recorded trial: its exact end and its start, or when it ended — and what its end means. Access the platform
+ * approved during it (paid, or granted) starts the moment it ends, and then that is what is said (C6); without it the
+ * business turns read-only at the end, as the terms said.
+ */
 export function TrialFacts({ trial, state }: { trial: TrialView; state: EntitlementState }) {
   const { t, lang } = useI18n();
   const at = (iso: string | null) => formatInstant(iso, trial.timeZone, lang);
   if (trial.status === 'active') {
+    const after = trial.accessAfterTrial ?? null;
     return (
       <div className="stack-tight">
         <p>
@@ -141,8 +146,16 @@ export function TrialFacts({ trial, state }: { trial: TrialView; state: Entitlem
         <p className="muted">
           <Phrase text={t('trial.active.started')} values={{ date: at(trial.startedAt) }} />
         </p>
-        <p className="muted small">{t('trial.terms.after')}</p>
-        <p className="muted small">{t('trial.terms.paid')}</p>
+        {after ? (
+          <p>
+            <Phrase text={t(after.kind === 'granted' ? 'trial.access.granted' : 'trial.access.paid')} values={{ date: at(after.startsAt) }} />
+          </p>
+        ) : (
+          <>
+            <p className="muted small">{t('trial.terms.after')}</p>
+            <p className="muted small">{t('trial.terms.paid')}</p>
+          </>
+        )}
       </div>
     );
   }

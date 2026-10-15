@@ -339,20 +339,22 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
 }
 
 /**
- * A paid period that has not begun (2026-10-13): access approved during a free trial starts when the trial ends, so the
+ * A period that has not begun (2026-10-13): access approved during a free trial starts when the trial ends, so the
  * running period's start can lie ahead. It is "ahead" when the server's own start is later than the server's own
- * reading of the entitlement — two server instants, never this browser's clock. Started at a trial's end, it is told
- * with that trial's zone, like every trial date.
+ * reading of the entitlement — two server instants, never this browser's clock. For a business with a trial, in
+ * whatever state (suspended mid-trial too), it is a trial date: told in the trial's zone, and as what it is — the
+ * platform's grant, when one runs, or paid access.
  */
 function PeriodStart({ data }: { data: MySubscription }) {
   const { t, lang } = useI18n();
   const ent = data.entitlement;
   const start = data.pricing.currentPeriod.periodStart;
   if (!start || !(Date.parse(start) > Date.parse(ent.calculatedAt))) return null;
-  if (ent.state === 'trial_active' && ent.trial) {
+  if (ent.trial) {
+    const granted = ent.complimentary?.status === 'active' || ent.complimentary?.status === 'indefinite';
     return (
       <p>
-        <Phrase text={t('trial.paidStart')} values={{ date: formatInstant(start, ent.trial.timeZone, lang) }} />
+        <Phrase text={t(granted ? 'trial.grantStart' : 'trial.paidStart')} values={{ date: formatInstant(start, ent.trial.timeZone, lang) }} />
       </p>
     );
   }

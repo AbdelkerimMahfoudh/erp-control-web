@@ -757,6 +757,55 @@ describe('dates in the business’s zone, in every language', () => {
     expect(period.textContent).toMatch(/Ends 20 Nov 2026/);
   });
 
+  it('paid access approved during the trial: the running trial says it starts at once when the trial ends — never that the business turns read-only (R4-03)', async () => {
+    const running = trialView('active', { accessAfterTrial: { kind: 'paid', startsAt: TRIAL_END } });
+    account('trial_active', { state: 'trial_active', trial: running, offer: null, setup: null, calculatedAt: TRIAL_START }, undefined, (sub) => {
+      sub.entitlement = { ...sub.entitlement, periodEnd: '2026-11-20T09:30:00.000Z', calculatedAt: TRIAL_START };
+      sub.pricing.currentPeriod.periodStart = TRIAL_END;
+    });
+    const c = await card();
+    expect(c.textContent).toContain(`When it ends, on 20 October 2026 at 10:30 (${CASABLANCA}), paid access starts at once.`);
+    expect(c.textContent).not.toContain(en['trial.terms.after']);
+    expect(c.textContent).not.toContain(en['trial.terms.paid']);
+    const period = (await screen.findByRole('heading', { name: 'Current period' })).closest('.card')!;
+    expect(period.textContent).toContain(`Paid access starts when the free trial ends, on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+  });
+
+  it('a grant approved during the trial is told as the access granted, on the card and in the period — not as paid access (R4-03)', async () => {
+    const running = trialView('active', { accessAfterTrial: { kind: 'granted', startsAt: TRIAL_END } });
+    account('trial_active', { state: 'trial_active', trial: running, offer: null, setup: null, calculatedAt: TRIAL_START }, undefined, (sub) => {
+      sub.entitlement = { ...sub.entitlement, calculatedAt: TRIAL_START, complimentary: { status: 'active', until: '2026-11-03T09:30:00.000Z', paidUntil: null } };
+      sub.pricing.currentPeriod.periodStart = TRIAL_END;
+    });
+    const c = await card();
+    expect(c.textContent).toContain(`When it ends, on 20 October 2026 at 10:30 (${CASABLANCA}), the access granted to your business starts at once.`);
+    expect(c.textContent).not.toContain(en['trial.terms.after']);
+    const period = (await screen.findByRole('heading', { name: 'Current period' })).closest('.card')!;
+    expect(period.textContent).toContain(`Access granted by the platform starts when the free trial ends, on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(period.textContent).not.toContain('Paid access');
+  });
+
+  it('nothing approved for after the trial: the running trial still says the business turns read-only at its end', async () => {
+    account('trial_active', { state: 'trial_active', trial: trialView('active', { accessAfterTrial: null }), offer: null, setup: null, calculatedAt: TRIAL_START });
+    const c = await card();
+    expect(c.textContent).toContain(en['trial.terms.after']);
+    expect(c.textContent).not.toMatch(/starts at once/);
+  });
+
+  it('a paid start ahead for a business suspended mid-trial is told in the trial’s zone, the day and hour the trial card says (R4-11)', async () => {
+    const ends = '2026-10-20T23:30:00.000Z';
+    const running = trialView('active', { endsAt: ends, timeZone: 'Asia/Dubai' });
+    account('suspended', { state: 'suspended', trial: running, offer: null, setup: null, calculatedAt: TRIAL_START }, undefined, (sub) => {
+      sub.entitlement = { ...sub.entitlement, state: 'suspended', periodEnd: '2026-11-20T23:30:00.000Z', calculatedAt: TRIAL_START, trial: running };
+      sub.pricing.currentPeriod.periodStart = ends;
+    });
+    const dubai = zoneName('Asia/Dubai', 'en-GB', ends);
+    const period = (await screen.findByRole('heading', { name: 'Current period' })).closest('.card')!;
+    expect(period.textContent).toContain(`Paid access starts when the free trial ends, on 21 October 2026 at 03:30 (${dubai}).`);
+    expect(period.textContent).not.toContain('20 Oct 2026');
+    expect((await card()).textContent).toContain(`Your free trial ends on 21 October 2026 at 03:30 (${dubai}).`);
+  });
+
   it('in Arabic the card reads right to left, the button names the trial in Arabic, and each date and address is isolated', async () => {
     localStorage.setItem('erp.web.language', 'ar');
     const setup = trialSetup({ sentTo: ['email', 'whatsapp'], destinations: [{ channel: 'email', masked: 'o•••@example.test' }, { channel: 'whatsapp', masked: '+222••••1234' }] });

@@ -254,6 +254,9 @@ export const fr: Catalogue = {
   'trial.expired.readOnly':
     'Votre entreprise est maintenant en lecture seule : vous pouvez toujours vous connecter, tout consulter et tout exporter, gérer votre sécurité et supprimer votre compte. Les ventes, le stock et l’argent pourront de nouveau être enregistrés dès le début de l’accès payant, qui s’organise sur ce site.',
   'trial.paidStart': 'L’accès payant commence à la fin de l’essai gratuit, le {date}.',
+  'trial.grantStart': 'L’accès accordé par la plateforme commence à la fin de l’essai gratuit, le {date}.',
+  'trial.access.paid': 'À sa fin, le {date}, l’accès payant commence aussitôt.',
+  'trial.access.granted': 'À sa fin, le {date}, l’accès accordé à votre entreprise commence aussitôt.',
   'trial.verify.phone': 'Avant de pouvoir le démarrer, vérifiez votre numéro WhatsApp dans l’application Dukan ERP, sous Votre compte → Numéro WhatsApp.',
   'trial.verify.email': 'Avant de pouvoir le démarrer, votre adresse e-mail doit être vérifiée. Contactez l’assistance Dukan ERP.',
   'trial.blocked.other': 'L’essai gratuit ne peut pas être démarré pour le moment.',

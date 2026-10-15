@@ -261,6 +261,9 @@ export const en = {
   'trial.expired.readOnly':
     'Your business is read-only now: you can still sign in, read and export everything, manage your security and delete your account. New sales, stock and money can be recorded again once paid access starts; it is arranged on this website.',
   'trial.paidStart': 'Paid access starts when the free trial ends, on {date}.',
+  'trial.grantStart': 'Access granted by the platform starts when the free trial ends, on {date}.',
+  'trial.access.paid': 'When it ends, on {date}, paid access starts at once.',
+  'trial.access.granted': 'When it ends, on {date}, the access granted to your business starts at once.',
   'trial.verify.phone': 'Before you can start it, verify your WhatsApp number in the Dukan ERP app, under Your account → WhatsApp number.',
   'trial.verify.email': 'Before you can start it, your email address must be verified. Contact Dukan ERP support.',
   'trial.blocked.other': 'The free trial cannot be started right now.',
