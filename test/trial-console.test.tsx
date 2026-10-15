@@ -19,7 +19,7 @@ describe('the console: a business’s trial, recorded', () => {
   const ADMIN = { id: 'a1', email: 'admin@example.test', name: 'Admin' };
   const ID = '0192f000-0000-7000-8000-0000000000b1';
 
-  function business(trial: BusinessDetail['trial'], state: EntitlementState = 'trial_active') {
+  function business(trial: BusinessDetail['trial'], state: EntitlementState = 'trial_active', events: BusinessDetail['events'] = []) {
     const sub = subscription(BRANCHES, LINES);
     const detail: BusinessDetail = {
       id: ID,
@@ -32,7 +32,7 @@ describe('the console: a business’s trial, recorded', () => {
       entitlement: { ...(sub.entitlement as BusinessDetail['entitlement'] & object), state, status: 'pending_activation', trial: state === 'trial_active' ? trialView('active') : null },
       pricing: null,
       version: 4,
-      events: [],
+      events,
       payments: [],
       trial,
     };
@@ -87,6 +87,35 @@ describe('the console: a business’s trial, recorded', () => {
     business({ eligibility: null, claim: null, timeZone: TRIAL_ZONE }, 'pending');
     const c = await trialCard();
     expect(c.textContent).toContain(en['admin.trial.none']);
+  });
+
+  it('the history says each kind in words and the trial’s events from the recorded claim, in the business’s zone (R4-01)', async () => {
+    const claimed = `Free trial claimed on the website by the Owner: 7 days from ${TRIAL_START} to ${TRIAL_END}. Nothing was charged.`;
+    business(
+      {
+        eligibility: { registrationMethod: 'email', createdAt: '2026-10-12T10:00:00.000Z', closedAt: '2026-10-14T08:00:00.000Z', closedReason: 'approved' },
+        claim: { claimedAt: TRIAL_START, startedAt: TRIAL_START, endsAt: TRIAL_END, expiryRecordedAt: null },
+        timeZone: TRIAL_ZONE,
+      },
+      'trial_active',
+      [
+        { id: 'e3', kind: 'approved', note: 'Approved for 1 month(s). Paid access starts when the free trial ends.', actor: 'admin@example.test', periodEndAfter: null, createdAt: '2026-10-14T08:00:00.000Z' },
+        { id: 'e2', kind: 'trial_claimed', note: claimed, actor: 'user:0192f000-0000-7000-8000-0000000000c1', periodEndAfter: null, createdAt: TRIAL_START },
+        { id: 'e1', kind: 'trial_eligible', note: 'Eligible for one 7-day free trial, to be claimed by the Owner on the Dukan ERP website. Not started.', actor: 'self-service', periodEndAfter: null, createdAt: '2026-10-12T10:00:00.000Z' },
+      ],
+    );
+    const history = (await screen.findByRole('heading', { name: 'History', level: 2 })).closest('.card')!;
+    const text = history.textContent!;
+    const at = (iso: string) => zoneName(TRIAL_ZONE, 'en-GB', iso);
+    expect(text).toContain(`Free trial started — By the Owner, on this website: from 13 October 2026 at 10:30 (${at(TRIAL_START)}) to 20 October 2026 at 10:30 (${CASABLANCA}). Nothing was charged.`);
+    expect(text).toContain(`Free trial available — ${en['event.trial_eligible.note']}`);
+    // The decision keeps the note its administrator's action wrote, and every row names who acted.
+    expect(text).toContain('Approved — Approved for 1 month(s). Paid access starts when the free trial ends. (admin@example.test)');
+    expect(text).toContain('(user:0192f000-0000-7000-8000-0000000000c1)');
+    expect(text).not.toContain(claimed);
+    expect(text).not.toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:|trial claimed|trial_/);
+    const times = [...history.querySelectorAll('time')].map((t) => t.textContent);
+    expect(times.slice(1)).toEqual([`13 October 2026 at 10:30 (${at(TRIAL_START)})`, `12 October 2026 at 11:00 (${at('2026-10-12T10:00:00.000Z')})`]);
   });
 
   it('the overview and the list name the three trial states', async () => {

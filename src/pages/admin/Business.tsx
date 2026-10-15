@@ -6,6 +6,7 @@ import { adminRequest } from '../../auth/admin';
 import { ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
+import { Timeline, type TimelineTrial } from '../../components/timeline';
 import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, StateBadge, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatDateTime, formatInt } from '../../lib/format';
@@ -252,24 +253,19 @@ export function Business() {
         </div>
         <div className="card stack">
           <h2>{t('account.timeline')}</h2>
-          <ul className="timeline">
-            {data.events.map((e) => (
-              <li key={e.id}>
-                <span className="dot" aria-hidden="true" />
-                <div>
-                  <div>
-                    <strong>{e.kind.replace(/_/g, ' ')}</strong>
-                    {e.note ? ` — ${e.note}` : ''} {e.actor ? <span className="muted small ltr">({e.actor})</span> : null}
-                  </div>
-                  <time dateTime={e.createdAt}>{formatDateTime(e.createdAt, lang)}</time>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <Timeline events={data.events} trial={timelineTrial(data)} actors />
         </div>
       </section>
     </div>
   );
+}
+
+/** The trial facts the console holds, for the trial's own events in the history: the recorded claim, in the business's zone. */
+function timelineTrial(business: BusinessDetail): TimelineTrial | null {
+  const timeZone = business.trial?.timeZone ?? business.entitlement?.trial?.timeZone;
+  if (!timeZone) return null;
+  const claim = business.trial?.claim ?? business.entitlement?.trial ?? null;
+  return { timeZone, startedAt: claim?.startedAt ?? null, endsAt: claim?.endsAt ?? null };
 }
 
 function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {

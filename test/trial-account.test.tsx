@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../src/app';
-import type { EntitlementState, MySubscription, TrialClaimResult, TrialLinkOutcome, TrialStatus, TrialView } from '../src/api/types';
+import type { EntitlementState, MySubscription, TimelineEvent, TrialClaimResult, TrialLinkOutcome, TrialStatus, TrialView } from '../src/api/types';
 import { ownerLogout } from '../src/auth/owner';
 import { I18nProvider } from '../src/i18n';
 import { ar } from '../src/i18n/ar';
@@ -538,6 +538,80 @@ describe('dates in the business’s zone, in every language', () => {
     const c = (await screen.findByRole('heading', { name: fr['trial.title'], level: 2 })).closest('section')!;
     expect(within(c).getByRole('button', { name: 'Démarrer mon essai gratuit de 7 jours' })).toBeTruthy();
     expect(c.textContent).toContain(`Si vous le démarrez maintenant, il se termine le 20 octobre 2026 à 10:30 (${zoneName(TRIAL_ZONE, 'fr-FR')}).`);
+  });
+});
+
+describe('the history: every event in words, the trial’s own from its facts in the business’s zone (R4-01)', () => {
+  /** The notes the server writes for the trial's events: English, with raw UTC instants — never what the page shows. */
+  const SERVER_NOTES = [
+    'Eligible for one 7-day free trial, to be claimed by the Owner on the Dukan ERP website. Not started.',
+    `Free trial claimed on the website by the Owner: 7 days from ${TRIAL_START} to ${TRIAL_END}. Nothing was charged.`,
+    `The 7-day free trial ended at ${TRIAL_END}. Nothing was charged.`,
+  ];
+  const RECORDED = '2026-10-20T09:31:00.000Z';
+  const EVENTS: TimelineEvent[] = [
+    { id: 'e5', kind: 'a_kind_from_a_newer_api', note: 'Something newer.', actor: 'system', periodEndAfter: null, createdAt: RECORDED },
+    { id: 'e4', kind: 'trial_expired', note: SERVER_NOTES[2]!, actor: 'system', periodEndAfter: null, createdAt: RECORDED },
+    { id: 'e3', kind: 'trial_claimed', note: SERVER_NOTES[1]!, actor: 'user:0192f000-0000-7000-8000-0000000000c1', periodEndAfter: null, createdAt: TRIAL_START },
+    { id: 'e2', kind: 'trial_eligible', note: SERVER_NOTES[0]!, actor: 'self-service', periodEndAfter: null, createdAt: '2026-10-12T10:00:00.000Z' },
+    { id: 'e1', kind: 'registered', note: 'Registered on the website.', actor: 'self-service', periodEndAfter: null, createdAt: '2026-10-12T10:00:00.000Z' },
+  ];
+  const expiredAccount = () =>
+    account('trial_expired', { state: 'trial_expired', trial: trialView('expired'), offer: null, setup: null, calculatedAt: TRIAL_END }, undefined, (sub) => {
+      sub.events = EVENTS;
+    });
+
+  it('in French: each kind in words, the trial’s sentences with its recorded dates in Casablanca time, and no server note or UTC instant', async () => {
+    localStorage.setItem('erp.web.language', 'fr');
+    expiredAccount();
+    const history = (await screen.findByRole('heading', { name: fr['account.timeline'], level: 2 })).closest('section')!;
+    const text = history.textContent!;
+    for (const key of ['event.trial_expired', 'event.trial_claimed', 'event.trial_eligible', 'event.registered', 'event.unknown'] as const) expect(text).toContain(fr[key]);
+    const fr2 = (iso: string) => zoneName(TRIAL_ZONE, 'fr-FR', iso);
+    expect(text).toContain(`Par le propriétaire, sur ce site : du 13 octobre 2026 à 10:30 (${fr2(TRIAL_START)}) au 20 octobre 2026 à 10:30 (${fr2(TRIAL_END)}). Rien n’a été facturé.`);
+    expect(text).toContain(`Il s’est terminé le 20 octobre 2026 à 10:30 (${fr2(TRIAL_END)}). Rien n’a été facturé.`);
+    expect(text).toContain(fr['event.trial_eligible.note']);
+    for (const note of SERVER_NOTES) expect(text).not.toContain(note);
+    // Every other kind keeps the note the server wrote — the newer one too, under words of its own.
+    expect(text).toContain('Registered on the website.');
+    expect(text).toContain(`${fr['event.unknown']} — Something newer.`);
+    expect(text).not.toMatch(/\d{4}-\d{2}-\d{2}T\d{2}:/);
+    expect(text).not.toContain('_');
+    // The trial's events are dated in the business's zone: the end recorded at 09:31 UTC is 10:31 there.
+    const times = [...history.querySelectorAll('time')].map((t) => t.textContent);
+    expect(times.slice(1, 4)).toEqual([`20 octobre 2026 à 10:31 (${fr2(RECORDED)})`, `13 octobre 2026 à 10:30 (${fr2(TRIAL_START)})`, `12 octobre 2026 à 11:00 (${fr2('2026-10-12T10:00:00.000Z')})`]);
+  });
+
+  it('in Arabic each date of the trial’s sentence is isolated, so it keeps its own order', async () => {
+    localStorage.setItem('erp.web.language', 'ar');
+    expiredAccount();
+    const history = (await screen.findByRole('heading', { name: ar['account.timeline'], level: 2 })).closest('section')!;
+    const dates = [...history.querySelectorAll('bdi')].map((b) => b.textContent ?? '');
+    expect(dates.filter((d) => d.includes(zoneName(TRIAL_ZONE, 'ar-MR')))).toHaveLength(3);
+    expect(history.textContent).toContain(ar['event.trial_claimed']);
+    expect(history.textContent).not.toContain('_');
+  });
+
+  it('every kind the server records has its own words in each language — no code, no kind left to a guess', async () => {
+    const kinds = [
+      'created', 'extended', 'branches_changed', 'seats_changed', 'complimentary_granted', 'complimentary_revoked', 'backfilled', 'registered',
+      'administrative_grant', 'suspended', 'reinstated', 'cancelled', 'approved', 'rejected', 'period_corrected', 'seat_requested', 'seat_paid',
+      'staff_activated', 'seat_closed', 'store_requested', 'activity_requested', 'activity_changed', 'activity_scheduled', 'renewed',
+      'trial_eligible', 'trial_claimed', 'trial_expired',
+    ];
+    for (const [lang, cat] of [['en', en], ['fr', fr], ['ar', ar]] as const) {
+      localStorage.setItem('erp.web.language', lang);
+      account('trial_active', { state: 'trial_active', trial: trialView('active'), offer: null, setup: null, calculatedAt: TRIAL_START }, undefined, (sub) => {
+        sub.events = kinds.map((kind, i) => ({ id: `k${i}`, kind, note: null, actor: null, periodEndAfter: null, createdAt: TRIAL_START }));
+      });
+      const history = (await screen.findByRole('heading', { name: cat['account.timeline'], level: 2 })).closest('section')!;
+      const titles = [...history.querySelectorAll('li strong')].map((e) => e.textContent);
+      expect(titles).toEqual(kinds.map((k) => cat[`event.${k}` as keyof typeof en]));
+      expect(new Set(titles).size).toBe(kinds.length);
+      expect(history.textContent).not.toContain('_');
+      await ownerLogout();
+      cleanup();
+    }
   });
 });
 

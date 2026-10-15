@@ -6,10 +6,11 @@ import { isUnauthorized, ownerChooseAccount, ownerLogin, ownerLogout, ownerReque
 import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
+import { Timeline } from '../../components/timeline';
 import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, StateBadge, Table, type Tone } from '../../components/ui';
 import { useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, canWithdraw, isScheduledActivityChange, pricesAfter } from '../../lib/activity';
-import { formatDate, formatDateTime, formatInstant, formatInt, formatMru } from '../../lib/format';
+import { formatDate, formatInstant, formatInt, formatMru } from '../../lib/format';
 import { isTrialLanding } from '../../lib/trial';
 import { paymentProvider } from '../../providers/payment';
 import { TrialCard } from './TrialCard';
@@ -331,24 +332,7 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
 
       <section className="card stack">
         <h2>{t('account.timeline')}</h2>
-        {data.events.length === 0 ? (
-          <Empty />
-        ) : (
-          <ul className="timeline">
-            {data.events.map((e) => (
-              <li key={e.id}>
-                <span className="dot" aria-hidden="true" />
-                <div>
-                  <div>
-                    <strong>{e.kind.replace(/_/g, ' ')}</strong>
-                    {e.note ? ` — ${e.note}` : ''}
-                  </div>
-                  <time dateTime={e.createdAt}>{formatDateTime(e.createdAt, lang)}</time>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+        <Timeline events={data.events} trial={ent.trial ?? null} />
       </section>
     </div>
   );

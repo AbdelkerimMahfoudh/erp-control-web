@@ -124,6 +124,36 @@ describe('the free trial’s dates are the server’s', () => {
   });
 });
 
+/*
+ * The history on the account page and in the console (review R4-01) says each event's kind in words, and the free
+ * trial's own events from the trial's facts in the business's zone — one component tells it for both pages, and the
+ * server's note, English with raw UTC instants, is never shown for the trial's events. Neither shows a server code by
+ * swapping its underscores for spaces.
+ */
+describe('the history says every event in words, and the trial’s in the business’s zone', () => {
+  it('neither timeline shows a server code by swapping its underscores for spaces', () => {
+    for (const f of [join('pages', 'account', 'Account.tsx'), join('pages', 'admin', 'Business.tsx'), join('components', 'timeline.tsx')]) {
+      const hits = executable(read(join(SRC, f))).filter((line) => /\.replace\(\/_\/g/.test(line));
+      expect({ file: f, hits }).toEqual({ file: f, hits: [] });
+    }
+  });
+
+  it('both timelines are the one component: neither page prints an event’s kind, note or date itself', () => {
+    for (const page of [join('pages', 'account', 'Account.tsx'), join('pages', 'admin', 'Business.tsx')]) {
+      const src = read(join(SRC, page));
+      expect({ page, timeline: /<Timeline\b/.test(src), own: /\be\.(kind|note|createdAt)\b/.test(src) }).toEqual({ page, timeline: true, own: false });
+    }
+  });
+
+  it('the trial’s events are told from catalogue sentences, dated in the business’s zone; only other kinds print their note', () => {
+    const src = read(join(SRC, 'components', 'timeline.tsx'));
+    expect(src.match(/event\.note/g)).toHaveLength(2);
+    expect(src).toMatch(/default:\s*\n\s*return event\.note \? <> — \{event\.note\}<\/> : null;/);
+    expect(src).toMatch(/TRIAL_KINDS\.has\(e\.kind\) && trial \? formatInstant\(e\.createdAt, trial\.timeZone, lang\)/);
+    for (const kind of ['trial_eligible', 'trial_claimed', 'trial_expired']) expect(src).toContain(`case '${kind}':`);
+  });
+});
+
 describe('the setup link’s token lives in memory only, and only the server decides', () => {
   it('no source keeps anything in a cookie, IndexedDB or the cache, and no trial source logs or puts the token in an address', () => {
     for (const f of code) expect({ file: relative(SRC, f), stored: /document\.cookie|indexedDB|\bcaches\./.test(read(f)) }).toEqual({ file: relative(SRC, f), stored: false });
