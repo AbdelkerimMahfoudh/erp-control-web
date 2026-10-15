@@ -28,6 +28,13 @@ function releaseGuard(): Plugin {
   };
 }
 
+/*
+ * The tests speak of "this browser's zone" as UTC, as CI's runners are: pinned here, before Vitest starts its workers,
+ * so a developer in another zone gets the same results. The business-zone dates under test are formatted with explicit
+ * zones and never depend on it.
+ */
+if (process.env.VITEST) process.env.TZ = 'UTC';
+
 export default defineConfig({
   plugins: [react(), releaseGuard()],
   server: { port: 5173, host: '127.0.0.1' },
