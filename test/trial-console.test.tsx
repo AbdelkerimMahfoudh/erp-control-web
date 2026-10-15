@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { BusinessDetail, EntitlementState, PendingApplication } from '../src/api/types';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
-import { BRANCHES, LINES, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
+import { BRANCHES, LINES, SLOW_WAIT, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
 import { TRIAL_END, TRIAL_START, TRIAL_ZONE, trialView, zoneName } from './fixtures-data';
 
 useActivityHarness();
@@ -49,7 +49,7 @@ describe('the console: a business’s trial, recorded', () => {
     return sent;
   }
 
-  const trialCard = async () => (await screen.findByRole('heading', { name: 'Free trial', level: 2 })).closest('section')!;
+  const trialCard = async () => (await screen.findByRole('heading', { name: 'Free trial', level: 2 }, SLOW_WAIT)).closest('section')!;
 
   it('shows the eligibility and the claim with their exact instants, and that no decision creates or extends a trial', async () => {
     business({

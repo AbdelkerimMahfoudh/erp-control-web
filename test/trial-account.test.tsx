@@ -10,7 +10,7 @@ import { ar } from '../src/i18n/ar';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
 import { ThemeProvider } from '../src/theme/theme';
-import { BRANCHES, LINES, PLAN_V3, activityOptions, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
+import { BRANCHES, LINES, PLAN_V3, SLOW_WAIT, activityOptions, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
 import { NO_TRIAL, TRIAL_END, TRIAL_START, TRIAL_ZONE, trialOffer, trialSetup, trialStatus, trialView, zoneName } from './fixtures-data';
 
 useActivityHarness();
@@ -65,8 +65,8 @@ function account(state: EntitlementState, trial: TrialStatus | number, extra?: H
   return sent;
 }
 
-const card = async () => (await screen.findByRole('heading', { name: '7-day free trial', level: 2 })).closest('section')!;
-const hero = async () => (await screen.findByRole('heading', { name: 'Boutique Test', level: 1 })).closest('section')!;
+const card = async () => (await screen.findByRole('heading', { name: '7-day free trial', level: 2 }, SLOW_WAIT)).closest('section')!;
+const hero = async () => (await screen.findByRole('heading', { name: 'Boutique Test', level: 1 }, SLOW_WAIT)).closest('section')!;
 /** Wait until the trial read was answered and rendered, for the cases that must show nothing. */
 async function settled(sent: { url: string }[]) {
   await hero();

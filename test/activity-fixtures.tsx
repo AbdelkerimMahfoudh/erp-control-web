@@ -19,6 +19,12 @@ import { B1, B2, B3, BOTH, PLAN_V3, line, quoteOf, subscription, BRANCHES, LINES
 
 export type Handler = (url: string, body: unknown) => { status?: number; body: unknown } | undefined;
 
+/**
+ * A wait for what a busy machine shows slowly — a file's first render, an answer after a form typed key by key: five
+ * seconds rather than Testing Library's one. At one second such waits failed while a build ran beside the tests.
+ */
+export const SLOW_WAIT = { timeout: 5_000 };
+
 /** A fetch that answers by route and remembers every body it was sent, and the bearer session it carried. */
 export function serve(handler: Handler) {
   const sent: { url: string; method: string; body: unknown; authorization: string | null }[] = [];
