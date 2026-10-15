@@ -416,7 +416,12 @@ export interface PendingApplication {
   phone: string | null;
   language: string;
   registeredAt: string;
+  /** The subscription's own status (`pending_activation`, …), `unknown`, or `incomplete` for an application with no business. */
   status: string;
+  /** The state the server computes for the business, a free trial's included (C8). Absent from an API older than it. */
+  state?: EntitlementState;
+  /** The business's free trial, when it has or may claim one: its status, its end once claimed, its zone (C8). */
+  trial?: { status: 'available' | 'active' | 'expired'; endsAt: string | null; timeZone: string } | null;
 }
 
 export interface BusinessRow {

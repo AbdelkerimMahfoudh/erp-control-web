@@ -127,14 +127,14 @@ describe('the free trial’s dates are the server’s', () => {
 /*
  * The history on the account page and in the console (review R4-01) says each event's kind in words, and the free
  * trial's own events from the trial's facts in the business's zone — one component tells it for both pages, and the
- * server's note, English with raw UTC instants, is never shown for the trial's events. Neither shows a server code by
- * swapping its underscores for spaces.
+ * server's note, English with raw UTC instants, is never shown for the trial's events. No source shows a server code
+ * by swapping its underscores for spaces (the console's pending queue did, review R4-13).
  */
 describe('the history says every event in words, and the trial’s in the business’s zone', () => {
-  it('neither timeline shows a server code by swapping its underscores for spaces', () => {
-    for (const f of [join('pages', 'account', 'Account.tsx'), join('pages', 'admin', 'Business.tsx'), join('components', 'timeline.tsx')]) {
-      const hits = executable(read(join(SRC, f))).filter((line) => /\.replace\(\/_\/g/.test(line));
-      expect({ file: f, hits }).toEqual({ file: f, hits: [] });
+  it('no source shows a server code by swapping its underscores for spaces — the history, the pending queue, anywhere', () => {
+    for (const f of code) {
+      const hits = executable(read(f)).filter((line) => /\.replace\(\/_\/g/.test(line));
+      expect({ file: relative(SRC, f), hits }).toEqual({ file: relative(SRC, f), hits: [] });
     }
   });
 

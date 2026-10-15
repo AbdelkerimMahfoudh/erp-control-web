@@ -1,7 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeEach, describe, expect, it } from 'vitest';
-import type { BusinessDetail, EntitlementState } from '../src/api/types';
+import type { BusinessDetail, EntitlementState, PendingApplication } from '../src/api/types';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
 import { BRANCHES, LINES, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
@@ -188,6 +188,62 @@ describe('the console: a business’s trial, recorded', () => {
       const decisions = (await screen.findByRole('heading', { name: 'Decisions' })).closest('section')!;
       await userEvent.setup().click(within(decisions).getByRole('button', { name: 'Approve' }));
       expect(decisions.textContent).not.toContain('A free trial is running');
+    });
+  });
+
+  describe('the applications queue says where each stands in words — never the raw status (R4-13)', () => {
+    const row = (id: string, name: string, extra: Partial<PendingApplication>): PendingApplication => ({
+      id,
+      companyId: `0192f000-0000-7000-8000-0000000000${id}`,
+      businessName: name,
+      ownerName: 'Owner',
+      city: null,
+      email: 'o@example.test',
+      phone: null,
+      language: 'en',
+      registeredAt: TRIAL_START,
+      status: 'pending_activation',
+      ...extra,
+    });
+    async function queue(rows: PendingApplication[]) {
+      serve((url) => {
+        if (url.endsWith('/platform/admin/me')) return { body: ADMIN };
+        if (url.endsWith('/platform/pending')) return { body: rows };
+        return undefined;
+      });
+      mount('/admin/pending');
+      await screen.findByText(rows[0]!.businessName);
+      return (name: string) => screen.getByText(name).closest('tr')!;
+    }
+
+    it('the state the server computes (C8): a running trial as a free trial with its end in the business’s zone', async () => {
+      const at = await queue([
+        row('c1', 'Boutique Essai', { state: 'trial_active', trial: { status: 'active', endsAt: TRIAL_END, timeZone: TRIAL_ZONE } }),
+        row('c2', 'Boutique Neuve', { state: 'trial_available', trial: { status: 'available', endsAt: null, timeZone: TRIAL_ZONE } }),
+        row('c3', 'Boutique Finie', { state: 'trial_expired', trial: { status: 'expired', endsAt: TRIAL_END, timeZone: TRIAL_ZONE } }),
+        row('c4', 'Boutique Console', { state: 'pending', trial: null }),
+      ]);
+      expect(at('Boutique Essai').textContent).toContain('Free trial');
+      expect(at('Boutique Essai').textContent).toContain(`The free trial ends on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+      expect(at('Boutique Neuve').textContent).toContain('Free trial not started');
+      expect(at('Boutique Finie').textContent).toContain('Free trial ended');
+      expect(at('Boutique Finie').textContent).not.toContain('ends on');
+      expect(at('Boutique Console').textContent).toContain('Pending review');
+      for (const name of ['Boutique Essai', 'Boutique Neuve', 'Boutique Finie', 'Boutique Console']) expect(at(name).textContent).not.toMatch(/pending.activation|_/);
+    });
+
+    it('an API that sends only the status: the status in words, or unknown — and an application with no business is incomplete', async () => {
+      const at = await queue([
+        row('d1', 'Boutique A', {}),
+        row('d2', 'Boutique B', { status: 'rejected' }),
+        row('d3', 'Boutique C', { status: 'something_newer' }),
+        row('d4', 'Boutique D', { companyId: null, status: 'incomplete' }),
+      ]);
+      expect(at('Boutique A').textContent).toContain('Awaiting approval');
+      expect(at('Boutique B').textContent).toContain('Refused');
+      expect(at('Boutique C').textContent).toContain('Unknown');
+      expect(at('Boutique D').textContent).toContain('Incomplete');
+      for (const name of ['Boutique A', 'Boutique B', 'Boutique C', 'Boutique D']) expect(at(name).textContent).not.toMatch(/pending.activation|something|_/);
     });
   });
 
