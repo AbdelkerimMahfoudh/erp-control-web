@@ -375,6 +375,10 @@ table.data th {
     color: var(--text-3);
     font-size: 0.85rem;
   }
+  /* A status keeps to its cell: a long one ("En attente de paiement") wraps rather than push the page sideways. */
+  table.data td .badge {
+    white-space: normal;
+  }
 }
 
 .timeline {
