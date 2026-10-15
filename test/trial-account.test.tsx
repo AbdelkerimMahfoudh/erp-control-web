@@ -931,7 +931,9 @@ describe('the setup link’s landing (/account/trial)', () => {
         const sent = landing(path, handler);
         await signIn();
         await screen.findByRole('button', { name: CLAIM });
-        // Two minutes on the page: the offer is read again twice, and still nothing is claimed.
+        // Two minutes on the page: the offer is read again twice, and still nothing is claimed. The minutes count from
+        // when the page reads again — an effect React may run only after the button showed, on a busy machine.
+        await readingAgain();
         const reads = () => sent.filter((r) => r.url.endsWith('/platform/my-subscription/trial')).length;
         const before = reads();
         await act(async () => {
@@ -945,9 +947,25 @@ describe('the setup link’s landing (/account/trial)', () => {
         await ownerLogout();
         cleanup();
       }
-    });
+    }, 15_000);
   });
 });
+
+/**
+ * Real time passes until the page has started its own timer — the minute-by-minute read of the trial. React starts it in
+ * an effect after the render a query saw, on a busy machine only after the query returned, and a fake clock moved before
+ * then moves nothing. Testing Library's waitFor cannot wait for it while `setInterval` is faked (its own polling is), so
+ * this waits in real time, a few milliseconds at a time.
+ */
+async function readingAgain() {
+  const start = Date.now();
+  while (vi.getTimerCount() === 0) {
+    if (Date.now() - start > SLOW_WAIT.timeout) throw new Error('The page never started reading the trial again.');
+    await act(async () => {
+      await new Promise((resolve) => setTimeout(resolve, 10));
+    });
+  }
+}
 
 describe('dates in the business’s zone, in every language', () => {
   it('the same instant is 10:30 in Casablanca and 13:30 in Dubai — never the server’s UTC, never this browser’s zone', async () => {
