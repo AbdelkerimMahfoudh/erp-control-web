@@ -158,6 +158,21 @@ describe('a scheduled store or seat starts on the server’s instant, told in th
     expect(found).toBeGreaterThan(0);
   });
 
+  it('no start leaves the object it came with: every `startsAt` read is an activation’s, told in its own zone, or the trial’s access, told in the trial’s', () => {
+    // A start taken out of its activation — destructured, or kept in a variable — would escape the rule above.
+    const KNOWN = [/formatInstant\(([\w.?]*\bactivation)\.startsAt, \1\.timeZone, lang\)/g, /\bat\(after\.startsAt\)/g];
+    const stray: string[] = [];
+    for (const f of code) {
+      if (relative(SRC, f) === join('api', 'types.ts')) continue; // where the fields are declared
+      for (const line of executable(read(f))) {
+        if (/\bstartsAt\b/.test(KNOWN.reduce((rest, known) => rest.replace(known, ''), line))) stray.push(`${relative(SRC, f)}: ${line.trim()}`);
+      }
+    }
+    expect(stray).toEqual([]);
+    // `at` is the trial card's formatter: the trial's own zone, with the zone's name.
+    expect(read(join(SRC, 'components', 'trial.tsx'))).toMatch(/const at = \(iso: string \| null\) => formatInstant\(iso, trial\.timeZone, lang\);/);
+  });
+
   it('a request’s status is put into words by one mapping, so a paid add-on never borrows the renewal’s "scheduled"', () => {
     const MAPPING = join('components', 'ui.tsx');
     for (const f of code) {
