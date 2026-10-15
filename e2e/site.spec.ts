@@ -284,6 +284,30 @@ for (const [name, path, signedIn, width] of PROTECTED) {
   });
 }
 
+test('a link preview: without a session the setup link consumes and starts nothing, and no request carries its token', async ({ page, request }) => {
+  const token = 'x'.repeat(43);
+  // A preview or a mail scanner fetching the address: the static shell, served with no referrer, holding no token.
+  const raw = await request.get(`/account/trial?t=${token}`);
+  expect(raw.status()).toBe(200);
+  expect(raw.headers()['referrer-policy']).toBe('no-referrer');
+  expect(await raw.text()).not.toContain(token);
+  // A browser with no session: asked to sign in, and the one question it asks the API is whether a session exists.
+  const errors = watchConsole(page);
+  const requests: { url: string; referer: string | null; body: string | null }[] = [];
+  page.on('request', (r) => requests.push({ url: r.url(), referer: r.headers()['referer'] ?? null, body: r.postData() }));
+  await mockApi(page);
+  const response = await page.goto(`/account/trial?t=${token}`);
+  expect(response?.headers()['referrer-policy']).toBe('no-referrer');
+  await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
+  await page.waitForLoadState('networkidle');
+  const after = requests.slice(1);
+  record({ test: 'link-preview', requests: after.map((r) => ({ url: r.url.replace(token, '<token>'), referer: r.referer?.replace(token, '<token>') ?? null })), consoleErrors: errors });
+  expect(after.filter((r) => r.url.includes(token) || (r.referer ?? '').includes(token) || (r.body ?? '').includes(token))).toEqual([]);
+  expect(after.filter((r) => r.url.startsWith(API)).map((r) => new URL(r.url).pathname)).toEqual(['/api/v1/platform/my-subscription']);
+  expect(new URL(page.url()).pathname + new URL(page.url()).search + new URL(page.url()).hash).toBe('/account/trial');
+  expect(errors).toEqual([]);
+});
+
 test('the setup link with a trailing slash: no later request carries its token, in its address or as referrer (R4-12)', async ({ page }) => {
   const errors = watchConsole(page);
   const token = 'z'.repeat(43);

@@ -804,6 +804,78 @@ describe('the setup link’s landing (/account/trial)', () => {
     expect(await screen.findByText(en['trial.error.owner_only'])).toBeTruthy();
     expect(screen.queryByRole('button', { name: CLAIM })).toBeNull();
   });
+
+  /*
+   * The owner's clarification (2026-10-13): website sign-in works without the message link. The link only continues
+   * to the right page after sign-in; delivery is never a second condition; nothing starts without the button.
+   */
+  describe('sign-in without the link (the owner’s clarification)', () => {
+    /** The account page's other reads, answered, so the page an Owner reaches by signing in is whole. */
+    const accountReads: Handler = (url) => {
+      if (url.endsWith('/platform/my-subscription/activity-options')) return { body: activityOptions() };
+      if (url.endsWith('/platform/my-subscription/seat-requests')) return { body: [] };
+      return undefined;
+    };
+    const failedDelivery = trialStatus({
+      setup: trialSetup({ delivery: 'failed', sentTo: [], history: [{ at: '2026-10-13T08:00:00.000Z', trigger: 'automatic', email: 'failed', whatsapp: 'not_applicable' }] }),
+    });
+    const claims = (sent: { url: string; body: unknown }[]) => sent.filter((r) => r.url.endsWith('/trial/claim')).map((r) => r.body);
+
+    it('the instructions failed to go out; the Owner signs in normally on /account and starts the trial there — no token anywhere', async () => {
+      const sent = landing('/account', signedOut('valid', (url, body) => accountReads(url, body) ?? (url.endsWith('/platform/my-subscription/trial') ? { body: failedDelivery } : undefined)));
+      await signIn();
+      const c = await card();
+      expect(within(c).getByText(en['trial.setup.failed'])).toBeTruthy();
+      await userEvent.setup().click(within(c).getByRole('button', { name: CLAIM }));
+      await waitFor(() => expect(c.textContent).toContain('Your free trial has started.'));
+      expect(claims(sent)).toEqual([{ idempotencyKey: expect.stringMatching(UUID), termsVersion: '2026-10-13' }]);
+      expect(sent.filter((r) => r.url.endsWith('/trial/link'))).toEqual([]);
+    });
+
+    it('an expired link, then the Owner opens the business account normally: the same card and the claim, the token sent nowhere else', async () => {
+      const sent = landing(`/account/trial#t=${TOKEN}`, signedOut('expired', accountReads));
+      await signIn();
+      expect(await screen.findByText(en['trial.error.link_expired'])).toBeTruthy();
+      await userEvent.setup().click(screen.getByRole('link', { name: 'Open my business account' }));
+      const c = await card();
+      expect(within(c).getByText(en['trial.terms.free'])).toBeTruthy();
+      await userEvent.setup().click(within(c).getByRole('button', { name: CLAIM }));
+      await waitFor(() => expect(c.textContent).toContain('Your free trial has started.'));
+      // The expired link was looked at once, and goes with nothing after: the eligibility never depended on it.
+      expect(sent.filter((r) => r.url.endsWith('/trial/link'))).toHaveLength(1);
+      expect(claims(sent)).toEqual([{ idempotencyKey: expect.stringMatching(UUID), termsVersion: '2026-10-13' }]);
+      nothingKept();
+    });
+
+    it('nothing is claimed without the button — not on load, at sign-in or as the page reads the trial again — in every path', async () => {
+      vi.useFakeTimers({ toFake: ['setInterval', 'clearInterval'] });
+      const paths: [string, string, Handler][] = [
+        ['the account card', '/account', signedOut('valid', accountReads)],
+        ['the account card after a failed delivery', '/account', signedOut('valid', (url, body) => accountReads(url, body) ?? (url.endsWith('/platform/my-subscription/trial') ? { body: failedDelivery } : undefined))],
+        ['the landing with a valid link', `/account/trial#t=${TOKEN}`, signedOut('valid')],
+        ['the landing with an expired link', `/account/trial?t=${TOKEN}`, signedOut('expired')],
+        ['the landing whose link could not be checked', `/account/trial#t=${TOKEN}`, signedOut('valid', (url) => (url.endsWith('/trial/link') ? { status: 500, body: { message: 'Internal server error' } } : undefined))],
+      ];
+      for (const [name, path, handler] of paths) {
+        const sent = landing(path, handler);
+        await signIn();
+        await screen.findByRole('button', { name: CLAIM });
+        // Two minutes on the page: the offer is read again twice, and still nothing is claimed.
+        const reads = () => sent.filter((r) => r.url.endsWith('/platform/my-subscription/trial')).length;
+        const before = reads();
+        await act(async () => {
+          vi.advanceTimersByTime(120_000);
+        });
+        await waitFor(() => expect(reads()).toBeGreaterThanOrEqual(before + 2));
+        expect({ name, claims: claims(sent) }).toEqual({ name, claims: [] });
+        await userEvent.setup().click(screen.getByRole('button', { name: CLAIM }));
+        await screen.findByText(/Your free trial has started/);
+        expect({ name, claims: claims(sent).length }).toEqual({ name, claims: 1 });
+        await ownerLogout();
+        cleanup();
+      }
+    });
+  });
 });
 
 describe('dates in the business’s zone, in every language', () => {
