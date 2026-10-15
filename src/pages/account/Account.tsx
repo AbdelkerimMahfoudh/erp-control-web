@@ -7,7 +7,7 @@ import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/
 import { GrantLine } from '../../components/grant';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
 import { Timeline } from '../../components/timeline';
-import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, StateBadge, Table, type Tone } from '../../components/ui';
+import { Badge, DatedPhrase, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, StateBadge, Table, type Tone } from '../../components/ui';
 import { useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, canWithdraw, isScheduledActivityChange, pricesAfter } from '../../lib/activity';
 import { formatDate, formatInstant, formatInt, formatMru } from '../../lib/format';
@@ -148,7 +148,8 @@ const EXPLAIN_WITH_DATE = new Set(['active', 'grace', 'expired']);
 /**
  * The lead sentence. A grant is told with its own end (docs/73 §11.5) — never the paid period's, and never the
  * latest billing period's start, which is what this page once showed as "granted until". A trial is told with the end
- * the server recorded at its claim, in the business's own zone (2026-10-13).
+ * the server recorded at its claim, in the business's own zone (2026-10-13) — and so are the ends of a business that
+ * had one, as the period card tells them.
  */
 function explanation(ent: Entitlement, t: (k: Key, p?: Record<string, string>) => string, lang: Language): ReactNode {
   const { state, periodEnd, complimentary: grant, trial } = ent;
@@ -156,19 +157,18 @@ function explanation(ent: Entitlement, t: (k: Key, p?: Record<string, string>) =
     if (!trial?.endsAt) return t(`status.explain.${state}.undated`);
     return <Phrase text={t(`status.explain.${state}`)} values={{ date: formatInstant(trial.endsAt, trial.timeZone, lang) }} />;
   }
+  const dated = (phrase: Key, date: string | null) => <DatedPhrase phrase={phrase} dates={{ date }} timeZone={trial?.timeZone} />;
   if (state === 'complimentary') {
-    if (grant?.until) return t('status.explain.complimentary', { date: formatDate(grant.until, lang) });
+    if (grant?.until) return dated('status.explain.complimentary', grant.until);
     // "No end date" only when the server says so; an older API without the grant view gets no claim about the date.
     return grant?.status === 'indefinite' ? t('status.explain.complimentary.noDate') : t('status.explain.complimentary.undated');
   }
   // Expired with no paid period behind it: the grant that ended is the date there is, never "ended on —".
   if (state === 'expired' && !periodEnd) {
-    return grant?.status === 'ended' && grant.until
-      ? t('status.explain.expired.grantEnded', { date: formatDate(grant.until, lang) })
-      : t('status.explain.expired.noPeriod');
+    return grant?.status === 'ended' && grant.until ? dated('status.explain.expired.grantEnded', grant.until) : t('status.explain.expired.noPeriod');
   }
   const key = `status.explain.${state}` as Key;
-  return EXPLAIN_WITH_DATE.has(state) ? t(key, { date: formatDate(periodEnd, lang) }) : t(key);
+  return EXPLAIN_WITH_DATE.has(state) ? dated(key, periodEnd) : t(key);
 }
 
 
@@ -247,10 +247,12 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         </div>
         <div className="card">
           <h2>{t('account.period')}</h2>
-          <GrantLine grant={ent.complimentary} />
+          <GrantLine grant={ent.complimentary} timeZone={ent.trial?.timeZone} />
           <PeriodStart data={data} />
           {ent.periodEnd ? (
-            <p>{t('account.period.ends', { date: formatDate(ent.periodEnd, lang) })}</p>
+            <p>
+              <DatedPhrase phrase="account.period.ends" dates={{ date: ent.periodEnd }} timeZone={ent.trial?.timeZone} />
+            </p>
           ) : ent.complimentary && ent.complimentary.status !== 'none' ? null : (
             <p className="muted">{t('account.period.none')}</p>
           )}

@@ -965,7 +965,7 @@ describe('dates in the business’s zone, in every language', () => {
     });
     const period = (await screen.findByRole('heading', { name: 'Current period' })).closest('.card')!;
     expect(period.textContent).toContain(`Paid access starts when the free trial ends, on 20 October 2026 at 10:30 (${CASABLANCA}).`);
-    expect(period.textContent).toMatch(/Ends 20 Nov 2026/);
+    expect(period.textContent).toContain(`Ends 20 November 2026 at 10:30 (${zoneName(TRIAL_ZONE, 'en-GB', '2026-11-20T09:30:00.000Z')})`);
   });
 
   it('paid access approved during the trial: the running trial says it starts at once when the trial ends — never that the business turns read-only (R4-03)', async () => {
@@ -1015,6 +1015,49 @@ describe('dates in the business’s zone, in every language', () => {
     expect(period.textContent).toContain(`Paid access starts when the free trial ends, on 21 October 2026 at 03:30 (${dubai}).`);
     expect(period.textContent).not.toContain('20 Oct 2026');
     expect((await card()).textContent).toContain(`Your free trial ends on 21 October 2026 at 03:30 (${dubai}).`);
+  });
+
+  describe('the ends of access decided during the trial, in its zone: the day the business itself lives — never the day before in this browser’s (R4-11)', () => {
+    // Dubai: the trial ends at 23:30 UTC, already the next day there; a month's period and a 14-day grant run from it.
+    const ends = '2026-10-20T23:30:00.000Z';
+    const periodEnd = '2026-11-20T23:30:00.000Z';
+    const grantEnd = '2026-11-03T23:30:00.000Z';
+    const inDubai = (date: string, iso: string) => `${date} at 03:30 (${zoneName('Asia/Dubai', 'en-GB', iso)})`;
+    const periodCard = async () => (await screen.findByRole('heading', { name: 'Current period' })).closest('.card')!;
+
+    it('a month approved during the trial, the business suspended before it ended: the period ends on 21 November', async () => {
+      const running = trialView('active', { endsAt: ends, timeZone: 'Asia/Dubai' });
+      account('suspended', { state: 'suspended', trial: running, offer: null, setup: null, calculatedAt: TRIAL_START }, undefined, (sub) => {
+        sub.entitlement = { ...sub.entitlement, state: 'suspended', periodEnd, calculatedAt: TRIAL_START, trial: running };
+        sub.pricing.currentPeriod.periodStart = ends;
+      });
+      const period = await periodCard();
+      expect(period.textContent).toContain(`Ends ${inDubai('21 November 2026', periodEnd)}`);
+      expect([...period.querySelectorAll('bdi')].map((b) => b.textContent)).toContain(inDubai('21 November 2026', periodEnd));
+      expect(period.textContent).not.toContain('20 Nov 2026');
+    });
+
+    it('once the trial is over, the lead sentence gives the period’s end as the period card does', async () => {
+      const ended = trialView('expired', { endsAt: ends, timeZone: 'Asia/Dubai' });
+      account('active', { state: 'active', trial: ended, offer: null, setup: null, calculatedAt: '2026-10-25T08:00:00.000Z' }, undefined, (sub) => {
+        sub.entitlement = { ...sub.entitlement, state: 'active', periodEnd, calculatedAt: '2026-10-25T08:00:00.000Z', trial: ended };
+        sub.pricing.currentPeriod.periodStart = ends;
+      });
+      expect((await hero()).textContent).toContain(`Everything works. The period ends on ${inDubai('21 November 2026', periodEnd)}.`);
+      expect((await periodCard()).textContent).toContain(`Ends ${inDubai('21 November 2026', periodEnd)}`);
+      expect(document.body.textContent).not.toContain('20 Nov 2026');
+    });
+
+    it('a grant decided during the trial: its end, in the lead sentence and the period card alike', async () => {
+      const ended = trialView('expired', { endsAt: ends, timeZone: 'Asia/Dubai' });
+      account('complimentary', { state: 'complimentary', trial: ended, offer: null, setup: null, calculatedAt: '2026-10-25T08:00:00.000Z' }, undefined, (sub) => {
+        sub.entitlement = { ...sub.entitlement, state: 'complimentary', periodEnd: null, calculatedAt: '2026-10-25T08:00:00.000Z', trial: ended, complimentary: { status: 'active', until: grantEnd, paidUntil: null } };
+        sub.pricing.currentPeriod.periodStart = ends;
+      });
+      expect((await hero()).textContent).toContain(`Access was granted by the platform until ${inDubai('4 November 2026', grantEnd)}.`);
+      expect((await periodCard()).textContent).toContain(`Granted by the platform until ${inDubai('4 November 2026', grantEnd)}.`);
+      expect(document.body.textContent).not.toContain('3 Nov 2026');
+    });
   });
 
   it('in Arabic the card reads right to left, the button names the trial in Arabic, and each date and address is isolated', async () => {

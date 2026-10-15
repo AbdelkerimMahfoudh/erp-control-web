@@ -2,7 +2,7 @@ import { Fragment, isValidElement, type ReactNode } from 'react';
 import { ApiError } from '../api/client';
 import type { EntitlementState, SeatRequestStatus } from '../api/types';
 import { useI18n, type Key } from '../i18n';
-import { formatMru } from '../lib/format';
+import { formatDate, formatInstant, formatMru } from '../lib/format';
 
 export type Tone = 'ok' | 'warn' | 'danger' | 'info' | 'muted';
 
@@ -43,6 +43,19 @@ export function Phrase({ text, values }: { text: string; values: Record<string, 
   }
   if (last < text.length) parts.push(<Fragment key={`t${last}`}>{text.slice(last)}</Fragment>);
   return <>{parts}</>;
+}
+
+/**
+ * A catalogue sentence dated with server instants — a paid period's or a grant's end. Given the business's zone, each
+ * date is told as a trial's is: in that zone, with the zone's name, isolated. A business with a free trial is given
+ * it, since access decided during the trial runs from the trial's end (2026-10-13). Without a zone, each date is told
+ * as every other date on the page.
+ */
+export function DatedPhrase({ phrase, dates, timeZone }: { phrase: Key; dates: Record<string, string | null>; timeZone: string | null | undefined }) {
+  const { t, lang } = useI18n();
+  const each = (format: (iso: string | null) => string) => Object.fromEntries(Object.entries(dates).map(([name, iso]) => [name, format(iso)]));
+  if (timeZone) return <Phrase text={t(phrase)} values={each((iso) => formatInstant(iso, timeZone, lang))} />;
+  return <>{t(phrase, each((iso) => formatDate(iso, lang)))}</>;
 }
 
 /** Status by colour AND words, never colour alone. */

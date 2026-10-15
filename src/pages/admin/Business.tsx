@@ -7,7 +7,7 @@ import { ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
 import { Timeline, type TimelineTrial } from '../../components/timeline';
-import { Badge, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, StateBadge, Table } from '../../components/ui';
+import { Badge, DatedPhrase, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, StateBadge, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatDateTime, formatInstant, formatInt } from '../../lib/format';
 import { detailOf } from '../../lib/trial';
@@ -77,6 +77,8 @@ export function Business() {
   if (error && !data) return <ErrorNotice error={error} />;
   if (!data) return <Loading />;
   const ent = data.entitlement;
+  // A business with a free trial has its access dates told in its zone: access decided during the trial runs from its end.
+  const accessZone = ent?.trial ? trialZone(data) : null;
   // Each branch's activity and scheduled change, and its fee on the server's quote (D154): the price components.
   const branchOf = (id: string) => data.branches.find((b) => b.id === id);
   const feeOf = (id: string) => data.pricing?.quote.lines.find((l) => l.branchId === id)?.activityFee;
@@ -158,9 +160,13 @@ export function Business() {
               {data.pricing.currentPeriod.available ? (
                 <p className="muted small">{t('account.quote.assessed', { amount: `${formatInt(data.pricing.currentPeriod.assessedTotal, lang)} MRU` })}</p>
               ) : null}
-              {ent?.periodEnd ? <p className="muted small">{t('account.period.ends', { date: formatDate(ent.periodEnd, lang) })}</p> : null}
+              {ent?.periodEnd ? (
+                <p className="muted small">
+                  <DatedPhrase phrase="account.period.ends" dates={{ date: ent.periodEnd }} timeZone={accessZone} />
+                </p>
+              ) : null}
               <div className="muted small">
-                <GrantLine grant={ent?.complimentary} />
+                <GrantLine grant={ent?.complimentary} timeZone={accessZone} />
               </div>
             </>
           ) : (

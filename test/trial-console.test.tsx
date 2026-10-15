@@ -122,6 +122,47 @@ describe('the console: a business’s trial, recorded', () => {
     expect(times.slice(1)).toEqual([`13 October 2026 at 10:30 (${at(TRIAL_START)})`, `12 October 2026 at 11:00 (${at('2026-10-12T10:00:00.000Z')})`]);
   });
 
+  it('a business that had a trial: its period’s and its grant’s ends in its zone, the day it lives them (R4-11)', async () => {
+    // Dubai: the trial ended at 23:30 UTC, already the next day there; the paid month and the grant ran from that end.
+    const ends = '2026-10-20T23:30:00.000Z';
+    const sub = subscription(BRANCHES, LINES);
+    const detail: BusinessDetail = {
+      id: ID,
+      name: 'Boutique Test',
+      publicStoreId: 'ST-7Q4K',
+      city: 'Nouakchott',
+      createdAt: '2026-10-12T10:00:00.000Z',
+      branches: [],
+      people: [],
+      entitlement: {
+        ...(sub.entitlement as BusinessDetail['entitlement'] & object),
+        state: 'active',
+        periodEnd: '2026-11-20T23:30:00.000Z',
+        complimentary: { status: 'superseded', until: '2026-11-03T23:30:00.000Z', paidUntil: '2026-11-20T23:30:00.000Z' },
+        trial: trialView('expired', { endsAt: ends, timeZone: 'Asia/Dubai' }),
+      },
+      pricing: sub.pricing as BusinessDetail['pricing'],
+      version: 4,
+      events: [],
+      payments: [],
+      trial: { eligibility: null, claim: { claimedAt: TRIAL_START, startedAt: TRIAL_START, endsAt: ends, expiryRecordedAt: ends }, timeZone: 'Asia/Dubai' },
+    };
+    serve((url) => {
+      if (url.endsWith('/platform/admin/me')) return { body: ADMIN };
+      if (url.endsWith(`/platform/businesses/${ID}`)) return { body: detail };
+      if (url.endsWith(`/platform/businesses/${ID}/seat-requests`)) return { body: [] };
+      return undefined;
+    });
+    mount(`/admin/businesses/${ID}`);
+    const quote = (await screen.findByRole('heading', { name: 'Your monthly total' })).closest('.card')!;
+    const dubai = (date: string, iso: string) => `${date} at 03:30 (${zoneName('Asia/Dubai', 'en-GB', iso)})`;
+    expect(quote.textContent).toContain(`Ends ${dubai('21 November 2026', '2026-11-20T23:30:00.000Z')}`);
+    expect(quote.textContent).toContain(
+      `The platform’s grant ended on ${dubai('4 November 2026', '2026-11-03T23:30:00.000Z')}. Your paid period runs until ${dubai('21 November 2026', '2026-11-20T23:30:00.000Z')}.`,
+    );
+    expect(quote.textContent).not.toMatch(/20 Nov 2026|3 Nov 2026/);
+  });
+
   describe('an end date inside a running trial (R4-05)', () => {
     beforeEach(() => {
       // jsdom has no <dialog> behaviour; the step-up dialog only needs open/close.
