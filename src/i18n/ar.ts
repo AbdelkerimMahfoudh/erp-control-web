@@ -276,6 +276,8 @@ export const ar: Catalogue = {
   'trial.setup.title': 'تعليمات الإعداد',
   'trial.setup.sent': 'أُرسلت تعليمات إكمال إعداد نشاطك التجاري إلى {destinations} في {date}.',
   'trial.setup.failed': 'تعذّر إرسال تعليمات الإعداد.',
+  'trial.setup.sending': 'يجري الآن إرسال تعليمات الإعداد.',
+  'trial.setup.sending.one': 'يجري الآن إرسال تعليمات الإعداد إلى {destination}.',
   'trial.setup.unavailable': 'لا يمكن إرسال تعليمات الإعداد الآن.',
   'trial.setup.waiting.phone': 'سيتم إرسال تعليمات الإعداد تلقائيًا بمجرد التحقق من رقم واتساب الخاص بك.',
   'trial.setup.waiting.email': 'سيتم إرسال تعليمات الإعداد تلقائيًا بمجرد التحقق من بريدك الإلكتروني.',

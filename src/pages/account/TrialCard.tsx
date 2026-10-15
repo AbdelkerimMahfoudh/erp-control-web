@@ -11,6 +11,9 @@ import { detailOf, secondsUntil } from '../../lib/trial';
 /** How often a shown card is read again: the end a claim would set moves with the clock, and the page shows the server's. */
 const REFRESH_MS = 60_000;
 
+/** How soon instructions still being sent are read again: their outcome is recorded once the providers answer (C1). */
+const SENDING_REREAD_MS = 5_000;
+
 /**
  * The Owner's free-trial card on the account page (2026-10-13), from GET platform/my-subscription/trial. That route
  * answers the Owner only: any other role is refused (403) and sees no card at all, without an error — as does an API
@@ -44,6 +47,14 @@ export function TrialCard({ version, onChanged }: { version: unknown; onChanged:
   useEffect(() => {
     void load();
   }, [load, version]);
+  // After a send, its answer is shown at once and the trial read again.
+  const reload = useCallback(
+    async (next?: TrialSetup) => {
+      if (next) setStatus((s) => (s ? { ...s, setup: next } : s));
+      await load();
+    },
+    [load],
+  );
 
   // An ended trial matters here only while it leaves the business read-only; once paid access runs it is history.
   const shown =
@@ -85,10 +96,7 @@ export function TrialCard({ version, onChanged }: { version: unknown; onChanged:
           missing={status.offer?.missingContacts ?? []}
           canClaim={status.offer?.available === true}
           timeZone={status.offer?.timeZone ?? status.trial?.timeZone ?? null}
-          reload={(next) => {
-            if (next) setStatus((s) => (s ? { ...s, setup: next } : s));
-            return load();
-          }}
+          reload={reload}
         />
       ) : null}
     </section>
@@ -144,6 +152,12 @@ function SetupInstructions({
     asked.current = until;
     void reload();
   }, [until, waiting, reload]);
+  // Instructions still on their way are read again shortly, until the server records what became of them.
+  useEffect(() => {
+    if (setup.delivery !== 'sending') return;
+    const id = setTimeout(() => void reload(), SENDING_REREAD_MS);
+    return () => clearTimeout(id);
+  }, [setup, reload]);
 
   const resend = async () => {
     setBusy(true);
@@ -151,7 +165,8 @@ function SetupInstructions({
     setDone(null);
     try {
       const next = await ownerRequest<TrialSetup>('platform/my-subscription/trial/setup/resend', { method: 'POST', body: {} });
-      setDone(next.delivery === 'sent' ? { tone: 'ok', text: t('trial.setup.resent') } : { tone: 'warn', text: t('trial.setup.failed') });
+      // Still on its way when the server answered: the line above says so, and the card reads it again shortly.
+      if (next.delivery !== 'sending') setDone(next.delivery === 'sent' ? { tone: 'ok', text: t('trial.setup.resent') } : { tone: 'warn', text: t('trial.setup.failed') });
       await reload(next);
     } catch (e) {
       setError(e);
@@ -233,6 +248,15 @@ function DeliveryHistory({ history, timeZone }: { history: TrialSetupAttempt[]; 
 function DeliveryLine({ setup, missing, timeZone, lang }: { setup: TrialSetup; missing: TrialContact[]; timeZone: string | null; lang: Language }) {
   const { t } = useI18n();
   switch (setup.delivery) {
+    case 'sending': {
+      // One verified contact is the only one a message on its way can be going to; of several, the server will say.
+      const only = setup.destinations.length === 1 ? setup.destinations[0]! : null;
+      return (
+        <p aria-live="polite">
+          {only ? <Phrase text={t('trial.setup.sending.one')} values={{ destination: <span className="ltr">{only.masked}</span> }} /> : t('trial.setup.sending')}
+        </p>
+      );
+    }
     case 'sent': {
       const to = setup.destinations.filter((d) => setup.sentTo.includes(d.channel)).map((d) => d.masked);
       return (

@@ -284,6 +284,8 @@ export const en = {
   'trial.setup.title': 'Setup instructions',
   'trial.setup.sent': 'The instructions for completing your business setup were sent to {destinations} on {date}.',
   'trial.setup.failed': 'The setup instructions could not be sent.',
+  'trial.setup.sending': 'The setup instructions are being sent.',
+  'trial.setup.sending.one': 'The setup instructions are being sent to {destination}.',
   'trial.setup.unavailable': 'The setup instructions cannot be sent right now.',
   'trial.setup.waiting.phone': 'The setup instructions will be sent automatically once your WhatsApp number is verified.',
   'trial.setup.waiting.email': 'The setup instructions will be sent automatically once your email address is verified.',

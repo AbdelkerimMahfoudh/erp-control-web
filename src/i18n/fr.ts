@@ -277,6 +277,8 @@ export const fr: Catalogue = {
   'trial.setup.title': 'Instructions de configuration',
   'trial.setup.sent': 'Les instructions pour finaliser la configuration de votre commerce ont été envoyées à {destinations} le {date}.',
   'trial.setup.failed': 'Les instructions de configuration n’ont pas pu être envoyées.',
+  'trial.setup.sending': 'Les instructions de configuration sont en cours d’envoi.',
+  'trial.setup.sending.one': 'Les instructions de configuration sont en cours d’envoi à {destination}.',
   'trial.setup.unavailable': 'Les instructions de configuration ne peuvent pas être envoyées pour le moment.',
   'trial.setup.waiting.phone': 'Les instructions de configuration seront envoyées automatiquement dès que votre numéro WhatsApp sera vérifié.',
   'trial.setup.waiting.email': 'Les instructions de configuration seront envoyées automatiquement dès que votre adresse e-mail sera vérifiée.',

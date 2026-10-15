@@ -322,6 +322,61 @@ describe('the setup instructions on the card', () => {
     expect(within(c).getByText(en['trial.verify.phone'])).toBeTruthy();
   });
 
+  it('instructions still on their way: being sent to the one verified contact, read again a few seconds later until recorded (C1)', async () => {
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'], shouldAdvanceTime: true });
+    let recorded = false;
+    // Just sent: the limit runs too, and its countdown ticking every second must not hold back the read.
+    const onItsWay = trialStatus({
+      setup: trialSetup({ delivery: 'sending', sentTo: [], history: [], canResendNow: false, resendBlockedBy: 'throttle', resendAvailableAt: new Date(Date.now() + 60_000).toISOString() }),
+    });
+    const sent = account('trial_available', onItsWay, (url) => (url.endsWith('/platform/my-subscription/trial') ? { body: recorded ? trialStatus() : onItsWay } : undefined));
+    const c = await card();
+    const line = within(c).getByText((_, el) => el?.tagName === 'P' && el.textContent === 'The setup instructions are being sent to o•••@example.test.');
+    expect(line.querySelector('.ltr')?.textContent).toBe('o•••@example.test');
+    expect(c.textContent).not.toMatch(/could not be sent|have not been sent/);
+    const reads = () => sent.filter((r) => r.url.endsWith('/platform/my-subscription/trial')).length;
+    const before = reads();
+    recorded = true;
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(5_000);
+    });
+    await waitFor(() => expect(reads()).toBeGreaterThan(before));
+    await waitFor(() => expect(c.textContent).toContain('were sent to o•••@example.test on'));
+  });
+
+  it('on its way to one of several verified contacts: said without naming one the server has not', async () => {
+    const destinations = [
+      { channel: 'email' as const, masked: 'o•••@example.test' },
+      { channel: 'whatsapp' as const, masked: '+222••••1234' },
+    ];
+    account('trial_available', trialStatus({ setup: trialSetup({ delivery: 'sending', sentTo: [], destinations, history: [] }) }));
+    const c = await card();
+    expect(within(c).getByText(en['trial.setup.sending'])).toBeTruthy();
+    expect(c.textContent).not.toMatch(/o•••@example\.test|\+222••••1234/);
+  });
+
+  it('a send again the server was still delivering when it answered: said as on its way, no failure claimed, read again (C1)', async () => {
+    vi.useFakeTimers({ toFake: ['Date', 'setTimeout', 'clearTimeout', 'setInterval', 'clearInterval'], shouldAdvanceTime: true });
+    let phase: 'before' | 'sending' | 'recorded' = 'before';
+    const onItsWay = trialSetup({ delivery: 'sending', canResendNow: false, resendBlockedBy: 'throttle', resendAvailableAt: new Date(Date.now() + 60_000).toISOString() });
+    account('trial_available', trialStatus(), (url) => {
+      if (url.endsWith('/trial/setup/resend')) {
+        phase = 'sending';
+        return { body: onItsWay };
+      }
+      return url.endsWith('/platform/my-subscription/trial') ? { body: phase === 'sending' ? trialStatus({ setup: onItsWay }) : trialStatus() } : undefined;
+    });
+    const c = await card();
+    await userEvent.setup({ advanceTimers: vi.advanceTimersByTime }).click(within(c).getByRole('button', { name: RESEND }));
+    expect(await within(c).findByText((_, el) => el?.tagName === 'P' && el.textContent === 'The setup instructions are being sent to o•••@example.test.')).toBeTruthy();
+    expect(within(c).queryByText(en['trial.setup.failed'])).toBeNull();
+    phase = 'recorded';
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(5_000);
+    });
+    await waitFor(() => expect(c.textContent).toContain('were sent to o•••@example.test on'));
+  });
+
   it('a long wait is told as the instant it ends, in the business’s zone', async () => {
     const at = '2026-10-13T11:00:00.000Z';
     vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'], now: new Date('2026-10-13T09:00:00.000Z') });

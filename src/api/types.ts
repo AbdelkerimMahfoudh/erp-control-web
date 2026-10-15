@@ -58,7 +58,8 @@ export interface TrialOffer {
  * `history` is the business's last attempts, newest first — an honest record, never a condition for claiming.
  */
 export interface TrialSetup {
-  delivery: 'waiting_for_contact' | 'not_sent' | 'sent' | 'failed' | 'unavailable';
+  /** `sending`: a link went out less than a minute ago and its providers have not all answered yet (C1). */
+  delivery: 'waiting_for_contact' | 'sending' | 'not_sent' | 'sent' | 'failed' | 'unavailable';
   sentTo: TrialChannel[];
   destinations: { channel: TrialChannel; masked: string }[];
   lastAttemptAt: string | null;
