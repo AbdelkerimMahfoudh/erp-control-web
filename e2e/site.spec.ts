@@ -35,7 +35,7 @@ function shot(variant: string, lang: string, path: string): string {
  * The free trial's states as the account page meets them (2026-10-13), from the component tests' fixtures: the business
  * state, the Owner's trial read, and the trial the entitlement carries.
  */
-const TRIALS: Record<'available' | 'active' | 'expired', TrialStatus> = {
+const TRIALS: Record<'available' | 'active' | 'paidAfter' | 'expired', TrialStatus> = {
   available: trialStatus({
     setup: trialSetup({
       sentTo: ['email', 'whatsapp'],
@@ -46,6 +46,8 @@ const TRIALS: Record<'available' | 'active' | 'expired', TrialStatus> = {
     }),
   }),
   active: { state: 'trial_active', trial: trialView('active'), offer: null, setup: null, calculatedAt: TRIAL_START },
+  // Paid access approved during the trial, starting at its end (C6).
+  paidAfter: { state: 'trial_active', trial: trialView('active', { accessAfterTrial: { kind: 'paid', startsAt: TRIAL_END } }), offer: null, setup: null, calculatedAt: TRIAL_START },
   expired: { state: 'trial_expired', trial: trialView('expired'), offer: null, setup: null, calculatedAt: TRIAL_END },
 };
 type Session = { owner?: boolean; admin?: boolean; trial?: keyof typeof TRIALS; lang?: 'en' | 'fr' | 'ar' };
@@ -259,6 +261,8 @@ const PROTECTED: [string, string, Session, number][] = [
   ['account-trial-available-ar-375', '/account', { owner: true, trial: 'available', lang: 'ar' }, 375],
   ['account-trial-available-fr-375', '/account', { owner: true, trial: 'available', lang: 'fr' }, 375],
   ['account-trial-active-375', '/account', { owner: true, trial: 'active' }, 375],
+  ['account-trial-paid-after-375', '/account', { owner: true, trial: 'paidAfter' }, 375],
+  ['account-trial-paid-after-ar-375', '/account', { owner: true, trial: 'paidAfter', lang: 'ar' }, 375],
   ['account-trial-expired-375', '/account', { owner: true, trial: 'expired' }, 375],
   ['account-trial-link-signed-out-375', SETUP_LINK, {}, 375],
   ['account-trial-link-signed-in', SETUP_LINK, { owner: true, trial: 'available' }, 1280],
