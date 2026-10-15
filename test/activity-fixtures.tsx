@@ -17,7 +17,9 @@ import { ThemeProvider } from '../src/theme/theme';
 export { B1, B2, B3, BOTH, PLAN_V3, line, quoteOf, subscription, BRANCHES, LINES, activityOptions, allocation } from './fixtures-data';
 import { B1, B2, B3, BOTH, PLAN_V3, line, quoteOf, subscription, BRANCHES, LINES, activityOptions, allocation, NO_TRIAL } from './fixtures-data';
 
-/** A route's answer: a status and a JSON body, or a whole Response for what JSON cannot say (a body cut off on its way). */
+/**
+ * A route's answer: a status and a JSON body, or a whole Response for what JSON cannot say — a body cut off on its way.
+ */
 export type Handler = (url: string, body: unknown) => { status?: number; body: unknown } | Response | undefined;
 
 /**

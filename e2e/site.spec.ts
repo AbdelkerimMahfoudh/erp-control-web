@@ -622,10 +622,10 @@ for (const lang of LANGS) {
 
 
 /*
- * The registration's code check refused by the API's rate limit, in a real browser: the limiter answers a request for
- * a new code and a confirmation with no code and its class name for a sentence ("ThrottlerException: Too Many
- * Requests"). The page says, in its own words, to wait a minute — no lost answer, no wrong code, nothing of the
- * limiter's. Every language at both widths (and 320 px), with no sideways scroll and no serious accessibility violation.
+ * The registration's code check refused by the API's rate limit, in a real browser: the limiter answers a request for a
+ * new code and a confirmation with no code and its class name for a sentence ("ThrottlerException: Too Many Requests").
+ * The page says, in its own words, to wait a minute — no lost answer, no wrong code, nothing of the limiter's. Every
+ * language at both widths (and 320 px), with no sideways scroll and no serious accessibility violation.
  */
 const LIMITED = { statusCode: 429, error: 'TOO_MANY_REQUESTS', message: 'ThrottlerException: Too Many Requests' };
 for (const lang of LANGS) {
