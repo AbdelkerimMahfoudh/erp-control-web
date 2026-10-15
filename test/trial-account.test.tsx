@@ -730,6 +730,34 @@ describe('the setup link’s landing (/account/trial)', () => {
     expect(claims[0]!.idempotencyKey).not.toBe(claims[1]!.idempotencyKey);
   });
 
+  it('a link the server could not check (its error, too many attempts, no network): the ordinary claim, without the link, and a word why (R4-07)', async () => {
+    for (const failure of [
+      { status: 500, body: { statusCode: 500, message: 'Internal server error' } },
+      { status: 429, body: { statusCode: 429, message: 'Too many requests' } },
+      'network',
+    ] as const) {
+      const sent = landing(
+        `/account/trial#t=${TOKEN}`,
+        signedOut('valid', (url) => {
+          if (!url.endsWith('/trial/link')) return undefined;
+          if (failure === 'network') throw new TypeError('Failed to fetch');
+          return failure;
+        }),
+      );
+      await signIn();
+      expect(await screen.findByText(en['trial.landing.unchecked'])).toBeTruthy();
+      expect(screen.getByText(en['trial.landing.withoutLink'])).toBeTruthy();
+      expect(screen.queryByText(en['error.generic'])).toBeNull();
+      // The trial was read without the link, and the claim — pressed — goes without it.
+      expect(sent.filter((r) => r.url.endsWith('/platform/my-subscription/trial')).length).toBeGreaterThan(0);
+      await userEvent.setup().click(screen.getByRole('button', { name: CLAIM }));
+      await screen.findByText(/Your free trial has started/);
+      expect(sent.filter((r) => r.url.endsWith('/trial/claim')).map((r) => r.body)).toEqual([{ idempotencyKey: expect.stringMatching(UUID), termsVersion: '2026-10-13' }]);
+      await ownerLogout();
+      cleanup();
+    }
+  });
+
   it('a Manager or an Employee signed in on the link: told only the Owner can start it', async () => {
     landing(`/account/trial#t=${TOKEN}`, signedOut('valid', (url) => (url.endsWith('/trial/link') ? { status: 403, body: { statusCode: 403, code: 'owner_only', message: 'Owner only' } } : undefined)));
     await signIn();

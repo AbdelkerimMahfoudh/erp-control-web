@@ -57,6 +57,8 @@ export function TrialLanding({ token, data, onChanged, onSignOut }: { token: str
   const { t } = useI18n();
   const [view, setView] = useState<View | null>(null);
   const [link, setLink] = useState<TrialLinkOutcome | null>(null);
+  // The server could not check the link just now (an error of its own, too many attempts, no network).
+  const [unchecked, setUnchecked] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [claimed, setClaimed] = useState<TrialClaimResult | null>(null);
   const [refused, setRefused] = useState<unknown>(null);
@@ -101,11 +103,17 @@ export function TrialLanding({ token, data, onChanged, onSignOut }: { token: str
       })
       .catch((e: unknown) => {
         if (!live) return;
-        // A link the server will not even look at (malformed by the time it arrived) is an invalid link.
+        // A link the server will not even look at (malformed by the time it arrived) is an invalid link; a session that
+        // ended, or someone who is not the Owner, is told so. A link that could not be checked now hides nothing: the
+        // link is never required, so the trial is read without it and the ordinary claim offered.
         if (e instanceof ApiError && e.status === 400) {
           setLink('invalid');
           void read();
-        } else setError(e);
+        } else if (e instanceof ApiError && (e.status === 401 || e.status === 403)) setError(e);
+        else {
+          setUnchecked(true);
+          void read();
+        }
       });
     return () => {
       live = false;
@@ -151,7 +159,8 @@ export function TrialLanding({ token, data, onChanged, onSignOut }: { token: str
           <>
             <ClaimOutcome claimed={claimed} refused={refused} offer={view.offer} />
             {linkRefused ? <Notice tone="warn">{t(`trial.error.link_${link}` as Key)}</Notice> : null}
-            {linkRefused && view.offer?.available ? <p>{t('trial.landing.withoutLink')}</p> : null}
+            {unchecked ? <Notice tone="warn">{t('trial.landing.unchecked')}</Notice> : null}
+            {(linkRefused || unchecked) && view.offer?.available ? <p>{t('trial.landing.withoutLink')}</p> : null}
             {!view.offer && !view.trial ? <Notice tone="info">{t('trial.error.trial_not_available')}</Notice> : null}
             <TrialPanel
               state={view.state}

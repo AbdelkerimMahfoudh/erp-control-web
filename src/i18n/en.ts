@@ -284,6 +284,7 @@ export const en = {
   'trial.error.too_many_requests': 'Too many attempts in a short while. Wait a minute, then try again.',
   'trial.landing.lead': 'Sign in with the business Owner’s email address or WhatsApp number to see your free trial. Nothing starts until you confirm it.',
   'trial.landing.withoutLink': 'You can still start your free trial here, without the link.',
+  'trial.landing.unchecked': 'This link could not be checked right now.',
   'trial.setup.title': 'Setup instructions',
   'trial.setup.sent': 'The instructions for completing your business setup were sent to {destinations} on {date}.',
   'trial.setup.sentUnnamed': 'The instructions for completing your business setup were sent on {date}.',

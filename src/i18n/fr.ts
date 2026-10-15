@@ -277,6 +277,7 @@ export const fr: Catalogue = {
   'trial.error.too_many_requests': 'Trop de tentatives en peu de temps. Attendez une minute, puis réessayez.',
   'trial.landing.lead': 'Connectez-vous avec l’adresse e-mail ou le numéro WhatsApp du propriétaire de l’entreprise pour voir votre essai gratuit. Rien ne commence avant votre confirmation.',
   'trial.landing.withoutLink': 'Vous pouvez quand même démarrer votre essai gratuit ici, sans le lien.',
+  'trial.landing.unchecked': 'Ce lien n’a pas pu être vérifié pour le moment.',
   'trial.setup.title': 'Instructions de configuration',
   'trial.setup.sent': 'Les instructions pour finaliser la configuration de votre commerce ont été envoyées à {destinations} le {date}.',
   'trial.setup.sentUnnamed': 'Les instructions pour finaliser la configuration de votre commerce ont été envoyées le {date}.',

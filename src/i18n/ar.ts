@@ -276,6 +276,7 @@ export const ar: Catalogue = {
   'trial.error.too_many_requests': 'محاولات كثيرة في وقت قصير. انتظر دقيقة ثم حاول مرة أخرى.',
   'trial.landing.lead': 'سجّل الدخول بالبريد الإلكتروني أو رقم واتساب الخاص بمالك الشركة لترى فترتك التجريبية المجانية. لا يبدأ أي شيء قبل أن تؤكّده.',
   'trial.landing.withoutLink': 'لا يزال بإمكانك بدء فترتك التجريبية المجانية هنا، من دون الرابط.',
+  'trial.landing.unchecked': 'تعذّر التحقق من هذا الرابط الآن.',
   'trial.setup.title': 'تعليمات الإعداد',
   'trial.setup.sent': 'أُرسلت تعليمات إكمال إعداد نشاطك التجاري إلى {destinations} في {date}.',
   'trial.setup.sentUnnamed': 'أُرسلت تعليمات إكمال إعداد نشاطك التجاري في {date}.',
