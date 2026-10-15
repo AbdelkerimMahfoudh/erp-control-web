@@ -270,6 +270,28 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
     }, FILLING);
   }
 
+  it.each([
+    ['a gateway got no answer from the API in time (504)', 504],
+    ['a gateway got an invalid one (502)', 502],
+  ])('%s, then the same code refused: no answer — the account may be ready, sign in, never wrong', async (_case, status) => {
+    let calls = 0;
+    const { form, confirmCode } = await atCodeCheck(en, '', () => {
+      calls += 1;
+      return calls === 1 ? { status, body: { message: 'Gateway' } } : refused;
+    });
+    await confirmCode('123456');
+    expect(said(form, en)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+    await confirmCode('123456');
+    expect(said(form, en)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+  }, FILLING);
+
+  it('a 503 is an answer — the request was not taken: an error, no account promised', async () => {
+    const { form, confirmCode } = await atCodeCheck(en, '', () => ({ status: 503, body: { statusCode: 503, message: 'Service Unavailable' } }));
+    await confirmCode('123456');
+    expect(said(form, en)).toEqual({ lost: false, signIn: null, wrong: false, serverEnglish: false });
+    expect(form.textContent).toContain(en['error.generic']);
+  }, FILLING);
+
   it('a lost answer, then the same code accepted after all: the application ends signed in, as it always does', async () => {
     let calls = 0;
     const { confirmCode } = await atCodeCheck(en, '', () => {
