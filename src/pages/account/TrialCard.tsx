@@ -258,14 +258,26 @@ function DeliveryLine({ setup, missing, timeZone, lang }: { setup: TrialSetup; m
       );
     }
     case 'sent': {
-      const to = setup.destinations.filter((d) => setup.sentTo.includes(d.channel)).map((d) => d.masked);
+      // Where the server says it went (C2: only while that is still the Owner's contact): each channel reached, by the
+      // Owner's contact on it — or by the channel, when the server names none there; never a blank.
+      const to = setup.sentTo.map((channel) => {
+        const masked = setup.destinations.find((d) => d.channel === channel)?.masked;
+        return masked ? { text: masked, masked: true } : { text: t(`trial.setup.to.${channel}`), masked: false };
+      });
+      const date = formatInstant(setup.lastAttemptAt, timeZone, lang);
       return (
         <p>
-          <Phrase text={t('trial.setup.sent')} values={{ destinations: <Destinations items={to} lang={lang} />, date: formatInstant(setup.lastAttemptAt, timeZone, lang) }} />
+          {to.length > 0 ? (
+            <Phrase text={t('trial.setup.sent')} values={{ destinations: <Destinations items={to} lang={lang} />, date }} />
+          ) : (
+            <Phrase text={t('trial.setup.sentUnnamed')} values={{ date }} />
+          )}
         </p>
       );
     }
     case 'waiting_for_contact':
+      // The automatic send goes once: after it was attempted, no second one is promised.
+      if (setup.history.some((a) => a.trigger === 'automatic')) return null;
       return (
         <>
           {missing.includes('phone') ? <p className="muted">{t('trial.setup.waiting.phone')}</p> : null}
@@ -281,10 +293,14 @@ function DeliveryLine({ setup, missing, timeZone, lang }: { setup: TrialSetup; m
   }
 }
 
-/** The masked contacts, joined the way the language joins a list, each kept left to right inside an Arabic sentence. */
-function Destinations({ items, lang }: { items: string[]; lang: Language }) {
-  const parts: ReactNode[] = listParts(items, lang).map((p, i) =>
-    p.type === 'element' ? (
+/**
+ * Where the message went, joined the way the language joins a list: each masked contact kept left to right inside an
+ * Arabic sentence, and a channel named in words flowing with it.
+ */
+function Destinations({ items, lang }: { items: { text: string; masked: boolean }[]; lang: Language }) {
+  const masked = new Set(items.filter((i) => i.masked).map((i) => i.text));
+  const parts: ReactNode[] = listParts(items.map((i) => i.text), lang).map((p, i) =>
+    p.type === 'element' && masked.has(p.value) ? (
       <span key={i} className="ltr">
         {p.value}
       </span>

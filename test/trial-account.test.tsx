@@ -175,6 +175,52 @@ describe('the setup instructions on the card', () => {
     expect(c.textContent).not.toContain('+222••••1234');
   });
 
+  it('names where the message went as the server says it: a channel with no current contact by its name, never a blank (R4-10)', async () => {
+    // WhatsApp reached, the verified contacts the server lists hold only the email: the WhatsApp number is named as such.
+    account('trial_available', trialStatus({ setup: trialSetup({ sentTo: ['whatsapp'], destinations: [{ channel: 'email', masked: 'o•••@example.test' }] }) }));
+    const c = await card();
+    const at = `13 October 2026 at 09:00 (${zoneName(TRIAL_ZONE, 'en-GB', '2026-10-13T08:00:00.000Z')})`;
+    expect(c.textContent).toContain(`The instructions for completing your business setup were sent to your WhatsApp number on ${at}.`);
+    expect(c.textContent).not.toContain('o•••@example.test');
+    expect(c.textContent).not.toMatch(/sent to\s+on/);
+    await ownerLogout();
+    cleanup();
+    // Sent, with no channel named at all: the date alone — never "sent to  on".
+    account('trial_available', trialStatus({ setup: trialSetup({ sentTo: [] }) }));
+    const unnamed = await card();
+    expect(unnamed.textContent).toContain(`The instructions for completing your business setup were sent on ${at}.`);
+  });
+
+  it('in Arabic a channel named in words flows with the sentence; only a masked contact is kept left to right', async () => {
+    localStorage.setItem('erp.web.language', 'ar');
+    account('trial_available', trialStatus({ setup: trialSetup({ sentTo: ['email', 'whatsapp'], destinations: [{ channel: 'email', masked: 'o•••@example.test' }] }) }));
+    const c = (await screen.findByRole('heading', { name: ar['trial.title'], level: 2 })).closest('section')!;
+    expect([...c.querySelectorAll('.ltr')].map((e) => e.textContent)).toEqual(['o•••@example.test']);
+    expect(c.textContent).toContain(`o•••@example.test و${ar['trial.setup.to.whatsapp']}`);
+  });
+
+  it('a contact still to verify after the automatic send: no promise that the instructions will go on their own', async () => {
+    account(
+      'trial_available',
+      trialStatus({
+        offer: trialOffer({ available: false, reason: 'contact_unverified', requiredContacts: ['email', 'phone'], missingContacts: ['phone'] }),
+        setup: trialSetup({
+          delivery: 'waiting_for_contact',
+          sentTo: [],
+          canResendNow: false,
+          resendBlockedBy: 'contact_unverified',
+          history: [{ at: '2026-10-13T08:00:00.000Z', trigger: 'automatic', email: 'accepted', whatsapp: 'not_applicable' }],
+        }),
+      }),
+    );
+    const c = await card();
+    expect(c.textContent).not.toContain(en['trial.setup.waiting.phone']);
+    expect(c.textContent).not.toMatch(/will be sent automatically/);
+    // What there is to do is still said, and what was sent is still listed.
+    expect(within(c).getByText(en['trial.verify.phone'])).toBeTruthy();
+    expect(within(c).getByText('Email: sent')).toBeTruthy();
+  });
+
   it('could not be sent, cannot be sent, not sent: each said honestly', async () => {
     for (const [delivery, text, resendBlockedBy] of [
       ['failed', en['trial.setup.failed'], null],
