@@ -512,10 +512,13 @@ describe('the console: a store or seat paid for during a trial (D176)', () => {
     const IMMEDIATE = allocation({ id: '0192f000-0000-7000-8000-0000000000d6', kind: 'seat', status: 'paid', activityFrom: null, activityTo: null, activityEffective: null, monthlyAmount: 100 });
     // Started from scheduled: paid, in force since the trial's end — the server sets `effectiveAt` on such a row only.
     const STARTED = { ...scheduledRequest('seat'), status: 'paid' as const, activation: null };
+    // An API older than the add-ons sends neither field: its rows are no paid add-on.
+    const { effectiveAt: _e, activation: _a, ...older } = IMMEDIATE;
     const cases: [string, SeatRequest[], boolean][] = [
       ['scheduled', [scheduledRequest('store'), PENDING_SEAT], true],
       ['started from scheduled', [STARTED], true],
       ['only paid at once, or awaiting payment', [IMMEDIATE, PENDING_STORE], false],
+      ['an older API', [older as SeatRequest, { ...PENDING_STORE, effectiveAt: undefined, activation: undefined } as unknown as SeatRequest], false],
     ];
     for (const [name, requests, shown] of cases) {
       businessPage(requests);
