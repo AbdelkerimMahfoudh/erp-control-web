@@ -330,6 +330,8 @@ describe('the console: a store or seat paid for during a trial (D176)', () => {
   const inZone = (locale: string, zone = TRIAL_ZONE, iso = TRIAL_END) =>
     `${new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeStyle: 'short', timeZone: zone }).format(new Date(iso))} (${zoneName(zone, locale, iso)})`;
   const AT_END = `20 October 2026 at 10:30 (${zoneName(TRIAL_ZONE)})`;
+  /** A confirmation types its form and passes the step-up: like the application's form, fifteen seconds on a busy machine. */
+  const CONFIRMING = 15_000;
 
   beforeEach(() => {
     // jsdom has no <dialog> behaviour; the step-up dialog only needs open/close.
@@ -413,7 +415,7 @@ describe('the console: a store or seat paid for during a trial (D176)', () => {
     expect(outcome.textContent).not.toContain(en['admin.seats.storeOpened']);
     expect(outcome.textContent).not.toMatch(/09:30/);
     expect(sent.find((r) => r.url.endsWith('/confirm-payment'))!.body).toMatchObject({ reference: 'BK-1', expectedVersion: 1, confirmPassword: 'step-up-password' });
-  });
+  }, CONFIRMING);
 
   it('with no paid access approved yet: it starts with the first paid month — no date; the seat’s person waits for it to start', async () => {
     queue(
@@ -436,38 +438,7 @@ describe('the console: a store or seat paid for during a trial (D176)', () => {
     expect(outcome.textContent).not.toContain('still has to prove');
     expect(outcome.querySelectorAll('bdi')).toHaveLength(0);
     expect(outcome.textContent).not.toContain(en['admin.seats.storeOpened']);
-  });
-
-  it('the seat’s person: what they still have to prove, apart from what they wait for — a seat’s start is never a proof, in English, French and Arabic', async () => {
-    for (const [lang, cat, locale] of [['en', en, 'en-GB'], ['fr', fr, 'fr-FR'], ['ar', ar, 'ar-MR']] as const) {
-      localStorage.setItem('erp.web.language', lang);
-      queue(
-        () => ({
-          body: {
-            applied: true,
-            allocation: { ...scheduledRequest('seat', { id: PENDING_SEAT.id, person: PENDING_SEAT.person }), business: BUSINESS },
-            paymentId: 'pay1',
-            // As the server's activation answers for a person whose seat starts at the trial's end and whose email is unproven.
-            activation: { activated: false, alreadyActive: false, pending: ['email_verification', 'seat_scheduled'] },
-          },
-        }),
-        [],
-        [PENDING_SEAT],
-      );
-      await confirmPayment('Sara', { confirmPayment: cat['admin.seats.confirm'], confirm: cat['action.confirm'], password: cat['admin.password'], code: cat['admin.mfa.code'] });
-      const outcome = (await screen.findByText(cat['admin.seats.confirmed'].replace('{reference}', 'BK-1'), undefined, SLOW_WAIT)).closest('.notice')!;
-      expect({ lang, lines: [...outcome.querySelectorAll('div')].map((d) => d.textContent) }).toEqual({
-        lang,
-        lines: [
-          cat['admin.seats.confirmed'].replace('{reference}', 'BK-1'),
-          cat['admin.trial.addonScheduled'].replace('{date}', inZone(locale)),
-          cat['admin.seats.stillPending'].replace('{reasons}', cat['pending.email_verification']),
-          cat['admin.seats.stillWaiting'].replace('{reasons}', cat['pending.seat_scheduled']),
-        ],
-      });
-      cleanup();
-    }
-  });
+  }, CONFIRMING);
 
   it('confirmed with a paid period in force: the server opened the store, and the outcome says so — and nothing of a start to come', async () => {
     queue(() => ({ body: { applied: true, allocation: { ...PENDING_STORE, status: 'paid', confirmedAt: TRIAL_END }, paymentId: 'pay1', activation: null } }));
@@ -475,7 +446,7 @@ describe('the console: a store or seat paid for during a trial (D176)', () => {
     const outcome = (await screen.findByText('Payment confirmed with reference BK-1.', undefined, SLOW_WAIT)).closest('.notice')!;
     expect(outcome.textContent).toContain(en['admin.seats.storeOpened']);
     expect(outcome.textContent).not.toContain('free trial');
-  });
+  }, CONFIRMING);
 
   it('a confirmation that would be charged again by the first paid period is refused in words: nothing was recorded, the request still waits', async () => {
     const message =
@@ -490,26 +461,117 @@ describe('the console: a store or seat paid for during a trial (D176)', () => {
     expect(screen.queryByText(/Payment confirmed with reference/)).toBeNull();
     // The form stays: the payment can be confirmed once paid access has started.
     expect(within(row).getByLabelText(/Reference/)).toBeTruthy();
-  });
+  }, CONFIRMING);
 
-  it('in French: the queue’s filter and the refusal; in Arabic: the outcome’s date isolated in the business’s zone', async () => {
-    localStorage.setItem('erp.web.language', 'fr');
-    queue(() => ({ status: 409, body: { statusCode: 409, code: 'paid_period_not_started', message: 'This business has no paid period running…' } }));
-    const filter = (await screen.findByDisplayValue(fr['account.requests.status.pending_payment'], undefined, SLOW_WAIT)) as HTMLSelectElement;
-    expect([...filter.options].find((o) => o.value === 'scheduled')!.textContent).toBe('Payé · programmé');
-    const row = await confirmPayment('Boutique Nord', { confirmPayment: fr['admin.seats.confirm'], confirm: fr['action.confirm'], password: fr['admin.password'], code: fr['admin.mfa.code'] });
-    await waitFor(() => expect(row.textContent).toContain(fr['admin.trial.paidPeriodNotStarted.title']), SLOW_WAIT);
-    expect(row.textContent).toContain(fr['admin.trial.paidPeriodNotStarted.refused']);
-    cleanup();
+  /*
+   * Every state the console shows for a store or seat paid for during a trial, in English, French and Arabic: each
+   * start is the server's instant in the zone its own row carries — Casablanca, Dubai — isolated, or the first paid month
+   * with no date; each confirmation's outcome is read line by line; the refusal is said in words, the form kept.
+   */
+  const ATAR_BUSINESS = { id: '0192f000-0000-7000-8000-0000000000b3', name: 'Boutique Atar', publicStoreId: 'ST-3A7R' };
+  const linesOf = (notice: Element) => [...notice.querySelectorAll('div')].map((d) => d.textContent);
+  for (const [lang, cat, locale] of [['en', en, 'en-GB'], ['fr', fr, 'fr-FR'], ['ar', ar, 'ar-MR']] as const) {
+    describe(`every state in ${lang === 'en' ? 'English' : lang === 'fr' ? 'French' : 'Arabic'}`, () => {
+      beforeEach(() => localStorage.setItem('erp.web.language', lang));
+      const labels = { confirmPayment: cat['admin.seats.confirm'], confirm: cat['action.confirm'], password: cat['admin.password'], code: cat['admin.mfa.code'] };
+      const confirmed = cat['admin.seats.confirmed'].replace('{reference}', 'BK-1');
+      const outcome = async () => (await screen.findByText(confirmed, undefined, SLOW_WAIT)).closest('.notice')!;
 
-    localStorage.setItem('erp.web.language', 'ar');
-    queue(() => ({ body: { applied: true, allocation: { ...scheduledRequest('store'), business: BUSINESS }, paymentId: 'pay1', activation: null } }));
-    await confirmPayment('Boutique Nord', { confirmPayment: ar['admin.seats.confirm'], confirm: ar['action.confirm'], password: ar['admin.password'], code: ar['admin.mfa.code'] });
-    const outcome = (await screen.findByText(ar['admin.seats.confirmed'].replace('{reference}', 'BK-1'), undefined, SLOW_WAIT)).closest('.notice')!;
-    const date = inZone('ar-MR');
-    expect(outcome.textContent).toContain(ar['admin.trial.addonScheduled'].replace('{date}', date));
-    expect([...outcome.querySelectorAll('bdi')].map((b) => b.textContent)).toEqual([date]);
-  });
+      it('the queue’s "Paid · scheduled": each row starts in its own business’s zone, or with the first paid month; none offers an action', async () => {
+        queue(() => ({ body: {} }), [
+          { ...scheduledRequest('store'), business: BUSINESS },
+          { ...scheduledRequest('seat', {}, { timeZone: 'Asia/Dubai' }), business: DUBAI_BUSINESS },
+          { ...scheduledRequest('store', { id: '0192f000-0000-7000-8000-0000000000d7', label: 'Boutique Est' }, { waitsFor: 'paid_access' }), business: ATAR_BUSINESS },
+        ]);
+        const filter = (await screen.findByDisplayValue(cat['account.requests.status.pending_payment'], undefined, SLOW_WAIT)) as HTMLSelectElement;
+        expect([...filter.options].find((o) => o.value === 'scheduled')!.textContent).toBe(cat['account.requests.status.paidScheduled']);
+        await userEvent.setup().selectOptions(filter, 'scheduled');
+        await screen.findByRole('link', { name: ATAR_BUSINESS.name }, SLOW_WAIT);
+        const cases: [string, string, string[]][] = [
+          [BUSINESS.name, cat['trial.addons.storeAtEnd'].replace('{date}', inZone(locale)), [inZone(locale)]],
+          [DUBAI_BUSINESS.name, cat['trial.addons.seatAtEnd'].replace('{date}', inZone(locale, 'Asia/Dubai')), [inZone(locale, 'Asia/Dubai')]],
+          [ATAR_BUSINESS.name, cat['trial.addons.waitsForPaidAccess'], []],
+        ];
+        for (const [business, start, dates] of cases) {
+          const row = screen.getByRole('link', { name: business }).closest('tr')!;
+          const badge = row.querySelector('.badge')!;
+          expect({ business, badge: [badge.textContent, badge.className] }).toEqual({ business, badge: [cat['account.requests.status.paidScheduled'], 'badge tone-info'] });
+          expect({ business, start: row.textContent!.includes(start) }).toEqual({ business, start: true });
+          expect({ business, dates: [...row.querySelectorAll('bdi')].map((b) => b.textContent) }).toEqual({ business, dates });
+          expect({ business, buttons: within(row).queryAllByRole('button').length }).toEqual({ business, buttons: 0 });
+          expect(row.textContent).not.toContain(cat['account.requests.status.scheduled']);
+        }
+      }, CONFIRMING);
+
+      it('confirmed during the trial: when it starts, in the business’s zone — never that the store opened', async () => {
+        queue(() => ({ body: { applied: true, allocation: { ...scheduledRequest('store'), business: BUSINESS }, paymentId: 'pay1', activation: null } }));
+        await confirmPayment('Boutique Nord', labels);
+        const notice = await outcome();
+        expect(linesOf(notice)).toEqual([confirmed, cat['admin.trial.addonScheduled'].replace('{date}', inZone(locale))]);
+        expect([...notice.querySelectorAll('bdi')].map((b) => b.textContent)).toEqual([inZone(locale)]);
+      }, CONFIRMING);
+
+      it('confirmed with no paid access approved yet: the first paid month, no date — and the seat’s person waits for it to start', async () => {
+        queue(
+          () => ({
+            body: {
+              applied: true,
+              allocation: { ...scheduledRequest('seat', { id: PENDING_SEAT.id, person: PENDING_SEAT.person }, { waitsFor: 'paid_access' }), business: BUSINESS },
+              paymentId: 'pay1',
+              activation: { activated: false, alreadyActive: false, pending: ['seat_scheduled'] },
+            },
+          }),
+          [],
+          [PENDING_SEAT],
+        );
+        await confirmPayment('Sara', labels);
+        const notice = await outcome();
+        expect(linesOf(notice)).toEqual([confirmed, cat['admin.trial.addonWaits'], cat['admin.seats.stillWaiting'].replace('{reasons}', cat['pending.seat_scheduled'])]);
+        expect(notice.querySelectorAll('bdi')).toHaveLength(0);
+      }, CONFIRMING);
+
+      it('the seat’s person proves their contacts and waits for the seat to start — its start is never a proof', async () => {
+        queue(
+          () => ({
+            body: {
+              applied: true,
+              allocation: { ...scheduledRequest('seat', { id: PENDING_SEAT.id, person: PENDING_SEAT.person }), business: BUSINESS },
+              paymentId: 'pay1',
+              // As the server's activation answers for a person whose seat starts at the trial's end and whose email is unproven.
+              activation: { activated: false, alreadyActive: false, pending: ['email_verification', 'seat_scheduled'] },
+            },
+          }),
+          [],
+          [PENDING_SEAT],
+        );
+        await confirmPayment('Sara', labels);
+        expect(linesOf(await outcome())).toEqual([
+          confirmed,
+          cat['admin.trial.addonScheduled'].replace('{date}', inZone(locale)),
+          cat['admin.seats.stillPending'].replace('{reasons}', cat['pending.email_verification']),
+          cat['admin.seats.stillWaiting'].replace('{reasons}', cat['pending.seat_scheduled']),
+        ]);
+      }, CONFIRMING);
+
+      it('confirmed with a paid period in force: the store was opened, and nothing of a start to come', async () => {
+        queue(() => ({ body: { applied: true, allocation: { ...PENDING_STORE, status: 'paid', confirmedAt: TRIAL_END, version: 2 }, paymentId: 'pay1', activation: null } }));
+        await confirmPayment('Boutique Nord', labels);
+        expect(linesOf(await outcome())).toEqual([confirmed, cat['admin.seats.storeOpened']]);
+      }, CONFIRMING);
+
+      it('a confirmation the first paid period would charge again is refused in words: nothing recorded, the form kept', async () => {
+        const message = 'This business has no paid period running and no free trial running, so a payment confirmed now would be charged again by its first paid period.';
+        queue(() => ({ status: 409, body: { statusCode: 409, error: 'Conflict', code: 'paid_period_not_started', message } }));
+        const row = await confirmPayment('Boutique Nord', labels);
+        await waitFor(() => expect(row.textContent).toContain(cat['admin.trial.paidPeriodNotStarted.title']), SLOW_WAIT);
+        expect(row.textContent).toContain(cat['admin.trial.paidPeriodNotStarted.refused']);
+        for (const never of [cat['error.conflict'], message, 'paid_period_not_started']) expect(row.textContent).not.toContain(never);
+        expect(screen.queryByText(confirmed)).toBeNull();
+        // The form stays, to confirm the payment once paid access has started.
+        expect(within(row).getByRole('button', { name: cat['action.confirm'] })).toBeTruthy();
+      }, CONFIRMING);
+    });
+  }
 
   /** A business whose trial runs, its requests as the server lists them on its page. */
   function businessPage(requests: SeatRequest[]) {
