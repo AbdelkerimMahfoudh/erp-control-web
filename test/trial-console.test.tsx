@@ -431,9 +431,42 @@ describe('the console: a store or seat paid for during a trial (D176)', () => {
     await confirmPayment('for Sara');
     const outcome = (await screen.findByText('Payment confirmed with reference BK-1.', undefined, SLOW_WAIT)).closest('.notice')!;
     expect(outcome.textContent).toContain(en['admin.trial.addonWaits']);
-    expect(outcome.textContent).toContain('The seat is paid; the person still has to prove: the seat to start.');
+    // What the person waits for, never something they have to prove.
+    expect(outcome.textContent).toContain('The person still waits for the seat to start.');
+    expect(outcome.textContent).not.toContain('still has to prove');
     expect(outcome.querySelectorAll('bdi')).toHaveLength(0);
     expect(outcome.textContent).not.toContain(en['admin.seats.storeOpened']);
+  });
+
+  it('the seat’s person: what they still have to prove, apart from what they wait for — a seat’s start is never a proof, in English, French and Arabic', async () => {
+    for (const [lang, cat, locale] of [['en', en, 'en-GB'], ['fr', fr, 'fr-FR'], ['ar', ar, 'ar-MR']] as const) {
+      localStorage.setItem('erp.web.language', lang);
+      queue(
+        () => ({
+          body: {
+            applied: true,
+            allocation: { ...scheduledRequest('seat', { id: PENDING_SEAT.id, person: PENDING_SEAT.person }), business: BUSINESS },
+            paymentId: 'pay1',
+            // As the server's activation answers for a person whose seat starts at the trial's end and whose email is unproven.
+            activation: { activated: false, alreadyActive: false, pending: ['email_verification', 'seat_scheduled'] },
+          },
+        }),
+        [],
+        [PENDING_SEAT],
+      );
+      await confirmPayment('Sara', { confirmPayment: cat['admin.seats.confirm'], confirm: cat['action.confirm'], password: cat['admin.password'], code: cat['admin.mfa.code'] });
+      const outcome = (await screen.findByText(cat['admin.seats.confirmed'].replace('{reference}', 'BK-1'), undefined, SLOW_WAIT)).closest('.notice')!;
+      expect({ lang, lines: [...outcome.querySelectorAll('div')].map((d) => d.textContent) }).toEqual({
+        lang,
+        lines: [
+          cat['admin.seats.confirmed'].replace('{reference}', 'BK-1'),
+          cat['admin.trial.addonScheduled'].replace('{date}', inZone(locale)),
+          cat['admin.seats.stillPending'].replace('{reasons}', cat['pending.email_verification']),
+          cat['admin.seats.stillWaiting'].replace('{reasons}', cat['pending.seat_scheduled']),
+        ],
+      });
+      cleanup();
+    }
   });
 
   it('confirmed with a paid period in force: the server opened the store, and the outcome says so — and nothing of a start to come', async () => {

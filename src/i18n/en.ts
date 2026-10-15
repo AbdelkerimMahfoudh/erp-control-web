@@ -435,6 +435,8 @@ export const en = {
   'admin.seats.confirmed': 'Payment confirmed with reference {reference}.',
   'admin.seats.activated': 'The person was activated.',
   'admin.seats.stillPending': 'The seat is paid; the person still has to prove: {reasons}.',
+  // What the person waits for is no proof of theirs: a seat to be paid, to come free, or to start (D176).
+  'admin.seats.stillWaiting': 'The person still waits for {reasons}.',
   'admin.seats.storeOpened': 'The store was opened.',
   'admin.seats.filter': 'Show',
   'admin.audit.title': 'Audit log',

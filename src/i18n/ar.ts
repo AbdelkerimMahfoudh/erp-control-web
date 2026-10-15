@@ -425,6 +425,7 @@ export const ar: Catalogue = {
   'admin.seats.confirmed': 'أُكِّد الدفع بالمرجع {reference}.',
   'admin.seats.activated': 'فُعِّل الشخص.',
   'admin.seats.stillPending': 'المقعد مدفوع؛ على الشخص بعدُ أن يثبت: {reasons}.',
+  'admin.seats.stillWaiting': 'لا يزال الشخص ينتظر {reasons}.',
   'admin.seats.storeOpened': 'افتُتح المتجر.',
   'admin.seats.filter': 'عرض',
   'admin.audit.title': 'سجل التدقيق',

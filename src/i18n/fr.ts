@@ -427,6 +427,7 @@ export const fr: Catalogue = {
   'admin.seats.confirmed': 'Paiement confirmé avec la référence {reference}.',
   'admin.seats.activated': 'La personne a été activée.',
   'admin.seats.stillPending': 'La place est payée ; la personne doit encore prouver : {reasons}.',
+  'admin.seats.stillWaiting': 'La personne attend encore {reasons}.',
   'admin.seats.storeOpened': 'Le magasin a été ouvert.',
   'admin.seats.filter': 'Afficher',
   'admin.audit.title': 'Journal d’audit',

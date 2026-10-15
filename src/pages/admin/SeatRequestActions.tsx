@@ -28,6 +28,25 @@ function ScheduledConfirmation({ activation }: { activation: SeatActivation }) {
   return <Phrase text={t('admin.trial.addonScheduled')} values={{ date: formatInstant(activation.startsAt, activation.timeZone, lang) }} />;
 }
 
+/** What a person still has to prove: their own contacts. Every other reason is a seat they wait for. */
+const PROOFS: ReadonlySet<string> = new Set(['email_verification', 'phone_verification']);
+
+/**
+ * Whether the seat's person could be activated, in words: activated; or what they still have to prove — their contacts
+ * — and, apart from it, what they still wait for: a seat to be paid for, to come free, or one paid for during a free
+ * trial to start (`seat_scheduled`, D176). Nobody proves a seat's start, so it is never listed among the proofs.
+ */
+function personOutcome(outcome: NonNullable<ConfirmResult['activation']>, t: ReturnType<typeof useI18n>['t']): string[] {
+  if (outcome.activated) return [t('admin.seats.activated')];
+  const words = (reasons: string[]) => reasons.map((p) => t(`pending.${p}` as Key)).join(', ');
+  const proofs = outcome.pending.filter((p) => PROOFS.has(p));
+  const waits = outcome.pending.filter((p) => !PROOFS.has(p));
+  return [
+    ...(proofs.length > 0 ? [t('admin.seats.stillPending', { reasons: words(proofs) })] : []),
+    ...(waits.length > 0 ? [t('admin.seats.stillWaiting', { reasons: words(waits) })] : []),
+  ];
+}
+
 /**
  * A confirmation the server refused, in words. `paid_period_not_started` (D176): a business with free trial facts, no
  * paid period ever started and no trial running — a payment recorded now would be charged again by its first paid
@@ -114,13 +133,7 @@ export function SeatRequestActions({
         if (r.applied && now.status === 'scheduled' && now.activation) lines.push(<ScheduledConfirmation activation={now.activation} />);
         if (r.applied && now.status === 'paid' && now.kind === 'store') lines.push(t('admin.seats.storeOpened'));
         if (r.applied && now.status === 'paid' && now.kind === 'activity') lines.push(t('admin.seats.activityChanged'));
-        if (r.activation) {
-          lines.push(
-            r.activation.activated
-              ? t('admin.seats.activated')
-              : t('admin.seats.stillPending', { reasons: r.activation.pending.map((p) => t(`pending.${p}` as Key)).join(', ') }),
-          );
-        }
+        if (r.activation) lines.push(...personOutcome(r.activation, t));
         report(lines);
       } else {
         const r = await adminRequest<{ applied: boolean }>(`${base}/${mode === 'refuse' ? 'refuse' : 'release'}`, {
