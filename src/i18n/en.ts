@@ -296,6 +296,15 @@ export const en = {
   'trial.setup.error.too_many_requests': 'The setup instructions were sent several times in a short while.',
   'trial.setup.error.setup_delivery_unavailable': 'No message can be sent right now, so the setup instructions were not sent. You can still start your trial here.',
   'trial.setup.error.trial_not_available': 'This business can no longer start a free trial, so the setup instructions were not sent.',
+  'trial.setup.history': 'Latest attempts',
+  'trial.setup.history.automatic': 'Automatic',
+  'trial.setup.history.resend': 'At your request',
+  'trial.setup.history.email.accepted': 'Email: sent',
+  'trial.setup.history.email.failed': 'Email: could not be sent',
+  'trial.setup.history.email.unavailable': 'Email: not available',
+  'trial.setup.history.whatsapp.accepted': 'WhatsApp: sent',
+  'trial.setup.history.whatsapp.failed': 'WhatsApp: could not be sent',
+  'trial.setup.history.whatsapp.unavailable': 'WhatsApp: not available',
 
   // ── admin ──
   'admin.title': 'Platform',

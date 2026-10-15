@@ -191,6 +191,53 @@ describe('the setup instructions on the card', () => {
     }
   });
 
+  it('lists the latest attempts: each date in the business’s zone, automatic or at the Owner’s request, each channel’s outcome in words (R4-02)', async () => {
+    const setup = trialSetup({
+      delivery: 'failed',
+      sentTo: [],
+      lastAttemptAt: '2026-10-13T08:30:00.000Z',
+      destinations: [
+        { channel: 'email', masked: 'o•••@example.test' },
+        { channel: 'whatsapp', masked: '+222••••1234' },
+      ],
+      history: [
+        { at: '2026-10-13T08:30:00.000Z', trigger: 'resend', email: 'failed', whatsapp: 'unavailable' },
+        { at: '2026-10-12T07:00:00.000Z', trigger: 'automatic', email: 'accepted', whatsapp: 'not_applicable' },
+      ],
+    });
+    account('trial_available', trialStatus({ setup }));
+    const c = await card();
+    const list = within(c).getByRole('heading', { name: 'Latest attempts', level: 4 }).parentElement!;
+    const rows = [...list.querySelectorAll('li')];
+    expect(rows.map((r) => r.textContent)).toEqual([
+      `13 October 2026 at 09:30 (${zoneName(TRIAL_ZONE, 'en-GB', '2026-10-13T08:30:00.000Z')})At your requestEmail: could not be sentWhatsApp: not available`,
+      `12 October 2026 at 08:00 (${zoneName(TRIAL_ZONE, 'en-GB', '2026-10-12T07:00:00.000Z')})AutomaticEmail: sent`,
+    ]);
+    // Each outcome in colour and words; each date isolated, so it keeps its order inside an Arabic line.
+    expect([...rows[0]!.querySelectorAll('.badge')].map((b) => b.className)).toEqual(['badge tone-danger', 'badge tone-warn']);
+    expect(rows.map((r) => r.querySelector('bdi')?.textContent)).toEqual([expect.stringContaining('13 October 2026'), expect.stringContaining('12 October 2026')]);
+    // A record, never a condition: the claim stands beside a failed history.
+    expect(within(c).getByRole('button', { name: CLAIM })).toHaveProperty('disabled', false);
+  });
+
+  it('the attempts in French and Arabic, and no list when nothing was ever attempted', async () => {
+    const history = [{ at: '2026-10-13T08:30:00.000Z', trigger: 'resend' as const, email: 'accepted' as const, whatsapp: 'failed' as const }];
+    for (const [lang, cat] of [['fr', fr], ['ar', ar]] as const) {
+      localStorage.setItem('erp.web.language', lang);
+      account('trial_available', trialStatus({ setup: trialSetup({ history }) }));
+      const c = (await screen.findByRole('heading', { name: cat['trial.title'], level: 2 })).closest('section')!;
+      const row = within(c).getByRole('heading', { name: cat['trial.setup.history'], level: 4 }).parentElement!.querySelector('li')!;
+      for (const key of ['trial.setup.history.resend', 'trial.setup.history.email.accepted', 'trial.setup.history.whatsapp.failed'] as const) expect(row.textContent).toContain(cat[key]);
+      expect(row.querySelector('bdi')!.textContent).toContain(zoneName(TRIAL_ZONE, lang === 'fr' ? 'fr-FR' : 'ar-MR', '2026-10-13T08:30:00.000Z'));
+      await ownerLogout();
+      cleanup();
+    }
+    localStorage.setItem('erp.web.language', 'en');
+    account('trial_available', trialStatus({ setup: trialSetup({ delivery: 'not_sent', sentTo: [], lastAttemptAt: null, history: [] }) }));
+    const c = await card();
+    expect(within(c).queryByRole('heading', { name: 'Latest attempts' })).toBeNull();
+  });
+
   it('a send again waits out the server’s limit, counted down to its instant, then sends an empty body', async () => {
     vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] });
     const now = Date.now();

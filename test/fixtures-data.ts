@@ -193,6 +193,7 @@ export function trialOffer(over: Partial<TrialOffer> = {}): TrialOffer {
   };
 }
 
+/** By default the instructions went out once, automatically, to the verified email — the history says so too. */
 export function trialSetup(over: Partial<TrialSetup> = {}): TrialSetup {
   return {
     delivery: 'sent',
@@ -201,6 +202,7 @@ export function trialSetup(over: Partial<TrialSetup> = {}): TrialSetup {
     lastAttemptAt: '2026-10-13T08:00:00.000Z',
     canResendNow: true,
     resendAvailableAt: null,
+    history: [{ at: '2026-10-13T08:00:00.000Z', trigger: 'automatic', email: 'accepted', whatsapp: 'not_applicable' }],
     ...over,
   };
 }

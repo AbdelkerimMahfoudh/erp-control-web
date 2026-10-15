@@ -290,6 +290,15 @@ export const fr: Catalogue = {
   'trial.setup.error.setup_delivery_unavailable':
     'Aucun message ne peut être envoyé pour le moment : les instructions de configuration n’ont pas été envoyées. Vous pouvez quand même démarrer votre essai ici.',
   'trial.setup.error.trial_not_available': 'Cette entreprise ne peut plus démarrer d’essai gratuit : les instructions de configuration n’ont pas été envoyées.',
+  'trial.setup.history': 'Dernières tentatives',
+  'trial.setup.history.automatic': 'Automatique',
+  'trial.setup.history.resend': 'À votre demande',
+  'trial.setup.history.email.accepted': 'E-mail : envoyé',
+  'trial.setup.history.email.failed': 'E-mail : échec de l’envoi',
+  'trial.setup.history.email.unavailable': 'E-mail : indisponible',
+  'trial.setup.history.whatsapp.accepted': 'WhatsApp : envoyé',
+  'trial.setup.history.whatsapp.failed': 'WhatsApp : échec de l’envoi',
+  'trial.setup.history.whatsapp.unavailable': 'WhatsApp : indisponible',
 
   'admin.title': 'Plateforme',
   'admin.signin.lead': 'Administrateurs de la plateforme uniquement. Cet espace est séparé de tout compte entreprise.',

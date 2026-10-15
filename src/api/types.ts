@@ -55,6 +55,7 @@ export interface TrialOffer {
 /**
  * The setup instructions sent automatically once the Owner's contacts are verified, and their resend from this
  * website only. `destinations` are the Owner's verified contacts, masked by the server; the site never sees one whole.
+ * `history` is the business's last attempts, newest first — an honest record, never a condition for claiming.
  */
 export interface TrialSetup {
   delivery: 'waiting_for_contact' | 'not_sent' | 'sent' | 'failed' | 'unavailable';
@@ -63,9 +64,25 @@ export interface TrialSetup {
   lastAttemptAt: string | null;
   canResendNow: boolean;
   resendAvailableAt: string | null;
+  history: TrialSetupAttempt[];
 }
 
 export type TrialChannel = 'email' | 'whatsapp';
+
+/**
+ * What one channel did with one attempt: `accepted` — its provider took the message; `failed` — the provider refused
+ * or erred; `unavailable` — a verified contact whose channel could not carry it; `not_applicable` — not a verified
+ * contact of the Owner, so nothing was tried there.
+ */
+export type TrialSetupOutcome = 'accepted' | 'failed' | 'unavailable' | 'not_applicable';
+
+/** One attempt: the server's instant, what started it (the send after verification, or the Owner's), each channel's outcome. */
+export interface TrialSetupAttempt {
+  at: string;
+  trigger: 'automatic' | 'resend';
+  email: TrialSetupOutcome;
+  whatsapp: TrialSetupOutcome;
+}
 
 /** GET platform/my-subscription/trial — the Owner's only (anyone else is refused 403 `owner_only`). */
 export interface TrialStatus {

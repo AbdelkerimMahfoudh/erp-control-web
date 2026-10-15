@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { ApiError } from '../../api/client';
-import type { TrialClaimResult, TrialContact, TrialSetup, TrialStatus } from '../../api/types';
+import type { TrialChannel, TrialClaimResult, TrialContact, TrialSetup, TrialSetupAttempt, TrialSetupOutcome, TrialStatus } from '../../api/types';
 import { ownerRequest } from '../../auth/owner';
 import { ClaimOutcome, TrialPanel, VerifyContacts } from '../../components/trial';
-import { ErrorNotice, Notice, Phrase, type Tone } from '../../components/ui';
-import { useI18n, type Language } from '../../i18n';
+import { Badge, ErrorNotice, Notice, Phrase, type Tone } from '../../components/ui';
+import { useI18n, type Key, type Language } from '../../i18n';
 import { formatInstant, formatWait, listParts } from '../../lib/format';
 import { detailOf, secondsUntil } from '../../lib/trial';
 
@@ -179,6 +179,41 @@ function SetupInstructions({
           ) : null}
         </div>
       )}
+      <DeliveryHistory history={setup.history} timeZone={timeZone} />
+    </div>
+  );
+}
+
+const CHANNELS: TrialChannel[] = ['email', 'whatsapp'];
+const OUTCOME_TONE: Record<Exclude<TrialSetupOutcome, 'not_applicable'>, Tone> = { accepted: 'ok', failed: 'danger', unavailable: 'warn' };
+
+/**
+ * The attempts the server recorded, newest first (its last ten): when, in the business's zone; whether it was the
+ * automatic send or one the Owner asked for; and, in colour and words, what each channel did — a channel that was no
+ * verified contact of the Owner was not tried and is not listed. A record only: the claim never depends on it.
+ */
+function DeliveryHistory({ history, timeZone }: { history: TrialSetupAttempt[]; timeZone: string | null }) {
+  const { t, lang } = useI18n();
+  if (history.length === 0) return null;
+  return (
+    <div className="stack-tight">
+      <h4>{t('trial.setup.history')}</h4>
+      <ul className="attempts">
+        {history.map((a) => (
+          <li key={`${a.at}-${a.trigger}`} className="row">
+            <bdi>{formatInstant(a.at, timeZone, lang)}</bdi>
+            <span className="muted">{t(`trial.setup.history.${a.trigger}`)}</span>
+            {CHANNELS.map((channel) => {
+              const outcome = a[channel];
+              return outcome === 'not_applicable' ? null : (
+                <Badge key={channel} tone={OUTCOME_TONE[outcome]}>
+                  {t(`trial.setup.history.${channel}.${outcome}` as Key)}
+                </Badge>
+              );
+            })}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
