@@ -95,7 +95,7 @@ describe('the Owner’s trial card on /account', () => {
       'trial_available',
       trialStatus({
         offer: trialOffer({ available: false, reason: 'contact_unverified', requiredContacts: ['email', 'phone'], missingContacts: ['phone'] }),
-        setup: trialSetup({ delivery: 'waiting_for_contact', sentTo: [], lastAttemptAt: null, canResendNow: false }),
+        setup: trialSetup({ delivery: 'waiting_for_contact', sentTo: [], lastAttemptAt: null, history: [], canResendNow: false, resendBlockedBy: 'contact_unverified' }),
       }),
     );
     const c = await card();
@@ -176,12 +176,13 @@ describe('the setup instructions on the card', () => {
   });
 
   it('could not be sent, cannot be sent, not sent: each said honestly', async () => {
-    for (const [delivery, text, canResendNow] of [
-      ['failed', en['trial.setup.failed'], true],
-      ['unavailable', en['trial.setup.unavailable'], false],
-      ['not_sent', en['trial.setup.notSent'], true],
+    for (const [delivery, text, resendBlockedBy] of [
+      ['failed', en['trial.setup.failed'], null],
+      ['unavailable', en['trial.setup.unavailable'], 'unavailable'],
+      ['not_sent', en['trial.setup.notSent'], null],
     ] as const) {
-      account('trial_available', trialStatus({ setup: trialSetup({ delivery, sentTo: [], canResendNow }) }));
+      const canResendNow = resendBlockedBy === null;
+      account('trial_available', trialStatus({ setup: trialSetup({ delivery, sentTo: [], canResendNow, resendBlockedBy }) }));
       const c = await card();
       expect(within(c).getByText(text)).toBeTruthy();
       expect(c.textContent).not.toMatch(/were sent to/);
@@ -238,12 +239,21 @@ describe('the setup instructions on the card', () => {
     expect(within(c).queryByRole('heading', { name: 'Latest attempts' })).toBeNull();
   });
 
-  it('a send again waits out the server’s limit, counted down to its instant, then sends an empty body', async () => {
+  it('a send again waits out the server’s limit, counted down to its instant; then the trial is read again, and the server opens the button', async () => {
     vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] });
     const now = Date.now();
-    const status = trialStatus({ setup: trialSetup({ canResendNow: false, resendAvailableAt: new Date(now + 42_000).toISOString() }) });
-    const sent = account('trial_available', status, (url) => (url.endsWith('/trial/setup/resend') ? { body: trialSetup({ lastAttemptAt: new Date(now + 43_000).toISOString() }) } : undefined));
+    const availableAt = now + 42_000;
+    // The server's answer follows its own clock: throttled until the instant it named, open from it.
+    const read = () =>
+      Date.now() < availableAt
+        ? trialStatus({ setup: trialSetup({ canResendNow: false, resendBlockedBy: 'throttle', resendAvailableAt: new Date(availableAt).toISOString() }) })
+        : trialStatus();
+    const sent = account('trial_available', read(), (url) => {
+      if (url.endsWith('/trial/setup/resend')) return { body: trialSetup({ lastAttemptAt: new Date(now + 43_000).toISOString() }) };
+      return url.endsWith('/platform/my-subscription/trial') ? { body: read() } : undefined;
+    });
     const c = await card();
+    const reads = () => sent.filter((r) => r.url.endsWith('/platform/my-subscription/trial')).length;
     const button = within(c).getByRole('button', { name: RESEND });
     expect(button).toHaveProperty('disabled', true);
     expect(c.textContent).toContain('You can send them again in 0:42.');
@@ -251,20 +261,71 @@ describe('the setup instructions on the card', () => {
       vi.advanceTimersByTime(20_000);
     });
     expect(c.textContent).toContain('You can send them again in 0:22.');
+    const before = reads();
     await act(async () => {
       vi.advanceTimersByTime(23_000);
     });
-    expect(button).toHaveProperty('disabled', false);
+    // The count ended: the page asked the server rather than trust this browser's clock, and the server said yes.
+    await waitFor(() => expect(reads()).toBe(before + 1));
+    await waitFor(() => expect(button).toHaveProperty('disabled', false));
     expect(c.textContent).not.toMatch(/You can send them again/);
     await userEvent.setup().click(button);
     expect(await within(c).findByText(en['trial.setup.resent'])).toBeTruthy();
     expect(sent.filter((r) => r.url.endsWith('/trial/setup/resend')).map((r) => [r.method, r.body])).toEqual([['POST', {}]]);
   });
 
+  it('nothing can carry the instructions: no countdown to a limit, the button stays off and says why — however long one waits (R4-06)', async () => {
+    vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] });
+    const now = Date.now();
+    const unavailable = trialSetup({
+      delivery: 'unavailable',
+      sentTo: [],
+      history: [{ at: new Date(now - 30_000).toISOString(), trigger: 'automatic', email: 'not_applicable', whatsapp: 'unavailable' }],
+      canResendNow: false,
+      resendBlockedBy: 'unavailable',
+      // The limit's own instant is still sent, but it is not what stands in the way: nothing is counted down to it.
+      resendAvailableAt: new Date(now + 30_000).toISOString(),
+    });
+    const sent = account('trial_available', trialStatus({ setup: unavailable }));
+    const c = await card();
+    const button = within(c).getByRole('button', { name: RESEND });
+    expect(button).toHaveProperty('disabled', true);
+    expect(c.textContent).not.toMatch(/You can send them again/);
+    expect(within(c).getAllByText(en['trial.setup.unavailable'])).toHaveLength(1);
+    const before = sent.length;
+    await act(async () => {
+      vi.advanceTimersByTime(31_000);
+    });
+    expect(button).toHaveProperty('disabled', true);
+    expect(c.textContent).not.toMatch(/You can send them again/);
+    expect(sent.slice(before).filter((r) => r.url.endsWith('/trial/setup/resend'))).toEqual([]);
+    // A delivery the server called failed, with nothing to carry a new one: the button says it cannot go now.
+    await ownerLogout();
+    cleanup();
+    account('trial_available', trialStatus({ setup: trialSetup({ delivery: 'failed', sentTo: [], canResendNow: false, resendBlockedBy: 'unavailable' }) }));
+    const failed = await card();
+    expect(within(failed).getByRole('button', { name: RESEND })).toHaveProperty('disabled', true);
+    expect(within(failed).getByText(en['trial.setup.unavailable'])).toBeTruthy();
+    expect(failed.textContent).not.toMatch(/You can send them again/);
+  });
+
+  it('a contact still to verify after the automatic send: no send-again button, and the card says what to verify', async () => {
+    account(
+      'trial_available',
+      trialStatus({
+        offer: trialOffer({ available: false, reason: 'contact_unverified', requiredContacts: ['email', 'phone'], missingContacts: ['phone'] }),
+        setup: trialSetup({ delivery: 'not_sent', sentTo: [], canResendNow: false, resendBlockedBy: 'contact_unverified' }),
+      }),
+    );
+    const c = await card();
+    expect(within(c).queryByRole('button', { name: RESEND })).toBeNull();
+    expect(within(c).getByText(en['trial.verify.phone'])).toBeTruthy();
+  });
+
   it('a long wait is told as the instant it ends, in the business’s zone', async () => {
     const at = '2026-10-13T11:00:00.000Z';
     vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'], now: new Date('2026-10-13T09:00:00.000Z') });
-    account('trial_available', trialStatus({ setup: trialSetup({ canResendNow: false, resendAvailableAt: at }) }));
+    account('trial_available', trialStatus({ setup: trialSetup({ canResendNow: false, resendBlockedBy: 'throttle', resendAvailableAt: at }) }));
     const c = await card();
     expect(c.textContent).toContain(`You can send them again on 13 October 2026 at 12:00 (${zoneName(TRIAL_ZONE, 'en-GB', at)}).`);
   });
@@ -377,7 +438,7 @@ describe('the claim', () => {
     let refused = false;
     const blocked = trialStatus({
       offer: trialOffer({ available: false, reason: 'contact_unverified', requiredContacts: ['email', 'phone'], missingContacts: ['phone'] }),
-      setup: trialSetup({ delivery: 'waiting_for_contact', sentTo: [], lastAttemptAt: null, canResendNow: false }),
+      setup: trialSetup({ delivery: 'waiting_for_contact', sentTo: [], lastAttemptAt: null, history: [], canResendNow: false, resendBlockedBy: 'contact_unverified' }),
     });
     account('trial_available', trialStatus(), (url) => {
       if (url.endsWith('/trial/claim')) {

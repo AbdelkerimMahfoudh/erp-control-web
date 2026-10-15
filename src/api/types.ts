@@ -63,6 +63,13 @@ export interface TrialSetup {
   destinations: { channel: TrialChannel; masked: string }[];
   lastAttemptAt: string | null;
   canResendNow: boolean;
+  /**
+   * Why a send again is not possible now — null exactly when `canResendNow`: `throttle` (only the limit stands in the
+   * way, until `resendAvailableAt`), `unavailable` (no verified contact's channel can carry it now: nothing to count
+   * down to), `contact_unverified` (a required contact is not verified; it outranks the others).
+   */
+  resendBlockedBy: 'throttle' | 'unavailable' | 'contact_unverified' | null;
+  /** The earliest instant the limit allows, or null when it allows now — whatever else may stand in the way. */
   resendAvailableAt: string | null;
   history: TrialSetupAttempt[];
 }

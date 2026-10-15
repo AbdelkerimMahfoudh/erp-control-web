@@ -201,6 +201,7 @@ export function trialSetup(over: Partial<TrialSetup> = {}): TrialSetup {
     destinations: [{ channel: 'email', masked: 'o•••@example.test' }],
     lastAttemptAt: '2026-10-13T08:00:00.000Z',
     canResendNow: true,
+    resendBlockedBy: null,
     resendAvailableAt: null,
     history: [{ at: '2026-10-13T08:00:00.000Z', trigger: 'automatic', email: 'accepted', whatsapp: 'not_applicable' }],
     ...over,

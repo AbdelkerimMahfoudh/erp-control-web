@@ -85,7 +85,7 @@ export function TrialCard({ version, onChanged }: { version: unknown; onChanged:
           missing={status.offer?.missingContacts ?? []}
           canClaim={status.offer?.available === true}
           timeZone={status.offer?.timeZone ?? status.trial?.timeZone ?? null}
-          onSent={(next) => {
+          reload={(next) => {
             if (next) setStatus((s) => (s ? { ...s, setup: next } : s));
             return load();
           }}
@@ -99,21 +99,26 @@ export function TrialCard({ version, onChanged }: { version: unknown; onChanged:
  * The setup instructions (2026-10-13): sent automatically, once, when the Owner's required contacts are all verified,
  * to every verified contact a message service can reach now. They are sent again only from here, by the Owner signed
  * in on this website — the app has no way to ask. The card says what was sent, where (masked by the server) and when,
- * or honestly that nothing was or could be; the claim never depends on them. A send again waits out the server's limit,
- * counted down to the instant the server named.
+ * or honestly that nothing was or could be; the claim never depends on them.
+ *
+ * Whether a send may go now is the server's answer, with its reason (C4): only the server's limit is counted down, to
+ * the instant it named — and when the count ends the trial is read again rather than the button enabled on this
+ * browser's clock. Nothing to carry the message is no countdown: the button stays off and says so. A contact still to
+ * verify hides it, as the card above says what to verify.
  */
 function SetupInstructions({
   setup,
   missing,
   canClaim,
   timeZone,
-  onSent,
+  reload,
 }: {
   setup: TrialSetup;
   missing: TrialContact[];
   canClaim: boolean;
   timeZone: string | null;
-  onSent: (next?: TrialSetup) => Promise<void>;
+  /** Reads the trial again — after a send, with the server's answer shown at once. */
+  reload: (next?: TrialSetup) => Promise<void>;
 }) {
   const { t, lang } = useI18n();
   const [busy, setBusy] = useState(false);
@@ -122,7 +127,7 @@ function SetupInstructions({
   // A refusal for sending too soon names its own instant; it holds until the next reading of the trial replaces it.
   const [pushed, setPushed] = useState<string | null>(null);
   useEffect(() => setPushed(null), [setup]);
-  const until = pushed ?? setup.resendAvailableAt;
+  const until = pushed ?? (setup.resendBlockedBy === 'throttle' ? setup.resendAvailableAt : null);
   const [now, setNow] = useState(() => Date.now());
   useEffect(() => setNow(Date.now()), [until]);
   const wait = secondsUntil(until, now);
@@ -132,6 +137,13 @@ function SetupInstructions({
     const id = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(id);
   }, [waiting]);
+  // The wait is over: ask the server, once for each instant it named.
+  const asked = useRef<string | null>(null);
+  useEffect(() => {
+    if (until === null || waiting || asked.current === until) return;
+    asked.current = until;
+    void reload();
+  }, [until, waiting, reload]);
 
   const resend = async () => {
     setBusy(true);
@@ -140,20 +152,19 @@ function SetupInstructions({
     try {
       const next = await ownerRequest<TrialSetup>('platform/my-subscription/trial/setup/resend', { method: 'POST', body: {} });
       setDone(next.delivery === 'sent' ? { tone: 'ok', text: t('trial.setup.resent') } : { tone: 'warn', text: t('trial.setup.failed') });
-      await onSent(next);
+      await reload(next);
     } catch (e) {
       setError(e);
       const at = detailOf<string>(e, 'resendAvailableAt');
       if (at) setPushed(at);
       // A refusal that changed what the card should say (nothing operational, no trial to set up any more): read again.
-      if (e instanceof ApiError && (e.status === 409 || e.status === 503)) await onSent();
+      if (e instanceof ApiError && (e.status === 409 || e.status === 503)) await reload();
     } finally {
       setBusy(false);
     }
   };
 
-  const awaitingContact = setup.delivery === 'waiting_for_contact';
-  const openToSend = setup.canResendNow || until !== null;
+  const awaitingContact = setup.delivery === 'waiting_for_contact' || setup.resendBlockedBy === 'contact_unverified';
   return (
     <div className="stack">
       <h3>{t('trial.setup.title')}</h3>
@@ -163,7 +174,7 @@ function SetupInstructions({
       <ResendRefusal error={error} />
       {awaitingContact ? null : (
         <div className="row">
-          <button type="button" className="btn" disabled={busy || waiting || !openToSend} onClick={() => void resend()}>
+          <button type="button" className="btn" disabled={busy || waiting || pushed !== null || !setup.canResendNow} onClick={() => void resend()}>
             {t('trial.setup.resend')}
           </button>
           {waiting ? (
@@ -174,7 +185,7 @@ function SetupInstructions({
                 <Phrase text={t('trial.setup.waitUntil')} values={{ date: formatInstant(until, timeZone, lang) }} />
               )}
             </span>
-          ) : !openToSend && setup.delivery !== 'unavailable' ? (
+          ) : setup.resendBlockedBy === 'unavailable' && setup.delivery !== 'unavailable' ? (
             <span className="muted small">{t('trial.setup.unavailable')}</span>
           ) : null}
         </div>
