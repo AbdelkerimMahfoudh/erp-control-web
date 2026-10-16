@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
+import { terms } from '../src/content/legal-terms';
 import { describe, expect, it } from 'vitest';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
@@ -271,6 +272,21 @@ describe('the payment boundary', () => {
     [join('i18n', 'ar.ts')]: ar['activity.money_agent.body'],
   };
 
+  /**
+   * The terms say what Dukan ERP is not — not a bank, not Bankily, not Sedad (the owner's brief of 2026-10-16) — in one
+   * sentence per language, which must be a denial. It is cut out exactly once before the scan, like the agent's trade.
+   */
+  const NOT_A_PROVIDER = (['en', 'fr', 'ar'] as const).map((lang) => terms[lang].sections.find((s) => s.id === 'not_bank')!.blocks[0]!);
+
+  it('the terms name a provider only to say Dukan ERP is not one', () => {
+    const negations = { en: /is not a bank/, fr: /n’est ni une banque/, ar: /وهو ليس مصرفًا/ } as const;
+    (['en', 'fr', 'ar'] as const).forEach((lang, i) => {
+      const block = NOT_A_PROVIDER[i]!;
+      expect(block.kind).toBe('p');
+      expect({ lang, denial: negations[lang].test((block as { text: string }).text) }).toEqual({ lang, denial: true });
+    });
+  });
+
   it('no page names a payment destination number or a provider', () => {
     for (const f of code) {
       let src = read(f);
@@ -278,6 +294,13 @@ describe('the payment boundary', () => {
       if (trade) {
         expect({ file: relative(SRC, f), found: src.split(trade).length - 1 }).toEqual({ file: relative(SRC, f), found: 1 });
         src = src.replace(trade, '');
+      }
+      if (relative(SRC, f) === join('content', 'legal-terms.ts')) {
+        for (const block of NOT_A_PROVIDER) {
+          const text = (block as { text: string }).text.replace(/'/g, "\\'");
+          expect({ file: relative(SRC, f), found: src.split(text).length - 1 }).toEqual({ file: relative(SRC, f), found: 1 });
+          src = src.replace(text, '');
+        }
       }
       expect({ file: relative(SRC, f), ok: !/bankily|masrivi|sedad|bimbank/i.test(src) }).toEqual({ file: relative(SRC, f), ok: true });
     }

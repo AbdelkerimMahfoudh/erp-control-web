@@ -9,6 +9,7 @@ import type { LegalDocument } from './types';
 export const privacy: Record<Language, LegalDocument> = {
   en: {
     version: '1.0 (draft)',
+    status: 'draft',
     title: 'Dukan ERP privacy policy',
     summary: 'How {displayName} collects, uses, shares and keeps personal information in Dukan ERP and on this website.',
     sections: [
@@ -46,6 +47,8 @@ export const privacy: Record<Language, LegalDocument> = {
               'Expenses with an optional receipt photo, returns, refunds, daily closings and cash counts.',
             ],
           },
+          { kind: 'h3', text: 'Imported files' },
+          { kind: 'list', items: ['When a business imports a spreadsheet — of stock, for example — each row of the file is kept with the import, so that what was imported can be checked later.'] },
           { kind: 'h3', text: 'Security and audit' },
           {
             kind: 'list',
@@ -54,6 +57,7 @@ export const privacy: Record<Language, LegalDocument> = {
               'For each device added to an account: a label, the platform, the model and the app version. No IMEI or hardware fingerprint of your own phone is collected.',
               'For each verification message: the destination number or address, a one-way hash of the code, the attempts and the delivery status.',
               'An audit trail of changes: who changed what, when, and the values before and after the change.',
+              'The service’s request logs: the IP address, the app or browser identifier and the address of each request, which can include an IMEI or serial number being looked up.',
             ],
           },
         ],
@@ -65,7 +69,7 @@ export const privacy: Record<Language, LegalDocument> = {
           {
             kind: 'list',
             items: [
-              'No location (GPS) data.',
+              'No location: the app does not ask for it or record it. A receipt photo is kept as the file you choose, so if your phone saved in the file where the photo was taken, that stays in it.',
               'No access to the contacts on your phone.',
               'The camera is used only to scan barcodes and IMEI numbers; no image is kept. A photo is stored only when you attach a receipt to an expense.',
               'No advertising, analytics or crash-reporting services, and no advertising or tracking cookies.',
@@ -97,6 +101,7 @@ export const privacy: Record<Language, LegalDocument> = {
           { kind: 'p', text: 'Inside a business, each person sees what their role and the owner’s permission choices allow.' },
           { kind: 'p', text: 'The {displayName} platform team sees businesses, their stores, the names and contact details of their accounts, their subscriptions and the payments recorded for those subscriptions.' },
           { kind: 'p', text: 'When WhatsApp delivery is turned on, verification codes and service messages are sent through Meta’s WhatsApp Business Platform, which receives the destination number and the message.' },
+          { kind: 'p', text: 'When email delivery is turned on, verification codes and service messages are sent through an email delivery provider, which receives the destination address and the message. [[blocker:processors]]' },
           { kind: 'p', text: 'Hosting and other service providers: [[blocker:processors]]' },
         ],
       },
@@ -128,14 +133,15 @@ export const privacy: Record<Language, LegalDocument> = {
         blocks: [
           { kind: 'p', text: 'Business and accounting records — sales, purchases, payments, returns, daily closings, the audit trail and subscription records — are kept for [[blocker:retention_period]].' },
           { kind: 'p', text: 'Verification codes expire after a few minutes. Signed-in sessions expire, and can be ended at any time.' },
+          { kind: 'p', text: 'Nothing is yet removed automatically after a set time: expired codes, ended sessions, request logs and imported files are kept until a retention schedule is decided. [[blocker:retention_period]]' },
         ],
       },
       {
         id: 'deletion',
         heading: 'Deleting an account',
         blocks: [
-          { kind: 'p', text: 'You can delete your account in the app. The account deletion page explains how, and what is removed and kept.' },
-          { kind: 'p', text: 'Deletion removes the person’s identity and contact details from the records in use, and every copy the app made of them that can be edited. The sealed audit trail and subscription history, and backups until they expire, are not edited. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
+          { kind: 'p', text: 'You can delete your account in the app; the deletion is confirmed with a code sent to your verified {deletionChannelName} number. The account deletion page explains how, and what is removed and kept.' },
+          { kind: 'p', text: 'Deletion removes the person’s identity and contact details from the records in use, and every copy the app made of them that can be edited. The sealed audit trail and subscription history, and backups until they expire, are not edited, nor are notifications already shown to other people of the business. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
         ],
       },
       {
@@ -164,6 +170,7 @@ export const privacy: Record<Language, LegalDocument> = {
   },
   fr: {
     version: '1.0 (projet)',
+    status: 'draft',
     title: 'Politique de confidentialité de Dukan ERP',
     summary: 'Comment {displayName} collecte, utilise, partage et conserve les informations personnelles dans Dukan ERP et sur ce site.',
     sections: [
@@ -201,6 +208,8 @@ export const privacy: Record<Language, LegalDocument> = {
               'Les dépenses avec une photo de reçu facultative, les retours, les remboursements, les clôtures quotidiennes et les comptages de caisse.',
             ],
           },
+          { kind: 'h3', text: 'Fichiers importés' },
+          { kind: 'list', items: ['Lorsqu’une entreprise importe un tableur — de stock, par exemple —, chaque ligne du fichier est conservée avec l’importation, afin que ce qui a été importé puisse être vérifié plus tard.'] },
           { kind: 'h3', text: 'Sécurité et audit' },
           {
             kind: 'list',
@@ -209,6 +218,7 @@ export const privacy: Record<Language, LegalDocument> = {
               'Pour chaque appareil ajouté à un compte : un libellé, la plateforme, le modèle et la version de l’application. Aucun IMEI ni empreinte matérielle de votre propre téléphone n’est collecté.',
               'Pour chaque message de vérification : le numéro ou l’adresse de destination, une empreinte à sens unique du code, les tentatives et l’état de l’envoi.',
               'Un journal d’audit des modifications : qui a modifié quoi, quand, et les valeurs avant et après la modification.',
+              'Les journaux de requêtes du service : l’adresse IP, l’identifiant de l’application ou du navigateur et l’adresse de chaque requête, qui peut contenir un IMEI ou un numéro de série recherché.',
             ],
           },
         ],
@@ -220,7 +230,7 @@ export const privacy: Record<Language, LegalDocument> = {
           {
             kind: 'list',
             items: [
-              'Aucune donnée de localisation (GPS).',
+              'Aucune localisation : l’application ne la demande pas et ne l’enregistre pas. Une photo de reçu est conservée telle que le fichier choisi ; si votre téléphone a enregistré dans le fichier l’endroit où la photo a été prise, cette information y reste.',
               'Aucun accès aux contacts de votre téléphone.',
               'L’appareil photo sert uniquement à scanner des codes-barres et des numéros IMEI ; aucune image n’est conservée. Une photo n’est enregistrée que lorsque vous joignez un reçu à une dépense.',
               'Aucun service de publicité, de mesure d’audience ou de rapport de plantage, et aucun cookie publicitaire ou de traçage.',
@@ -252,6 +262,7 @@ export const privacy: Record<Language, LegalDocument> = {
           { kind: 'p', text: 'Au sein d’une entreprise, chacun voit ce que permettent son rôle et les autorisations choisies par le propriétaire.' },
           { kind: 'p', text: 'L’équipe de la plateforme {displayName} voit les entreprises, leurs magasins, les noms et coordonnées de leurs comptes, leurs abonnements et les paiements enregistrés pour ces abonnements.' },
           { kind: 'p', text: 'Lorsque l’envoi par WhatsApp est activé, les codes de vérification et les messages de service passent par la plateforme WhatsApp Business de Meta, qui reçoit le numéro de destination et le message.' },
+          { kind: 'p', text: 'Lorsque l’envoi par e-mail est activé, les codes de vérification et les messages de service passent par un prestataire d’envoi d’e-mails, qui reçoit l’adresse de destination et le message. [[blocker:processors]]' },
           { kind: 'p', text: 'Hébergement et autres prestataires : [[blocker:processors]]' },
         ],
       },
@@ -283,14 +294,15 @@ export const privacy: Record<Language, LegalDocument> = {
         blocks: [
           { kind: 'p', text: 'Les données de l’entreprise et les données comptables — ventes, achats, paiements, retours, clôtures quotidiennes, journal d’audit et données d’abonnement — sont conservées pendant [[blocker:retention_period]].' },
           { kind: 'p', text: 'Les codes de vérification expirent au bout de quelques minutes. Les sessions ouvertes expirent et peuvent être fermées à tout moment.' },
+          { kind: 'p', text: 'Rien n’est encore supprimé automatiquement après un délai fixé : les codes expirés, les sessions fermées, les journaux de requêtes et les fichiers importés sont conservés jusqu’à ce qu’une durée de conservation soit décidée. [[blocker:retention_period]]' },
         ],
       },
       {
         id: 'deletion',
         heading: 'Supprimer un compte',
         blocks: [
-          { kind: 'p', text: 'Vous pouvez supprimer votre compte dans l’application. La page sur la suppression de compte explique comment, et ce qui est supprimé ou conservé.' },
-          { kind: 'p', text: 'La suppression retire l’identité et les coordonnées de la personne des données en service, et de toutes les copies modifiables que l’application en a faites. Le journal d’audit et l’historique de l’abonnement scellés, ainsi que les sauvegardes jusqu’à leur expiration, ne sont pas modifiés. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
+          { kind: 'p', text: 'Vous pouvez supprimer votre compte dans l’application ; la suppression est confirmée par un code envoyé à votre numéro {deletionChannelName} vérifié. La page sur la suppression de compte explique comment, et ce qui est supprimé ou conservé.' },
+          { kind: 'p', text: 'La suppression retire l’identité et les coordonnées de la personne des données en service, et de toutes les copies modifiables que l’application en a faites. Le journal d’audit et l’historique de l’abonnement scellés, ainsi que les sauvegardes jusqu’à leur expiration, ne sont pas modifiés, pas plus que les notifications déjà affichées à d’autres personnes de l’entreprise. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
         ],
       },
       {
@@ -319,6 +331,7 @@ export const privacy: Record<Language, LegalDocument> = {
   },
   ar: {
     version: '1.0 (مسودة)',
+    status: 'draft',
     title: 'سياسة الخصوصية في Dukan ERP',
     summary: 'كيف تجمع {displayName} المعلومات الشخصية وتستخدمها وتشاركها وتحتفظ بها في Dukan ERP وعلى هذا الموقع.',
     sections: [
@@ -356,6 +369,8 @@ export const privacy: Record<Language, LegalDocument> = {
               'المصروفات مع صورة إيصال اختيارية، والمرتجعات، والمبالغ المستردّة، والإغلاقات اليومية، وعدّ الصندوق.',
             ],
           },
+          { kind: 'h3', text: 'الملفات المستوردة' },
+          { kind: 'list', items: ['عندما تستورد مؤسسة جدول بيانات — للمخزون مثلًا — يُحتفَظ بكل صف من الملف مع عملية الاستيراد، حتى يمكن التحقق لاحقًا مما استُورد.'] },
           { kind: 'h3', text: 'الأمان والتدقيق' },
           {
             kind: 'list',
@@ -364,6 +379,7 @@ export const privacy: Record<Language, LegalDocument> = {
               'لكل جهاز يُضاف إلى الحساب: تسمية، والمنصة، والطراز، وإصدار التطبيق. ولا يُجمع رقم IMEI أو أي بصمة عتادية لهاتفك أنت.',
               'لكل رسالة تحقق: الرقم أو العنوان المرسَل إليه، وبصمة أحادية الاتجاه للرمز، والمحاولات، وحالة الإرسال.',
               'سجل تدقيق للتعديلات: من عدّل ماذا ومتى، والقيم قبل التعديل وبعده.',
+              'سجلات طلبات الخدمة: عنوان IP، ومعرّف التطبيق أو المتصفح، وعنوان كل طلب، وقد يتضمن رقم IMEI أو رقمًا تسلسليًا يجري البحث عنه.',
             ],
           },
         ],
@@ -375,7 +391,7 @@ export const privacy: Record<Language, LegalDocument> = {
           {
             kind: 'list',
             items: [
-              'لا نجمع أي بيانات موقع (GPS).',
+              'لا نجمع موقعك: فالتطبيق لا يطلبه ولا يسجّله. وتُحفَظ صورة الإيصال كما هو الملف الذي تختاره، فإذا سجّل هاتفك داخل الملف مكان التقاط الصورة، بقيت هذه المعلومة فيه.',
               'لا نصل إلى جهات الاتصال في هاتفك.',
               'تُستخدم الكاميرا فقط لمسح الرموز الشريطية وأرقام IMEI، ولا تُحفظ أي صورة. ولا تُحفظ صورة إلا حين ترفق إيصالًا بأحد المصروفات.',
               'لا خدمات إعلانية أو تحليلية أو لتقارير الأعطال، ولا ملفات تعريف ارتباط إعلانية أو للتتبع.',
@@ -407,6 +423,7 @@ export const privacy: Record<Language, LegalDocument> = {
           { kind: 'p', text: 'داخل الشركة، يرى كل شخص ما يسمح به دوره وخيارات الصلاحيات التي يحدّدها المالك.' },
           { kind: 'p', text: 'يرى فريق منصة {displayName} الشركاتِ ومتاجرها، وأسماء حساباتها وبيانات الاتصال بها، واشتراكاتها، والمدفوعات المسجّلة لتلك الاشتراكات.' },
           { kind: 'p', text: 'عند تفعيل الإرسال عبر واتساب، تُرسَل رموز التحقق ورسائل الخدمة عبر منصة WhatsApp Business التابعة لشركة Meta، التي تتلقّى الرقم المرسَل إليه والرسالة.' },
+          { kind: 'p', text: 'عند تفعيل الإرسال عبر البريد الإلكتروني، تُرسَل رموز التحقق ورسائل الخدمة عبر مقدّم خدمة لإرسال البريد الإلكتروني، يتلقّى العنوان المرسَل إليه والرسالة. [[blocker:processors]]' },
           { kind: 'p', text: 'الاستضافة ومقدّمو الخدمات الآخرون: [[blocker:processors]]' },
         ],
       },
@@ -438,14 +455,15 @@ export const privacy: Record<Language, LegalDocument> = {
         blocks: [
           { kind: 'p', text: 'يُحتفَظ بسجلات الشركة والسجلات المحاسبية — المبيعات والمشتريات والمدفوعات والمرتجعات والإغلاقات اليومية وسجل التدقيق وسجلات الاشتراك — لمدة [[blocker:retention_period]].' },
           { kind: 'p', text: 'تنتهي صلاحية رموز التحقق بعد بضع دقائق. وتنتهي الجلسات المفتوحة، ويمكن إنهاؤها في أي وقت.' },
+          { kind: 'p', text: 'لا يُحذف شيء تلقائيًا بعد مدة محددة حتى الآن: تُحفَظ الرموز المنتهية والجلسات المنتهية وسجلات الطلبات والملفات المستوردة إلى أن تُحدَّد مدة الاحتفاظ. [[blocker:retention_period]]' },
         ],
       },
       {
         id: 'deletion',
         heading: 'حذف الحساب',
         blocks: [
-          { kind: 'p', text: 'يمكنك حذف حسابك من التطبيق. وتشرح صفحة حذف الحساب الطريقة، وما يُحذف وما يُحتفَظ به.' },
-          { kind: 'p', text: 'يزيل الحذف هوية الشخص وبيانات الاتصال به من السجلات المستعملة، ومن كل نسخة قابلة للتعديل صنعها التطبيق منها. ولا يُعدَّل سجل التدقيق وسجل الاشتراك المختومان، ولا النسخ الاحتياطية حتى تنتهي صلاحيتها. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
+          { kind: 'p', text: 'يمكنك حذف حسابك من التطبيق؛ ويُؤكَّد الحذف برمز يُرسَل إلى رقم {deletionChannelName} المتحقَّق منه. وتشرح صفحة حذف الحساب الطريقة، وما يُحذف وما يُحتفَظ به.' },
+          { kind: 'p', text: 'يزيل الحذف هوية الشخص وبيانات الاتصال به من السجلات المستعملة، ومن كل نسخة قابلة للتعديل صنعها التطبيق منها. ولا يُعدَّل سجل التدقيق وسجل الاشتراك المختومان، ولا النسخ الاحتياطية حتى تنتهي صلاحيتها، ولا الإشعارات التي عُرضت بالفعل على أشخاص آخرين في المؤسسة. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
         ],
       },
       {

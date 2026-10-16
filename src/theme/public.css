@@ -435,6 +435,64 @@ mark.pending {
   }
 }
 
+/* A legal text TSX-MR has not approved says so above everything else (brief of 2026-10-16) */
+.legal-draft {
+  margin: 0 0 16px;
+}
+.legal-related {
+  border-block-start: 1px solid var(--border);
+  margin-block-start: 32px;
+  padding-block-start: 16px;
+}
+.legal-related h2 {
+  font-size: 1.05rem;
+  margin: 0 0 8px;
+}
+.legal-links {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+  padding: 0;
+}
+.legal-links a {
+  display: inline-block;
+  min-block-size: 44px;
+  padding-block: 10px;
+}
+
+/* The pages the mobile app opens: the product, the languages, the text — nothing else */
+.in-app-header .chrome-bar {
+  justify-content: space-between;
+}
+.in-app-footer .container {
+  display: grid;
+  gap: 8px;
+}
+
+/* A legal page prints as its text: no navigation, no controls, links written out */
+@media print {
+  .chrome-header,
+  .skip-link,
+  .preview-banner,
+  .theme-choice,
+  .footer-grid,
+  .toc {
+    display: none !important;
+  }
+  body {
+    background: white;
+    color: black;
+  }
+  .doc a[href^='mailto:']::after {
+    content: ' (' attr(href) ')';
+  }
+  .doc-section {
+    break-inside: avoid-page;
+  }
+}
+
 /* The one inline style the console had (a checkbox), as a class, so the CSP needs no 'unsafe-inline' */
 .checkbox-inline {
   inline-size: auto;

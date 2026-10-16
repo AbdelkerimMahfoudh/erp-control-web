@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
-import { about, accountDeletion, applicationStatus, contact, login, privacy, products, support, terms } from '../../content';
+import { about, accountDeletion, applicationStatus, contact, legalNotice, login, privacy, privacyChoices, products, security, support, terms } from '../../content';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
-import { ContactAddresses, LegalView, OrgDetails, PageIntro, ProductMark, Sections } from '../../components/public/blocks';
+import { ContactAddresses, LegalLinks, LegalView, OrgDetails, PageIntro, ProductMark, Sections, useLegalPath } from '../../components/public/blocks';
 import { RichText } from '../../components/public/RichText';
 
 /**
@@ -77,6 +77,7 @@ export function Contact() {
 
 export function Support() {
   const { lang } = useI18n();
+  const to = useLegalPath();
   const doc = support[lang];
   return (
     <article className="public-page doc">
@@ -86,8 +87,15 @@ export function Support() {
         after={{
           deletion: (
             <p>
-              <Link to={pathOf('accountDeletion', lang)}>
+              <Link to={to('accountDeletion')}>
                 <RichText text={accountDeletion[lang].title} />
+              </Link>
+            </p>
+          ),
+          security: (
+            <p>
+              <Link to={to('security')}>
+                <RichText text={security[lang].title} />
               </Link>
             </p>
           ),
@@ -100,7 +108,7 @@ export function Support() {
 
 export function Privacy() {
   const { lang } = useI18n();
-  return <LegalView doc={privacy[lang]} />;
+  return <LegalView doc={privacy[lang]} after={{ contact: <ContactAddresses /> }} />;
 }
 
 export function Terms() {
@@ -111,6 +119,22 @@ export function Terms() {
 export function AccountDeletion() {
   const { lang } = useI18n();
   return <LegalView doc={accountDeletion[lang]} />;
+}
+
+export function PrivacyChoices() {
+  const { lang } = useI18n();
+  return <LegalView doc={privacyChoices[lang]} after={{ contact: <ContactAddresses /> }} />;
+}
+
+/** The publisher: who TSX-MR is, as it registered — never more than it supplied — and every policy. */
+export function LegalNotice() {
+  const { lang } = useI18n();
+  return <LegalView doc={legalNotice[lang]} after={{ entity: <OrgDetails />, contact: <ContactAddresses />, policies: <LegalLinks /> }} />;
+}
+
+export function Security() {
+  const { lang } = useI18n();
+  return <LegalView doc={security[lang]} />;
 }
 
 export function ApplicationStatus() {

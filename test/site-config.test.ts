@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { formatProblems, INPUTS, looksLikeTestValue, readInputs, releaseProblems, type InputName } from '../src/config/schema';
 import { BLOCKERS } from '../src/content/blockers';
-import { publishedBlockers } from '../src/content';
+import { publishedBlockers, publishedDrafts, publishedPlaceholders } from '../src/content';
 
 /** Plausible, invented values with no test marker — a release must accept them when nothing else blocks it. */
 const COMPLETE: Record<string, string> = {
@@ -14,6 +14,10 @@ const COMPLETE: Record<string, string> = {
   VITE_ORGANIZATION_ADDRESS: 'Street 1',
   VITE_SUPPORT_EMAIL: 'support@company-domain.mr',
   VITE_PRIVACY_EMAIL: 'privacy@company-domain.mr',
+  VITE_SECURITY_EMAIL: 'security@company-domain.mr',
+  VITE_SUPPORT_HOURS: 'Sunday to Thursday, 9:00 to 17:00 (Nouakchott time)',
+  VITE_SUPPORT_RESPONSE_TIME: 'Within two working days',
+  VITE_SUPPORT_LANGUAGES: 'Arabic, French and English',
   VITE_ACCOUNT_DELETION_CHANNEL: 'whatsapp',
   VITE_LEGAL_EFFECTIVE_DATE: '2026-11-01',
 };
@@ -61,6 +65,31 @@ describe('the production refusal (docs/74 §3)', () => {
       const found = releaseProblems({ ...COMPLETE, [env]: value }, []);
       expect({ env, value, found: found.map((p) => `${p.env}:${p.problem}`) }).toEqual({ env, value, found: [`${env}:${problem}`] });
     }
+  });
+
+  it('refuses a placeholder for a fact the owner has not supplied, wherever it is, and never fills it in', () => {
+    for (const value of ['[TO BE PROVIDED]', '[ to be confirmed ]', 'TBD', 'Registered Name SARL (TODO)', '[placeholder]']) {
+      const found = releaseProblems({ ...COMPLETE, VITE_ORGANIZATION_LEGAL_NAME: value }, []);
+      expect({ value, found: found.map((p) => `${p.env}:${p.problem}`) }).toEqual({ value, found: ['VITE_ORGANIZATION_LEGAL_NAME:placeholder'] });
+    }
+    const inText = releaseProblems(COMPLETE, [], { drafts: [], placeholders: ['Support hours: [TO BE PROVIDED]'] });
+    expect(inText.map((p) => p.problem)).toEqual(['placeholder']);
+    // Read back, a blank stays blank in production — never a guessed value.
+    const { inputs } = readInputs({}, 'production');
+    for (const name of ['legalName', 'legalForm', 'registrationNumber', 'address', 'city', 'supportEmail', 'privacyEmail', 'securityEmail', 'supportHours', 'supportLanguages', 'supportResponseTime', 'publicSiteOrigin'] as InputName[]) {
+      expect({ name, value: inputs[name] }).toEqual({ name, value: '' });
+    }
+  });
+
+  it('refuses a legal document still marked draft, by name', () => {
+    const problems = releaseProblems(COMPLETE, [], { drafts: ['privacy', 'terms'], placeholders: [] });
+    expect(problems.map((p) => `${p.problem}:${p.detail.split(':')[0]}`)).toEqual(['legal_draft:privacy', 'legal_draft:terms']);
+    expect(problems[0]!.detail).toMatch(/DRAFT — REQUIRES TSX-MR APPROVAL/);
+  });
+
+  it('every legal document is a draft today, so production is refused until TSX-MR approves each', () => {
+    expect(publishedDrafts()).toEqual(['accountDeletion', 'legalNotice', 'privacy', 'privacyChoices', 'security', 'terms']);
+    expect(publishedPlaceholders()).toEqual([]);
   });
 
   it('the published texts carry blockers today, so a production build is refused until they are decided', () => {

@@ -2,7 +2,7 @@ import { loadEnv, type Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { formatProblems, releaseProblems } from './src/config/schema';
-import { publishedBlockers } from './src/content';
+import { publishedBlockers, publishedDrafts, publishedPlaceholders } from './src/content';
 
 /**
  * The control website: the TSX-MR public site, the Owner account area and the Super Admin console (docs/68, docs/74).
@@ -22,7 +22,7 @@ function releaseGuard(): Plugin {
     configResolved(config) {
       if (config.mode !== 'production') return;
       const env = loadEnv(config.mode, config.root, 'VITE_');
-      const problems = releaseProblems(env, publishedBlockers());
+      const problems = releaseProblems(env, publishedBlockers(), { drafts: publishedDrafts(), placeholders: publishedPlaceholders() });
       if (problems.length > 0) throw new Error(formatProblems(problems));
     },
   };

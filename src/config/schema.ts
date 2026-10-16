@@ -45,7 +45,10 @@ export const INPUTS = {
   supportEmail: { env: 'VITE_SUPPORT_EMAIL', kind: 'email', required: true, preview: 'support@preview.invalid', label: 'Support email' },
   privacyEmail: { env: 'VITE_PRIVACY_EMAIL', kind: 'email', required: true, preview: 'privacy@preview.invalid', label: 'Privacy email' },
   commercialEmail: { env: 'VITE_COMMERCIAL_EMAIL', kind: 'email', required: false, preview: 'sales@preview.invalid', label: 'Commercial email' },
-  securityEmail: { env: 'VITE_SECURITY_EMAIL', kind: 'email', required: false, preview: 'security@preview.invalid', label: 'Security contact email (security.txt)' },
+  securityEmail: { env: 'VITE_SECURITY_EMAIL', kind: 'email', required: true, preview: 'security@preview.invalid', label: 'Security contact email: the /security page and security.txt' },
+  supportHours: { env: 'VITE_SUPPORT_HOURS', kind: 'text', required: true, preview: '[TEST] Support hours', label: 'When support answers, in words (days, hours and time zone), as TSX-MR commits to them' },
+  supportLanguages: { env: 'VITE_SUPPORT_LANGUAGES', kind: 'text', required: true, preview: '[TEST] Support languages', label: 'The languages support answers in, in words, as TSX-MR commits to them' },
+  supportResponseTime: { env: 'VITE_SUPPORT_RESPONSE_TIME', kind: 'text', required: true, preview: '[TEST] Response time', label: 'How soon support replies, in words, as TSX-MR commits to it' },
   supportWhatsapp: { env: 'VITE_SUPPORT_WHATSAPP', kind: 'phone', required: false, preview: '', label: 'Support WhatsApp number' },
   appleAppStoreUrl: { env: 'VITE_APPLE_APP_STORE_URL', kind: 'https-url', required: false, preview: '', label: 'App Store listing, once the app is published there' },
   googlePlayUrl: { env: 'VITE_GOOGLE_PLAY_URL', kind: 'https-url', required: false, preview: '', label: 'Google Play listing, once the app is published there' },
@@ -58,6 +61,16 @@ export type SiteInputs = Record<InputName, string>;
 
 /** Anything that reads as a test value. A production build carrying one is refused. */
 const TEST_MARKERS = [/\[test\]/i, /\.invalid\b/i, /\bexample\.(com|org|net|test)\b/i, /\blocalhost\b/i, /\b127\.0\.0\.1\b/, /\btest value\b/i, /\blorem\b/i];
+
+/**
+ * A fact somebody meant to supply later — `[TO BE PROVIDED]`, `[TBD]`, `TODO`, `XXX`. Allowed in a preview, refused in
+ * a production build wherever it appears: an input or a published text. Never replaced by a guess.
+ */
+export const PLACEHOLDER_MARKERS = [/\[\s*to be (provided|confirmed|decided)\s*\]/i, /\[\s*tbd\s*\]/i, /\btbd\b/i, /\btodo\b/i, /\bxxx\b/i, /\[\s*placeholder\s*\]/i];
+
+export function looksLikePlaceholder(value: string): boolean {
+  return PLACEHOLDER_MARKERS.some((re) => re.test(value));
+}
 
 export function looksLikeTestValue(value: string): boolean {
   return TEST_MARKERS.some((re) => re.test(value));
@@ -116,15 +129,27 @@ export function readInputs(env: Record<string, string | undefined>, mode: BuildM
 export interface ReleaseProblem {
   input?: InputName;
   env?: string;
-  problem: 'missing' | 'malformed' | 'test_value' | 'not_https' | 'legal_blocker';
+  problem: 'missing' | 'malformed' | 'test_value' | 'placeholder' | 'not_https' | 'legal_blocker' | 'legal_draft';
   detail: string;
+}
+
+/** What the published texts still lack: documents not yet approved, and placeholder texts (docs/85). */
+export interface ContentState {
+  /** Legal documents still marked draft, by name. */
+  drafts: readonly string[];
+  /** Published texts that still carry a placeholder marker. */
+  placeholders: readonly string[];
 }
 
 /**
  * Why a production build must not be published. Empty means every required input is present, well formed and real,
- * and no legal blocker is left in the published texts.
+ * no legal blocker is left in the published texts, no legal document is still a draft and no text is a placeholder.
  */
-export function releaseProblems(env: Record<string, string | undefined>, legalBlockers: readonly { id: string; summary: string }[]): ReleaseProblem[] {
+export function releaseProblems(
+  env: Record<string, string | undefined>,
+  legalBlockers: readonly { id: string; summary: string }[],
+  content: ContentState = { drafts: [], placeholders: [] },
+): ReleaseProblem[] {
   const problems: ReleaseProblem[] = [];
   const { inputs } = readInputs(env, 'production');
   for (const [name, spec] of Object.entries(INPUTS) as [InputName, InputSpec][]) {
@@ -137,12 +162,18 @@ export function releaseProblems(env: Record<string, string | undefined>, legalBl
       problems.push({ input: name, env: spec.env, problem: 'test_value', detail: spec.label });
       continue;
     }
+    if (looksLikePlaceholder(value)) {
+      problems.push({ input: name, env: spec.env, problem: 'placeholder', detail: spec.label });
+      continue;
+    }
     if (!validFormat(spec.kind, value)) {
       const httpsKind = spec.kind === 'https-origin' || spec.kind === 'https-url';
       problems.push({ input: name, env: spec.env, problem: httpsKind && value.startsWith('http:') ? 'not_https' : 'malformed', detail: spec.label });
     }
   }
   for (const b of legalBlockers) problems.push({ problem: 'legal_blocker', detail: `${b.id}: ${b.summary}` });
+  for (const d of content.drafts) problems.push({ problem: 'legal_draft', detail: `${d}: still marked DRAFT — REQUIRES TSX-MR APPROVAL` });
+  for (const t of content.placeholders) problems.push({ problem: 'placeholder', detail: `a published text is a placeholder: “${t.slice(0, 80)}”` });
   return problems;
 }
 

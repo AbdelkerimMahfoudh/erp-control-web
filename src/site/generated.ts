@@ -5,7 +5,7 @@
  */
 import { LANGUAGES } from '../i18n/languages';
 import type { SiteInputs } from '../config/schema';
-import { pathOf, PROTECTED_PREFIXES, PUBLIC_ROUTES, TRIAL_LANDING } from './routes';
+import { IN_APP_PREFIX, LANGUAGE_PREFIX, pathOf, PROTECTED_PREFIXES, PUBLIC_ROUTES, TRIAL_LANDING } from './routes';
 
 /** The shell the protected areas load: no prerendered content, never indexed. */
 export const APP_SHELL = '/app-shell.html';
@@ -90,6 +90,8 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'>, preview: boolean)
   // as the page's files are asked for — with the address as referrer — before any script could refuse anything.
   for (const path of [TRIAL_LANDING, `${TRIAL_LANDING}/*`]) blocks.push(`${path}\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer`);
   blocks.push(`${APP_SHELL}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
+  // The pages the mobile app opens: public texts, never indexed (their public pages are).
+  for (const prefix of Object.values(LANGUAGE_PREFIX)) blocks.push(`${prefix}${IN_APP_PREFIX}/*\n  X-Robots-Tag: noindex, nofollow`);
   // Hashed assets never change; everything else is revalidated.
   blocks.push('/assets/*\n  Cache-Control: public, max-age=31536000, immutable');
   return `${blocks.join('\n\n')}\n`;

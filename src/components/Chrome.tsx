@@ -2,9 +2,9 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { SITE } from '../config/site';
 import { LANGUAGE_LABELS, LANGUAGES, storeLanguage, useI18n, type Language } from '../i18n';
-import { pathOf, publicRouteAt, type PublicRouteId } from '../site/routes';
+import { inAppPathOf, pathOf, publicRouteAt, type PublicRouteId } from '../site/routes';
 import { useTheme } from '../theme/theme';
-import { OrgMark, PreviewBanner } from './public/blocks';
+import { InAppContext, LegalLinks, OrgMark, PreviewBanner, ProductMark } from './public/blocks';
 
 /**
  * The frame around every page (docs/74 §4): the organization's identity, the public navigation, the languages and the
@@ -120,7 +120,16 @@ function Footer() {
     [t('footer.company'), [['about', t('nav.about')], ['contact', t('nav.contact')]]],
     [t('footer.product'), [['dukanErp', t('nav.dukanErp')], ['products', t('nav.products')], ['apply', t('nav.apply')]]],
     [t('footer.help'), [['support', t('nav.support')], ['applicationStatus', t('footer.applicationStatus')], ['accountDeletion', t('footer.deletion')]]],
-    [t('footer.legal'), [['privacy', t('footer.privacy')], ['terms', t('footer.terms')]]],
+    [
+      t('footer.legal'),
+      [
+        ['privacy', t('footer.privacy')],
+        ['privacyChoices', t('footer.privacyChoices')],
+        ['terms', t('footer.terms')],
+        ['security', t('footer.security')],
+        ['legalNotice', t('footer.legalNotice')],
+      ],
+    ],
   ];
   const identity = [SITE.legalName, SITE.legalForm, SITE.registrationNumber].filter(Boolean).join(' · ');
   return (
@@ -160,5 +169,45 @@ function Footer() {
         </label>
       </div>
     </footer>
+  );
+}
+
+/**
+ * The frame of the pages the mobile app opens (`/in-app/…`): the product, the page in the three languages, the text,
+ * and the other legal pages — no navigation, no sign-in, no product, pricing or application link, so nothing reached
+ * from the app leads to buying access. Its links stay among the same pages.
+ */
+export function InAppChrome({ id, children }: { id: PublicRouteId; children: ReactNode }) {
+  const { t, lang } = useI18n();
+  return (
+    <InAppContext.Provider value={true}>
+      <a className="skip-link" href="#main">
+        {t('skip.toMain')}
+      </a>
+      <PreviewBanner />
+      <header className="chrome-header in-app-header">
+        <div className="container chrome-bar">
+          <ProductMark />
+          <ul className="languages" aria-label={t('nav.languages')}>
+            {LANGUAGES.map((l) => (
+              <li key={l}>
+                <Link to={inAppPathOf(id, l)} lang={l} hrefLang={l} aria-current={l === lang ? 'true' : undefined} onClick={() => storeLanguage(l)}>
+                  {LANGUAGE_LABELS[l]}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </header>
+      <main id="main" className="container">
+        {children}
+      </main>
+      <footer className="chrome-footer in-app-footer">
+        <div className="container">
+          <LegalLinks />
+          <p className="small">{t('footer.rights', { year: String(new Date().getFullYear()), name: SITE.displayName })}</p>
+        </div>
+      </footer>
+    </InAppContext.Provider>
   );
 }

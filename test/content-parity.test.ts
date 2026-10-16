@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DOCUMENTS, dukanErp, home, stringsOf } from '../src/content';
+import { DOCUMENTS, dukanErp, home, stringsOf, terms } from '../src/content';
 import { BLOCKERS } from '../src/content/blockers';
 import { blockersIn, inputsIn, shapeOf, textsOf } from '../src/content/types';
 import { INPUTS } from '../src/config/schema';
@@ -79,7 +79,11 @@ describe('the public texts in three languages', () => {
   it('names no payment provider and makes no availability or endorsement claim', () => {
     for (const [name, value] of ALL) {
       for (const lang of LANGS) {
-        const all = stringsOf(value[lang]).join('\n');
+        // The terms' one denial — Dukan ERP is not Bankily or Sedad (brief of 2026-10-16) — is the only provider mention.
+        const denial = name === 'terms' ? (value[lang] as typeof terms.en).sections.find((s) => s.id === 'not_bank')!.blocks[0] : null;
+        const all = stringsOf(value[lang])
+          .filter((t) => !denial || t !== (denial as { text: string }).text)
+          .join('\n');
         expect({ name, lang, provider: /bankily|masrivi|sedad|bimbank/i.test(all) }).toEqual({ name, lang, provider: false });
         expect({ name, lang, store: /download on the|get it on|available on the app store/i.test(all) }).toEqual({ name, lang, store: false });
         expect({ name, lang, filler: /lorem|ipsum|todo|tbd/i.test(all) }).toEqual({ name, lang, filler: false });

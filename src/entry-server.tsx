@@ -18,7 +18,7 @@ import type { PublicRouteId } from './site/routes';
 
 export { BUILD_MODE, IS_PREVIEW, SITE, FILLED_INPUTS };
 export { LANGUAGES, isRtl } from './i18n/languages';
-export { PUBLIC_ROUTES, pathOf } from './site/routes';
+export { IN_APP_ROUTE_IDS, PUBLIC_ROUTES, inAppPathOf, pathOf } from './site/routes';
 export { APP_SHELL, fileForPath, headersFile, redirectsFile, robotsTxt, securityTxt, sitemapXml, webManifest } from './site/generated';
 export { translate } from './i18n';
 
@@ -36,8 +36,8 @@ export function render(url: string, lang: Language): string {
   );
 }
 
-/** The head of a public page, as markup. */
-export function headOf(id: PublicRouteId, lang: Language): string {
+/** The head of a public page, as markup — or of its in-app variant: never indexed, the public page canonical. */
+export function headOf(id: PublicRouteId, lang: Language, inApp = false): string {
   const meta = metaFor(id, lang);
   const values = textValues(lang);
   return headHtml(
@@ -50,6 +50,7 @@ export function headOf(id: PublicRouteId, lang: Language): string {
       filled: FILLED_INPUTS,
       preview: IS_PREVIEW,
       productName: 'Dukan ERP',
+      inApp,
     }),
   );
 }

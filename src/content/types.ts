@@ -28,9 +28,14 @@ export interface Document {
   sections: Section[];
 }
 
-/** A legal text names what it is and since when (the brief: version and effective date on every legal page). */
+/**
+ * A legal text names what it is, since when, and whether TSX-MR has approved it (the brief: version and effective date
+ * on every legal page; every text labelled DRAFT — REQUIRES TSX-MR APPROVAL until its facts are supplied and approved).
+ * Only TSX-MR, with its legal adviser, turns `draft` into `approved` — a production build refuses a draft.
+ */
 export interface LegalDocument extends Document {
   version: string;
+  status: 'draft' | 'approved';
 }
 
 export const BLOCKER_TOKEN = /\[\[blocker:([a-z0-9_]+)\]\]/g;

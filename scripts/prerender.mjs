@@ -37,6 +37,15 @@ for (const lang of ssr.LANGUAGES) {
   }
 }
 
+// 2b. The legal and support pages as the mobile app opens them: same texts, no navigation, never indexed.
+for (const lang of ssr.LANGUAGES) {
+  for (const id of ssr.IN_APP_ROUTE_IDS) {
+    const url = ssr.inAppPathOf(id, lang);
+    write(ssr.fileForPath(url), page(lang, ssr.headOf(id, lang, true), ssr.render(url, lang)));
+    pages++;
+  }
+}
+
 // 3. The page for any other address (the host serves 404.html with a 404 status).
 const notFoundTitle = `${ssr.translate('en', 'notFound.title')} — ${ssr.SITE.displayName}`;
 write('404.html', page('en', `<title>${esc(notFoundTitle)}</title>\n    <meta name="robots" content="noindex, nofollow" />`, ssr.render('/404', 'en')));

@@ -22,6 +22,8 @@ export interface HeadInput {
   preview: boolean;
   /** The product's own name, for the Dukan ERP page's structured data. */
   productName: string;
+  /** The page as the mobile app opens it: never indexed, its public page canonical. */
+  inApp?: boolean;
 }
 
 export interface Head {
@@ -43,7 +45,7 @@ export function headFor(h: HeadInput): Head {
   const route = routeById(h.id);
   const origin = h.site.publicSiteOrigin;
   const canonical = absolute(origin, pathOf(h.id, h.lang));
-  const indexable = route.indexable && !h.preview;
+  const indexable = route.indexable && !h.preview && !h.inApp;
   const alternates = origin
     ? [
         ...LANGUAGES.map((l) => ({ hreflang: l, href: `${origin}${pathOf(h.id, l)}` })),

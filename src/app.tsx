@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ComponentType } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { Chrome } from './components/Chrome';
+import { Chrome, InAppChrome } from './components/Chrome';
 import { PageHead } from './components/public/blocks';
 import { SITE } from './config/site';
 import { I18nProvider, readStoredLanguage, useI18n } from './i18n';
@@ -8,12 +8,12 @@ import { LANGUAGES } from './i18n/languages';
 import { Home } from './pages/public/Home';
 import { DukanErp } from './pages/public/DukanErp';
 import { Apply } from './pages/public/Apply';
-import { About, AccountDeletion, ApplicationStatus, Contact, Login, NotFound, Privacy, Products, Support, Terms } from './pages/public/Legal';
+import { About, AccountDeletion, ApplicationStatus, Contact, LegalNotice, Login, NotFound, Privacy, PrivacyChoices, Products, Security, Support, Terms } from './pages/public/Legal';
 import { Account } from './pages/account/Account';
 import { Admin } from './pages/admin/Admin';
 import { metaFor } from './site/meta';
 import { applyProtectedHead } from './site/head';
-import { isProtectedPath, localizedPath, PUBLIC_ROUTES, splitLanguage, type PublicRouteId } from './site/routes';
+import { inAppRouteAt, isProtectedPath, localizedPath, PUBLIC_ROUTES, splitLanguage, type PublicRouteId } from './site/routes';
 
 const PAGES: Record<PublicRouteId, ComponentType> = {
   home: Home,
@@ -25,6 +25,9 @@ const PAGES: Record<PublicRouteId, ComponentType> = {
   privacy: Privacy,
   terms: Terms,
   accountDeletion: AccountDeletion,
+  privacyChoices: PrivacyChoices,
+  legalNotice: LegalNotice,
+  security: Security,
   apply: Apply,
   applicationStatus: ApplicationStatus,
   login: Login,
@@ -40,6 +43,16 @@ export function App() {
   const { pathname } = useLocation();
   if (isProtectedPath(pathname)) return <ProtectedArea />;
   const { lang } = splitLanguage(pathname);
+  const inApp = inAppRouteAt(pathname);
+  if (inApp) {
+    return (
+      <I18nProvider fixed={lang}>
+        <InAppChrome id={inApp.route.id}>
+          <PublicPage id={inApp.route.id} />
+        </InAppChrome>
+      </I18nProvider>
+    );
+  }
   return (
     <I18nProvider fixed={lang}>
       <PreferredLanguage />

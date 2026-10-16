@@ -1,11 +1,22 @@
-import { useEffect, type ReactNode } from 'react';
+import { Link } from 'react-router-dom';
+import { createContext, useContext, useEffect, type ReactNode } from 'react';
 import { BUILD_MODE, FILLED_INPUTS, IS_PREVIEW, SITE } from '../../config/site';
 import type { Block, Document, LegalDocument } from '../../content/types';
 import { useI18n } from '../../i18n';
 import { formatDate } from '../../lib/format';
 import { applyHead, headFor } from '../../site/head';
-import type { PublicRouteId } from '../../site/routes';
+import { inAppPathOf, pathOf, type PublicRouteId } from '../../site/routes';
 import { plainText, RichText, textValues } from './RichText';
+
+/** True inside the pages the mobile app opens (`/in-app/…`): their links stay among those pages. */
+export const InAppContext = createContext(false);
+
+/** The address of a legal or support page from where the reader is: the public site, or the app's own pages. */
+export function useLegalPath(): (id: PublicRouteId) => string {
+  const inApp = useContext(InAppContext);
+  const { lang } = useI18n();
+  return (id) => (inApp ? inAppPathOf(id, lang) : pathOf(id, lang));
+}
 
 /** The organization, as a text mark (docs/74 §4: no logo is approved; this component is where one goes). */
 export function OrgMark() {
@@ -106,12 +117,21 @@ export function PageIntro({ title, summary, children }: { title: string; summary
   );
 }
 
-/** A legal text: what it is, which version, since when, and its sections with a table of contents. */
-export function LegalView({ doc }: { doc: LegalDocument }) {
+/**
+ * A legal text: what it is, which version, since when, whether TSX-MR has approved it, and its sections with a table
+ * of contents. A draft says so at the top in every language and every mode — a production build refuses one, so the
+ * real site never shows the label.
+ */
+export function LegalView({ doc, after }: { doc: LegalDocument; after?: Record<string, ReactNode> }) {
   const { t, lang } = useI18n();
   const effective = SITE.legalEffectiveDate;
   return (
     <article className="doc legal">
+      {doc.status === 'draft' ? (
+        <p className="notice tone-warn legal-draft" role="note">
+          <strong>{t('legal.draft')}</strong>
+        </p>
+      ) : null}
       <PageIntro title={doc.title} summary={doc.summary}>
         <p className="legal-meta">
           <span>{t('legal.version', { version: doc.version })}</span>
@@ -133,8 +153,36 @@ export function LegalView({ doc }: { doc: LegalDocument }) {
           ))}
         </ol>
       </nav>
-      <Sections doc={doc} />
+      <Sections doc={doc} after={after} />
+      <footer className="legal-related" aria-labelledby="related-h">
+        <h2 id="related-h">{t('legal.related')}</h2>
+        <LegalLinks />
+      </footer>
     </article>
+  );
+}
+
+/** The legal and support pages, as links in the current language — on every legal page and the legal notice. */
+export function LegalLinks() {
+  const { t } = useI18n();
+  const to = useLegalPath();
+  const pages: [PublicRouteId, string][] = [
+    ['privacy', t('footer.privacy')],
+    ['privacyChoices', t('footer.privacyChoices')],
+    ['terms', t('footer.terms')],
+    ['accountDeletion', t('footer.deletion')],
+    ['support', t('footer.support')],
+    ['security', t('footer.security')],
+    ['legalNotice', t('footer.legalNotice')],
+  ];
+  return (
+    <ul className="legal-links">
+      {pages.map(([id, label]) => (
+        <li key={id}>
+          <Link to={to(id)}>{label}</Link>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -202,6 +250,7 @@ export function ContactAddresses() {
 /** Applies the page's head after a navigation; the prerendered file already carries the same tags. */
 export function PageHead({ id, title, description }: { id: PublicRouteId; title: string; description: string }) {
   const { lang } = useI18n();
+  const inApp = useContext(InAppContext);
   useEffect(() => {
     const values = textValues(lang);
     applyHead(
@@ -214,8 +263,9 @@ export function PageHead({ id, title, description }: { id: PublicRouteId; title:
         filled: FILLED_INPUTS,
         preview: IS_PREVIEW,
         productName: 'Dukan ERP',
+        inApp,
       }),
     );
-  }, [id, lang, title, description]);
+  }, [id, lang, title, description, inApp]);
   return null;
 }
