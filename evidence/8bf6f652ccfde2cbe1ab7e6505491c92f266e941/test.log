@@ -1,0 +1,202 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:4:49). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:5:75). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./legal-choices" without a file extension (src/content/index.ts:10:32). Add the file extension
+  - import "./legal-notice" without a file extension (src/content/index.ts:11:29). Add the file extension
+  - import "./legal-security" without a file extension (src/content/index.ts:12:26). Add the file extension
+  - import "./home" without a file extension (src/content/index.ts:13:22). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:14:26). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:15:40). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:16:38). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:17:72). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/trial-console.test.tsx [2m([22m[2m40 tests[22m[2m)[22m[33m 12616[2mms[22m[39m
+   [32m✓[39m the console: a business’s trial, recorded [2m(12)[22m
+     [33m[2m✓[22m[39m shows the eligibility and the claim with their exact instants, and that no decision creates or extends a trial[33m 679[2mms[22m[39m
+     [32m✓[39m an end date inside a running trial (R4-05) [2m(4)[22m
+       [33m[2m✓[22m[39m refused: a title of its own and the trial’s end in the business’s zone — not "something went wrong", not the server’s UTC sentence[33m 651[2mms[22m[39m
+       [33m[2m✓[22m[39m the end the server names in its refusal comes first, said in French in the business’s zone[33m 554[2mms[22m[39m
+   [32m✓[39m the console: a store or seat paid for during a trial (D176) [2m(25)[22m
+     [33m[2m✓[22m[39m confirmed during the trial: the outcome says when it starts — the server’s instant in the business’s zone — never that the store opened[33m 404[2mms[22m[39m
+     [33m[2m✓[22m[39m with no paid access approved yet: it starts with the first paid month — no date; the seat’s person waits for it to start[33m 355[2mms[22m[39m
+     [33m[2m✓[22m[39m confirmed with a paid period in force: the server opened the store, and the outcome says so — and nothing of a start to come[33m 356[2mms[22m[39m
+     [33m[2m✓[22m[39m a confirmation that would be charged again by the first paid period is refused in words: nothing was recorded, the request still waits[33m 375[2mms[22m[39m
+     [32m✓[39m every state in English [2m(6)[22m
+       [33m[2m✓[22m[39m confirmed during the trial: when it starts, in the business’s zone — never that the store opened[33m 346[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with no paid access approved yet: the first paid month, no date — and the seat’s person waits for it to start[33m 390[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with a paid period in force: the store was opened, and nothing of a start to come[33m 311[2mms[22m[39m
+       [33m[2m✓[22m[39m a confirmation the first paid period would charge again is refused in words: nothing recorded, the form kept[33m 359[2mms[22m[39m
+     [32m✓[39m every state in French [2m(6)[22m
+       [33m[2m✓[22m[39m confirmed during the trial: when it starts, in the business’s zone — never that the store opened[33m 374[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with no paid access approved yet: the first paid month, no date — and the seat’s person waits for it to start[33m 387[2mms[22m[39m
+       [33m[2m✓[22m[39m the seat’s person proves their contacts and waits for the seat to start — its start is never a proof[33m 373[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with a paid period in force: the store was opened, and nothing of a start to come[33m 409[2mms[22m[39m
+       [33m[2m✓[22m[39m a confirmation the first paid period would charge again is refused in words: nothing recorded, the form kept[33m 379[2mms[22m[39m
+     [32m✓[39m every state in Arabic [2m(6)[22m
+       [33m[2m✓[22m[39m confirmed during the trial: when it starts, in the business’s zone — never that the store opened[33m 401[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with no paid access approved yet: the first paid month, no date — and the seat’s person waits for it to start[33m 435[2mms[22m[39m
+       [33m[2m✓[22m[39m the seat’s person proves their contacts and waits for the seat to start — its start is never a proof[33m 398[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with a paid period in force: the store was opened, and nothing of a start to come[33m 457[2mms[22m[39m
+       [33m[2m✓[22m[39m a confirmation the first paid period would charge again is refused in words: nothing recorded, the form kept[33m 413[2mms[22m[39m
+     [33m[2m✓[22m[39m the business page says, above its requests, that what was paid for during the trial is not collected again — while one is scheduled, and once one started[33m 594[2mms[22m[39m
+     [33m[2m✓[22m[39m on the business page a scheduled row says when it starts and offers no action; the note in French and Arabic[33m 361[2mms[22m[39m
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m22 tests[22m[2m)[22m[33m 430[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 2499[2mms[22m[39m
+   [32m✓[39m Account: a store’s activity and its change [2m(9)[22m
+     [33m[2m✓[22m[39m lists each store with its activity; a warehouse offers no change[33m 526[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade is explained by the server’s own answer, then shows the amount the server recorded[33m 417[2mms[22m[39m
+ [32m✓[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2279[2mms[22m[39m
+   [32m✓[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 954[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the confirmation’s result on screen after the paid request leaves the queue[33m 461[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 761[2mms[22m[39m
+ [32m✓[39m test/trial-account.test.tsx [2m([22m[2m81 tests[22m[2m)[22m[33m 23270[2mms[22m[39m
+   [32m✓[39m the Owner’s trial card on /account [2m(6)[22m
+     [33m[2m✓[22m[39m an Owner who may claim sees the terms, the end the server would set — in the business’s zone — and one button[33m 653[2mms[22m[39m
+     [33m[2m✓[22m[39m a contact still to verify: says which and where, and offers no button[33m 373[2mms[22m[39m
+     [33m[2m✓[22m[39m no offer and no trial, a paid business after its trial, another role (403), an older API (404): no card, no error[33m 574[2mms[22m[39m
+   [32m✓[39m the setup instructions on the card [2m(21)[22m
+     [33m[2m✓[22m[39m names where the message went as the server says it: a channel with no current contact by its name, never a blank (R4-10)[33m 336[2mms[22m[39m
+     [33m[2m✓[22m[39m could not be sent, cannot be sent, not sent: each said honestly[33m 432[2mms[22m[39m
+     [33m[2m✓[22m[39m a message that went out, then no longer counted, in French and Arabic: the same sentences, each date isolated in the business’s zone[33m 524[2mms[22m[39m
+     [33m[2m✓[22m[39m a failed, unavailable or never-sent delivery still leaves the claim there and enabled — delivery is never a condition (R4-09)[33m 461[2mms[22m[39m
+     [33m[2m✓[22m[39m the attempts in French and Arabic, and no list when nothing was ever attempted[33m 469[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing can carry the instructions: no countdown to a limit, the button stays off and says why — however long one waits (R4-06)[33m 321[2mms[22m[39m
+     [33m[2m✓[22m[39m a refused send is said in words: too soon (with the server’s instant), nothing can be sent, no trial any more[33m 516[2mms[22m[39m
+   [32m✓[39m the setup link’s landing (/account/trial) [2m(12)[22m
+     [33m[2m✓[22m[39m takes the token from the email’s #t= out of the address at once, keeps it in memory only, and sends nothing before sign-in[33m 438[2mms[22m[39m
+     [33m[2m✓[22m[39m takes the token from the WhatsApp button’s ?t= out of the address at once, keeps it in memory only, and sends nothing before sign-in[33m 399[2mms[22m[39m
+     [33m[2m✓[22m[39m says what a link is worth when it no longer works, and offers the claim without it while the business can still claim[33m 1711[2mms[22m[39m
+     [33m[2m✓[22m[39m another account’s link: said, and one button signs out and keeps the link for the account it belongs to (R4-08)[33m 528[2mms[22m[39m
+     [33m[2m✓[22m[39m a link refused at the claim (it expired since it was checked): said, and the claim offered again without it — a new attempt, a new key[33m 326[2mms[22m[39m
+     [33m[2m✓[22m[39m a link the server could not check (its error, too many attempts, no network): the ordinary claim, without the link, and a word why (R4-07)[33m 768[2mms[22m[39m
+     [32m✓[39m sign-in without the link (the owner’s clarification) [2m(3)[22m
+       [33m[2m✓[22m[39m the instructions failed to go out; the Owner signs in normally on /account and starts the trial there — no token anywhere[33m 303[2mms[22m[39m
+       [33m[2m✓[22m[39m an expired link, then the Owner opens the business account normally: the same card and the claim, the token sent nowhere else[33m 471[2mms[22m[39m
+       [33m[2m✓[22m[39m nothing is claimed without the button — not on load, at sign-in or as the page reads the trial again — in every path[33m 1623[2mms[22m[39m
+   [32m✓[39m a store or seat paid for during the trial: "Paid · scheduled", and when it starts (D176) [2m(9)[22m
+     [33m[2m✓[22m[39m every status in its own words and colour, in English, French and Arabic — a paid add-on never reads as the renewal’s "scheduled"[33m 374[2mms[22m[39m
+   [32m✓[39m Apply ends signed in [2m(2)[22m
+     [33m[2m✓[22m[39m keeps the session the confirmation opens and leads to the account, where the eligible Owner sees the trial — Apply claims nothing[33m 859[2mms[22m[39m
+     [33m[2m✓[22m[39m an application the server does not call eligible says what it always said[33m 659[2mms[22m[39m
+ [32m✓[39m test/apply.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[33m 23693[2mms[22m[39m
+   [32m✓[39m Apply: a contact whose code cannot be sent now (C10) [2m(5)[22m
+     [33m[2m✓[22m[39m only the WhatsApp number, beside an email address: remove the number or try later — and without it, a new attempt goes through[33m 1780[2mms[22m[39m
+     [33m[2m✓[22m[39m every other case keeps the general refusal: a WhatsApp number alone[33m 827[2mms[22m[39m
+     [33m[2m✓[22m[39m every other case keeps the general refusal: the email[33m 717[2mms[22m[39m
+     [33m[2m✓[22m[39m every other case keeps the general refusal: both[33m 789[2mms[22m[39m
+     [33m[2m✓[22m[39m every other case keeps the general refusal: none named[33m 789[2mms[22m[39m
+   [32m✓[39m Apply: one attempt, one key (C11; the app’s R5-7) [2m(1)[22m
+     [33m[2m✓[22m[39m a retry of the same form keeps its key, so the server replays; a corrected field is a new attempt with a new key[33m 706[2mms[22m[39m
+   [32m✓[39m Apply: a code check that got no answer is never called a wrong code (R2-1 / C14 on the website) [2m(23)[22m
+     [33m[2m✓[22m[39m no answer (the network failed), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 743[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request was aborted), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 867[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request timed out), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 708[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 1055[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 936[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 772[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 1064[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 868[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 768[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 957[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 729[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 604[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got no answer from the API in time (504), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 835[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got an invalid one (502), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 808[2mms[22m[39m
+     [33m[2m✓[22m[39m a 503 is an answer — the request was not taken: an error, no account promised[33m 665[2mms[22m[39m
+     [33m[2m✓[22m[39m a lost answer, then the same code accepted after all: the application ends signed in, as it always does[33m 786[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer is an answer: a server error is said as one, and no account is promised[33m 750[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose body was cut off keeps its status — a refusal is still a refusal: the code is wrong, and no account is promised[33m 764[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose body was cut off keeps its status — a server error is still an error, and no account is promised[33m 710[2mms[22m[39m
+     [32m✓[39m a request the rate limit refused [2m(4)[22m
+       [33m[2m✓[22m[39m in English: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 743[2mms[22m[39m
+       [33m[2m✓[22m[39m in French: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 730[2mms[22m[39m
+       [33m[2m✓[22m[39m in Arabic: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 625[2mms[22m[39m
+       [33m[2m✓[22m[39m the application itself refused by the limit: wait a minute, the form kept as it was[33m 591[2mms[22m[39m
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1880[2mms[22m[39m
+   [32m✓[39m Account: the platform grant and its own dates [2m(6)[22m
+     [33m[2m✓[22m[39m an active grant says its own end, never the billing period’s start[33m 522[2mms[22m[39m
+ [32m✓[39m test/site-routes.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 177[2mms[22m[39m
+[90mstderr[2m | test/legal-pages.test.tsx[2m > [22m[2mthe public legal and support pages[2m > [22m[2mthe footer links to every legal and support page, on public and signed-in pages alike
+[22m[39mAn update to Account inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m test/admin-mfa.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 3352[2mms[22m[39m
+   [32m✓[39m signing in to the console [2m(3)[22m
+     [33m[2m✓[22m[39m a password leads to the code screen; the console opens only once the code is accepted[33m 1116[2mms[22m[39m
+     [33m[2m✓[22m[39m a recovery code can stand in for the authenticator[33m 609[2mms[22m[39m
+     [33m[2m✓[22m[39m with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once[33m 771[2mms[22m[39m
+   [32m✓[39m a decision’s step-up [2m(1)[22m
+     [33m[2m✓[22m[39m a wrong password or code keeps the dialog open with the reason, and the decision is never sent[33m 851[2mms[22m[39m
+ [32m✓[39m test/site-config.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m test/legal-pages.test.tsx [2m([22m[2m67 tests[22m[2m)[22m[33m 4929[2mms[22m[39m
+   [32m✓[39m the public legal and support pages [2m(44)[22m
+     [33m[2m✓[22m[39m /privacy renders with one heading, its language and direction, and asks the API nothing[33m 413[2mms[22m[39m
+     [33m[2m✓[22m[39m names TSX-MR as the operator on the privacy policy, the terms and the legal notice[33m 571[2mms[22m[39m
+ [32m✓[39m test/content-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 90[2mms[22m[39m
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 2119[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 1584[2mms[22m[39m
+   [32m✓[39m The Dukan ERP page: three prices and an estimate by activity (moved from the home page, docs/74) [2m(2)[22m
+     [33m[2m✓[22m[39m lists the three prices and sends one activity per store to the quote[33m 432[2mms[22m[39m
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1419[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns (on the Dukan ERP page)[33m 756[2mms[22m[39m
+     [33m[2m✓[22m[39m moves to the same page in Arabic, mirrors the document and keeps the language across visits[33m 496[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m test/throttle.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 2094[2mms[22m[39m
+   [32m✓[39m a request the API’s rate limit refused [2m(5)[22m
+     [33m[2m✓[22m[39m in English: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s[33m 761[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s[33m 322[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s[33m 320[2mms[22m[39m
+     [33m[2m✓[22m[39m a refusal of the API’s own, with its code — the code lock — keeps the server’s sentence, never "a minute"[33m 421[2mms[22m[39m
+ [32m✓[39m test/api-client.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m test/public-pages.test.tsx [2m([22m[2m50 tests[22m[2m)[22m[33m 5016[2mms[22m[39m
+   [32m✓[39m every public page in every language [2m(45)[22m
+     [33m[2m✓[22m[39m / renders in en[33m 525[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m19 passed[39m[22m[90m (19)[39m
+[2m      Tests [22m [1m[32m376 passed[39m[22m[90m (376)[39m
+[2m   Start at [22m 13:26:07
+[2m   Duration [22m 39.03s[2m (tests 77%, environment 16%, import 4%, transform 2%)[22m
+
+[2m    Isolate [22m [33m19 workers spawned[39m[2m · ~1.14s startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~6.07s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
