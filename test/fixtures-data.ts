@@ -173,10 +173,12 @@ export function allocation(over: Partial<SeatRequest>): SeatRequest {
 
 /*
  * The free trial (2026-10-13), as GET platform/my-subscription/trial answers it: UTC instants and the business's zone.
- * The zone is Africa/Casablanca (GMT+1) on purpose — neither the server's UTC nor the test runner's zone — so a page
- * that formatted a trial date in either would show another hour: 09:30 UTC is 10:30 there.
+ * The zone is Africa/Lagos (GMT+1) on purpose — neither the server's UTC nor the test runner's zone — so a page
+ * that formatted a trial date in either would show another hour: 09:30 UTC is 10:30 there. Lagos has no daylight
+ * saving and settled rules, so every Node's time-zone data agrees on that hour; Africa/Casablanca, used before, does
+ * not (newer data puts it on GMT in October 2026, and CI failed on every run from 4b61f79 to 8efa902).
  */
-export const TRIAL_ZONE = 'Africa/Casablanca';
+export const TRIAL_ZONE = 'Africa/Lagos';
 export const TRIAL_START = '2026-10-13T09:30:00.000Z';
 export const TRIAL_END = '2026-10-20T09:30:00.000Z';
 

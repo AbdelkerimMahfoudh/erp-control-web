@@ -12,10 +12,10 @@ useActivityHarness();
 
 /*
  * The free trial in the console (2026-10-13): each business's eligibility and claim as recorded, in the business's
- * zone (Africa/Casablanca, GMT+1, so 09:30 UTC is 10:30 there), the three trial states in the overview and the list,
+ * zone (Africa/Lagos, GMT+1, so 09:30 UTC is 10:30 there), the three trial states in the overview and the list,
  * and no decision that could create, extend or shorten a trial.
  */
-const CASABLANCA = zoneName(TRIAL_ZONE);
+const LAGOS = zoneName(TRIAL_ZONE);
 
 describe('the console: a business’s trial, recorded', () => {
   const ADMIN = { id: 'a1', email: 'admin@example.test', name: 'Admin' };
@@ -63,7 +63,7 @@ describe('the console: a business’s trial, recorded', () => {
     expect(c.textContent).toContain(`Eligible since 12 October 2026 at 11:00 (${at('2026-10-12T10:00:00.000Z')}); registered with an email address and a WhatsApp number.`);
     expect(c.textContent).toContain(en['admin.trial.open']);
     expect(c.textContent).toContain(`Claimed by the Owner on 13 October 2026 at 10:30 (${at(TRIAL_START)}).`);
-    expect(c.textContent).toContain(`From 13 October 2026 at 10:30 (${at(TRIAL_START)}) to 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(c.textContent).toContain(`From 13 October 2026 at 10:30 (${at(TRIAL_START)}) to 20 October 2026 at 10:30 (${LAGOS}).`);
     expect(c.textContent).toContain(en['admin.trial.expiryPending']);
     expect(c.textContent).toContain(en['admin.trial.paidAfter']);
     expect(c.textContent).toContain(en['admin.trial.noAction']);
@@ -112,7 +112,7 @@ describe('the console: a business’s trial, recorded', () => {
     const history = (await screen.findByRole('heading', { name: 'History', level: 2 })).closest('.card')!;
     const text = history.textContent!;
     const at = (iso: string) => zoneName(TRIAL_ZONE, 'en-GB', iso);
-    expect(text).toContain(`Free trial started — By the Owner, on this website: from 13 October 2026 at 10:30 (${at(TRIAL_START)}) to 20 October 2026 at 10:30 (${CASABLANCA}). Nothing was charged.`);
+    expect(text).toContain(`Free trial started — By the Owner, on this website: from 13 October 2026 at 10:30 (${at(TRIAL_START)}) to 20 October 2026 at 10:30 (${LAGOS}). Nothing was charged.`);
     expect(text).toContain(`Free trial available — ${en['event.trial_eligible.note']}`);
     // The decision keeps the note its administrator's action wrote, and every row names who acted.
     expect(text).toContain('Approved — Approved for 1 month(s). Paid access starts when the free trial ends. (admin@example.test)');
@@ -202,15 +202,15 @@ describe('the console: a business’s trial, recorded', () => {
       const decisions = (await screen.findByRole('heading', { name: 'Decisions' })).closest('section')!;
       await userEvent.setup().click(within(decisions).getByRole('button', { name: 'Approve' }));
       const field = (decisions.querySelector('input[type="date"]') as HTMLInputElement).closest('label')!;
-      expect(field.textContent).toContain(`A free trial is running: the end date must be after it ends, on 20 October 2026 at 10:30 (${CASABLANCA}).`);
-      expect(field.querySelector('bdi')?.textContent).toBe(`20 October 2026 at 10:30 (${CASABLANCA})`);
+      expect(field.textContent).toContain(`A free trial is running: the end date must be after it ends, on 20 October 2026 at 10:30 (${LAGOS}).`);
+      expect(field.querySelector('bdi')?.textContent).toBe(`20 October 2026 at 10:30 (${LAGOS})`);
     });
 
     it('refused: a title of its own and the trial’s end in the business’s zone — not "something went wrong", not the server’s UTC sentence', async () => {
       business(RUNNING, 'trial_active', [], refusal());
       const decisions = await approveWithEndDate('2026-10-15');
       await waitFor(() => expect(decisions.textContent).toContain(en['admin.trial.periodEnd.title']));
-      expect(decisions.textContent).toContain(`The end date must be after the free trial ends, on 20 October 2026 at 10:30 (${CASABLANCA}). Choose a later date.`);
+      expect(decisions.textContent).toContain(`The end date must be after the free trial ends, on 20 October 2026 at 10:30 (${LAGOS}). Choose a later date.`);
       expect(decisions.textContent).not.toContain(en['error.generic']);
       expect(decisions.textContent).not.toContain(TRIAL_END);
       expect(decisions.textContent).not.toContain('period_ends_before_trial_end');
@@ -266,7 +266,7 @@ describe('the console: a business’s trial, recorded', () => {
         row('c4', 'Boutique Console', { state: 'pending', trial: null }),
       ]);
       expect(at('Boutique Essai').textContent).toContain('Free trial');
-      expect(at('Boutique Essai').textContent).toContain(`The free trial ends on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+      expect(at('Boutique Essai').textContent).toContain(`The free trial ends on 20 October 2026 at 10:30 (${LAGOS}).`);
       expect(at('Boutique Neuve').textContent).toContain('Free trial not started');
       expect(at('Boutique Finie').textContent).toContain('Free trial ended');
       expect(at('Boutique Finie').textContent).not.toContain('ends on');
@@ -316,7 +316,7 @@ describe('the console: a business’s trial, recorded', () => {
  * The businesses list's "Ends" (C18): a business with a free trial has its end told as its own page tells it — in the
  * business's zone, with the zone's name, isolated — since access decided during the trial runs from the trial's end.
  * Dubai's paid month ends at 23:30 UTC, already 21 November there; a grant ends at 23:30 UTC, already 4 November in
- * Casablanca. The runner's zone is UTC, so a date told in this browser's zone would name the day before. A business
+ * Lagos. The runner's zone is UTC, so a date told in this browser's zone would name the day before. A business
  * with no trial, and every row of an API older than C18, keeps the date it had.
  */
 describe('the businesses list: a business with a trial ends in its own zone (C18)', () => {
@@ -376,14 +376,14 @@ describe('the businesses list: a business with a trial ends in its own zone (C18
       const isolated = (name: string) => [...ends(name).querySelectorAll('bdi')].map((b) => b.textContent);
 
       const inDubai = inZone(locale, 'Asia/Dubai', PERIOD_END);
-      const inCasablanca = inZone(locale, TRIAL_ZONE, GRANT_END);
+      const inLagos = inZone(locale, TRIAL_ZONE, GRANT_END);
       if (dubai && cadeau) {
         expect(inDubai).toBe(`${dubai} (${zoneName('Asia/Dubai', locale, PERIOD_END)})`);
-        expect(inCasablanca).toBe(`${cadeau} (${zoneName(TRIAL_ZONE, locale, GRANT_END)})`);
+        expect(inLagos).toBe(`${cadeau} (${zoneName(TRIAL_ZONE, locale, GRANT_END)})`);
       }
       expect({ dubai: ends('Boutique Dubai').textContent, isolated: isolated('Boutique Dubai') }).toEqual({ dubai: inDubai, isolated: [inDubai] });
-      // A grant decided during the trial ends on the day it ends in Casablanca.
-      expect({ cadeau: ends('Boutique Cadeau').textContent, isolated: isolated('Boutique Cadeau') }).toEqual({ cadeau: inCasablanca, isolated: [inCasablanca] });
+      // A grant decided during the trial ends on the day it ends in Lagos.
+      expect({ cadeau: ends('Boutique Cadeau').textContent, isolated: isolated('Boutique Cadeau') }).toEqual({ cadeau: inLagos, isolated: [inLagos] });
       // A trial with no paid period yet has no end here; nothing is isolated for a dash.
       expect({ essai: ends('Boutique Essai').textContent, isolated: isolated('Boutique Essai') }).toEqual({ essai: '—', isolated: [] });
       // No trial, and an API that sends none: the date this list always showed.
@@ -551,7 +551,7 @@ describe('the console: a store or seat paid for during a trial (D176)', () => {
 
   /*
    * Every state the console shows for a store or seat paid for during a trial, in English, French and Arabic: each
-   * start is the server's instant in the zone its own row carries — Casablanca, Dubai — isolated, or the first paid month
+   * start is the server's instant in the zone its own row carries — Lagos, Dubai — isolated, or the first paid month
    * with no date; each confirmation's outcome is read line by line; the refusal is said in words, the form kept.
    */
   const ATAR_BUSINESS = { id: '0192f000-0000-7000-8000-0000000000b3', name: 'Boutique Atar', publicStoreId: 'ST-3A7R' };

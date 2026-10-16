@@ -24,7 +24,7 @@ afterEach(async () => {
 /*
  * The free trial on the website (2026-10-13): the Owner's card on /account, the setup link's landing at
  * /account/trial, and Apply ending signed in — every answer mocked exactly as the SPEC's contract shapes it. The
- * business's zone is Africa/Casablanca (GMT+1) unless a test says otherwise, so a date shown in the server's UTC or in
+ * business's zone is Africa/Lagos (GMT+1) unless a test says otherwise, so a date shown in the server's UTC or in
  * the runner's zone would show another hour than the one asserted.
  */
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -33,7 +33,7 @@ const TOKEN = 'x'.repeat(43);
 const CLAIM = 'Start my 7-day free trial';
 const RESEND = 'Send the setup instructions again';
 
-const CASABLANCA = zoneName(TRIAL_ZONE);
+const LAGOS = zoneName(TRIAL_ZONE);
 
 function claimResult(trial: TrialView = trialView('active'), replayed = false): TrialClaimResult {
   return { claimed: true, replayed, state: 'trial_active', trial, subscriptionVersion: 5 };
@@ -79,9 +79,9 @@ describe('the Owner’s trial card on /account', () => {
     const sent = account('trial_available', trialStatus());
     const c = await card();
     for (const key of ['trial.terms.free', 'trial.terms.start', 'trial.terms.once', 'trial.terms.after', 'trial.terms.paid'] as const) expect(c.textContent).toContain(en[key]);
-    expect(c.textContent).toContain(`If you start it now, it ends on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(c.textContent).toContain(`If you start it now, it ends on 20 October 2026 at 10:30 (${LAGOS}).`);
     // The date is isolated, so it keeps its own order inside an Arabic sentence.
-    expect([...c.querySelectorAll('bdi')].map((b) => b.textContent)).toContain(`20 October 2026 at 10:30 (${CASABLANCA})`);
+    expect([...c.querySelectorAll('bdi')].map((b) => b.textContent)).toContain(`20 October 2026 at 10:30 (${LAGOS})`);
     expect(within(c).getAllByRole('button', { name: CLAIM })).toHaveLength(1);
     // Never the server's UTC hour; and showing the offer claimed nothing.
     expect(c.textContent).not.toMatch(/09:30/);
@@ -115,18 +115,18 @@ describe('the Owner’s trial card on /account', () => {
   it('a running trial: its recorded start and exact end, in the business’s zone — the hero says the same', async () => {
     account('trial_active', { state: 'trial_active', trial: trialView('active'), offer: null, setup: null, calculatedAt: TRIAL_START });
     const c = await card();
-    expect(c.textContent).toContain(`Your free trial ends on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(c.textContent).toContain(`Your free trial ends on 20 October 2026 at 10:30 (${LAGOS}).`);
     expect(c.textContent).toContain(`It started on 13 October 2026 at 10:30 (${zoneName(TRIAL_ZONE, 'en-GB', TRIAL_START)}).`);
     expect(within(c).queryByRole('button')).toBeNull();
     const h = await hero();
     expect(within(h).getByText('Free trial')).toBeTruthy();
-    expect(h.textContent).toContain(`The 7-day free trial is running. It ends on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(h.textContent).toContain(`The 7-day free trial is running. It ends on 20 October 2026 at 10:30 (${LAGOS}).`);
   });
 
   it('an ended trial: when it ended, and that the business is read-only until paid access starts', async () => {
     account('trial_expired', { state: 'trial_expired', trial: trialView('expired'), offer: null, setup: null, calculatedAt: TRIAL_END });
     const c = await card();
-    expect(c.textContent).toContain(`Your free trial ended on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(c.textContent).toContain(`Your free trial ended on 20 October 2026 at 10:30 (${LAGOS}).`);
     expect(within(c).getByText(en['trial.expired.readOnly'])).toBeTruthy();
     expect(within(c).queryByRole('button')).toBeNull();
     const h = await hero();
@@ -334,7 +334,7 @@ describe('the setup instructions on the card', () => {
   it('a setup status the server could not read: the offer and the claim stand, without the instructions (C3)', async () => {
     account('trial_available', trialStatus({ setup: null }));
     const c = await card();
-    expect(c.textContent).toContain(`If you start it now, it ends on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(c.textContent).toContain(`If you start it now, it ends on 20 October 2026 at 10:30 (${LAGOS}).`);
     expect(within(c).getByRole('button', { name: CLAIM })).toHaveProperty('disabled', false);
     expect(within(c).queryByRole('heading', { name: en['trial.setup.title'] })).toBeNull();
     expect(within(c).queryByRole('button', { name: RESEND })).toBeNull();
@@ -584,7 +584,7 @@ describe('the claim', () => {
     expect(sent.filter((r) => r.url.endsWith('/trial/claim'))).toEqual([]);
     const accountReads = sent.filter((r) => r.url.endsWith('/platform/my-subscription')).length;
     await userEvent.setup().click(within(c).getByRole('button', { name: CLAIM }));
-    // The server's end in the zone it named — Dubai's 13:30, not the offer's Casablanca 10:30.
+    // The server's end in the zone it named — Dubai's 13:30, not the offer's Lagos 10:30.
     const gulf = zoneName('Asia/Dubai');
     await waitFor(() => expect(c.textContent).toContain(`Your free trial has started. It ends on 20 October 2026 at 13:30 (${gulf}).`));
     await waitFor(() => expect(c.textContent).toContain(`Your free trial ends on 20 October 2026 at 13:30 (${gulf}).`));
@@ -802,7 +802,7 @@ describe('the setup link’s landing (/account/trial)', () => {
     landing(`/account/trial#t=${TOKEN}`, signedOut('used', (url) => (url.endsWith('/trial/link') ? { body: { link: 'used', offer: null, trial: trialView('active'), state: 'trial_active' } } : undefined)));
     await signIn();
     expect(await screen.findByText(en['trial.error.link_used'])).toBeTruthy();
-    expect(document.body.textContent).toContain(`Your free trial ends on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(document.body.textContent).toContain(`Your free trial ends on 20 October 2026 at 10:30 (${LAGOS}).`);
     expect(screen.queryByRole('button', { name: CLAIM })).toBeNull();
     expect(screen.queryByText(en['trial.landing.withoutLink'])).toBeNull();
   });
@@ -968,7 +968,7 @@ async function readingAgain() {
 }
 
 describe('dates in the business’s zone, in every language', () => {
-  it('the same instant is 10:30 in Casablanca and 13:30 in Dubai — never the server’s UTC, never this browser’s zone', async () => {
+  it('the same instant is 10:30 in Lagos and 13:30 in Dubai — never the server’s UTC, never this browser’s zone', async () => {
     account('trial_available', trialStatus({ offer: trialOffer({ timeZone: 'Asia/Dubai' }) }));
     const c = await card();
     expect(c.textContent).toContain(`If you start it now, it ends on 20 October 2026 at 13:30 (${zoneName('Asia/Dubai')}).`);
@@ -982,7 +982,7 @@ describe('dates in the business’s zone, in every language', () => {
       sub.pricing.currentPeriod.periodStart = TRIAL_END;
     });
     const period = (await screen.findByRole('heading', { name: 'Current period' })).closest('.card')!;
-    expect(period.textContent).toContain(`Paid access starts when the free trial ends, on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(period.textContent).toContain(`Paid access starts when the free trial ends, on 20 October 2026 at 10:30 (${LAGOS}).`);
     expect(period.textContent).toContain(`Ends 20 November 2026 at 10:30 (${zoneName(TRIAL_ZONE, 'en-GB', '2026-11-20T09:30:00.000Z')})`);
   });
 
@@ -993,11 +993,11 @@ describe('dates in the business’s zone, in every language', () => {
       sub.pricing.currentPeriod.periodStart = TRIAL_END;
     });
     const c = await card();
-    expect(c.textContent).toContain(`When it ends, on 20 October 2026 at 10:30 (${CASABLANCA}), paid access starts at once.`);
+    expect(c.textContent).toContain(`When it ends, on 20 October 2026 at 10:30 (${LAGOS}), paid access starts at once.`);
     expect(c.textContent).not.toContain(en['trial.terms.after']);
     expect(c.textContent).not.toContain(en['trial.terms.paid']);
     const period = (await screen.findByRole('heading', { name: 'Current period' })).closest('.card')!;
-    expect(period.textContent).toContain(`Paid access starts when the free trial ends, on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(period.textContent).toContain(`Paid access starts when the free trial ends, on 20 October 2026 at 10:30 (${LAGOS}).`);
   });
 
   it('a grant approved during the trial is told as the access granted, on the card and in the period — not as paid access (R4-03)', async () => {
@@ -1007,10 +1007,10 @@ describe('dates in the business’s zone, in every language', () => {
       sub.pricing.currentPeriod.periodStart = TRIAL_END;
     });
     const c = await card();
-    expect(c.textContent).toContain(`When it ends, on 20 October 2026 at 10:30 (${CASABLANCA}), the access granted to your business starts at once.`);
+    expect(c.textContent).toContain(`When it ends, on 20 October 2026 at 10:30 (${LAGOS}), the access granted to your business starts at once.`);
     expect(c.textContent).not.toContain(en['trial.terms.after']);
     const period = (await screen.findByRole('heading', { name: 'Current period' })).closest('.card')!;
-    expect(period.textContent).toContain(`Access granted by the platform starts when the free trial ends, on 20 October 2026 at 10:30 (${CASABLANCA}).`);
+    expect(period.textContent).toContain(`Access granted by the platform starts when the free trial ends, on 20 October 2026 at 10:30 (${LAGOS}).`);
     expect(period.textContent).not.toContain('Paid access');
   });
 
@@ -1124,7 +1124,7 @@ describe('the history: every event in words, the trial’s own from its facts in
       sub.events = EVENTS;
     });
 
-  it('in French: each kind in words, the trial’s sentences with its recorded dates in Casablanca time, and no server note or UTC instant', async () => {
+  it('in French: each kind in words, the trial’s sentences with its recorded dates in Lagos time, and no server note or UTC instant', async () => {
     localStorage.setItem('erp.web.language', 'fr');
     expiredAccount();
     const history = (await screen.findByRole('heading', { name: fr['account.timeline'], level: 2 })).closest('section')!;
@@ -1270,7 +1270,7 @@ describe('a store or seat paid for during the trial: "Paid · scheduled", and wh
   /** The trial's end as a page must show it: in the zone the server named, with that zone's name — never UTC or this browser's. */
   const inZone = (locale: string, zone = TRIAL_ZONE, iso = TRIAL_END) =>
     `${new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeStyle: 'short', timeZone: zone }).format(new Date(iso))} (${zoneName(zone, locale, iso)})`;
-  const AT_END = `20 October 2026 at 10:30 (${CASABLANCA})`;
+  const AT_END = `20 October 2026 at 10:30 (${LAGOS})`;
 
   it('a store opens, a seat starts, when the trial ends — the server’s instant in the business’s zone, isolated; no withdraw, the payment’s reference instead', async () => {
     account('trial_active', RUNNING, listing([scheduledRequest('store'), scheduledRequest('seat'), PENDING_STORE]));

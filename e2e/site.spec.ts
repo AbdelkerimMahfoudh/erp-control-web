@@ -456,7 +456,7 @@ for (const lang of LANGS) {
       await page.setViewportSize({ width: 320, height: 900 });
       const at320 = await layout(page);
       record({ test: 'addons-account', lang, width, dates, layout: l, overflow320: at320.overflow, offenders320: at320.offenders, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
-      // Both scheduled rows dated with the trial's end, in the business's zone (Casablanca: 10:30), never UTC's 09:30.
+      // Both scheduled rows dated with the trial's end, in the business's zone (Lagos: 10:30), never UTC's 09:30.
       expect(dates).toHaveLength(2);
       for (const d of dates) expect(d).toMatch(/10:30|١٠:٣٠/);
       expect(dates.join(' ')).not.toMatch(/09:30|٠٩:٣٠/);
