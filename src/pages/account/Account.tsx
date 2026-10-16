@@ -680,7 +680,8 @@ function Requests({
       <h2>{t('account.requests')}</h2>
       <p className="muted small">{t('account.requests.explain')}</p>
       {rows === null ? (
-        <Loading />
+        // A list that could not be read says so below, once; it is not still loading.
+        error ? null : <Loading />
       ) : rows.length === 0 ? (
         <Empty text={t('account.requests.none')} />
       ) : (

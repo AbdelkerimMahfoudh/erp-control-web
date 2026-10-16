@@ -141,6 +141,19 @@ describe('Account: a store’s activity and its change', () => {
     expect(await within(item).findByText('This store already has another activity request open. Withdraw it first from the requests below.')).toBeTruthy();
   });
 
+  it('a requests list that cannot be read says so, and is not left loading (screenshot matrix, 2026-10-16)', async () => {
+    serve((url) => {
+      if (url.endsWith('/platform/my-subscription')) return { body: subscription(BRANCHES, LINES) };
+      if (url.endsWith('/platform/my-subscription/activity-options')) return { body: activityOptions() };
+      if (url.endsWith('/platform/my-subscription/seat-requests')) return { status: 403, body: { statusCode: 403, code: 'ENTITLEMENT_SUSPENDED', message: 'This business is suspended.' } };
+      return undefined;
+    });
+    mount('/account');
+    const requests = (await screen.findByRole('heading', { name: 'Seat, store and activity requests' })).closest('section')!;
+    expect(await within(requests).findByText('Your account is not allowed to do this.')).toBeTruthy();
+    expect(within(requests).queryByText('Loading…')).toBeNull();
+  });
+
   it('asks the new store’s activity and sends it, priced as the server would charge it', async () => {
     // The running period's own prices (550/330/770), not the plan's 500/300/700: what requestStore will charge.
     const options = activityOptions({}, [
