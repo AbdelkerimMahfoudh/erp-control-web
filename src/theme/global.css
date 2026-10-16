@@ -332,6 +332,10 @@ table.data {
   width: 100%;
   border-collapse: collapse;
 }
+/* A table wider than its card (the console's stores, beside the monthly total) scrolls inside it. */
+.table-scroll {
+  overflow-x: auto;
+}
 table.data th,
 table.data td {
   text-align: start;
@@ -378,6 +382,16 @@ table.data th {
   /* A status keeps to its cell: a long one ("En attente de paiement") wraps rather than push the page sideways. */
   table.data td .badge {
     white-space: normal;
+  }
+  /* So does a value: an address and its chip wrap, and an address longer than the column breaks. */
+  table.data td > * {
+    min-width: 0;
+  }
+  table.data td .row {
+    flex-wrap: wrap;
+  }
+  table.data td {
+    overflow-wrap: anywhere;
   }
 }
 

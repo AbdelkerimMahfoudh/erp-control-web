@@ -158,28 +158,33 @@ export function Field({ label, hint, children }: { label: string; hint?: ReactNo
   );
 }
 
-/** A table whose cells carry their heading, so it becomes labelled cards below 720px. */
+/**
+ * A table whose cells carry their heading, so it becomes labelled cards below 720px. Wider than its card above that, it
+ * scrolls inside the card, never running under the card beside it.
+ */
 export function Table<T>({ columns, rows, keyOf }: { columns: { label: string; render: (row: T) => ReactNode }[]; rows: T[]; keyOf: (row: T) => string }) {
   return (
-    <table className="data">
-      <thead>
-        <tr>
-          {columns.map((c) => (
-            <th key={c.label}>{c.label}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {rows.map((row) => (
-          <tr key={keyOf(row)}>
+    <div className="table-scroll">
+      <table className="data">
+        <thead>
+          <tr>
             {columns.map((c) => (
-              <td key={c.label} data-label={c.label}>
-                {c.render(row)}
-              </td>
+              <th key={c.label}>{c.label}</th>
             ))}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {rows.map((row) => (
+            <tr key={keyOf(row)}>
+              {columns.map((c) => (
+                <td key={c.label} data-label={c.label}>
+                  {c.render(row)}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

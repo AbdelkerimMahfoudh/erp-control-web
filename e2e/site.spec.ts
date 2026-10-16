@@ -104,6 +104,9 @@ async function mockApi(page: Page, signedIn: Session = {}) {
   });
 }
 
+/** An address long enough that, with its "verified" chip, it cannot sit on one line of a phone's labelled card. */
+const LONG_ADDRESS = 'proprietaire.boutique.ksar@preview.invalid';
+
 /** The console's page for the business whose trial runs, with paid access approved for its end. */
 function trialBusiness() {
   const sub = subscription(BRANCHES, LINES);
@@ -115,7 +118,9 @@ function trialBusiness() {
       { id: B1, name: 'Agence Centre', type: 'store', activity: 'money_agent', activityNext: null },
       { id: B2, name: 'Boutique Ksar', type: 'store', activity: 'both', activityNext: null },
     ],
-    people: [],
+    people: [
+      { id: 'p1', name: 'Mariem Ould Ahmed', email: LONG_ADDRESS, phone: '+22236001234', emailVerified: true, phoneVerified: true, isActive: true, status: 'active', lastLoginAt: '2026-10-14T08:00:00.000Z' },
+    ],
     entitlement: { ...sub.entitlement, state: 'trial_active', status: 'pending_activation', periodEnd: '2026-11-20T09:30:00.000Z', trial: TRIALS.paidAfter.trial },
     pricing: sub.pricing,
     version: 4,
@@ -485,6 +490,40 @@ for (const lang of LANGS) {
       expect(serious.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
     });
   }
+}
+
+/*
+ * The console's business page keeps to the page (found against the real API, 2026-10-16): a long verified address and
+ * its chip pushed a 375 px phone sideways, and at 1280 px the stores table ran under the monthly total beside it.
+ */
+for (const lang of LANGS) {
+  test(`the console's business page keeps to the page, ${lang} at 375, 320 and 1280 px`, async ({ page }) => {
+    const errors = watchConsole(page);
+    await mockApi(page, { admin: true, addons: 'trial_end', lang });
+    await page.setViewportSize({ width: 375, height: 900 });
+    await page.goto(`/admin/businesses/${BUSINESS.id}`);
+    await expect(page.getByText(LONG_ADDRESS)).toBeVisible();
+    await page.waitForLoadState('networkidle');
+    const at375 = await layout(page);
+    await page.setViewportSize({ width: 320, height: 900 });
+    const at320 = await layout(page);
+    await page.setViewportSize({ width: 1280, height: 900 });
+    const tables = await page.locator('.card table.data').evaluateAll((els) =>
+      els.map((table) => {
+        const card = table.closest('.card')!.getBoundingClientRect();
+        const box = (table.closest('.table-scroll') ?? table).getBoundingClientRect();
+        return { inside: box.left >= card.left - 0.5 && box.right <= card.right + 0.5 };
+      }),
+    );
+    const at1280 = await layout(page);
+    record({ test: 'console-business-fits', lang, overflow375: at375.overflow, offenders375: at375.offenders, overflow320: at320.overflow, offenders320: at320.offenders, tables });
+    expect(at375.overflow, `no sideways scroll at 375 px: ${at375.offenders.join(', ')}`).toBeLessThanOrEqual(0);
+    expect(at320.overflow, `no sideways scroll at 320 px: ${at320.offenders.join(', ')}`).toBeLessThanOrEqual(0);
+    expect(at1280.overflow, 'no sideways scroll at 1280 px').toBeLessThanOrEqual(0);
+    expect(tables.length).toBeGreaterThan(1);
+    expect(tables, 'every table keeps inside its card at 1280 px').toEqual(tables.map(() => ({ inside: true })));
+    expect(errors).toEqual([]);
+  });
 }
 
 /*
