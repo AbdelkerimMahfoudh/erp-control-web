@@ -1,0 +1,206 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:5:49). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:6:75). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./legal-choices" without a file extension (src/content/index.ts:10:32). Add the file extension
+  - import "./legal-notice" without a file extension (src/content/index.ts:11:29). Add the file extension
+  - import "./legal-security" without a file extension (src/content/index.ts:12:26). Add the file extension
+  - import "./home" without a file extension (src/content/index.ts:13:22). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:14:26). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:15:40). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:16:38). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:17:72). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/trial-console.test.tsx [2m([22m[2m40 tests[22m[2m)[22m[33m 8431[2mms[22m[39m
+   [32m✓[39m the console: a business’s trial, recorded [2m(12)[22m
+     [33m[2m✓[22m[39m shows the eligibility and the claim with their exact instants, and that no decision creates or extends a trial[33m 404[2mms[22m[39m
+     [32m✓[39m an end date inside a running trial (R4-05) [2m(4)[22m
+       [33m[2m✓[22m[39m refused: a title of its own and the trial’s end in the business’s zone — not "something went wrong", not the server’s UTC sentence[33m 413[2mms[22m[39m
+       [33m[2m✓[22m[39m the end the server names in its refusal comes first, said in French in the business’s zone[33m 341[2mms[22m[39m
+   [32m✓[39m the console: a store or seat paid for during a trial (D176) [2m(25)[22m
+     [32m✓[39m every state in Arabic [2m(6)[22m
+       [33m[2m✓[22m[39m confirmed with no paid access approved yet: the first paid month, no date — and the seat’s person waits for it to start[33m 312[2mms[22m[39m
+     [33m[2m✓[22m[39m the business page says, above its requests, that what was paid for during the trial is not collected again — while one is scheduled, and once one started[33m 310[2mms[22m[39m
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 257[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1572[2mms[22m[39m
+   [32m✓[39m Account: a store’s activity and its change [2m(9)[22m
+     [33m[2m✓[22m[39m lists each store with its activity; a warehouse offers no change[33m 306[2mms[22m[39m
+ [32m✓[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1483[2mms[22m[39m
+   [32m✓[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 633[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 510[2mms[22m[39m
+ [32m✓[39m test/trial-account.test.tsx [2m([22m[2m81 tests[22m[2m)[22m[33m 15209[2mms[22m[39m
+   [32m✓[39m the Owner’s trial card on /account [2m(6)[22m
+     [33m[2m✓[22m[39m an Owner who may claim sees the terms, the end the server would set — in the business’s zone — and one button[33m 442[2mms[22m[39m
+     [33m[2m✓[22m[39m no offer and no trial, a paid business after its trial, another role (403), an older API (404): no card, no error[33m 359[2mms[22m[39m
+   [32m✓[39m the setup instructions on the card [2m(21)[22m
+     [33m[2m✓[22m[39m could not be sent, cannot be sent, not sent: each said honestly[33m 308[2mms[22m[39m
+     [33m[2m✓[22m[39m a message that went out, then no longer counted, in French and Arabic: the same sentences, each date isolated in the business’s zone[33m 381[2mms[22m[39m
+     [33m[2m✓[22m[39m a refused send is said in words: too soon (with the server’s instant), nothing can be sent, no trial any more[33m 320[2mms[22m[39m
+   [32m✓[39m the setup link’s landing (/account/trial) [2m(12)[22m
+     [33m[2m✓[22m[39m takes the token from the email’s #t= out of the address at once, keeps it in memory only, and sends nothing before sign-in[33m 306[2mms[22m[39m
+     [33m[2m✓[22m[39m says what a link is worth when it no longer works, and offers the claim without it while the business can still claim[33m 1058[2mms[22m[39m
+     [33m[2m✓[22m[39m another account’s link: said, and one button signs out and keeps the link for the account it belongs to (R4-08)[33m 408[2mms[22m[39m
+     [33m[2m✓[22m[39m a link the server could not check (its error, too many attempts, no network): the ordinary claim, without the link, and a word why (R4-07)[33m 567[2mms[22m[39m
+     [32m✓[39m sign-in without the link (the owner’s clarification) [2m(3)[22m
+       [33m[2m✓[22m[39m nothing is claimed without the button — not on load, at sign-in or as the page reads the trial again — in every path[33m 1085[2mms[22m[39m
+   [32m✓[39m Apply ends signed in [2m(2)[22m
+     [33m[2m✓[22m[39m keeps the session the confirmation opens and leads to the account, where the eligible Owner sees the trial — Apply claims nothing[33m 614[2mms[22m[39m
+     [33m[2m✓[22m[39m an application the server does not call eligible says what it always said[33m 415[2mms[22m[39m
+ [32m✓[39m test/apply.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[33m 15595[2mms[22m[39m
+   [32m✓[39m Apply: a contact whose code cannot be sent now (C10) [2m(5)[22m
+     [33m[2m✓[22m[39m only the WhatsApp number, beside an email address: remove the number or try later — and without it, a new attempt goes through[33m 1102[2mms[22m[39m
+     [33m[2m✓[22m[39m every other case keeps the general refusal: a WhatsApp number alone[33m 499[2mms[22m[39m
+     [33m[2m✓[22m[39m every other case keeps the general refusal: the email[33m 466[2mms[22m[39m
+     [33m[2m✓[22m[39m every other case keeps the general refusal: both[33m 521[2mms[22m[39m
+     [33m[2m✓[22m[39m every other case keeps the general refusal: none named[33m 454[2mms[22m[39m
+   [32m✓[39m Apply: one attempt, one key (C11; the app’s R5-7) [2m(1)[22m
+     [33m[2m✓[22m[39m a retry of the same form keeps its key, so the server replays; a corrected field is a new attempt with a new key[33m 503[2mms[22m[39m
+   [32m✓[39m Apply: a code check that got no answer is never called a wrong code (R2-1 / C14 on the website) [2m(23)[22m
+     [33m[2m✓[22m[39m no answer (the network failed), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 474[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request was aborted), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 558[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request timed out), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 599[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 732[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 596[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 515[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 706[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 589[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 491[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 606[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 509[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 523[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got no answer from the API in time (504), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 550[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got an invalid one (502), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 480[2mms[22m[39m
+     [33m[2m✓[22m[39m a 503 is an answer — the request was not taken: an error, no account promised[33m 475[2mms[22m[39m
+     [33m[2m✓[22m[39m a lost answer, then the same code accepted after all: the application ends signed in, as it always does[33m 392[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer is an answer: a server error is said as one, and no account is promised[33m 498[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose body was cut off keeps its status — a refusal is still a refusal: the code is wrong, and no account is promised[33m 481[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose body was cut off keeps its status — a server error is still an error, and no account is promised[33m 501[2mms[22m[39m
+     [32m✓[39m a request the rate limit refused [2m(4)[22m
+       [33m[2m✓[22m[39m in English: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 402[2mms[22m[39m
+       [33m[2m✓[22m[39m in French: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 477[2mms[22m[39m
+       [33m[2m✓[22m[39m in Arabic: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 433[2mms[22m[39m
+       [33m[2m✓[22m[39m the application itself refused by the limit: wait a minute, the form kept as it was[33m 461[2mms[22m[39m
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1132[2mms[22m[39m
+   [32m✓[39m Account: the platform grant and its own dates [2m(6)[22m
+     [33m[2m✓[22m[39m an active grant says its own end, never the billing period’s start[33m 304[2mms[22m[39m
+ [32m✓[39m test/site-routes.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 167[2mms[22m[39m
+[90mstderr[2m | test/legal-pages.test.tsx[2m > [22m[2mthe public legal and support pages[2m > [22m[2mthe footer links to every legal and support page, on public and signed-in pages alike
+[22m[39mAn update to Account inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m test/admin-mfa.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2343[2mms[22m[39m
+   [32m✓[39m signing in to the console [2m(3)[22m
+     [33m[2m✓[22m[39m a password leads to the code screen; the console opens only once the code is accepted[33m 817[2mms[22m[39m
+     [33m[2m✓[22m[39m a recovery code can stand in for the authenticator[33m 400[2mms[22m[39m
+     [33m[2m✓[22m[39m with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once[33m 597[2mms[22m[39m
+   [32m✓[39m a decision’s step-up [2m(1)[22m
+     [33m[2m✓[22m[39m a wrong password or code keeps the dialog open with the reason, and the decision is never sent[33m 526[2mms[22m[39m
+ [32m✓[39m test/legal-pages.test.tsx [2m([22m[2m67 tests[22m[2m)[22m[33m 2723[2mms[22m[39m
+ [32m✓[39m test/site-config.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m test/site-surface.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m test/content-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 71[2mms[22m[39m
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1426[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 1144[2mms[22m[39m
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 984[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns (on the Dukan ERP page)[33m 539[2mms[22m[39m
+     [33m[2m✓[22m[39m moves to the same page in Arabic, mirrors the document and keeps the language across visits[33m 352[2mms[22m[39m
+ [32m✓[39m test/public-pages.test.tsx [2m([22m[2m50 tests[22m[2m)[22m[33m 3416[2mms[22m[39m
+ [31m❯[39m test/site-surface-render.test.tsx [2m([22m[2m14 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[33m 819[2mms[22m[39m
+   [31m❯[39m a public build, page by page [2m(14)[22m
+[31m     [31m×[31m the Dukan ERP page in en: no prices, no application or sign-in, a way to contact, and no request to any API[39m[32m 200[2mms[22m[39m
+     [32m✓[39m the home page in en: no application or sign-in link, the legal pages in the footer[32m 85[2mms[22m[39m
+[31m     [31m×[31m the Dukan ERP page in fr: no prices, no application or sign-in, a way to contact, and no request to any API[39m[32m 67[2mms[22m[39m
+     [32m✓[39m the home page in fr: no application or sign-in link, the legal pages in the footer[32m 59[2mms[22m[39m
+[31m     [31m×[31m the Dukan ERP page in ar: no prices, no application or sign-in, a way to contact, and no request to any API[39m[32m 58[2mms[22m[39m
+     [32m✓[39m the home page in ar: no application or sign-in link, the legal pages in the footer[32m 62[2mms[22m[39m
+     [32m✓[39m /apply is an unknown page here, never a form or a console[32m 39[2mms[22m[39m
+     [32m✓[39m /login is an unknown page here, never a form or a console[32m 41[2mms[22m[39m
+     [32m✓[39m /application-status is an unknown page here, never a form or a console[32m 42[2mms[22m[39m
+     [32m✓[39m /account is an unknown page here, never a form or a console[32m 40[2mms[22m[39m
+     [32m✓[39m /account/trial is an unknown page here, never a form or a console[32m 34[2mms[22m[39m
+     [32m✓[39m /admin is an unknown page here, never a form or a console[32m 27[2mms[22m[39m
+     [32m✓[39m /admin/businesses is an unknown page here, never a form or a console[32m 33[2mms[22m[39m
+     [32m✓[39m /fr/apply is an unknown page here, never a form or a console[32m 30[2mms[22m[39m
+ [32m✓[39m test/throttle.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1422[2mms[22m[39m
+   [32m✓[39m a request the API’s rate limit refused [2m(5)[22m
+     [33m[2m✓[22m[39m in English: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s[33m 497[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m test/api-client.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 3 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m test/site-surface-render.test.tsx[2m > [22ma public build, page by page[2m > [22mthe Dukan ERP page in en: no prices, no application or sign-in, a way to contact, and no request to any API
+[41m[1m FAIL [22m[49m test/site-surface-render.test.tsx[2m > [22ma public build, page by page[2m > [22mthe Dukan ERP page in fr: no prices, no application or sign-in, a way to contact, and no request to any API
+[41m[1m FAIL [22m[49m test/site-surface-render.test.tsx[2m > [22ma public build, page by page[2m > [22mthe Dukan ERP page in ar: no prices, no application or sign-in, a way to contact, and no request to any API
+[31m[1mAssertionError[22m: expected true to be false // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- false[39m
+[31m+ true[39m
+
+[36m [2m❯[22m test/site-surface-render.test.tsx:[2m61:62[22m[39m
+    [90m 59|[39m       const links = hrefs();
+    [90m 60|[39m       for (const id of ['apply', 'login', 'applicationStatus'] as cons…
+    [90m 61|[39m       expect(links.some((h) => /\/account|\/admin/.test(h))).toBe(fals…
+    [90m   |[39m                                                              [31m^[39m
+    [90m 62|[39m       expect(links).toContain(pathOf('contact', lang));
+    [90m 63|[39m       expect(screen.queryByText(en['home.pricing.loading'])).toBeNull(…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m20 passed[39m[22m[90m (21)[39m
+[2m      Tests [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m398 passed[39m[22m[90m (401)[39m
+[2m   Start at [22m 01:27:39
+[2m   Duration [22m 26.75s[2m (tests 74%, environment 19%, import 4%, transform 2%)[22m
+
+[2m    Isolate [22m [33m21 workers spawned[39m[2m · ~796ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~4.78s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/site-surface-render.test.tsx,title=test/site-surface-render.test.tsx > a public build%2C page by page > the Dukan ERP page in en%3A no prices%2C no application or sign-in%2C a way to contact%2C and no request to any API,line=61,column=62::AssertionError: expected true to be false // Object.is equality%0A%0A- Expected%0A+ Received%0A%0A- false%0A+ true%0A%0A ❯ test/site-surface-render.test.tsx:61:62%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/site-surface-render.test.tsx,title=test/site-surface-render.test.tsx > a public build%2C page by page > the Dukan ERP page in fr%3A no prices%2C no application or sign-in%2C a way to contact%2C and no request to any API,line=61,column=62::AssertionError: expected true to be false // Object.is equality%0A%0A- Expected%0A+ Received%0A%0A- false%0A+ true%0A%0A ❯ test/site-surface-render.test.tsx:61:62%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/site-surface-render.test.tsx,title=test/site-surface-render.test.tsx > a public build%2C page by page > the Dukan ERP page in ar%3A no prices%2C no application or sign-in%2C a way to contact%2C and no request to any API,line=61,column=62::AssertionError: expected true to be false // Object.is equality%0A%0A- Expected%0A+ Received%0A%0A- false%0A+ true%0A%0A ❯ test/site-surface-render.test.tsx:61:62%0A%0A

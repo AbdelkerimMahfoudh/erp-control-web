@@ -1,0 +1,174 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/playwright.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/3c08c3f11c5318dd8a90633c47a365cb5ea5b810",
+        "commitHash": "3c08c3f11c5318dd8a90633c47a365cb5ea5b810",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/38990929531"
+      },
+      "gitCommit": {
+        "shortHash": "3c08c3f",
+        "hash": "3c08c3f11c5318dd8a90633c47a365cb5ea5b810",
+        "subject": "Public build for tsxmr.com: VITE_SITE_SURFACE=public, without the API, the account or the console",
+        "body": "Public build for tsxmr.com: VITE_SITE_SURFACE=public, without the API, the account or the console\n\nThe owner's brief of 2026-10-17: publish the public site at https://tsxmr.com\nwhile the business account (later https://dukan.tsxmr.com) and the API\n(later https://api.tsxmr.com) stay separate. As built, the site needed the\nAPI on its own origin: /apply, /login, /application-status and the Dukan ERP\nprices call it, and /account and /admin ship in the same bundle.\n\nVITE_SITE_SURFACE=public (default full: nothing changes otherwise):\n- the three pages that need the API are not built, linked, prerendered or\n  listed in the sitemap; /account and /admin are not rewritten (404), and a\n  build alias replaces their routes with a stub, so neither area's code is\n  in the bundle;\n- VITE_API_BASE is not asked for, the CSP allows no API origin, no request\n  leaves the page;\n- \"Sign in\" and \"Apply\" link to VITE_PORTAL_ORIGIN once one is given and\n  are absent before; the Dukan ERP page shows no prices and says to ask\n  (EN/FR/AR);\n- every other refusal of a production build stands: blank facts, test\n  values, legal blockers and drafts.\n\nTests: site-surface (release rule, routes, sitemap, headers, rewrites,\nlinks) and site-surface-render (EN/FR/AR pages, unknown /account, /admin,\n/apply). CI builds and audits the public surface too (refusal without the\nAPI, preview, links, bundle --public). .node-version pins Node 22 for\nCloudflare Pages.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+        "author": {
+          "name": "CLAUDE-B",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1792200438000
+        },
+        "committer": {
+          "name": "CLAUDE-B",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1792200438000
+        },
+        "branch": "tsx-public-site"
+      }
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/3c08c3f11c5318dd8a90633c47a365cb5ea5b810/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/3c08c3f11c5318dd8a90633c47a365cb5ea5b810",
+            "commitHash": "3c08c3f11c5318dd8a90633c47a365cb5ea5b810",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/38990929531"
+          },
+          "gitCommit": {
+            "shortHash": "3c08c3f",
+            "hash": "3c08c3f11c5318dd8a90633c47a365cb5ea5b810",
+            "subject": "Public build for tsxmr.com: VITE_SITE_SURFACE=public, without the API, the account or the console",
+            "body": "Public build for tsxmr.com: VITE_SITE_SURFACE=public, without the API, the account or the console\n\nThe owner's brief of 2026-10-17: publish the public site at https://tsxmr.com\nwhile the business account (later https://dukan.tsxmr.com) and the API\n(later https://api.tsxmr.com) stay separate. As built, the site needed the\nAPI on its own origin: /apply, /login, /application-status and the Dukan ERP\nprices call it, and /account and /admin ship in the same bundle.\n\nVITE_SITE_SURFACE=public (default full: nothing changes otherwise):\n- the three pages that need the API are not built, linked, prerendered or\n  listed in the sitemap; /account and /admin are not rewritten (404), and a\n  build alias replaces their routes with a stub, so neither area's code is\n  in the bundle;\n- VITE_API_BASE is not asked for, the CSP allows no API origin, no request\n  leaves the page;\n- \"Sign in\" and \"Apply\" link to VITE_PORTAL_ORIGIN once one is given and\n  are absent before; the Dukan ERP page shows no prices and says to ask\n  (EN/FR/AR);\n- every other refusal of a production build stands: blank facts, test\n  values, legal blockers and drafts.\n\nTests: site-surface (release rule, routes, sitemap, headers, rewrites,\nlinks) and site-surface-render (EN/FR/AR pages, unknown /account, /admin,\n/apply). CI builds and audits the public surface too (refusal without the\nAPI, preview, links, bundle --public). .node-version pins Node 22 for\nCloudflare Pages.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE-B",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792200438000
+            },
+            "committer": {
+              "name": "CLAUDE-B",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792200438000
+            },
+            "branch": "tsx-public-site"
+          }
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/3c08c3f11c5318dd8a90633c47a365cb5ea5b810/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/3c08c3f11c5318dd8a90633c47a365cb5ea5b810",
+            "commitHash": "3c08c3f11c5318dd8a90633c47a365cb5ea5b810",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/38990929531"
+          },
+          "gitCommit": {
+            "shortHash": "3c08c3f",
+            "hash": "3c08c3f11c5318dd8a90633c47a365cb5ea5b810",
+            "subject": "Public build for tsxmr.com: VITE_SITE_SURFACE=public, without the API, the account or the console",
+            "body": "Public build for tsxmr.com: VITE_SITE_SURFACE=public, without the API, the account or the console\n\nThe owner's brief of 2026-10-17: publish the public site at https://tsxmr.com\nwhile the business account (later https://dukan.tsxmr.com) and the API\n(later https://api.tsxmr.com) stay separate. As built, the site needed the\nAPI on its own origin: /apply, /login, /application-status and the Dukan ERP\nprices call it, and /account and /admin ship in the same bundle.\n\nVITE_SITE_SURFACE=public (default full: nothing changes otherwise):\n- the three pages that need the API are not built, linked, prerendered or\n  listed in the sitemap; /account and /admin are not rewritten (404), and a\n  build alias replaces their routes with a stub, so neither area's code is\n  in the bundle;\n- VITE_API_BASE is not asked for, the CSP allows no API origin, no request\n  leaves the page;\n- \"Sign in\" and \"Apply\" link to VITE_PORTAL_ORIGIN once one is given and\n  are absent before; the Dukan ERP page shows no prices and says to ask\n  (EN/FR/AR);\n- every other refusal of a production build stands: blank facts, test\n  values, legal blockers and drafts.\n\nTests: site-surface (release rule, routes, sitemap, headers, rewrites,\nlinks) and site-surface-render (EN/FR/AR pages, unknown /account, /admin,\n/apply). CI builds and audits the public surface too (refusal without the\nAPI, preview, links, bundle --public). .node-version pins Node 22 for\nCloudflare Pages.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE-B",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792200438000
+            },
+            "committer": {
+              "name": "CLAUDE-B",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792200438000
+            },
+            "branch": "tsx-public-site"
+          }
+        },
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/3c08c3f11c5318dd8a90633c47a365cb5ea5b810/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
+      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-10-17T01:28:45.150Z",
+    "duration": 145.65400000000005,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
