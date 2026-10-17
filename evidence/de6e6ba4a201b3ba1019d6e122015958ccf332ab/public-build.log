@@ -28,25 +28,25 @@
   - import "./prelaunch" without a file extension (src/content/index.ts:21:140). Add the file extension
   - import "./legal-prelaunch" without a file extension (src/content/index.ts:22:142). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/legal-prelaunch.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
   - import "./types" without a file extension (src/content/legal-prelaunch.ts:2:36). Add the file extension
-  - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
   - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
   - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
-  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
-  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
-  - import "./types" without a file extension (src/content/prelaunch.ts:2:31). Add the file extension
-  - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
   - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/prelaunch.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
   - import "./home" without a file extension (src/content/prelaunch.ts:3:34). Add the file extension
   - import "./dukan-erp" without a file extension (src/content/prelaunch.ts:4:38). Add the file extension
 Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
@@ -64,7 +64,7 @@ dist/assets/index-D7bxVIyj.js   651.76 kB │ gzip: 189.25 kB
 - Using dynamic import() to code-split the application
 - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
-[32m✓ built in 243ms[39m
+[32m✓ built in 220ms[39m
 [33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
   - import "./src/config/schema" without a file extension (vite.config.ts:5:92). Add the file extension
   - import "./src/content" resolves to a directory index (vite.config.ts:6:75). Import the index file directly
@@ -86,26 +86,26 @@ dist/assets/index-D7bxVIyj.js   651.76 kB │ gzip: 189.25 kB
   - import "./dukan-erp" without a file extension (src/content/index.ts:20:38). Add the file extension
   - import "./prelaunch" without a file extension (src/content/index.ts:21:140). Add the file extension
   - import "./legal-prelaunch" without a file extension (src/content/index.ts:22:142). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-prelaunch.ts:1:31). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-prelaunch.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
   - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
   - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
   - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
   - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
-  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
   - import "./types" without a file extension (src/content/prelaunch.ts:2:31). Add the file extension
-  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
-  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
-  - import "./types" without a file extension (src/content/legal-prelaunch.ts:2:36). Add the file extension
   - import "./home" without a file extension (src/content/prelaunch.ts:3:34). Add the file extension
   - import "./dukan-erp" without a file extension (src/content/prelaunch.ts:4:38). Add the file extension
 Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
@@ -116,5 +116,5 @@ rendering chunks...
 computing gzip size...
 dist-ssr/entry-server.js  510.25 kB │ gzip: 132.94 kB
 
-[32m✓ built in 54ms[39m
+[32m✓ built in 51ms[39m
 prerendered 57 pages (3 languages), mode preview, surface public — PREVIEW: test values, noindex

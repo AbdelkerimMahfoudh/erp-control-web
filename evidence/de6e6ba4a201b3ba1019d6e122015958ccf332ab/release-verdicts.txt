@@ -1,7 +1,8 @@
 
-PUBLIC_WEBSITE: NO-GO — 2 reason(s)
+PUBLIC_WEBSITE: NO-GO — 3 reason(s)
   - VITE_PUBLIC_SITE_ORIGIN [missing] Public website origin, e.g. https://<domain>
   - VITE_LEGAL_EFFECTIVE_DATE [missing] Effective date of the published privacy policy and terms (YYYY-MM-DD)
+  - [external] the public browser checks did not all pass (passed 102, failed 1, flaky 0)
 
 PORTAL: NO-GO — 27 reason(s)
   - VITE_PUBLIC_SITE_ORIGIN [missing] Public website origin, e.g. https://<domain>
