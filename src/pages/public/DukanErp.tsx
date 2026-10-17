@@ -75,7 +75,10 @@ export function DukanErp() {
         <ol className="steps">
           {c.start.steps.map((s) => (
             <li key={s}>
-              <RichText text={s} />
+              {/* One grid cell for the whole sentence: a value inside it (e.g. the organization's name) must not become its own cell. */}
+              <span>
+                <RichText text={s} />
+              </span>
             </li>
           ))}
         </ol>
