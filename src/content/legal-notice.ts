@@ -42,14 +42,9 @@ export const legalNotice: Record<Language, LegalDocument> = {
         id: 'ip',
         heading: 'Copyright and trademarks',
         blocks: [
-          { kind: 'p', text: 'The texts, design and software of this website and of Dukan ERP belong to {legalName}, unless a notice says otherwise. They may not be copied or reused without written permission.' },
+          { kind: 'p', text: 'The texts, design and software of this website and of Dukan ERP belong to the operator, unless a notice says otherwise. They may not be copied or reused without written permission.' },
           { kind: 'p', text: 'The names of the mobile-money and payment services a shop records in Dukan ERP belong to their owners. Showing them does not mean those services endorse Dukan ERP or are connected with it.' },
         ],
-      },
-      {
-        id: 'policies',
-        heading: 'Policies',
-        blocks: [{ kind: 'p', text: 'How Dukan ERP is used and how personal information is handled is set out in these pages:' }],
       },
     ],
   },
@@ -86,14 +81,9 @@ export const legalNotice: Record<Language, LegalDocument> = {
         id: 'ip',
         heading: 'Droits d’auteur et marques',
         blocks: [
-          { kind: 'p', text: 'Les textes, la conception et les logiciels de ce site et de Dukan ERP appartiennent à {legalName}, sauf mention contraire. Ils ne peuvent être copiés ni réutilisés sans autorisation écrite.' },
+          { kind: 'p', text: 'Les textes, la conception et les logiciels de ce site et de Dukan ERP appartiennent à l’exploitant, sauf mention contraire. Ils ne peuvent être copiés ni réutilisés sans autorisation écrite.' },
           { kind: 'p', text: 'Les noms des services de paiement mobile et de paiement qu’une boutique enregistre dans Dukan ERP appartiennent à leurs propriétaires. Les afficher ne signifie pas que ces services approuvent Dukan ERP ou y sont liés.' },
         ],
-      },
-      {
-        id: 'policies',
-        heading: 'Politiques',
-        blocks: [{ kind: 'p', text: 'L’utilisation de Dukan ERP et le traitement des informations personnelles sont décrits dans ces pages :' }],
       },
     ],
   },
@@ -130,14 +120,9 @@ export const legalNotice: Record<Language, LegalDocument> = {
         id: 'ip',
         heading: 'حقوق المؤلف والعلامات التجارية',
         blocks: [
-          { kind: 'p', text: 'نصوص هذا الموقع وتصميمه وبرامجه وبرامج Dukan ERP مملوكة لـ{legalName}، ما لم يُذكر خلاف ذلك. ولا يجوز نسخها أو إعادة استخدامها دون إذن كتابي.' },
+          { kind: 'p', text: 'نصوص هذا الموقع وتصميمه وبرامجه وبرامج Dukan ERP مملوكة للمشغّل، ما لم يُذكر خلاف ذلك. ولا يجوز نسخها أو إعادة استخدامها دون إذن كتابي.' },
           { kind: 'p', text: 'أسماء خدمات الدفع عبر الهاتف وخدمات الدفع التي يسجلها المتجر في Dukan ERP مملوكة لأصحابها. وعرضها لا يعني أن هذه الخدمات تؤيد Dukan ERP أو ترتبط به.' },
         ],
-      },
-      {
-        id: 'policies',
-        heading: 'السياسات',
-        blocks: [{ kind: 'p', text: 'تشرح هذه الصفحات كيفية استخدام Dukan ERP وكيفية التعامل مع المعلومات الشخصية:' }],
       },
     ],
   },

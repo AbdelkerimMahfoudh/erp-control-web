@@ -1,4 +1,4 @@
-import { homeFor } from '../../content';
+import { dukanOverviewFor } from '../../content';
 import { SURFACE } from '../../config/site';
 import { useI18n } from '../../i18n';
 import { Icon } from './icons';
@@ -8,7 +8,7 @@ import { Icon } from './icons';
  * recorded once" card. It is an illustration of what the application does, built from the site's own styles — no
  * image to license, nothing the Content-Security-Policy would refuse, and it changes language with the page.
  *
- * Its words come from `content/home.ts` (`visual`). Its numbers are ordinary demo values, labelled as such, with no
+ * Its words come from `content/dukan-overview.ts` (`visual`). Its numbers are ordinary demo values, labelled as such, with no
  * currency and no provider: nothing here is a customer's data or a claim about anyone. It is decorative for assistive
  * technology — the page's text says everything it shows.
  */
@@ -21,7 +21,7 @@ const ROWS = [
 
 export function ProductVisual() {
   const { lang } = useI18n();
-  const v = homeFor(lang, SURFACE).visual;
+  const v = dukanOverviewFor(lang, SURFACE).visual;
   return (
     <div className="pv" aria-hidden="true">
       <div className="pv-phone-wrap">

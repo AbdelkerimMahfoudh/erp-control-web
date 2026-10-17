@@ -108,19 +108,25 @@ for (const lang of LANGS) {
 
   test(`public site: who operates it, said plainly in ${lang} — an individual, no company, nothing invented`, async ({ page }) => {
     const c = CATALOGUE[lang];
-    for (const id of ['legalNotice', 'contact', 'about'] as const) {
+    const NAME = 'Abdel Kerim Taleb Ould Sidi';
+    // The legal notice says who operates TSX-MR and who is responsible for publication — the only page that names the
+    // person twice; every other legal text names them once, and the brand's own pages not at all.
+    await page.goto(pathOf('legalNotice', lang));
+    const notice = (await facts(page)).text;
+    expect(notice).toContain(c['org.statusIndividual']);
+    expect(notice.split(NAME).length - 1).toBe(2);
+    expect(notice).not.toContain(c['org.legalForm']);
+    expect(notice).not.toContain(c['org.registration']);
+    for (const id of ['home', 'services', 'about', 'contact', 'products', 'dukanErp'] as const) {
       await page.goto(pathOf(id, lang));
       const text = (await facts(page)).text;
-      expect(text).toContain(c['org.statusIndividual']);
-      expect(text).toContain('Abdel Kerim Taleb Ould Sidi');
-      // No legal form, trade-register number or company label is ever shown for an individual operator.
+      expect({ id, named: text.includes(NAME) }).toEqual({ id, named: false });
+      expect({ id, html: (await page.content()).includes(NAME) }).toEqual({ id, html: false });
       expect(text).not.toContain(c['org.legalForm']);
-      expect(text).not.toContain(c['org.registration']);
     }
+    // The footer of every page describes the brand in one line, with no name.
+    expect(await page.locator('.chrome-footer').textContent()).toContain(c['footer.brand']);
     await page.goto(pathOf('legalNotice', lang));
-    expect((await facts(page)).text).toContain(c['org.publicationDirector']);
-    // The footer of every page says the same in one sentence.
-    expect((await facts(page)).text).toContain(c['footer.operatorIndividual'].replace('{name}', 'TSX-MR').replace('{operator}', 'Abdel Kerim Taleb Ould Sidi'));
     // The correspondence address the owner gave, in the reader's language, on the legal notice and in the footer —
     // with no street number or postal code, because none was given.
     const address = { en: 'Tevragh Zeina, Nouakchott-Ouest, Mauritania', fr: 'Tevragh Zeina, Nouakchott-Ouest, Mauritanie', ar: 'تفرغ زينة، نواكشوط الغربية، موريتانيا' }[lang];
@@ -271,7 +277,7 @@ for (const lang of LANGS) {
       await expect(panel).toBeVisible();
       const codes = panel.locator('ul.languages a');
       expect(await codes.allInnerTexts()).toEqual(['EN', 'FR', 'AR']);
-      expect(await codes.evaluateAll((as) => as.map((a) => a.getAttribute('aria-label')))).toEqual(['English', 'Français', 'العربية']);
+      expect(await codes.evaluateAll((as) => as.map((a) => a.getAttribute('aria-label')))).toEqual(['EN, English', 'FR, Français', 'AR, العربية']);
       await expect(panel.locator(`ul.languages a[lang="${lang}"]`)).toHaveAttribute('aria-current', 'true');
       for (const a of await panel.locator('a').all()) expect((await a.boundingBox())!.height).toBeGreaterThanOrEqual(44);
       const panelBox = (await panel.boundingBox())!;
@@ -365,6 +371,190 @@ for (const lang of LANGS) {
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto(pathOf('privacy', lang));
     await page.locator('nav.toc').screenshot({ path: shot('toc', lang, pathOf('privacy', lang)) });
+  });
+
+  test(`public site: a link opens its page at the top, focus in its content; Back and Forward return (${lang})`, async ({ page }) => {
+    // The owner's brief of 2026-10-17, fourth: footer and quick links used to open their destination near its bottom.
+    const atTop = () =>
+      page.evaluate(() => {
+        const header = document.querySelector('.chrome-header')!.getBoundingClientRect();
+        const h1 = document.querySelector('main h1')!;
+        return { y: window.scrollY, below: h1.getBoundingClientRect().top >= header.bottom - 1, focus: document.activeElement === h1 };
+      });
+    const toBottom = () => page.evaluate(() => (window.scrollTo(0, document.documentElement.scrollHeight), window.scrollY));
+    for (const width of [375, 1280]) {
+      await page.setViewportSize({ width, height: 800 });
+      for (const [from, link, to] of [
+        ['privacy', `.chrome-footer a[href="${pathOf('about', lang)}"]`, 'about'],
+        ['terms', `.legal-related a[href="${pathOf('legalNotice', lang)}"]`, 'legalNotice'],
+        ['contact', `.legal-related a[href="${pathOf('privacy', lang)}"]`, 'privacy'],
+        ['dukanErp', `.chrome-footer a[href="${pathOf('services', lang)}"]`, 'services'],
+      ] as const) {
+        await page.goto(pathOf(from, lang));
+        await toBottom();
+        // As far down as the link allows: at the very bottom, or with the link on the last line of the screen (on a
+        // phone the quick links sit above a tall footer), so the click does not move the page first.
+        const left = await page.locator(link).evaluate((a) => {
+          if (a.getBoundingClientRect().bottom > window.innerHeight) a.scrollIntoView({ block: 'end' });
+          return window.scrollY;
+        });
+        expect(left, `${from} is long enough to test from its bottom`).toBeGreaterThan(300);
+        // A click from where the reader is: Playwright's own click would first scroll the link to where it prefers.
+        await page.locator(link).evaluate((a: HTMLElement) => a.click());
+        await expect(page).toHaveURL(new RegExp(`${pathOf(to, lang)}$`));
+        // The address changes a moment before the new page is drawn; wait for the page, never a fixed delay.
+        await expect.poll(() => atTop()).toEqual({ y: 0, below: true, focus: true });
+        await page.goBack();
+        await expect(page).toHaveURL(new RegExp(`${pathOf(from, lang)}$`));
+        await expect.poll(() => page.evaluate(() => window.scrollY), { message: `${from} at ${width} px: Back returns to ${left}` }).toBe(left);
+        await page.goForward();
+        await expect(page).toHaveURL(new RegExp(`${pathOf(to, lang)}$`));
+        await expect.poll(() => page.evaluate(() => window.scrollY), { message: `${to} at ${width} px: Forward returns to the top` }).toBe(0);
+      }
+      // The phone menu, used from the bottom of a page: the new page's heading takes focus, not the menu button.
+      if (width === 375) {
+        await page.goto(pathOf('privacy', lang));
+        await toBottom();
+        await page.locator('.chrome-header button.menu-button').click();
+        await page.locator(`#site-menu .nav a[href="${pathOf('about', lang)}"]`).click();
+        await expect(page).toHaveURL(new RegExp(`${pathOf('about', lang)}$`));
+        await expect.poll(() => atTop()).toEqual({ y: 0, below: true, focus: true });
+        await expect(page.locator('.chrome-header button.menu-button')).toHaveAttribute('aria-expanded', 'false');
+      }
+    }
+    // A section link still lands on its section, below the header, with focus on it; Back returns to where it was.
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(pathOf('privacy', lang));
+    const before = await page.evaluate(() => window.scrollY);
+    await page.locator('nav.toc a.toc-link').nth(6).click();
+    await expect.poll(() => page.evaluate(() => document.activeElement?.id === location.hash.slice(1))).toBe(true);
+    const landed = await page.evaluate(() => {
+      const header = document.querySelector('.chrome-header')!.getBoundingClientRect();
+      const section = document.getElementById(location.hash.slice(1))!;
+      return { hash: !!location.hash, gap: section.querySelector('h2')!.getBoundingClientRect().top - header.bottom, focus: document.activeElement === section };
+    });
+    expect(landed.hash && landed.focus && landed.gap >= 0 && landed.gap < 120).toBe(true);
+    await page.goBack();
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(before);
+    // A language switched from the bottom of a page: the page in the other language, from its top (the documented policy).
+    const other = lang === 'fr' ? 'ar' : 'fr';
+    await page.goto(pathOf('terms', lang));
+    await toBottom();
+    await page.locator(`.languages-wide a[lang="${other}"]`).evaluate((a: HTMLElement) => a.click());
+    await expect(page).toHaveURL(new RegExp(`${pathOf('terms', other)}$`));
+    await expect.poll(() => page.evaluate(() => document.documentElement.lang)).toBe(other);
+    await expect.poll(() => atTop()).toEqual({ y: 0, below: true, focus: true });
+  });
+
+  test(`public site: every link stays a real link — a new tab, and a page without a script (${lang})`, async ({ page, context, browser }) => {
+    await page.goto(pathOf('privacy', lang));
+    const footerAbout = page.locator(`.chrome-footer a[href="${pathOf('about', lang)}"]`);
+    const [opened] = await Promise.all([context.waitForEvent('page'), footerAbout.click({ modifiers: ['ControlOrMeta'] })]);
+    await opened.waitForURL(new RegExp(`${pathOf('about', lang)}$`));
+    expect(new URL(opened.url()).pathname).toBe(pathOf('about', lang));
+    expect(new URL(page.url()).pathname).toBe(pathOf('privacy', lang));
+    await opened.close();
+    const plain = await browser.newContext({ javaScriptEnabled: false, baseURL: new URL(page.url()).origin });
+    const noScript = await plain.newPage();
+    await noScript.goto(pathOf('terms', lang));
+    await noScript.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await noScript.locator(`.legal-related a[href="${pathOf('privacy', lang)}"]`).click();
+    await expect(noScript).toHaveURL(new RegExp(`${pathOf('privacy', lang)}$`));
+    expect(await noScript.evaluate(() => window.scrollY)).toBe(0);
+    await plain.close();
+  });
+
+  test(`public site: the language control is three equal segments everywhere, each filled the same way (${lang})`, async ({ page }) => {
+    /** Each segment: its box, the filled area inside it (the content box) and where its label's glyphs sit. */
+    const measure = (selector: string) =>
+      page.$$eval(selector, (as) =>
+        as.map((a) => {
+          const box = a.getBoundingClientRect();
+          const cs = getComputedStyle(a);
+          const range = document.createRange();
+          range.selectNodeContents(a);
+          const glyphs = range.getBoundingClientRect();
+          const fill = { left: box.left + parseFloat(cs.paddingLeft), right: box.right - parseFloat(cs.paddingRight), top: box.top + parseFloat(cs.paddingTop), bottom: box.bottom - parseFloat(cs.paddingBottom) };
+          return { width: box.width, height: box.height, fillWidth: fill.right - fill.left, fillHeight: fill.bottom - fill.top, fill, centreOffset: (glyphs.left + glyphs.right) / 2 - (box.left + box.right) / 2, current: a.getAttribute('aria-current') === 'true', label: a.getAttribute('aria-label') };
+        }),
+      );
+    const check = async (where: string, selector: string, list: string) => {
+      const segs = await measure(selector);
+      expect(segs.length, where).toBe(3);
+      for (const s of segs) {
+        expect(s.height, `${where}: a 44 px target`).toBeGreaterThanOrEqual(44);
+        expect(Math.abs(s.width - segs[0]!.width), `${where}: equal segments`).toBeLessThanOrEqual(0.5);
+        expect(Math.abs(s.centreOffset), `${where}: the label centred`).toBeLessThanOrEqual(1);
+      }
+      expect(segs.map((s) => s.label)).toEqual(['EN, English', 'FR, Français', 'AR, العربية']);
+      expect(segs.filter((s) => s.current)).toHaveLength(1);
+      // The same inset at both ends and between segments.
+      const outer = await page.$eval(list, (ul) => ul.getBoundingClientRect());
+      const fills = segs.map((s) => s.fill).sort((a, b) => a.left - b.left);
+      const insets = [fills[0]!.left - outer.left, fills[1]!.left - fills[0]!.right, fills[2]!.left - fills[1]!.right, outer.right - fills[2]!.right, fills[0]!.top - outer.top, outer.bottom - fills[0]!.bottom];
+      for (const inset of insets) expect(Math.abs(inset - insets[0]!), `${where}: equal insets ${insets.join(', ')}`).toBeLessThanOrEqual(0.5);
+      return segs.find((s) => s.current)!;
+    };
+    const filled: Record<string, { fillWidth: number; fillHeight: number }[]> = { wide: [], narrow: [], app: [] };
+    for (const current of LANGS) {
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto(pathOf('privacy', current));
+      filled.wide!.push(await check(`wide ${current}`, '.languages-wide a', '.languages-wide'));
+      await page.goto(inAppPathOf('privacy', current));
+      filled.app!.push(await check(`app ${current}`, '.in-app-header .languages a', '.in-app-header .languages'));
+      await page.setViewportSize({ width: 375, height: 800 });
+      await page.goto(pathOf('privacy', current));
+      await page.locator('.chrome-header button.menu-button').click();
+      filled.narrow!.push(await check(`narrow ${current}`, '#site-menu .languages a', '#site-menu .languages'));
+      if (current === lang) await page.locator('#site-menu .languages').screenshot({ path: shot('selector-narrow', lang, pathOf('privacy', lang)) });
+    }
+    // EN, FR and AR selected: the filled background has the same size every time.
+    for (const [where, fills] of Object.entries(filled)) {
+      for (const f of fills) expect({ where, w: Math.round(f.fillWidth * 2) / 2, h: Math.round(f.fillHeight * 2) / 2 }).toEqual({ where, w: Math.round(fills[0]!.fillWidth * 2) / 2, h: Math.round(fills[0]!.fillHeight * 2) / 2 });
+    }
+  });
+
+  test(`public site: one group of quick links per page, the current page shown as text (${lang})`, async ({ page }) => {
+    for (const id of ['privacy', 'terms', 'accountDeletion', 'privacyChoices', 'legalNotice', 'security', 'support', 'contact'] as const) {
+      await page.goto(pathOf(id, lang));
+      const f = await page.evaluate((here) => {
+        const main = document.querySelector('main')!;
+        const groups = main.querySelectorAll('.legal-links');
+        const related = main.querySelector('.legal-related');
+        const headings = [...main.querySelectorAll('h2')].map((h) => h.textContent?.trim());
+        return {
+          groups: groups.length,
+          last: related === main.querySelector('article')?.lastElementChild || related === main.lastElementChild?.lastElementChild,
+          current: related?.querySelector('[aria-current="page"]')?.tagName ?? null,
+          selfLink: !!related?.querySelector(`a[href="${here}"]`),
+          links: related?.querySelectorAll('a').length ?? 0,
+          repeatedHeading: headings.some((h, i) => i > 0 && h === headings[i - 1]),
+        };
+      }, pathOf(id, lang));
+      const policy = id !== 'contact';
+      expect({ id, ...f }).toEqual({ id, groups: 1, last: true, current: policy ? 'SPAN' : null, selfLink: false, links: policy ? 6 : 7, repeatedHeading: false });
+    }
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(pathOf('legalNotice', lang));
+    await page.locator('.legal-related').screenshot({ path: shot('legal-nav', lang, pathOf('legalNotice', lang)) });
+    // The pages the app opens: their footer is the only list, legal pages only.
+    await page.goto(inAppPathOf('terms', lang));
+    expect(await page.locator('main .legal-links').count()).toBe(0);
+    expect(await page.locator('.in-app-footer .legal-links').count()).toBe(1);
+    expect(await page.locator('.in-app-footer [aria-current="page"]').evaluate((el) => el.tagName)).toBe('SPAN');
+  });
+
+  test(`public site: the brand pages fit 320 and 375 px, in light and dark (${lang})`, async ({ page }) => {
+    for (const theme of ['light', 'dark'] as const) {
+      await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
+      for (const width of [320, 375]) {
+        await page.setViewportSize({ width, height: 800 });
+        for (const id of ['home', 'services', 'products', 'about', 'contact', 'dukanErp'] as const) {
+          await page.goto(pathOf(id, lang));
+          expect({ id, width, theme, overflow: (await facts(page)).overflow }).toEqual({ id, width, theme, overflow: 0 });
+        }
+      }
+    }
   });
 
   test(`public site: the pages the app opens answer in ${lang}, without the site's navigation`, async ({ page }) => {

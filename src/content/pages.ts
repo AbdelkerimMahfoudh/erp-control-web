@@ -2,79 +2,83 @@ import type { Language } from '../i18n/languages';
 import type { Document } from './types';
 
 /**
- * The shorter public pages (docs/74 §4). About states only what TSX-MR is and does; the operator-details block and
- * the contact addresses are rendered from the production inputs, so verified facts can be added without a redesign.
+ * The shorter public pages (docs/74 §4). About states only what TSX-MR is and does — an independent development brand,
+ * its services for clients and its own product (the owner's brief of 2026-10-17, fourth) — and leaves who operates it
+ * to the legal notice; the contact addresses are rendered from the production inputs.
  */
 type Docs = Record<Language, Document>;
 
 export const about: Docs = {
   en: {
     title: 'About {displayName}',
-    summary: '{displayName} develops digital business-management solutions in Mauritania. Dukan ERP is one of its products.',
+    summary: '{displayName} is an independent development brand managed by a Mauritanian developer. It builds websites, mobile applications and business tools for clients, and Dukan ERP as its own product.',
     sections: [
-      { id: 'who', heading: 'Who we are', blocks: [{ kind: 'p', text: '{displayName} develops digital business-management solutions in Mauritania. Its work starts from the daily reality of local businesses: stock that moves quickly, money that passes through cash and mobile accounts, and teams that share the work across several stores.' }] },
-      { id: 'product', heading: 'What we build', blocks: [{ kind: 'p', text: 'Dukan ERP is one of our products. {displayName} develops and operates it: we build the application, run the service and support the businesses that use it.' }] },
+      { id: 'who', heading: 'What {displayName} is', blocks: [{ kind: 'p', text: '{displayName} is an independent development brand, managed by a Mauritanian developer.' }] },
+      { id: 'work', heading: 'What it builds for clients', blocks: [{ kind: 'p', text: 'Websites, mobile applications and business tools, designed around the way each client works, in Arabic, French and English. The services page describes each of them.' }] },
+      { id: 'product', heading: 'Its own product', blocks: [{ kind: 'p', text: 'Dukan ERP is the first product {displayName} builds as its own: a business-management application for retail and electronics shops and for money-services agents. {displayName} develops it and operates the service.' }] },
       {
         id: 'principles',
-        heading: 'How we build',
+        heading: 'How it works',
         blocks: [
           {
             kind: 'list',
             items: [
-              'Every feature should make daily work faster or safer, with less typing.',
-              'Businesses decide who can see their records; the server enforces it.',
-              'Arabic, French and English are supported from the start.',
+              'Each project starts from the way the people who will use it actually work.',
+              'Simple screens and plain words, for people who are not technical.',
+              'Arabic, French and English from the start, right-to-left included.',
             ],
           },
         ],
       },
-      { id: 'details', heading: 'Who operates {displayName}', blocks: [{ kind: 'p', text: '{operatorStatus} The operator’s details are listed below.' }] },
+      { id: 'publisher', heading: 'Who publishes this website', blocks: [{ kind: 'p', text: 'The legal notice says who operates {displayName} and publishes this website.' }] },
     ],
   },
   fr: {
     title: 'À propos de {displayName}',
-    summary: '{displayName} développe des solutions numériques de gestion d’entreprise en Mauritanie. Dukan ERP est l’un de ses produits.',
+    summary: '{displayName} est une marque indépendante de développement, gérée par un développeur mauritanien. Elle réalise des sites web, des applications mobiles et des outils de gestion pour des clients, ainsi que Dukan ERP, son propre produit.',
     sections: [
-      { id: 'who', heading: 'Qui nous sommes', blocks: [{ kind: 'p', text: '{displayName} développe des solutions numériques de gestion d’entreprise en Mauritanie. Son travail part de la réalité quotidienne des entreprises locales : un stock qui tourne vite, de l’argent qui passe par la caisse et par des comptes mobiles, et des équipes qui se partagent le travail entre plusieurs magasins.' }] },
-      { id: 'product', heading: 'Ce que nous construisons', blocks: [{ kind: 'p', text: 'Dukan ERP est l’un de nos produits. {displayName} le développe et l’exploite : nous construisons l’application, faisons fonctionner le service et accompagnons les entreprises qui l’utilisent.' }] },
+      { id: 'who', heading: 'Ce qu’est {displayName}', blocks: [{ kind: 'p', text: '{displayName} est une marque indépendante de développement, gérée par un développeur mauritanien.' }] },
+      { id: 'work', heading: 'Ce qu’elle réalise pour ses clients', blocks: [{ kind: 'p', text: 'Des sites web, des applications mobiles et des outils de gestion, conçus selon la façon de travailler de chaque client, en arabe, en français et en anglais. La page Services décrit chacun d’eux.' }] },
+      { id: 'product', heading: 'Son propre produit', blocks: [{ kind: 'p', text: 'Dukan ERP est le premier produit que {displayName} développe pour son propre compte : une application de gestion pour les commerces de détail et d’électronique et pour les agents de services monétaires. {displayName} le développe et en exploite le service.' }] },
       {
         id: 'principles',
-        heading: 'Notre manière de construire',
+        heading: 'Sa façon de travailler',
         blocks: [
           {
             kind: 'list',
             items: [
-              'Chaque fonction doit rendre le travail quotidien plus rapide ou plus sûr, avec moins de saisie.',
-              'Les entreprises décident qui peut voir leurs données ; le serveur l’applique.',
-              'L’arabe, le français et l’anglais sont pris en charge dès le départ.',
+              'Chaque projet part de la façon dont travaillent réellement ceux qui l’utiliseront.',
+              'Des écrans simples et des mots clairs, pour des personnes qui ne sont pas techniciennes.',
+              'L’arabe, le français et l’anglais dès le départ, écriture de droite à gauche comprise.',
             ],
           },
         ],
       },
-      { id: 'details', heading: 'Qui exploite {displayName}', blocks: [{ kind: 'p', text: '{operatorStatus} Les informations sur l’exploitant figurent ci-dessous.' }] },
+      { id: 'publisher', heading: 'Qui publie ce site', blocks: [{ kind: 'p', text: 'Les mentions légales indiquent qui exploite {displayName} et publie ce site.' }] },
     ],
   },
   ar: {
     title: 'عن {displayName}',
-    summary: 'تطوّر {displayName} حلولًا رقمية لإدارة الأعمال في موريتانيا، وDukan ERP أحد منتجاتها.',
+    summary: '{displayName} علامة تطوير مستقلة يديرها مطوّر موريتاني. تبني مواقع الويب وتطبيقات الهاتف وأدوات الإدارة للعملاء، إلى جانب Dukan ERP، منتجها الخاص.',
     sections: [
-      { id: 'who', heading: 'من نحن', blocks: [{ kind: 'p', text: 'تطوّر {displayName} حلولًا رقمية لإدارة الأعمال في موريتانيا. وينطلق عملها من الواقع اليومي للشركات المحلية: مخزون يتحرك بسرعة، وأموال تمرّ عبر الصندوق والحسابات عبر الهاتف، وفرق تتقاسم العمل بين عدة متاجر.' }] },
-      { id: 'product', heading: 'ماذا نبني', blocks: [{ kind: 'p', text: 'Dukan ERP أحد منتجاتنا. تطوّره {displayName} وتشغّله: نبني التطبيق، ونشغّل الخدمة، وندعم الشركات التي تستخدمه.' }] },
+      { id: 'who', heading: 'ما هي {displayName}', blocks: [{ kind: 'p', text: '{displayName} علامة تطوير مستقلة يديرها مطوّر موريتاني.' }] },
+      { id: 'work', heading: 'ما تبنيه للعملاء', blocks: [{ kind: 'p', text: 'مواقع الويب وتطبيقات الهاتف وأدوات الإدارة، مصمَّمة وفق طريقة عمل كل عميل، بالعربية والفرنسية والإنجليزية. وتصف صفحة الخدمات كلًّا منها.' }] },
+      { id: 'product', heading: 'منتجها الخاص', blocks: [{ kind: 'p', text: 'Dukan ERP أول منتج تطوّره {displayName} لحسابها الخاص: تطبيق لإدارة الأعمال موجّه إلى متاجر التجزئة والإلكترونيات ووكلاء الخدمات المالية. وتطوّره {displayName} وتشغّل خدمته.' }] },
       {
         id: 'principles',
-        heading: 'كيف نبني',
+        heading: 'طريقة العمل',
         blocks: [
           {
             kind: 'list',
             items: [
-              'ينبغي لكل وظيفة أن تجعل العمل اليومي أسرع أو أكثر أمانًا، بكتابة أقل.',
-              'تقرّر الشركات من يمكنه رؤية سجلاتها، ويطبّق الخادم ذلك.',
-              'العربية والفرنسية والإنجليزية مدعومة منذ البداية.',
+              'ينطلق كل مشروع من الطريقة التي يعمل بها فعلًا من سيستخدمونه.',
+              'شاشات بسيطة وكلمات واضحة، لأشخاص ليسوا تقنيين.',
+              'العربية والفرنسية والإنجليزية منذ البداية، مع الكتابة من اليمين إلى اليسار.',
             ],
           },
         ],
       },
-      { id: 'details', heading: 'من يشغّل {displayName}', blocks: [{ kind: 'p', text: '{operatorStatus} وبيانات المشغّل مذكورة أدناه.' }] },
+      { id: 'publisher', heading: 'من ينشر هذا الموقع', blocks: [{ kind: 'p', text: 'يبيّن الإشعار القانوني من يشغّل {displayName} وينشر هذا الموقع.' }] },
     ],
   },
 };
@@ -82,17 +86,17 @@ export const about: Docs = {
 export const products: Docs = {
   en: {
     title: 'Products',
-    summary: 'Software developed and operated by {displayName}.',
+    summary: 'The software {displayName} builds as its own products. Today there is one: Dukan ERP.',
     sections: [{ id: 'dukan', heading: 'Dukan ERP', blocks: [{ kind: 'p', text: 'A business-management platform for retail and electronics shops and for money-services agents: stock, sales, money, teams and reports in one application.' }] }],
   },
   fr: {
     title: 'Produits',
-    summary: 'Les logiciels développés et exploités par {displayName}.',
+    summary: 'Les logiciels que {displayName} développe comme ses propres produits. Il y en a un aujourd’hui : Dukan ERP.',
     sections: [{ id: 'dukan', heading: 'Dukan ERP', blocks: [{ kind: 'p', text: 'Une plateforme de gestion pour les commerces de détail et d’électronique et pour les agents de services monétaires : stock, ventes, argent, équipes et rapports dans une seule application.' }] }],
   },
   ar: {
     title: 'المنتجات',
-    summary: 'البرمجيات التي تطوّرها {displayName} وتشغّلها.',
+    summary: 'البرمجيات التي تطوّرها {displayName} منتجاتٍ خاصة بها. ويوجد اليوم منتج واحد: Dukan ERP.',
     sections: [{ id: 'dukan', heading: 'Dukan ERP', blocks: [{ kind: 'p', text: 'منصة لإدارة الأعمال موجّهة إلى متاجر التجزئة والإلكترونيات وإلى وكلاء الخدمات المالية: المخزون والمبيعات والأموال والفرق والتقارير في تطبيق واحد.' }] }],
   },
 };
@@ -100,7 +104,7 @@ export const products: Docs = {
 export const contact: Docs = {
   en: {
     title: 'Contact {displayName}',
-    summary: 'How to reach {displayName} about Dukan ERP, a business account or this website.',
+    summary: 'How to reach {displayName} about a project, Dukan ERP, a business account or this website.',
     sections: [
       { id: 'write', heading: 'Write to us', blocks: [{ kind: 'p', text: 'Choose the address that fits your question. Each one opens your email application with the address already filled in.' }] },
       {
@@ -120,7 +124,7 @@ export const contact: Docs = {
   },
   fr: {
     title: 'Contacter {displayName}',
-    summary: 'Comment joindre {displayName} au sujet de Dukan ERP, d’un compte entreprise ou de ce site.',
+    summary: 'Comment joindre {displayName} au sujet d’un projet, de Dukan ERP, d’un compte entreprise ou de ce site.',
     sections: [
       { id: 'write', heading: 'Nous écrire', blocks: [{ kind: 'p', text: 'Choisissez l’adresse qui correspond à votre question. Chacune ouvre votre messagerie avec l’adresse déjà remplie.' }] },
       {
@@ -140,7 +144,7 @@ export const contact: Docs = {
   },
   ar: {
     title: 'تواصل مع {displayName}',
-    summary: 'كيف تتواصل مع {displayName} بشأن Dukan ERP أو حساب شركة أو هذا الموقع.',
+    summary: 'كيف تتواصل مع {displayName} بشأن مشروع أو Dukan ERP أو حساب شركة أو هذا الموقع.',
     sections: [
       { id: 'write', heading: 'راسلنا', blocks: [{ kind: 'p', text: 'اختر العنوان المناسب لسؤالك. يفتح كل عنوان تطبيق البريد لديك مع ملء العنوان مسبقًا.' }] },
       {

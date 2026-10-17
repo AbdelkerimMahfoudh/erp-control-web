@@ -97,7 +97,8 @@ function structuredData(h: HeadInput, canonical: string | null): object[] {
       }
     : undefined;
   // An individual operator (the owner's brief of 2026-10-17, third): TSX-MR is a name, not a company, so the
-  // organization carries no legal name; the website names the person who publishes it.
+  // organization carries no legal name. The person who publishes the website is named where the website says who
+  // publishes it — the legal notice — and not on every page (the brief of 2026-10-17, fourth).
   const individual = h.site.operatorType !== 'company';
   const operator = real('legalName', h.site.legalName);
   const organization = {
@@ -110,7 +111,7 @@ function structuredData(h: HeadInput, canonical: string | null): object[] {
     address,
   };
   const graph: object[] = [organization];
-  if (individual && operator) {
+  if (individual && operator && h.id === 'legalNotice') {
     graph.push({
       '@type': 'WebSite',
       '@id': `${origin}/#website`,

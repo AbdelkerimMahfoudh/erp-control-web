@@ -27,12 +27,12 @@ type Legal = Record<Language, LegalDocument>;
 
 export const privacyPrelaunch: Legal = {
   en: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'Privacy policy',
     summary: 'How {displayName} handles personal information on this website before Dukan ERP opens.',
     sections: [
-      { id: 'who', heading: 'Who is responsible', blocks: [{ kind: 'p', text: '{operatorStatus} This website is published under that name, and {legalName} is responsible for the personal information it processes. Correspondence address: {postalAddress}. For any question about personal information, write to {privacyEmail}.' }] },
+      { id: 'who', heading: 'Who is responsible', blocks: [{ kind: 'p', text: '{operatorStatus} This website is published under that name, and the operator is responsible for the personal information it processes. Correspondence address: {postalAddress}. For any question about personal information, write to {privacyEmail}.' }] },
       { id: 'scope', heading: 'What this policy covers', blocks: [{ kind: 'p', text: 'This policy covers this website only. Dukan ERP, a business-management product operated under the {displayName} name, is not yet open for public registration and collects no information through this website. A privacy policy for the Dukan ERP service will be published here before the service opens. It will describe what the service collects and name the providers it relies on, which are planned to include Brevo for transactional email and Meta’s WhatsApp Business Platform (Cloud API) for verification messages. Neither is used by this website.' }] },
       {
         id: 'collected',
@@ -60,12 +60,12 @@ export const privacyPrelaunch: Legal = {
     ],
   },
   fr: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'Politique de confidentialité',
     summary: 'Comment {displayName} traite les informations personnelles sur ce site avant l’ouverture de Dukan ERP.',
     sections: [
-      { id: 'who', heading: 'Qui est responsable', blocks: [{ kind: 'p', text: '{operatorStatus} Ce site est publié sous ce nom, et {legalName} est responsable des informations personnelles qu’il traite. Adresse de correspondance : {postalAddress}. Pour toute question sur les informations personnelles, écrivez à {privacyEmail}.' }] },
+      { id: 'who', heading: 'Qui est responsable', blocks: [{ kind: 'p', text: '{operatorStatus} Ce site est publié sous ce nom, et l’exploitant est responsable des informations personnelles qu’il traite. Adresse de correspondance : {postalAddress}. Pour toute question sur les informations personnelles, écrivez à {privacyEmail}.' }] },
       { id: 'scope', heading: 'Ce que couvre cette politique', blocks: [{ kind: 'p', text: 'Cette politique couvre uniquement ce site. Dukan ERP, un produit de gestion d’entreprise exploité sous le nom {displayName}, n’est pas encore ouvert aux inscriptions et ne collecte aucune information par ce site. Une politique de confidentialité du service Dukan ERP sera publiée ici avant son ouverture. Elle décrira ce que collecte le service et nommera les prestataires sur lesquels il s’appuie, dont il est prévu qu’ils comprennent Brevo pour les e-mails transactionnels et la plateforme WhatsApp Business de Meta (Cloud API) pour les messages de vérification. Aucun des deux n’est utilisé par ce site.' }] },
       {
         id: 'collected',
@@ -93,12 +93,12 @@ export const privacyPrelaunch: Legal = {
     ],
   },
   ar: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'سياسة الخصوصية',
     summary: 'كيف يتعامل {displayName} مع المعلومات الشخصية على هذا الموقع قبل افتتاح Dukan ERP.',
     sections: [
-      { id: 'who', heading: 'من المسؤول', blocks: [{ kind: 'p', text: '{operatorStatus} ويُنشر هذا الموقع بهذا الاسم، وتقع المسؤولية عن المعلومات الشخصية التي يعالجها على {legalName}. عنوان المراسلة: {postalAddress}. لأي سؤال عن المعلومات الشخصية، راسلوا {privacyEmail}.' }] },
+      { id: 'who', heading: 'من المسؤول', blocks: [{ kind: 'p', text: '{operatorStatus} ويُنشر هذا الموقع بهذا الاسم، وتقع المسؤولية عن المعلومات الشخصية التي يعالجها على المشغّل. عنوان المراسلة: {postalAddress}. لأي سؤال عن المعلومات الشخصية، راسلوا {privacyEmail}.' }] },
       { id: 'scope', heading: 'ما تشمله هذه السياسة', blocks: [{ kind: 'p', text: 'تشمل هذه السياسة هذا الموقع وحده. أما Dukan ERP، منتج إدارة الأعمال الذي يُشغَّل تحت اسم {displayName}، فالتسجيل فيه غير مفتوح للعموم بعد، ولا يجمع أي معلومات عبر هذا الموقع. وستُنشر هنا سياسة خصوصية خاصة بخدمة Dukan ERP قبل افتتاحها، تصف ما تجمعه الخدمة وتسمّي المزوّدين الذين تعتمد عليهم، ومن المقرر أن يكون بينهم Brevo للرسائل الإلكترونية التشغيلية ومنصة WhatsApp Business التابعة لـMeta (Cloud API) لرسائل التحقق. ولا يستخدم هذا الموقع أيًّا منهما.' }] },
       {
         id: 'collected',
@@ -129,7 +129,7 @@ export const privacyPrelaunch: Legal = {
 
 export const termsPrelaunch: Legal = {
   en: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'Terms of use of this website',
     summary: 'The terms for using this website before Dukan ERP opens.',
@@ -137,7 +137,7 @@ export const termsPrelaunch: Legal = {
       { id: 'who', heading: 'Who publishes this website', blocks: [{ kind: 'p', text: '{operatorStatus} This website is published under that name. By using it, you accept these terms.' }] },
       { id: 'prelaunch', heading: 'Dukan ERP is not yet available', blocks: [{ kind: 'p', text: 'Dukan ERP is being prepared for launch. This website does not sell it, take registrations for it or form any contract for it. The terms of service of Dukan ERP will be published here before the service opens.' }] },
       { id: 'information', heading: 'Information on this website', blocks: [{ kind: 'p', text: 'The descriptions of Dukan ERP show the product as it is being built. They may change before launch. They are not an offer, a price or a promise of availability.' }] },
-      { id: 'ip', heading: 'Intellectual property', blocks: [{ kind: 'p', text: 'The texts, design and software of this website belong to {legalName}, unless a notice says otherwise. They may not be copied or reused without written permission.' }] },
+      { id: 'ip', heading: 'Intellectual property', blocks: [{ kind: 'p', text: 'The texts, design and software of this website belong to the operator, unless a notice says otherwise. They may not be copied or reused without written permission.' }] },
       {
         id: 'use',
         heading: 'Using this website',
@@ -148,7 +148,7 @@ export const termsPrelaunch: Legal = {
     ],
   },
   fr: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'Conditions d’utilisation de ce site',
     summary: 'Les conditions d’utilisation de ce site avant l’ouverture de Dukan ERP.',
@@ -156,7 +156,7 @@ export const termsPrelaunch: Legal = {
       { id: 'who', heading: 'Qui publie ce site', blocks: [{ kind: 'p', text: '{operatorStatus} Ce site est publié sous ce nom. En l’utilisant, vous acceptez ces conditions.' }] },
       { id: 'prelaunch', heading: 'Dukan ERP n’est pas encore disponible', blocks: [{ kind: 'p', text: 'Dukan ERP est en préparation pour son lancement. Ce site ne le vend pas, n’enregistre pas d’inscriptions et ne conclut aucun contrat à son sujet. Les conditions de service de Dukan ERP seront publiées ici avant son ouverture.' }] },
       { id: 'information', heading: 'Les informations de ce site', blocks: [{ kind: 'p', text: 'Les descriptions de Dukan ERP présentent le produit tel qu’il est en cours de construction. Elles peuvent changer avant le lancement. Elles ne constituent ni une offre, ni un prix, ni une promesse de disponibilité.' }] },
-      { id: 'ip', heading: 'Propriété intellectuelle', blocks: [{ kind: 'p', text: 'Les textes, la présentation et le logiciel de ce site appartiennent à {legalName}, sauf mention contraire. Ils ne peuvent être copiés ou réutilisés sans autorisation écrite.' }] },
+      { id: 'ip', heading: 'Propriété intellectuelle', blocks: [{ kind: 'p', text: 'Les textes, la présentation et le logiciel de ce site appartiennent à l’exploitant, sauf mention contraire. Ils ne peuvent être copiés ou réutilisés sans autorisation écrite.' }] },
       {
         id: 'use',
         heading: 'Utilisation de ce site',
@@ -167,7 +167,7 @@ export const termsPrelaunch: Legal = {
     ],
   },
   ar: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'شروط استخدام هذا الموقع',
     summary: 'شروط استخدام هذا الموقع قبل افتتاح Dukan ERP.',
@@ -175,7 +175,7 @@ export const termsPrelaunch: Legal = {
       { id: 'who', heading: 'من ينشر هذا الموقع', blocks: [{ kind: 'p', text: '{operatorStatus} ويُنشر هذا الموقع بهذا الاسم. وباستخدامكم له، فإنكم تقبلون هذه الشروط.' }] },
       { id: 'prelaunch', heading: 'Dukan ERP غير متاح بعد', blocks: [{ kind: 'p', text: 'Dukan ERP قيد التحضير للإطلاق. ولا يبيعه هذا الموقع ولا يقبل التسجيل فيه ولا يُبرم أي عقد بشأنه. وستُنشر هنا شروط خدمة Dukan ERP قبل افتتاحها.' }] },
       { id: 'information', heading: 'المعلومات على هذا الموقع', blocks: [{ kind: 'p', text: 'تعرض أوصاف Dukan ERP المنتج كما يُبنى الآن. وقد تتغير قبل الإطلاق. وهي ليست عرضًا تعاقديًا ولا سعرًا ولا وعدًا بالإتاحة.' }] },
-      { id: 'ip', heading: 'الملكية الفكرية', blocks: [{ kind: 'p', text: 'نصوص هذا الموقع وتصميمه وبرمجياته ملك لـ{legalName}، ما لم يُذكر خلاف ذلك. ولا يجوز نسخها أو إعادة استخدامها دون إذن كتابي.' }] },
+      { id: 'ip', heading: 'الملكية الفكرية', blocks: [{ kind: 'p', text: 'نصوص هذا الموقع وتصميمه وبرمجياته ملك للمشغّل، ما لم يُذكر خلاف ذلك. ولا يجوز نسخها أو إعادة استخدامها دون إذن كتابي.' }] },
       {
         id: 'use',
         heading: 'استخدام هذا الموقع',
@@ -267,7 +267,7 @@ export const privacyChoicesPrelaunch: Legal = {
 
 export const legalNoticePrelaunch: Legal = {
   en: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'Legal notice',
     summary: 'Who publishes this website, and how to reach them.',
@@ -277,12 +277,11 @@ export const legalNoticePrelaunch: Legal = {
       { id: 'product', heading: 'Dukan ERP', blocks: [{ kind: 'p', text: 'Dukan ERP is a product operated under the {displayName} name. It is being prepared for launch and is not yet open for public registration.' }] },
       { id: 'hosting', heading: 'Hosting', blocks: [{ kind: 'p', text: 'This website is hosted by Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, United States.' }] },
       { id: 'contact', heading: 'Contact', blocks: [{ kind: 'p', text: 'Write to the address that matches your question:' }] },
-      { id: 'ip', heading: 'Copyright and trademarks', blocks: [{ kind: 'p', text: 'The texts, design and software of this website belong to {legalName}, unless a notice says otherwise. They may not be copied or reused without written permission.' }] },
-      { id: 'policies', heading: 'Policies', blocks: [{ kind: 'p', text: 'How this website handles information is set out in these pages:' }] },
+      { id: 'ip', heading: 'Copyright and trademarks', blocks: [{ kind: 'p', text: 'The texts, design and software of this website belong to the operator, unless a notice says otherwise. They may not be copied or reused without written permission.' }] },
     ],
   },
   fr: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'Mentions légales',
     summary: 'Qui publie ce site, et comment le joindre.',
@@ -292,12 +291,11 @@ export const legalNoticePrelaunch: Legal = {
       { id: 'product', heading: 'Dukan ERP', blocks: [{ kind: 'p', text: 'Dukan ERP est un produit exploité sous le nom {displayName}. Il est en préparation pour son lancement et n’est pas encore ouvert aux inscriptions.' }] },
       { id: 'hosting', heading: 'Hébergement', blocks: [{ kind: 'p', text: 'Ce site est hébergé par Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, États-Unis.' }] },
       { id: 'contact', heading: 'Contact', blocks: [{ kind: 'p', text: 'Écrivez à l’adresse qui correspond à votre question :' }] },
-      { id: 'ip', heading: 'Droits d’auteur et marques', blocks: [{ kind: 'p', text: 'Les textes, la présentation et le logiciel de ce site appartiennent à {legalName}, sauf mention contraire. Ils ne peuvent être copiés ou réutilisés sans autorisation écrite.' }] },
-      { id: 'policies', heading: 'Politiques', blocks: [{ kind: 'p', text: 'La manière dont ce site traite les informations est exposée dans ces pages :' }] },
+      { id: 'ip', heading: 'Droits d’auteur et marques', blocks: [{ kind: 'p', text: 'Les textes, la présentation et le logiciel de ce site appartiennent à l’exploitant, sauf mention contraire. Ils ne peuvent être copiés ou réutilisés sans autorisation écrite.' }] },
     ],
   },
   ar: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'إشعار قانوني',
     summary: 'من ينشر هذا الموقع، وكيف يمكن التواصل معه.',
@@ -307,8 +305,7 @@ export const legalNoticePrelaunch: Legal = {
       { id: 'product', heading: 'Dukan ERP', blocks: [{ kind: 'p', text: 'Dukan ERP منتج يُشغَّل تحت اسم {displayName}. وهو قيد التحضير للإطلاق، والتسجيل فيه غير مفتوح للعموم بعد.' }] },
       { id: 'hosting', heading: 'الاستضافة', blocks: [{ kind: 'p', text: 'تستضيف هذا الموقعَ شركة \u2066Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107\u2069، الولايات المتحدة.' }] },
       { id: 'contact', heading: 'التواصل', blocks: [{ kind: 'p', text: 'راسلوا العنوان الذي يناسب سؤالكم:' }] },
-      { id: 'ip', heading: 'حقوق النشر والعلامات التجارية', blocks: [{ kind: 'p', text: 'نصوص هذا الموقع وتصميمه وبرمجياته ملك لـ{legalName}، ما لم يُذكر خلاف ذلك. ولا يجوز نسخها أو إعادة استخدامها دون إذن كتابي.' }] },
-      { id: 'policies', heading: 'السياسات', blocks: [{ kind: 'p', text: 'تشرح هذه الصفحات كيف يتعامل هذا الموقع مع المعلومات:' }] },
+      { id: 'ip', heading: 'حقوق النشر والعلامات التجارية', blocks: [{ kind: 'p', text: 'نصوص هذا الموقع وتصميمه وبرمجياته ملك للمشغّل، ما لم يُذكر خلاف ذلك. ولا يجوز نسخها أو إعادة استخدامها دون إذن كتابي.' }] },
     ],
   },
 };

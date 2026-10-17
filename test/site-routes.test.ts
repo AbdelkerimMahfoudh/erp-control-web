@@ -96,12 +96,19 @@ describe('the head (docs/74 §5)', () => {
     expect(filled).not.toContain('PostalAddress');
   });
 
-  it('an individual operator: the organization carries no legal name, and the website names the person who publishes it', () => {
-    const json = JSON.stringify(input({ site: { ...SITE, operatorType: 'individual', legalName: 'Abdel Kerim Taleb Ould Sidi', contactEmail: 'contact@tsxmr.com' } }).jsonLd);
-    expect(json).not.toContain('"legalName"');
-    expect(json).toContain('"publisher":{"@type":"Person","name":"Abdel Kerim Taleb Ould Sidi"}');
-    expect(json).toContain('"email":"contact@tsxmr.com"');
-    expect(json).not.toMatch(/SARL|RCCM|taxID|vatID|identifier/);
+  it('an individual operator: the organization carries no legal name; only the legal notice names the person who publishes it', () => {
+    const site = { ...SITE, operatorType: 'individual', legalName: 'Abdel Kerim Taleb Ould Sidi', contactEmail: 'contact@tsxmr.com' };
+    const notice = JSON.stringify(input({ id: 'legalNotice', site }).jsonLd);
+    expect(notice).not.toContain('"legalName"');
+    expect(notice).toContain('"publisher":{"@type":"Person","name":"Abdel Kerim Taleb Ould Sidi"}');
+    expect(notice).toContain('"email":"contact@tsxmr.com"');
+    expect(notice).not.toMatch(/SARL|RCCM|taxID|vatID|identifier/);
+    // Every other page describes the brand only (the brief of 2026-10-17, fourth).
+    for (const id of ['home', 'services', 'about', 'contact', 'dukanErp', 'privacy'] as const) {
+      const json = JSON.stringify(input({ id, site }).jsonLd);
+      expect({ id, person: json.includes('Abdel Kerim') || json.includes('"Person"') }).toEqual({ id, person: false });
+      expect(json).toContain('"@type":"Organization"');
+    }
   });
 
   it('escapes what it writes', () => {

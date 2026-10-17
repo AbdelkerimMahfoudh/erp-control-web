@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FocusEvent, type MouseEvent, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { SITE, SURFACE } from '../config/site';
+import { SITE } from '../config/site';
 import { LANGUAGE_CODES, LANGUAGE_LABELS, LANGUAGES, storeLanguage, useI18n, type Language } from '../i18n';
 import { inAppPathOf, pathOf, publicRouteAt, type PublicRouteId } from '../site/routes';
 import { useTheme } from '../theme/theme';
@@ -12,7 +12,7 @@ import { Icon } from './public/icons';
 
 /**
  * The frame around every page (docs/74 §4): the organization's identity, the public navigation, the languages and the
- * footer with the policies and the company details TSX-MR supplied. The administration area is never linked from a
+ * footer with the policies and the brand in one line. The administration area is never linked from a
  * public page (it is reached at its own address until it moves to its own origin, docs/74 §8). On a phone the
  * navigation sits behind a menu button (`PhoneMenu`), which works before any script has run.
  */
@@ -23,8 +23,9 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
   // The public pages' sections rise into view as the reader reaches them (lib/reveal.ts).
   useReveal(pathname);
 
+  // What TSX-MR does for clients first, then what it owns: Services and Products stay two separate destinations.
   const links: [PublicRouteId, string][] = [
-    ['dukanErp', t('nav.dukanErp')],
+    ['services', t('nav.services')],
     ['products', t('nav.products')],
     ['about', t('nav.about')],
     ['support', t('nav.support')],
@@ -91,8 +92,9 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
  * consistency pass; it replaces the "Menu" text button). The prerendered page carries a native disclosure, so the menu
  * opens before any script has run; once the script runs it becomes a button that names its action ("Open menu" /
  * "Close menu"), states `aria-expanded` and controls the panel. The panel is not a dialog, so it traps nothing: Escape
- * closes it and returns focus to the button, as does choosing a destination; a press outside it or Tab past its last
- * link closes it where the reader is. While closed its links are not rendered (`hidden`), so they take no focus.
+ * closes it and returns focus to the button, as does choosing the page already open; choosing another page closes it
+ * and leaves focus to that page's heading (`RouteScroll`); a press outside it or Tab past its last link closes it where
+ * the reader is. While closed its links are not rendered (`hidden`), so they take no focus.
  */
 function PhoneMenu({ children }: { children: ReactNode }) {
   const { t } = useI18n();
@@ -137,11 +139,13 @@ function PhoneMenu({ children }: { children: ReactNode }) {
       </details>
     );
   }
-  // Choosing a destination (the current page too) closes the menu and keeps focus in the header.
+  // Choosing a destination closes the menu. Another page takes focus to its own heading; the page already open (marked
+  // current, so nothing moves) returns it to the button rather than to the hidden link.
   const onChoose = (e: MouseEvent<HTMLDivElement>) => {
-    if (!(e.target as Element).closest('a, button')) return;
+    const chosen = (e.target as Element).closest('a, button');
+    if (!chosen) return;
     setOpen(false);
-    button.current?.focus();
+    if (chosen.tagName !== 'A' || chosen.hasAttribute('aria-current')) button.current?.focus();
   };
   const onLeave = (e: FocusEvent<HTMLDivElement>) => {
     if (e.relatedTarget && !root.current?.contains(e.relatedTarget as Node)) setOpen(false);
@@ -166,9 +170,15 @@ function PhoneMenu({ children }: { children: ReactNode }) {
   );
 }
 
+/** "EN, English", "FR, Français", "AR, العربية". */
+const languageName = (l: Language) => `${LANGUAGE_CODES[l]}, ${LANGUAGE_LABELS[l]}`;
+
 /**
  * The current page in each language (a link, so it works without a script); the protected areas switch in place. Each
- * shows its short code (EN, FR, AR) and is named in full, in its own language, for assistive technology.
+ * shows its short code (EN, FR, AR) and is named by the code and the language in full, in that language — the visible
+ * label first, so a voice command that says what it sees reaches it. The control is three equal segments
+ * (`public.css` `.languages`), the same in the header, the phone menu, the app's pages and the protected areas.
+ * Switching keeps the page and stores the choice; the page in the other language starts at its top (`RouteScroll`).
  */
 function Languages({ area, className }: { area: 'public' | 'protected'; className: string }) {
   const { t, lang, setLanguage } = useI18n();
@@ -184,13 +194,13 @@ function Languages({ area, className }: { area: 'public' | 'protected'; classNam
               lang={l}
               hrefLang={l}
               aria-current={l === lang ? 'true' : undefined}
-              aria-label={LANGUAGE_LABELS[l]}
+              aria-label={languageName(l)}
               onClick={() => storeLanguage(l)}
             >
               {LANGUAGE_CODES[l]}
             </Link>
           ) : (
-            <button type="button" className="link-button" lang={l} aria-pressed={l === lang} aria-label={LANGUAGE_LABELS[l]} onClick={() => setLanguage(l)}>
+            <button type="button" className="link-button" lang={l} aria-pressed={l === lang} aria-label={languageName(l)} onClick={() => setLanguage(l)}>
               {LANGUAGE_CODES[l]}
             </button>
           )}
@@ -221,7 +231,7 @@ function Footer() {
   const { t, lang } = useI18n();
   const to = (id: PublicRouteId) => pathOf(id, lang);
   const columns: [string, [PublicRouteId, string][]][] = [
-    [INDIVIDUAL_OPERATOR ? SITE.displayName : t('footer.company'), [['about', t('nav.about')], ['contact', t('nav.contact')]]],
+    [INDIVIDUAL_OPERATOR ? SITE.displayName : t('footer.company'), [['services', t('nav.services')], ['about', t('nav.about')], ['contact', t('nav.contact')]]],
     [t('footer.product'), [['dukanErp', t('nav.dukanErp')], ['products', t('nav.products')], ['apply', t('nav.apply')]]],
     [t('footer.help'), [['support', t('nav.support')], ['applicationStatus', t('footer.applicationStatus')], ['accountDeletion', t('footer.deletion')]]],
     [
@@ -235,28 +245,20 @@ function Footer() {
       ],
     ],
   ];
-  // An individual operator is named as one, with the plain fact that there is no company (the brief of 2026-10-17, third).
-  const identity = INDIVIDUAL_OPERATOR
-    ? SITE.legalName
-      ? t('footer.operatorIndividual', { name: SITE.displayName, operator: SITE.legalName })
-      : ''
-    : [SITE.legalName, SITE.legalForm, SITE.registrationNumber].filter(Boolean).join(' · ');
+  // An individual operator: the brand in one line, with no name — the legal notice says who operates it (the owner's
+  // brief of 2026-10-17, fourth). A company shows its registered details.
+  const identity = INDIVIDUAL_OPERATOR ? '' : [SITE.legalName, SITE.legalForm, SITE.registrationNumber].filter(Boolean).join(' · ');
   const postal = textValues(lang).postalAddress;
   return (
     <footer className="chrome-footer">
       <div className="container footer-grid">
         <div className="footer-org">
           <OrgMark />
-          <p>{t(SURFACE === 'public' ? 'footer.relationshipPrelaunch' : 'footer.relationship', { name: SITE.displayName })}</p>
-          {identity ? (
-            // A company's details are values (isolated); an individual operator's line is a sentence in the reader's language.
-            <p className="small">{INDIVIDUAL_OPERATOR ? identity : <bdi>{identity}</bdi>}</p>
-          ) : null}
+          {INDIVIDUAL_OPERATOR ? <p>{t('footer.brand')}</p> : identity ? <p className="small"><bdi>{identity}</bdi></p> : null}
           {postal ? (
             // In the reader's language (its Arabic line in Arabic), so a sentence, not an isolated value.
             <p className="small">{t('footer.address', { address: postal })}</p>
           ) : null}
-          <p className="small muted">{t('footer.note')}</p>
         </div>
         {columns.map(([title, items]) => (
           <nav key={title} className="footer-col" aria-label={title}>
@@ -298,7 +300,7 @@ export function InAppChrome({ id = 'support', children }: { id?: PublicRouteId; 
       <header className="chrome-header in-app-header">
         <div className="container chrome-bar">
           <ProductMark />
-          <ul className="languages" aria-label={t('nav.languages')}>
+          <ul className="languages languages-app" aria-label={t('nav.languages')}>
             {LANGUAGES.map((l) => (
               <li key={l}>
                 <Link
@@ -306,7 +308,7 @@ export function InAppChrome({ id = 'support', children }: { id?: PublicRouteId; 
                   lang={l}
                   hrefLang={l}
                   aria-current={l === lang ? 'true' : undefined}
-                  aria-label={LANGUAGE_LABELS[l]}
+                  aria-label={languageName(l)}
                   onClick={() => storeLanguage(l)}
                 >
                   {LANGUAGE_CODES[l]}
@@ -321,7 +323,9 @@ export function InAppChrome({ id = 'support', children }: { id?: PublicRouteId; 
       </main>
       <footer className="chrome-footer in-app-footer">
         <div className="container">
-          <LegalLinks />
+          <nav aria-label={t('legal.related')}>
+            <LegalLinks />
+          </nav>
           <p className="small">{t('footer.rights', { year: String(new Date().getFullYear()), name: SITE.displayName })}</p>
         </div>
       </footer>

@@ -139,7 +139,7 @@ export const terms: Record<Language, LegalDocument> = {
         id: 'ip',
         heading: 'Intellectual property and feedback',
         blocks: [
-          { kind: 'p', text: 'The app, the service and this website belong to {legalName}. A business receives the right to use them for its own activity while its access lasts, and no other right.' },
+          { kind: 'p', text: 'The app, the service and this website belong to the operator. A business receives the right to use them for its own activity while its access lasts, and no other right.' },
           { kind: 'p', text: 'Suggestions sent to {displayName} may be used to improve Dukan ERP, without obligation to the person who sent them.' },
         ],
       },
@@ -314,7 +314,7 @@ export const terms: Record<Language, LegalDocument> = {
         id: 'ip',
         heading: 'Propriété intellectuelle et suggestions',
         blocks: [
-          { kind: 'p', text: 'L’application, le service et ce site appartiennent à {legalName}. Une entreprise reçoit le droit de les utiliser pour sa propre activité tant que dure son accès, et aucun autre droit.' },
+          { kind: 'p', text: 'L’application, le service et ce site appartiennent à l’exploitant. Une entreprise reçoit le droit de les utiliser pour sa propre activité tant que dure son accès, et aucun autre droit.' },
           { kind: 'p', text: 'Les suggestions envoyées à {displayName} peuvent servir à améliorer Dukan ERP, sans obligation envers la personne qui les a envoyées.' },
         ],
       },
@@ -489,7 +489,7 @@ export const terms: Record<Language, LegalDocument> = {
         id: 'ip',
         heading: 'الملكية الفكرية والاقتراحات',
         blocks: [
-          { kind: 'p', text: 'التطبيق والخدمة وهذا الموقع مملوكة لـ{legalName}. وتحصل المؤسسة على حق استخدامها لنشاطها الخاص ما دام وصولها قائمًا، ولا تحصل على أي حق آخر.' },
+          { kind: 'p', text: 'التطبيق والخدمة وهذا الموقع مملوكة للمشغّل. وتحصل المؤسسة على حق استخدامها لنشاطها الخاص ما دام وصولها قائمًا، ولا تحصل على أي حق آخر.' },
           { kind: 'p', text: 'يجوز استخدام الاقتراحات المرسلة إلى {displayName} لتحسين Dukan ERP، دون أي التزام تجاه مرسلها.' },
         ],
       },

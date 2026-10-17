@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { DOCUMENTS, dukanErp, home, stringsOf, terms } from '../src/content';
+import { brand, DOCUMENTS, dukanErp, dukanOverview, stringsOf, terms } from '../src/content';
 import { BLOCKERS } from '../src/content/blockers';
 import { blockersIn, inputsIn, shapeOf, textsOf } from '../src/content/types';
 import { INPUTS } from '../src/config/schema';
@@ -13,7 +13,7 @@ const LANGS = ['en', 'fr', 'ar'] as const;
 /** Values a text may name: the inputs, and those derived from them (RichText.textValues). */
 const KNOWN_INPUTS = new Set([...Object.keys(INPUTS), 'deletionChannelName', 'operatorStatus', 'postalAddress', 'productName']);
 /** Strings that are the same in every language: names, words French writes as English does, and texts made only of placeholders and blockers. */
-const NAME_ONLY = /^(Dukan ERP|Contact|(\s*(\{[a-zA-Z]+\}|\[\[blocker:[a-z_]+\]\])\s*)+)$/;
+const NAME_ONLY = /^(Dukan ERP|Contact|Services|(\s*(\{[a-zA-Z]+\}|\[\[blocker:[a-z_]+\]\])\s*)+)$/;
 
 /** A language-free skeleton of any value: object keys, array lengths, and strings reduced to their tokens. */
 function deepShape(v: unknown): unknown {
@@ -23,7 +23,7 @@ function deepShape(v: unknown): unknown {
   return v;
 }
 
-const ALL: [string, Record<(typeof LANGS)[number], unknown>][] = [...Object.entries(DOCUMENTS), ['home', home], ['dukanErp', dukanErp]];
+const ALL: [string, Record<(typeof LANGS)[number], unknown>][] = [...Object.entries(DOCUMENTS), ['brand', brand], ['dukanOverview', dukanOverview], ['dukanErp', dukanErp]];
 /** The words of a value: a document's texts (not its section ids or block kinds), or every string of a page. */
 const wordsOf = (name: string, v: unknown): string[] => (name in DOCUMENTS ? textsOf(v as never) : stringsOf(v));
 

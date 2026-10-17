@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { createContext, useContext, useEffect, type HTMLAttributes, type ReactNode } from 'react';
 import { BUILD_MODE, FILLED_INPUTS, IS_PREVIEW, SITE, SURFACE } from '../../config/site';
 import { phoneList } from '../../config/schema';
@@ -181,34 +181,49 @@ export function LegalView({ doc, after }: { doc: LegalDocument; after?: Record<s
         <ol className="toc-list" role="list">
           {doc.sections.map((s, i) => (
             <li key={s.id}>
-              <a className="toc-link" href={`#${s.id}`}>
+              {/* Through the router, so the section opens below the header with focus on it, and Back returns (RouteScroll). */}
+              <Link className="toc-link" to={{ hash: s.id }}>
                 <span className="toc-num num" aria-hidden="true">
                   {i + 1}
                 </span>
                 <span className="toc-text">
                   <RichText text={s.heading} />
                 </span>
-              </a>
+              </Link>
             </li>
           ))}
         </ol>
       </nav>
       <Sections doc={doc} after={after} />
-      <footer className="legal-related" aria-labelledby="related-h">
-        <h2 id="related-h">{t('legal.related')}</h2>
-        <LegalLinks />
-      </footer>
+      <RelatedPages />
     </article>
   );
 }
 
 /**
- * The legal and support pages, as links in the current language — on every legal page and the legal notice, and in the
- * footer of the pages the app opens. Each is a compact pill; the page the reader is on is marked as current.
+ * The one group of quick links a page carries (the owner's brief of 2026-10-17, fourth): the policies and help, at the
+ * end of every legal page, of Support and of Contact — never twice on a page, and never as well as another list of the
+ * same pages. Inside the pages the app opens, their footer already lists them, so the page itself adds none.
+ */
+export function RelatedPages() {
+  const { t } = useI18n();
+  if (useContext(InAppContext)) return null;
+  return (
+    <nav className="legal-related" aria-labelledby="related-h">
+      <h2 id="related-h">{t('legal.related')}</h2>
+      <LegalLinks />
+    </nav>
+  );
+}
+
+/**
+ * The legal and support pages in the current language, each a compact pill. The page the reader is on is in the list
+ * too, so the set never changes shape, but as plain text marked current — not a link that leads back to itself.
  */
 export function LegalLinks() {
   const { t } = useI18n();
   const to = useLegalPath();
+  const { pathname } = useLocation();
   const pages: [PublicRouteId, string][] = [
     ['privacy', t('footer.privacy')],
     ['privacyChoices', t('footer.privacyChoices')],
@@ -222,9 +237,15 @@ export function LegalLinks() {
     <ul className="legal-links" role="list">
       {pages.map(([id, label]) => (
         <li key={id}>
-          <NavLink className="related-link" to={to(id)} end>
-            {label}
-          </NavLink>
+          {to(id) === pathname ? (
+            <span className="related-link" aria-current="page">
+              {label}
+            </span>
+          ) : (
+            <Link className="related-link" to={to(id)}>
+              {label}
+            </Link>
+          )}
         </li>
       ))}
     </ul>
@@ -251,9 +272,10 @@ function PhoneLink({ phone }: { phone: string }) {
 }
 
 /**
- * Who operates the website, as TSX-MR supplied it — never more. An individual operator is shown as one: a trading
- * name, the person, the person responsible for publication and a correspondence address, and the plain statement that
- * there is no company, so no legal form or trade-register number. A company shows its registered details.
+ * The operator's details, as TSX-MR supplied them — never more — under the legal notice's "Publisher" section, whose
+ * sentence already names who operates the website (`{operatorStatus}`); the person responsible for publication is
+ * named by its own section. An individual operator: the trading name, the plain statement that there is no company (so
+ * no legal form or trade-register number) and a correspondence address. A company: its registered details.
  */
 export function OrgDetails() {
   const { t, lang } = useI18n();
@@ -261,14 +283,12 @@ export function OrgDetails() {
   const rows: [string, ReactNode][] = [];
   if (INDIVIDUAL_OPERATOR) {
     rows.push([t('org.tradingName'), <bdi key="t">{SITE.displayName}</bdi>]);
-    if (SITE.legalName) rows.push([t('org.operator'), <bdi key="n">{SITE.legalName}</bdi>]);
     rows.push([t('org.status'), t('org.statusIndividual')]);
   } else {
     if (SITE.legalName) rows.push([t('org.legalName'), <bdi key="n">{SITE.legalName}</bdi>]);
     if (SITE.legalForm) rows.push([t('org.legalForm'), <bdi key="f">{SITE.legalForm}</bdi>]);
     if (SITE.registrationNumber) rows.push([t('org.registration'), <bdi key="r">{SITE.registrationNumber}</bdi>]);
   }
-  if (SITE.publicationDirector) rows.push([t('org.publicationDirector'), <bdi key="d">{SITE.publicationDirector}</bdi>]);
   if (v.postalAddress) rows.push([t(INDIVIDUAL_OPERATOR ? 'org.correspondenceAddress' : 'org.address'), <bdi key="a">{v.postalAddress}</bdi>]);
   phoneList(SITE.phone).forEach((phone, i) => rows.push([t('org.phone'), <PhoneLink key={`p${i}`} phone={phone} />]));
   return (
@@ -281,12 +301,6 @@ export function OrgDetails() {
       ))}
     </dl>
   );
-}
-
-/** The heading over `OrgDetails`: "Operator details" for an individual, "Company details" for a company. */
-export function useOrgTitle(): string {
-  const { t } = useI18n();
-  return t(INDIVIDUAL_OPERATOR ? 'org.titleIndividual' : 'org.title');
 }
 
 /**
