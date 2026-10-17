@@ -83,7 +83,7 @@ export function Home() {
         <SectionHead id="problems-h" title={c.problems.title} lead={c.problems.lead} />
         <ul className="problem-grid stagger">
           {c.problems.items.map((item, i) => (
-            <li key={item.title} className="card card-lift" data-reveal="">
+            <li key={item.title} className="card elevated" data-reveal="">
               <span className="icon-badge">
                 <Icon name={PROBLEM_ICONS[i] ?? 'box'} />
               </span>
@@ -104,7 +104,7 @@ export function Home() {
           {c.capabilities.items.map((item, i) => {
             const kind = CAPABILITY_ART[i] ?? 'reports';
             return (
-              <li key={item.title} className={`tile tile-${kind}`} data-reveal="">
+              <li key={item.title} className={`tile tile-${kind} elevated`} data-reveal="">
                 <h3>
                   <RichText text={item.title} />
                 </h3>
@@ -127,7 +127,7 @@ export function Home() {
           ].map(([activity, icon]) => {
             const a = activity as typeof c.activities.retail;
             return (
-              <article key={a.title} className="card activity" data-reveal="">
+              <article key={a.title} className="card activity elevated" data-reveal="">
                 <span className="icon-badge">
                   <Icon name={icon as IconName} />
                 </span>
@@ -154,7 +154,7 @@ export function Home() {
         <SectionHead id="how-h" title={c.how.title} lead={c.how.lead} />
         <ol className="how-steps stagger">
           {c.how.steps.map((step, i) => (
-            <li key={step.title} data-reveal="">
+            <li key={step.title} className="elevated" data-reveal="">
               <span className="step-num num">{i + 1}</span>
               <h3>
                 <RichText text={step.title} />
@@ -171,7 +171,7 @@ export function Home() {
         <SectionHead id="previews-h" title={c.previews.title} lead={c.previews.lead} />
         <ul className="previews stagger">
           {c.previews.items.map((item, i) => (
-            <li key={item.title} className="card" data-reveal="">
+            <li key={item.title} className="card elevated" data-reveal="">
               <PreviewArt kind={PREVIEW_ART[i] ?? 'sell'} v={c.visual} />
               <div className="preview-body">
                 <h3>
@@ -207,7 +207,7 @@ export function Home() {
             {LANGUAGE_CARDS.map((l) => {
               const other = homeFor(l, SURFACE).visual;
               return (
-                <li key={l} lang={l} dir={l === 'ar' ? 'rtl' : 'ltr'} className="card lang-card" data-reveal="">
+                <li key={l} lang={l} dir={l === 'ar' ? 'rtl' : 'ltr'} className="card lang-card elevated" data-reveal="">
                   <span className="lang-tag">{LANGUAGE_LABELS[l]}</span>
                   <strong>{other.drawerTitle}</strong>
                   <span>{other.drawerSub}</span>

@@ -132,7 +132,111 @@ for (const lang of LANGS) {
     for (const box of ['contact', 'support', 'privacy', 'security']) expect(links).toContain(`mailto:${box}@tsxmr.com`);
     const phones = (process.env.VITE_ORGANIZATION_PHONE ?? '').split(',').map((p) => p.trim()).filter(Boolean);
     for (const phone of phones) expect(links).toContain(`tel:${phone.replace(/\s+/g, '')}`);
-    expect(await page.locator('.contact-label', { hasText: c['org.whatsapp'] }).count()).toBe(0);
+    expect(await page.locator('.contact-card', { hasText: c['org.whatsapp'] }).count()).toBe(0);
+  });
+
+  // The 2026-10-17 refinement: contact cards, the header theme toggle, one card elevation system.
+  test(`public site: the contact methods are cards with real mail and call links in ${lang}, whole at 320 px`, async ({ page }) => {
+    const c = CATALOGUE[lang];
+    for (const width of [320, 375, 1280]) {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto(pathOf('contact', lang));
+      const cards = page.locator('.contact-methods .contact-card');
+      expect(await cards.count()).toBeGreaterThanOrEqual(4);
+      for (const box of ['contact', 'support', 'privacy', 'security']) {
+        const link = page.locator(`.contact-link[href="mailto:${box}@tsxmr.com"]`);
+        await expect(link).toHaveCount(1);
+        await expect(link).toContainText(`${box}@tsxmr.com`);
+        expect(await link.getAttribute('aria-label')).toContain(`${box}@tsxmr.com`);
+      }
+      const phones = (process.env.VITE_ORGANIZATION_PHONE ?? '').split(',').map((p) => p.trim()).filter(Boolean);
+      for (const phone of phones) {
+        const link = page.locator(`.contact-link[href="tel:${phone.replace(/\s+/g, '')}"]`);
+        await expect(link).toHaveCount(1);
+        expect(await link.getAttribute('aria-label')).toBe(c['contact.callName'].replace('{value}', phone));
+      }
+      // Nothing sticks out of its card or the page, and every card is at least a comfortable touch target.
+      const boxes = await page.evaluate(() =>
+        [...document.querySelectorAll('.contact-card')].map((card) => {
+          const r = card.getBoundingClientRect();
+          const value = card.querySelector('.contact-value')!.getBoundingClientRect();
+          return { left: r.left, right: r.right, height: r.height, inside: value.left >= r.left - 0.5 && value.right <= r.right + 0.5, vw: document.documentElement.clientWidth };
+        }),
+      );
+      for (const b of boxes) {
+        expect(b.left).toBeGreaterThanOrEqual(0);
+        expect(b.right).toBeLessThanOrEqual(b.vw);
+        expect(b.height).toBeGreaterThanOrEqual(44);
+        expect(b.inside).toBe(true);
+      }
+      // A value never breaks inside itself (an address or a number stays on one line).
+      const lines = await page.evaluate(() => [...document.querySelectorAll('.contact-value')].map((v) => Math.round(v.getBoundingClientRect().height / parseFloat(getComputedStyle(v).lineHeight))));
+      expect(lines.every((n) => n === 1), `values on one line at ${width}px: ${lines}`).toBe(true);
+      expect((await facts(page)).overflow).toBeLessThanOrEqual(0);
+    }
+    if (lang === 'ar') {
+      // In Arabic the card reads right to left (icon first, on the right) while the value stays left to right.
+      const geo = await page.locator('.contact-link').first().evaluate((a) => ({
+        icon: a.querySelector('.contact-icon')!.getBoundingClientRect().left,
+        action: a.querySelector('.contact-action')!.getBoundingClientRect().left,
+        valueDir: a.querySelector('.contact-value')!.getAttribute('dir'),
+      }));
+      expect(geo.icon).toBeGreaterThan(geo.action);
+      expect(geo.valueDir).toBe('ltr');
+    }
+  });
+
+  test(`public site: the theme is a header toggle in ${lang}, named for its action, kept across pages and reloads`, async ({ page }) => {
+    const c = CATALOGUE[lang];
+    for (const width of [320, 375, 1280]) {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto(pathOf('home', lang));
+      const toggle = page.locator('.chrome-header button.theme-toggle');
+      await expect(toggle).toBeVisible();
+      const box = (await toggle.boundingBox())!;
+      expect(box.width).toBeGreaterThanOrEqual(44);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+      expect(box.x + box.width).toBeLessThanOrEqual(width);
+      // The header stays one row: the toggle on the same line as the mark.
+      const mark = (await page.locator('.chrome-header .brand').boundingBox())!;
+      expect(Math.abs(mark.y + mark.height / 2 - (box.y + box.height / 2))).toBeLessThan(8);
+    }
+    expect(await page.locator('.chrome-footer select, .chrome-footer .theme-choice, .chrome-footer .theme-toggle').count(), 'no appearance control in the footer').toBe(0);
+    const toggle = page.locator('.chrome-header button.theme-toggle');
+    await expect(toggle).toHaveAttribute('aria-label', c['theme.toDark']);
+    await toggle.focus();
+    await page.keyboard.press('Enter');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await expect(toggle).toHaveAttribute('aria-label', c['theme.toLight']);
+    expect(await page.evaluate(() => localStorage.getItem('erp.web.theme'))).toBe('dark');
+    await page.goto(pathOf('contact', lang));
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await page.reload();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await page.locator('.chrome-header button.theme-toggle').click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+    expect(await page.evaluate(() => localStorage.getItem('erp.web.theme'))).toBe('light');
+  });
+
+  test(`public site: the Launch cards share the card elevation and rise on hover, not under reduced motion (${lang})`, async ({ browser }) => {
+    for (const reducedMotion of ['no-preference', 'reduce'] as const) {
+      const context = await browser.newContext({ reducedMotion, viewport: { width: 1280, height: 900 } });
+      const page = await context.newPage();
+      await page.goto(pathOf('dukanErp', lang));
+      const card = page.locator('section:has(#start-h) li').first();
+      await card.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(900);
+      expect(await card.getAttribute('class')).toContain('elevated');
+      const rest = await card.evaluate((e) => ({ shadow: getComputedStyle(e).boxShadow, translate: getComputedStyle(e).translate }));
+      expect(rest.shadow).not.toBe('none');
+      await card.hover();
+      await page.waitForTimeout(400);
+      const hover = await card.evaluate((e) => ({ shadow: getComputedStyle(e).boxShadow, translate: getComputedStyle(e).translate }));
+      expect(hover.shadow).not.toBe(rest.shadow);
+      if (reducedMotion === 'reduce') expect(hover.translate === 'none' || hover.translate === '0px').toBe(true);
+      else expect(hover.translate).toBe('0px -3px');
+      await context.close();
+    }
   });
 
   test(`public site: the pages the app opens answer in ${lang}, without the site's navigation`, async ({ page }) => {

@@ -5,7 +5,7 @@ import { Icon, type IconName } from '../../components/public/icons';
 import { SURFACE } from '../../config/site';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
-import { ContactAddresses, LegalLinks, LegalView, OrgDetails, PageIntro, ProductMark, Sections, useLegalPath, useOrgTitle } from '../../components/public/blocks';
+import { ContactMethods, LegalLinks, LegalView, OrgDetails, PageIntro, ProductMark, Sections, useLegalPath, useOrgTitle } from '../../components/public/blocks';
 import { RichText } from '../../components/public/RichText';
 
 /**
@@ -39,7 +39,7 @@ export function Products() {
       <PageIntro title={doc.title} summary={doc.summary} />
       <ul className="card-grid products-grid">
         {doc.sections.map((s) => (
-          <li key={s.id} className="card product-card">
+          <li key={s.id} className="card product-card elevated">
             <h2>
               <ProductMark size="lg" />
             </h2>
@@ -86,12 +86,7 @@ export function Contact() {
       <Sections
         doc={doc}
         after={{
-          write: (
-            <>
-              <h3>{t('contact.addresses')}</h3>
-              <ContactAddresses />
-            </>
-          ),
+          write: <ContactMethods />,
         }}
       />
       <section className="doc-section" aria-labelledby="org-h">
@@ -126,7 +121,7 @@ export function Support() {
               </Link>
             </p>
           ),
-          contact: <ContactAddresses />,
+          contact: <ContactMethods />,
         }}
       />
     </article>
@@ -135,7 +130,7 @@ export function Support() {
 
 export function Privacy() {
   const { lang } = useI18n();
-  return <LegalView doc={privacy[lang]} after={{ contact: <ContactAddresses /> }} />;
+  return <LegalView doc={privacy[lang]} after={{ contact: <ContactMethods /> }} />;
 }
 
 export function Terms() {
@@ -150,13 +145,13 @@ export function AccountDeletion() {
 
 export function PrivacyChoices() {
   const { lang } = useI18n();
-  return <LegalView doc={privacyChoices[lang]} after={{ contact: <ContactAddresses /> }} />;
+  return <LegalView doc={privacyChoices[lang]} after={{ contact: <ContactMethods /> }} />;
 }
 
 /** The publisher: who TSX-MR is, as it registered — never more than it supplied — and every policy. */
 export function LegalNotice() {
   const { lang } = useI18n();
-  return <LegalView doc={legalNotice[lang]} after={{ entity: <OrgDetails />, contact: <ContactAddresses />, policies: <LegalLinks /> }} />;
+  return <LegalView doc={legalNotice[lang]} after={{ entity: <OrgDetails />, contact: <ContactMethods />, policies: <LegalLinks /> }} />;
 }
 
 export function Security() {

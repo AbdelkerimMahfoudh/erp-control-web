@@ -7,6 +7,7 @@ import { useI18n } from '../../i18n';
 import { formatDate } from '../../lib/format';
 import { applyHead, headFor } from '../../site/head';
 import { inAppPathOf, pathOf, type PublicRouteId } from '../../site/routes';
+import { Icon, type IconName } from './icons';
 import { plainText, RichText, textValues } from './RichText';
 
 /** True inside the pages the mobile app opens (`/in-app/…`): their links stay among those pages. */
@@ -269,10 +270,16 @@ export function useOrgTitle(): string {
   return t(INDIVIDUAL_OPERATOR ? 'org.titleIndividual' : 'org.title');
 }
 
-/** The configured addresses and numbers, each a link; none configured is said, never left as a dead end. */
-export function ContactAddresses() {
+/**
+ * How to reach TSX-MR (the 2026-10-17 refinement): each configured mailbox and number is a card that is itself the link
+ * (`mailto:` or `tel:`). Each card shows what it is for, the address or number in full (readable and copyable) and the
+ * action, and its accessible name says all three. The emails come first, then the telephones under their own heading.
+ * A number has no purpose of its own here (none is documented), so each is simply a number to call, and none is
+ * labelled WhatsApp unless `VITE_SUPPORT_WHATSAPP` names one. Nothing configured is said, never left as a dead end.
+ */
+export function ContactMethods() {
   const { t } = useI18n();
-  const entries: [string, string][] = [
+  const emails: [string, string][] = [
     [t('org.contactEmail'), SITE.contactEmail],
     [t('org.supportEmail'), SITE.supportEmail],
     [t('org.commercialEmail'), SITE.commercialEmail],
@@ -280,30 +287,83 @@ export function ContactAddresses() {
     [t('org.securityEmail'), SITE.securityEmail],
   ].filter((e): e is [string, string] => Boolean(e[1]));
   const phones = phoneList(SITE.phone);
-  if (entries.length === 0 && !SITE.supportWhatsapp && phones.length === 0) return <p className="notice tone-warn">{t('contact.none')}</p>;
+  if (emails.length === 0 && !SITE.supportWhatsapp && phones.length === 0) return <p className="notice tone-warn">{t('contact.none')}</p>;
   return (
-    <ul className="contact-list">
-      {entries.map(([label, email]) => (
-        <li key={label}>
-          <span className="contact-label">{label}</span>
-          <a href={`mailto:${email}`}>
-            <bdi>{email}</bdi>
-          </a>
-        </li>
-      ))}
-      {SITE.supportWhatsapp ? (
-        <li>
-          <span className="contact-label">{t('org.whatsapp')}</span>
-          <span className="ltr">{SITE.supportWhatsapp}</span>
-        </li>
+    <div className="contact-methods">
+      {emails.length > 0 ? (
+        <div className="contact-group">
+          <h3 className="contact-group-title">{t('contact.byEmail')}</h3>
+          <ul className="contact-grid">
+            {emails.map(([purpose, email]) => (
+              <ContactCard
+                key={purpose}
+                icon="mail"
+                href={`mailto:${email}`}
+                purpose={purpose}
+                value={email}
+                action={t('contact.write')}
+                name={t('contact.writeName', { purpose, value: email })}
+              />
+            ))}
+          </ul>
+        </div>
       ) : null}
-      {phones.map((phone) => (
-        <li key={phone}>
-          <span className="contact-label">{t('org.phone')}</span>
-          <PhoneLink phone={phone} />
-        </li>
-      ))}
-    </ul>
+      {phones.length > 0 || SITE.supportWhatsapp ? (
+        <div className="contact-group">
+          <h3 className="contact-group-title">{t('contact.byPhone')}</h3>
+          <ul className="contact-grid">
+            {phones.map((phone) => (
+              <ContactCard
+                key={phone}
+                icon="call"
+                href={`tel:${phone.replace(/\s+/g, '')}`}
+                value={phone}
+                action={t('contact.call')}
+                name={t('contact.callName', { value: phone })}
+              />
+            ))}
+            {SITE.supportWhatsapp ? (
+              <li className="contact-card elevated">
+                <div className="contact-body">
+                  <span className="icon-badge contact-icon">
+                    <Icon name="messages" />
+                  </span>
+                  <span className="contact-text">
+                    <span className="contact-purpose">{t('org.whatsapp')}</span>
+                    <bdi dir="ltr" className="contact-value">
+                      {SITE.supportWhatsapp}
+                    </bdi>
+                  </span>
+                </div>
+              </li>
+            ) : null}
+          </ul>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+/** One way to reach TSX-MR: the whole card is the link, the value stays visible and left to right in Arabic. */
+function ContactCard({ icon, href, purpose, value, action, name }: { icon: IconName; href: string; purpose?: string; value: string; action: string; name: string }) {
+  return (
+    <li className="contact-card elevated">
+      <a className="contact-body contact-link" href={href} aria-label={name}>
+        <span className="icon-badge contact-icon">
+          <Icon name={icon} />
+        </span>
+        <span className="contact-text">
+          {purpose ? <span className="contact-purpose">{purpose}</span> : null}
+          <bdi dir="ltr" className="contact-value">
+            {value}
+          </bdi>
+        </span>
+        <span className="contact-action">
+          <span className="contact-action-text">{action}</span>
+          <Icon name="arrow" size={16} className="icon-arrow" />
+        </span>
+      </a>
+    </li>
   );
 }
 

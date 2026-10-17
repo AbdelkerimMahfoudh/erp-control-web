@@ -65,6 +65,10 @@
   --focus-on-ink: #d4d0ff;
   --shadow-lift: 0 14px 34px -18px rgba(13, 18, 48, 0.35);
   --shadow-deep: 0 36px 70px -30px rgba(0, 0, 0, 0.7);
+  /* The card elevation system (public.css `.elevated`): at rest `--shadow`, raised `--shadow-raised`. */
+  --shadow-raised: 0 2px 4px rgba(23, 32, 51, 0.06), 0 18px 40px -14px rgba(23, 32, 51, 0.24);
+  --border-raised: #c3c7df;
+  --shadow-raised-on-ink: 0 20px 44px -18px rgba(0, 0, 0, 0.6);
   --phone-bezel: #0a0d22;
   --phone-screen: #161c45;
   --phone-screen-2: #0f1434;
@@ -126,6 +130,9 @@
   --focus-on-ink: #d4d0ff;
   --shadow-lift: 0 14px 34px -18px rgba(0, 0, 0, 0.6);
   --shadow-deep: 0 36px 70px -30px rgba(0, 0, 0, 0.8);
+  --shadow-raised: 0 2px 4px rgba(0, 0, 0, 0.45), 0 20px 44px -14px rgba(0, 0, 0, 0.7);
+  --border-raised: #3a4663;
+  --shadow-raised-on-ink: 0 20px 44px -18px rgba(0, 0, 0, 0.75);
   --phone-bezel: #06081a;
   --phone-screen: #141a40;
   --phone-screen-2: #0d1230;

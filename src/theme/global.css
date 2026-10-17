@@ -11,6 +11,13 @@
   --radius-xl: 28px;
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --dur: 180ms;
+  /* Cards rise this far, this fast, when pointed at or focused (public.css `.elevated`). */
+  --lift: -3px;
+  /* An arrow inside a button or a contact card steps this far toward where it leads. */
+  --nudge: 3px;
+  --dur-lift: 200ms;
+  /* One touch-target size for every icon button (the header's theme toggle). */
+  --tap: 44px;
 }
 html[lang='ar'] {
   --font-body: 'IBM Plex Sans Arabic', 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', 'Noto Sans Arabic', sans-serif;

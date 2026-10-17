@@ -78,7 +78,7 @@ export function DukanErp() {
         <SectionHead id="start-h" title={c.start.title} />
         <ol className="how-steps how-steps-light stagger">
           {c.start.steps.map((step, i) => (
-            <li key={step} data-reveal="">
+            <li key={step} className="elevated" data-reveal="">
               <span className="step-num num">{i + 1}</span>
               {/* One element for the whole sentence: a value inside it (e.g. the organization's name) stays in the line. */}
               <p>
@@ -140,7 +140,7 @@ export function DukanErp() {
 
 function Activity({ card, id, icon }: { card: ActivityCard; id: string; icon: IconName }) {
   return (
-    <article className={`card activity activity-card activity-${id}`} aria-labelledby={`${id}-h`} data-reveal="">
+    <article className={`card activity activity-card activity-${id} elevated`} aria-labelledby={`${id}-h`} data-reveal="">
       <span className="icon-badge">
         <Icon name={icon} />
       </span>

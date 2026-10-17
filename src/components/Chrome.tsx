@@ -8,6 +8,7 @@ import { useReveal } from '../lib/reveal';
 import { INDIVIDUAL_OPERATOR, InAppContext, LegalLinks, OrgMark, PreviewBanner, ProductMark } from './public/blocks';
 import { AccountLink, accountHref, linkable } from './AccountLink';
 import { textValues } from './public/RichText';
+import { Icon } from './public/icons';
 
 /**
  * The frame around every page (docs/74 §4): the organization's identity, the public navigation, the languages and the
@@ -63,6 +64,7 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
           </nav>
           <div className="controls">
             <Languages area={area} className="languages-wide" />
+            <ThemeToggle />
             {area === 'public' ? (
               <AccountLink id="login" lang={lang} className="btn btn-sm btn-primary">
                 {t('nav.signIn')}
@@ -124,9 +126,25 @@ function Languages({ area, className }: { area: 'public' | 'protected'; classNam
   );
 }
 
+/**
+ * The appearance, one tap from every page (the 2026-10-17 refinement; it replaces the footer's select). The icon shows
+ * where a press leads — a moon while light, a sun while dark — and is chosen by CSS from `data-theme`, so it is right
+ * before any script runs; the name says the action, in the reader's language.
+ */
+function ThemeToggle() {
+  const { t } = useI18n();
+  const { theme, toggleTheme } = useTheme();
+  const label = t(theme === 'dark' ? 'theme.toLight' : 'theme.toDark');
+  return (
+    <button type="button" className="icon-button theme-toggle" onClick={toggleTheme} aria-label={label} title={label}>
+      <Icon name="moon" size={20} className="theme-icon-moon" />
+      <Icon name="sun" size={20} className="theme-icon-sun" />
+    </button>
+  );
+}
+
 function Footer() {
   const { t, lang } = useI18n();
-  const { theme, setTheme } = useTheme();
   const to = (id: PublicRouteId) => pathOf(id, lang);
   const columns: [string, [PublicRouteId, string][]][] = [
     [INDIVIDUAL_OPERATOR ? SITE.displayName : t('footer.company'), [['about', t('nav.about')], ['contact', t('nav.contact')]]],
@@ -184,13 +202,6 @@ function Footer() {
       </div>
       <div className="container footer-bottom">
         <span>{t('footer.rights', { year: String(new Date().getFullYear()), name: SITE.displayName })}</span>
-        <label className="theme-choice">
-          <span>{t('theme.label')}</span>
-          <select className="compact" value={theme} onChange={(e) => setTheme(e.target.value === 'dark' ? 'dark' : 'light')}>
-            <option value="light">{t('theme.light')}</option>
-            <option value="dark">{t('theme.dark')}</option>
-          </select>
-        </label>
       </div>
     </footer>
   );
