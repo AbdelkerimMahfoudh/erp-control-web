@@ -1,0 +1,37 @@
+{
+  "test": "code-check-lost",
+  "lang": "en",
+  "width": 375,
+  "confirmations": 2,
+  "signIn": "/account",
+  "layout": {
+    "lang": "en",
+    "dir": "ltr",
+    "h1": 1,
+    "overflow": 0,
+    "title": "Apply for a business account — TSX-MR",
+    "robots": "noindex, nofollow",
+    "canonical": "https://preview.invalid/apply",
+    "offenders": []
+  },
+  "overflow320": 0,
+  "offenders320": [
+    "div.nav-narrow [-43..197]",
+    "nav.nav [-34..188]",
+    "ul. [-34..70]",
+    "li. [-34..70]",
+    "a. [-34..70]",
+    "li. [-34..70]",
+    "a. [-34..70]",
+    "li. [-34..70]",
+    "a. [-34..70]",
+    "li. [-34..70]",
+    "a. [-34..70]",
+    "li. [-34..70]"
+  ],
+  "consoleErrors": [
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: the server responded with a status of 400 (Bad Request)"
+  ],
+  "axe": []
+}

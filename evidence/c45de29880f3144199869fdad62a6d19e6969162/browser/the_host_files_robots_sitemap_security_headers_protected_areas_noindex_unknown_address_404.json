@@ -1,0 +1,51 @@
+{
+  "robots": "User-agent: *\nDisallow: /\n",
+  "csp": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' http://127.0.0.1:3999; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+  "homeHeaders": {
+    "content-type": "text/html; charset=utf-8",
+    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' http://127.0.0.1:3999; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()",
+    "cross-origin-opener-policy": "same-origin",
+    "x-robots-tag": "noindex, nofollow",
+    "date": "Sat, 17 Oct 2026 10:58:37 GMT",
+    "connection": "keep-alive",
+    "keep-alive": "timeout=5",
+    "transfer-encoding": "chunked"
+  },
+  "accountRobots": "noindex, nofollow",
+  "landingHeaders": {
+    "content-type": "text/html; charset=utf-8",
+    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' http://127.0.0.1:3999; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()",
+    "cross-origin-opener-policy": "same-origin",
+    "x-robots-tag": "noindex, nofollow",
+    "cache-control": "no-store",
+    "referrer-policy": "no-referrer",
+    "date": "Sat, 17 Oct 2026 10:58:37 GMT",
+    "connection": "keep-alive",
+    "keep-alive": "timeout=5",
+    "transfer-encoding": "chunked"
+  },
+  "landingSlashHeaders": {
+    "content-type": "text/html; charset=utf-8",
+    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' http://127.0.0.1:3999; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()",
+    "cross-origin-opener-policy": "same-origin",
+    "x-robots-tag": "noindex, nofollow",
+    "cache-control": "no-store",
+    "referrer-policy": "no-referrer",
+    "date": "Sat, 17 Oct 2026 10:58:37 GMT",
+    "connection": "keep-alive",
+    "keep-alive": "timeout=5",
+    "transfer-encoding": "chunked"
+  },
+  "adminRobots": "noindex, nofollow",
+  "missingStatus": 404
+}
