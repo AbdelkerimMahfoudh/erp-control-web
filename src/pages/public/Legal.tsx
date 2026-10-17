@@ -202,18 +202,3 @@ export function Login() {
     </article>
   );
 }
-
-export function NotFound() {
-  const { t, lang } = useI18n();
-  return (
-    <article className="public-page doc">
-      <header className="page-intro">
-        <h1>{t('notFound.title')}</h1>
-        <p className="lead">{t('notFound.body')}</p>
-        <Link className="btn btn-primary" to={pathOf('home', lang)}>
-          {t('notFound.home')}
-        </Link>
-      </header>
-    </article>
-  );
-}

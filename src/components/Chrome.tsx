@@ -284,9 +284,10 @@ function Footer() {
 /**
  * The frame of the pages the mobile app opens (`/in-app/…`): the product, the page in the three languages, the text,
  * and the other legal pages — no navigation, no sign-in, no product, pricing or application link, so nothing reached
- * from the app leads to buying access. Its links stay among the same pages.
+ * from the app leads to buying access. Its links stay among the same pages. Without a page (an unknown address there),
+ * the languages lead to the help page in each language.
  */
-export function InAppChrome({ id, children }: { id: PublicRouteId; children: ReactNode }) {
+export function InAppChrome({ id = 'support', children }: { id?: PublicRouteId; children: ReactNode }) {
   const { t, lang } = useI18n();
   return (
     <InAppContext.Provider value={true}>

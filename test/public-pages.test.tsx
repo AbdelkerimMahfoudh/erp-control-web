@@ -93,7 +93,7 @@ describe('the legal pages', () => {
   it('an address that is no page says so, with a way home', async () => {
     mount('/ar/no-such-page');
     expect(await screen.findByText('الصفحة غير موجودة')).toBeTruthy();
-    expect(screen.getByRole('link', { name: 'الذهاب إلى الصفحة الرئيسية' }).getAttribute('href')).toBe('/ar');
+    expect(screen.getByRole('link', { name: 'العودة إلى الصفحة الرئيسية' }).getAttribute('href')).toBe('/ar');
   });
 });
 

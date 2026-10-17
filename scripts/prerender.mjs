@@ -47,9 +47,19 @@ for (const lang of ssr.LANGUAGES) {
   }
 }
 
-// 3. The page for any other address (the host serves 404.html with a 404 status).
-const notFoundTitle = `${ssr.translate('en', 'notFound.title')} — ${ssr.SITE.displayName}`;
-write('404.html', page('en', `<title>${esc(notFoundTitle)}</title>\n    <meta name="robots" content="noindex, nofollow" />`, ssr.render('/404', 'en')));
+// 3. The page for any other address. Cloudflare Pages answers an address it has no file for with a 404 status and
+//    the NEAREST 404.html up the address's directories, so there is one per language directory (`/fr/…` → fr/404.html)
+//    and one per language for the app's pages (`/in-app/…` → in-app/404.html, which keeps their frame). Each is
+//    rendered at an address of its own directory, so the page that hydrates it at the real address renders the same.
+let notFound = 0;
+for (const lang of ssr.LANGUAGES) {
+  const prefix = lang === 'en' ? '' : `/${lang}`;
+  const head = `<title>${esc(`${ssr.translate(lang, 'notFound.title')} — ${ssr.SITE.displayName}`)}</title>\n    <meta name="robots" content="noindex, nofollow" />`;
+  for (const dir of [prefix, `${prefix}/in-app`]) {
+    write(`${dir.slice(1)}${dir ? '/' : ''}404.html`, page(lang, head, ssr.render(`${dir}/404`, lang)));
+    notFound++;
+  }
+}
 
 // 4. The generated files.
 const builtAt = new Date();
@@ -62,4 +72,4 @@ if (security) write('.well-known/security.txt', security);
 // The manifest's colours are the light theme's background and text (theme/tokens.css).
 write('site.webmanifest', ssr.webManifest(ssr.SITE, '#172033', '#f7f8fb'));
 
-console.log(`prerendered ${pages} pages (${ssr.LANGUAGES.length} languages), mode ${ssr.BUILD_MODE}, surface ${ssr.SURFACE}${ssr.IS_PREVIEW ? ' — PREVIEW: test values, noindex' : ''}`);
+console.log(`prerendered ${pages} pages and ${notFound} not-found pages (${ssr.LANGUAGES.length} languages), mode ${ssr.BUILD_MODE}, surface ${ssr.SURFACE}${ssr.IS_PREVIEW ? ' — PREVIEW: test values, noindex' : ''}`);
