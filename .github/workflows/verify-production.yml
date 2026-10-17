@@ -58,7 +58,7 @@ jobs:
         env:
           E2E_SURFACE: public
           E2E_BASE_URL: https://tsxmr.com
-        run: set -o pipefail; npx playwright test -c e2e/production.config.ts 2>&1 | tee "$EV/playwright.log"
+        run: set -o pipefail; npx playwright test -c playwright.production.config.ts 2>&1 | tee "$EV/playwright.log"
       - name: Keep the evidence
         if: always()
         env:

@@ -104,7 +104,16 @@ const files = walk(distDir)
   .map((f) => relative(distDir, f).split('\\').join('/'))
   .filter((f) => !['_headers', '_redirects', '404.html'].includes(f));
 const urlOf = (f) => (f.endsWith('.html') ? `/${f.replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '')}` : `/${f}`);
-const TRACKERS = /cloudflareinsights|\/cdn-cgi\/|googletagmanager|google-analytics|gtag\(|fbq\(|connect\.facebook|plausible|clarity\.ms|hotjar|segment\.com|matomo|email-decode/i;
+const TRACKERS = /cloudflareinsights|googletagmanager|google-analytics|gtag\(|fbq\(|connect\.facebook|plausible|clarity\.ms|hotjar|segment\.com|matomo/i;
+// Cloudflare's zone-level Email Address Obfuscation rewrites every mailto: link at the edge and adds its own script.
+const OBFUSCATION = /\/cdn-cgi\/l\/email-protection|__cf_email__|email-decode\.min\.js/;
+// Where the served bytes first differ from the built ones, for the record.
+function firstDifference(a, b) {
+  let i = 0;
+  while (i < a.length && i < b.length && a[i] === b[i]) i++;
+  return { at: i, built: b.toString('utf8', Math.max(0, i - 60), i + 160), live: a.toString('utf8', Math.max(0, i - 60), i + 260) };
+}
+const obfuscated = [];
 const mismatched = [];
 const pageProblems = [];
 let pages = 0;
@@ -122,7 +131,7 @@ for (const f of files) {
     const strip = (b) => b.toString('utf8').replace(/^Expires:.*$/m, '');
     if (strip(body) !== strip(local)) mismatched.push({ path, reason: 'content' });
   } else if (sha(body) !== sha(local)) {
-    mismatched.push({ path, live: sha(body).slice(0, 12), built: sha(local).slice(0, 12), bytes: [body.length, local.length] });
+    mismatched.push({ path, live: sha(body).slice(0, 12), built: sha(local).slice(0, 12), bytes: [body.length, local.length], ...(mismatched.length < 2 ? { first: firstDifference(body, local) } : {}) });
   }
   if (f.endsWith('.html')) {
     pages++;
@@ -133,6 +142,8 @@ for (const f of files) {
     if (!inApp && canonical !== `${origin}${path === '/' ? '/' : path}`) problems.push(`canonical ${canonical}`);
     if (/pages\.dev/.test(html)) problems.push('a preview host');
     if (TRACKERS.test(html)) problems.push(`tracker ${html.match(TRACKERS)[0]}`);
+    if (OBFUSCATION.test(html)) obfuscated.push(path);
+    if (/\/cdn-cgi\//.test(html) && !OBFUSCATION.test(html)) problems.push('another /cdn-cgi/ injection');
     if (/(src|href)="http:\/\//.test(html)) problems.push('plain-HTTP resource');
     if (inApp && !/noindex/.test(r.headers.get('x-robots-tag') ?? '')) problems.push('in-app page without noindex');
     if (problems.length) pageProblems.push({ path, problems });
@@ -140,6 +151,29 @@ for (const f of files) {
 }
 check(`every built file is served byte-for-byte as built (${files.length} files)`, mismatched.length === 0, mismatched.slice(0, 20));
 check(`${pages} pages: canonical on ${origin}, no preview host, tracker, beacon or plain-HTTP resource; in-app noindex`, pageProblems.length === 0, pageProblems.slice(0, 20));
+check('no edge rewriting of the pages (Cloudflare Email Address Obfuscation off)', obfuscated.length === 0, obfuscated.length ? `${obfuscated.length} pages rewritten: ${obfuscated.slice(0, 6).join(' ')}…` : '');
+{
+  // The rewritten files, apart from the rewrite: equal to the build once Cloudflare's markup is decoded back.
+  const decode = (html) =>
+    html
+      .replace(/<script data-cfasync="false" src="\/cdn-cgi\/scripts\/[^"]+\/email-decode\.min\.js"><\/script>/g, '')
+      .replace(/<a([^>]*?) href="\/cdn-cgi\/l\/email-protection#([0-9a-f]+)"/g, (_, attrs, hex) => `<a${attrs} href="mailto:${cfDecode(hex)}"`)
+      .replace(/<span class="__cf_email__" data-cfemail="([0-9a-f]+)">\[email(?:&#160;|\u00a0| )protected\]<\/span>/g, (_, hex) => cfDecode(hex));
+  const cfDecode = (hex) => {
+    const key = parseInt(hex.slice(0, 2), 16);
+    let out = '';
+    for (let i = 2; i < hex.length; i += 2) out += String.fromCharCode(parseInt(hex.slice(i, i + 2), 16) ^ key);
+    return out;
+  };
+  const residue = [];
+  for (const m of mismatched.filter((x) => x.path && obfuscated.includes(x.path))) {
+    const f = files.find((x) => urlOf(x) === m.path);
+    const live = Buffer.from(await (await get(`${origin}${m.path}`)).arrayBuffer()).toString('utf8');
+    if (decode(live) !== readFileSync(join(distDir, f), 'utf8')) residue.push(m.path);
+  }
+  const unexplained = mismatched.filter((x) => !obfuscated.includes(x.path));
+  check('every difference from the build is that rewrite and nothing else', residue.length === 0 && unexplained.length === 0, { residue, unexplained: unexplained.slice(0, 10) });
+}
 
 // ── The protected and unknown addresses ─────────────────────────────────────────────────────────────────────────────
 {
@@ -151,7 +185,7 @@ check(`${pages} pages: canonical on ${origin}, no preview host, tracker, beacon 
 {
   const sitemap = await (await get(`${origin}/sitemap.xml`)).text();
   const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-  check('sitemap: every URL on the production origin, no in-app or protected page', locs.length > 0 && locs.every((l) => l.startsWith(`${origin}/`) && !/in-app|account|admin/.test(l)), `${locs.length} URLs`);
+  check('sitemap: every URL on the production origin, no in-app or protected page', locs.length > 0 && locs.every((l) => l.startsWith(`${origin}/`) && !/\/in-app(\/|$)|\/(account|admin)(\/|$)/.test(l)), `${locs.length} URLs`);
 }
 
 // ── Email DNS, as recorded in the handoff (only the website's own records may have changed) ─────────────────────────
