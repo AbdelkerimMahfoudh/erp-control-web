@@ -121,7 +121,8 @@ test('public site: the host files and the security headers; no account, console 
   expect(h['content-security-policy']).toContain("connect-src 'self';");
   expect(h['x-frame-options']).toBe('DENY');
   expect(h['x-content-type-options']).toBe('nosniff');
-  expect(h['strict-transport-security']).toContain('max-age=31536000');
+  // HSTS is sent over HTTPS only (scripts/serve-dist.mjs drops it on this plain-HTTP server, as browsers ignore it there);
+  // its presence in `_headers` is checked by the unit tests and the release verdict (`--dist`).
   expect(h['referrer-policy']).toBe('strict-origin-when-cross-origin');
   for (const path of ['/account', '/account/trial', '/admin', '/admin/businesses', '/apply', '/login', '/application-status', '/fr/apply', '/app-shell.html']) {
     expect({ path, status: (await request.get(path)).status() }).toEqual({ path, status: 404 });
