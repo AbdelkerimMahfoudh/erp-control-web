@@ -1261,7 +1261,6 @@ html[lang='fr'] .hero-copy h1 {
   display: grid;
   gap: 18px;
   justify-items: start;
-  max-inline-size: 860px;
 }
 .product-card h2 {
   margin: 0;
@@ -1277,6 +1276,11 @@ html[lang='fr'] .hero-copy h1 {
 @media (min-width: 640px) {
   .feature-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 960px) {
+  .feature-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 .feature-list li {
@@ -1487,6 +1491,16 @@ mark.pending {
   background: var(--ink-2);
   color: var(--on-ink);
   border-color: var(--ink-line-strong);
+}
+/* At desktop width: the organization, then the four columns, on one row. */
+@media (min-width: 900px) {
+  .footer-grid {
+    grid-template-columns: minmax(0, 1.8fr) repeat(4, minmax(0, 1fr));
+  }
+  .footer-org {
+    grid-column: auto;
+    padding-inline-end: 24px;
+  }
 }
 @media (max-width: 559px) {
   .footer-org {
