@@ -121,6 +121,11 @@ for (const lang of LANGS) {
     expect((await facts(page)).text).toContain(c['org.publicationDirector']);
     // The footer of every page says the same in one sentence.
     expect((await facts(page)).text).toContain(c['footer.operatorIndividual'].replace('{name}', 'TSX-MR').replace('{operator}', 'Abdel Kerim Taleb Ould Sidi'));
+    // The correspondence address the owner gave, in the reader's language, on the legal notice and in the footer —
+    // with no street number or postal code, because none was given.
+    const address = { en: 'Tevragh Zeina, Nouakchott-Ouest, Mauritania', fr: 'Tevragh Zeina, Nouakchott-Ouest, Mauritanie', ar: 'تفرغ زينة، نواكشوط الغربية، موريتانيا' }[lang];
+    expect(await page.locator('.org-details').textContent()).toContain(address);
+    expect(await page.locator('.chrome-footer').textContent()).toContain(address);
     // The contacts: the four mailboxes as mail links; the configured numbers as call links, none labelled WhatsApp.
     await page.goto(pathOf('contact', lang));
     const links = (await facts(page)).links;

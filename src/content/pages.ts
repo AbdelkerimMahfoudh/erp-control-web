@@ -2,7 +2,7 @@ import type { Language } from '../i18n/languages';
 import type { Document } from './types';
 
 /**
- * The shorter public pages (docs/74 §4). About states only what TSX-MR is and does; the company-details block and
+ * The shorter public pages (docs/74 §4). About states only what TSX-MR is and does; the operator-details block and
  * the contact addresses are rendered from the production inputs, so verified facts can be added without a redesign.
  */
 type Docs = Record<Language, Document>;
@@ -28,7 +28,7 @@ export const about: Docs = {
           },
         ],
       },
-      { id: 'details', heading: 'Company details', blocks: [{ kind: 'p', text: 'The registered details of {displayName} are listed below.' }] },
+      { id: 'details', heading: 'Who operates {displayName}', blocks: [{ kind: 'p', text: '{operatorStatus} The operator’s details are listed below.' }] },
     ],
   },
   fr: {
@@ -51,7 +51,7 @@ export const about: Docs = {
           },
         ],
       },
-      { id: 'details', heading: 'Informations sur la société', blocks: [{ kind: 'p', text: 'Les informations légales de {displayName} figurent ci-dessous.' }] },
+      { id: 'details', heading: 'Qui exploite {displayName}', blocks: [{ kind: 'p', text: '{operatorStatus} Les informations sur l’exploitant figurent ci-dessous.' }] },
     ],
   },
   ar: {
@@ -74,7 +74,7 @@ export const about: Docs = {
           },
         ],
       },
-      { id: 'details', heading: 'بيانات الشركة', blocks: [{ kind: 'p', text: 'ترد أدناه البيانات المسجّلة لـ{displayName}.' }] },
+      { id: 'details', heading: 'من يشغّل {displayName}', blocks: [{ kind: 'p', text: '{operatorStatus} وبيانات المشغّل مذكورة أدناه.' }] },
     ],
   },
 };

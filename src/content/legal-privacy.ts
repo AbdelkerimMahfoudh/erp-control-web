@@ -17,7 +17,7 @@ export const privacy: Record<Language, LegalDocument> = {
         id: 'who',
         heading: 'Who is responsible',
         blocks: [
-          { kind: 'p', text: 'Dukan ERP is developed and operated by {legalName} ({displayName}), {legalForm}, registered under number {registrationNumber}, {address}, {city}, {country}.' },
+          { kind: 'p', text: 'Dukan ERP is developed and operated under the {displayName} name. {operatorStatus} {legalName} is responsible for the personal information Dukan ERP processes. Correspondence address: {postalAddress}.' },
           { kind: 'p', text: 'A business that uses Dukan ERP decides what it records about its own customers, suppliers and staff; {displayName} processes that information to provide the service. [[blocker:legal_review]]' },
           { kind: 'p', text: 'Questions about this policy or about your personal information: {privacyEmail}.' },
         ],
@@ -178,7 +178,7 @@ export const privacy: Record<Language, LegalDocument> = {
         id: 'who',
         heading: 'Qui est responsable',
         blocks: [
-          { kind: 'p', text: 'Dukan ERP est développé et exploité par {legalName} ({displayName}), {legalForm}, immatriculée sous le numéro {registrationNumber}, {address}, {city}, {country}.' },
+          { kind: 'p', text: 'Dukan ERP est développé et exploité sous le nom {displayName}. {operatorStatus} {legalName} est responsable des informations personnelles traitées par Dukan ERP. Adresse de correspondance : {postalAddress}.' },
           { kind: 'p', text: 'Une entreprise qui utilise Dukan ERP décide de ce qu’elle enregistre sur ses propres clients, fournisseurs et employés ; {displayName} traite ces informations pour fournir le service. [[blocker:legal_review]]' },
           { kind: 'p', text: 'Questions sur cette politique ou sur vos informations personnelles : {privacyEmail}.' },
         ],
@@ -339,7 +339,7 @@ export const privacy: Record<Language, LegalDocument> = {
         id: 'who',
         heading: 'الجهة المسؤولة',
         blocks: [
-          { kind: 'p', text: 'تطوّر Dukan ERP وتشغّله {legalName} ({displayName})، {legalForm}، المسجّلة تحت الرقم {registrationNumber}، {address}، {city}، {country}.' },
+          { kind: 'p', text: 'يُطوَّر Dukan ERP ويُشغَّل تحت اسم {displayName}. {operatorStatus} وتقع المسؤولية عن المعلومات الشخصية التي يعالجها Dukan ERP على {legalName}. عنوان المراسلة: {postalAddress}.' },
           { kind: 'p', text: 'تقرّر الشركة التي تستخدم Dukan ERP ما تسجّله عن عملائها ومورّديها وموظفيها، وتعالج {displayName} هذه المعلومات لتقديم الخدمة. [[blocker:legal_review]]' },
           { kind: 'p', text: 'للأسئلة عن هذه السياسة أو عن معلوماتك الشخصية: {privacyEmail}.' },
         ],

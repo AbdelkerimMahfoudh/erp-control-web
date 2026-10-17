@@ -6,6 +6,7 @@ import { inAppPathOf, pathOf, publicRouteAt, type PublicRouteId } from '../site/
 import { useTheme } from '../theme/theme';
 import { INDIVIDUAL_OPERATOR, InAppContext, LegalLinks, OrgMark, PreviewBanner, ProductMark } from './public/blocks';
 import { AccountLink, accountHref, linkable } from './AccountLink';
+import { textValues } from './public/RichText';
 
 /**
  * The frame around every page (docs/74 §4): the organization's identity, the public navigation, the languages and the
@@ -144,6 +145,7 @@ function Footer() {
       ? t('footer.operatorIndividual', { name: SITE.displayName, operator: SITE.legalName })
       : ''
     : [SITE.legalName, SITE.legalForm, SITE.registrationNumber].filter(Boolean).join(' · ');
+  const postal = textValues(lang).postalAddress;
   return (
     <footer className="chrome-footer">
       <div className="container footer-grid">
@@ -153,6 +155,10 @@ function Footer() {
           {identity ? (
             // A company's details are values (isolated); an individual operator's line is a sentence in the reader's language.
             <p className="small">{INDIVIDUAL_OPERATOR ? identity : <bdi>{identity}</bdi>}</p>
+          ) : null}
+          {postal ? (
+            // In the reader's language (its Arabic line in Arabic), so a sentence, not an isolated value.
+            <p className="small">{t('footer.address', { address: postal })}</p>
           ) : null}
           <p className="small muted">{t('footer.note')}</p>
         </div>

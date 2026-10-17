@@ -560,6 +560,7 @@ export const fr: Catalogue = {
   'org.publicationDirector': "Responsable de la publication",
   'org.correspondenceAddress': "Adresse de correspondance",
   'org.contactEmail': "Renseignements généraux",
+  'footer.address': "Adresse de correspondance : {address}.",
   'footer.operatorIndividual': "{name} est un nom de projet et un nom commercial exploité par {operator}, personne physique. Ce n’est pas une société immatriculée.",
   'country.mauritania': 'Mauritanie',
   'preview.banner': 'Version de prévisualisation — des valeurs de test sont affichées et rien ici n’est destiné à la publication.',

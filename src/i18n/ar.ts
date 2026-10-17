@@ -558,6 +558,7 @@ export const ar: Catalogue = {
   'org.publicationDirector': "المسؤول عن النشر",
   'org.correspondenceAddress': "عنوان المراسلة",
   'org.contactEmail': "الاستفسارات العامة",
+  'footer.address': "عنوان المراسلة: {address}.",
   'footer.operatorIndividual': "{name} اسم مشروع واسم تجاري يتولى تشغيلَه شخصٌ طبيعي هو {operator}، وليس شركة مسجَّلة.",
   'country.mauritania': 'موريتانيا',
   'preview.banner': 'نسخة معاينة — تُعرض قيم اختبارية، ولا شيء هنا معدّ للنشر.',

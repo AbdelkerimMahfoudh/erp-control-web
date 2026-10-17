@@ -22,7 +22,6 @@ export const BLOCKERS: readonly Blocker[] = [
   { id: 'indemnity', summary: 'Whether a business indemnifies TSX-MR, and for what, is a legal clause TSX-MR and its adviser must write or remove.' },
   { id: 'refund_policy', summary: 'The refund policy for business access paid outside the app is not decided by TSX-MR (today nothing is refunded by the system).' },
   { id: 'privacy_law', summary: 'Which data-protection law applies, the legal bases it requires, the rights it grants and the authority a person may complain to are not confirmed by Mauritanian counsel.' },
-  { id: 'publisher', summary: 'Whether the website must name a person responsible for publication, and who, is not decided by TSX-MR.' },
 ];
 
 export function blockerById(id: string): Blocker | undefined {

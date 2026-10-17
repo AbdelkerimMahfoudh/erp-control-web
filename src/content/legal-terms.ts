@@ -17,7 +17,7 @@ export const terms: Record<Language, LegalDocument> = {
         id: 'about',
         heading: 'About these terms',
         blocks: [
-          { kind: 'p', text: 'These terms apply to Dukan ERP, a service operated by {legalName} ({displayName}). A business accepts them when its Owner applies for, claims a trial of, or uses a business account. Only a person able to bind the business may accept them on its behalf. [[blocker:legal_review]]' },
+          { kind: 'p', text: 'These terms apply to Dukan ERP, a service operated under the {displayName} name. {operatorStatus} A business accepts them when its Owner applies for, claims a trial of, or uses a business account. Only a person able to bind the business may accept them on its behalf. [[blocker:legal_review]]' },
         ],
       },
       {
@@ -192,7 +192,7 @@ export const terms: Record<Language, LegalDocument> = {
         id: 'about',
         heading: 'À propos de ces conditions',
         blocks: [
-          { kind: 'p', text: 'Ces conditions s’appliquent à Dukan ERP, un service exploité par {legalName} ({displayName}). Une entreprise les accepte lorsque son propriétaire demande un compte entreprise, en réclame l’essai ou l’utilise. Seule une personne habilitée à engager l’entreprise peut les accepter en son nom. [[blocker:legal_review]]' },
+          { kind: 'p', text: 'Ces conditions s’appliquent à Dukan ERP, un service exploité sous le nom {displayName}. {operatorStatus} Une entreprise les accepte lorsque son propriétaire demande un compte entreprise, en réclame l’essai ou l’utilise. Seule une personne habilitée à engager l’entreprise peut les accepter en son nom. [[blocker:legal_review]]' },
         ],
       },
       {
@@ -367,7 +367,7 @@ export const terms: Record<Language, LegalDocument> = {
         id: 'about',
         heading: 'حول هذه الشروط',
         blocks: [
-          { kind: 'p', text: 'تسري هذه الشروط على Dukan ERP، وهي خدمة تشغّلها {legalName} ({displayName}). وتقبلها المؤسسة عندما يطلب مالكها حساب مؤسسة أو يطالب بتجربته أو يستخدمه. ولا يجوز قبولها نيابة عن المؤسسة إلا لشخص مخوَّل بإلزامها. [[blocker:legal_review]]' },
+          { kind: 'p', text: 'تسري هذه الشروط على Dukan ERP، وهي خدمة تُشغَّل تحت اسم {displayName}. {operatorStatus} وتقبلها المؤسسة عندما يطلب مالكها حساب مؤسسة أو يطالب بتجربته أو يستخدمه. ولا يجوز قبولها نيابة عن المؤسسة إلا لشخص مخوَّل بإلزامها. [[blocker:legal_review]]' },
         ],
       },
       {

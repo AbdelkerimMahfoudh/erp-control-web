@@ -12,6 +12,7 @@ import * as stub from '../src/protected-areas.public';
  */
 const REAL: Record<string, string> = {
   VITE_PUBLIC_SITE_ORIGIN: 'https://www.company-domain.mr',
+  VITE_OPERATOR_TYPE: 'company',
   VITE_ORGANIZATION_LEGAL_NAME: 'Registered Name SARL',
   VITE_ORGANIZATION_LEGAL_FORM: 'SARL',
   VITE_ORGANIZATION_REGISTRATION_NUMBER: 'RC 0000',
@@ -54,9 +55,12 @@ describe('the PUBLIC_WEBSITE gate (a public build)', () => {
     // The owner gave the identity and the mailboxes (the brief of 2026-10-17, third): those are defaults. A company has
     // a legal form and a trade-register number besides.
     const missing = (env: Record<string, string>) => releaseProblems(env, []).filter((p) => p.problem === 'missing').map((p) => p.env).sort();
-    expect(missing({ VITE_SITE_SURFACE: 'public' })).toEqual(['VITE_LEGAL_EFFECTIVE_DATE', 'VITE_ORGANIZATION_ADDRESS', 'VITE_PUBLIC_SITE_ORIGIN']);
+    // The correspondence address was given too (the brief "Final Legal, Identity, Portal and Website Production
+    // Preparation"). What is left: the effective date and the origin.
+    expect(missing({ VITE_SITE_SURFACE: 'public' })).toEqual(['VITE_LEGAL_EFFECTIVE_DATE', 'VITE_PUBLIC_SITE_ORIGIN']);
+    // A company gives its own registered name and address besides: the person's never stand in for them.
     expect(missing({ VITE_SITE_SURFACE: 'public', VITE_OPERATOR_TYPE: 'company' })).toEqual(
-      ['VITE_LEGAL_EFFECTIVE_DATE', 'VITE_ORGANIZATION_ADDRESS', 'VITE_ORGANIZATION_LEGAL_FORM', 'VITE_ORGANIZATION_REGISTRATION_NUMBER', 'VITE_PUBLIC_SITE_ORIGIN'].sort(),
+      ['VITE_LEGAL_EFFECTIVE_DATE', 'VITE_ORGANIZATION_ADDRESS', 'VITE_ORGANIZATION_LEGAL_FORM', 'VITE_ORGANIZATION_LEGAL_NAME', 'VITE_ORGANIZATION_REGISTRATION_NUMBER', 'VITE_PUBLIC_SITE_ORIGIN'].sort(),
     );
   });
 
@@ -108,6 +112,7 @@ describe('the PUBLIC_WEBSITE gate (a public build)', () => {
     // An unknown operator type is refused, and meanwhile held to the stricter company rule (fail closed).
     expect(releaseProblems({ ...base, VITE_OPERATOR_TYPE: 'partnership' }, []).map((p) => `${p.env}:${p.problem}`)).toEqual([
       'VITE_OPERATOR_TYPE:malformed',
+      'VITE_ORGANIZATION_LEGAL_NAME:missing',
       'VITE_ORGANIZATION_LEGAL_FORM:missing',
       'VITE_ORGANIZATION_REGISTRATION_NUMBER:missing',
     ]);

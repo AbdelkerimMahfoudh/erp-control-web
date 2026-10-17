@@ -218,8 +218,7 @@ export function OrgDetails() {
     if (SITE.registrationNumber) rows.push([t('org.registration'), <bdi key="r">{SITE.registrationNumber}</bdi>]);
   }
   if (SITE.publicationDirector) rows.push([t('org.publicationDirector'), <bdi key="d">{SITE.publicationDirector}</bdi>]);
-  const address = [SITE.address, v.city, v.country].filter(Boolean).join(lang === 'ar' ? '، ' : ', ');
-  if (address) rows.push([t(INDIVIDUAL_OPERATOR ? 'org.correspondenceAddress' : 'org.address'), <bdi key="a">{address}</bdi>]);
+  if (v.postalAddress) rows.push([t(INDIVIDUAL_OPERATOR ? 'org.correspondenceAddress' : 'org.address'), <bdi key="a">{v.postalAddress}</bdi>]);
   phoneList(SITE.phone).forEach((phone, i) => rows.push([t('org.phone'), <PhoneLink key={`p${i}`} phone={phone} />]));
   return (
     <dl className="org-details">

@@ -6,6 +6,7 @@ import { publishedBlockers, publishedDrafts, publishedPlaceholders } from '../sr
 /** Plausible, invented values with no test marker — a release must accept them when nothing else blocks it. */
 const COMPLETE: Record<string, string> = {
   VITE_PUBLIC_SITE_ORIGIN: 'https://www.company-domain.mr',
+  VITE_OPERATOR_TYPE: 'company',
   VITE_API_BASE: 'https://api.company-domain.mr/api/v1',
   VITE_ORGANIZATION_LEGAL_NAME: 'Registered Name SARL',
   VITE_ORGANIZATION_LEGAL_FORM: 'SARL',
@@ -26,11 +27,16 @@ describe('the production refusal (docs/74 §3)', () => {
   it('refuses a blank configuration and names every required input', () => {
     const problems = releaseProblems({}, []);
     const missing = problems.filter((p) => p.problem === 'missing').map((p) => p.env).sort();
+    // The default operator is an individual: no legal form, no trade-register number (neither exists for one).
+    const companyOnly = [INPUTS.legalForm.env, INPUTS.registrationNumber.env] as string[];
     const required = Object.values(INPUTS)
-      .filter((s) => s.required && !('fallback' in s))
+      .filter((s) => s.required && !('fallback' in s) && !companyOnly.includes(s.env))
       .map((s) => s.env)
       .sort();
     expect(missing).toEqual(required);
+    // A company is asked for both, and for its own registered name and address: it never inherits the person's.
+    const companyMissing = releaseProblems({ VITE_OPERATOR_TYPE: 'company' }, []).filter((p) => p.problem === 'missing').map((p) => p.env);
+    for (const env of [...companyOnly, INPUTS.legalName.env, INPUTS.address.env]) expect(companyMissing).toContain(env);
     // TSX-MR and Mauritania were given in the brief: they default, and are never reported missing.
     expect(missing).not.toContain('VITE_ORGANIZATION_DISPLAY_NAME');
     expect(missing).not.toContain('VITE_ORGANIZATION_COUNTRY');
@@ -76,7 +82,7 @@ describe('the production refusal (docs/74 §3)', () => {
     expect(inText.map((p) => p.problem)).toEqual(['placeholder']);
     // Read back, a blank stays blank in production — never a guessed value. Only what the owner gave is a default.
     const { inputs } = readInputs({}, 'production');
-    for (const name of ['legalForm', 'registrationNumber', 'address', 'phone', 'supportHours', 'supportLanguages', 'supportResponseTime', 'publicSiteOrigin', 'legalEffectiveDate'] as InputName[]) {
+    for (const name of ['legalForm', 'registrationNumber', 'phone', 'supportHours', 'supportLanguages', 'supportResponseTime', 'publicSiteOrigin', 'legalEffectiveDate'] as InputName[]) {
       expect({ name, value: inputs[name] }).toEqual({ name, value: '' });
     }
     const given = Object.entries(INPUTS).filter(([, spec]) => 'fallback' in spec).map(([name, spec]) => [name, (spec as { fallback: string }).fallback]);
@@ -88,6 +94,8 @@ describe('the production refusal (docs/74 §3)', () => {
       publicationDirector: 'Abdel Kerim Taleb Ould Sidi',
       country: 'Mauritania',
       city: 'Nouakchott',
+      address: 'Tevragh Zeina, Nouakchott-Ouest',
+      addressAr: 'تفرغ زينة، نواكشوط الغربية',
       contactEmail: 'contact@tsxmr.com',
       supportEmail: 'support@tsxmr.com',
       privacyEmail: 'privacy@tsxmr.com',

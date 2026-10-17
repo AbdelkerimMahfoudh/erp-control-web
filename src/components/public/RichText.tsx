@@ -21,6 +21,18 @@ const CITY: Record<string, Record<Language, string>> = {
 
 const DELETION_CHANNEL_NAMES: Record<string, string> = { whatsapp: 'WhatsApp' };
 
+/**
+ * The correspondence address in the reader's language: the address line (its Arabic line in Arabic, when one is
+ * configured), the city unless the line already names it, and the country. "Tevragh Zeina, Nouakchott-Ouest,
+ * Mauritania" — never a street number, postal code or detail the owner did not give.
+ */
+export function postalAddress(lang: Language, parts: { address: string; addressAr: string; city: string; country: string }): string {
+  const line = (lang === 'ar' && parts.addressAr) || parts.address;
+  const city = line && parts.city && line.toLowerCase().includes(parts.city.toLowerCase()) ? '' : parts.city;
+  if (!line && !city) return '';
+  return [line, city, parts.country].filter(Boolean).join(lang === 'ar' ? '، ' : ', ');
+}
+
 /** Every value a text may name: the inputs, and the few derived from them. */
 export function textValues(lang: Language): Record<string, string> {
   const country = COUNTRY[SITE.country.trim().toLowerCase()]?.[lang] ?? SITE.country;
@@ -29,6 +41,7 @@ export function textValues(lang: Language): Record<string, string> {
     ...SITE,
     country,
     city,
+    postalAddress: postalAddress(lang, { address: SITE.address, addressAr: SITE.addressAr, city, country }),
     deletionChannelName: DELETION_CHANNEL_NAMES[SITE.deletionChannel] ?? '',
     operatorStatus: operatorStatus(lang, SITE),
     productName: 'Dukan ERP',

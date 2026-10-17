@@ -56,8 +56,23 @@ export type OperatorType = (typeof OPERATOR_TYPES)[number];
 /** The inputs that exist only for a company: an individual operator has none, and none is ever invented for one. */
 export const COMPANY_ONLY_INPUTS = ['legalForm', 'registrationNumber'] as const;
 
+/**
+ * Defaults that describe the individual operator, never a company: the person's name and correspondence address. A
+ * company gives its own registered name and address; it never inherits the person's.
+ */
+export const INDIVIDUAL_ONLY_DEFAULTS = ['legalName', 'address', 'addressAr'] as const;
+
 /** The owner of the website, as the brief of 2026-10-17 gives it: the defaults below, never a guess. */
 const OPERATOR_NAME = 'Abdel Kerim Taleb Ould Sidi';
+
+/**
+ * The correspondence address as the owner gave it (the brief "Final Legal, Identity, Portal and Website Production
+ * Preparation", 2026-10-17): a district and a region, with no street number and no postal code, because none was given.
+ * The country is added in the reader's language. The Arabic line is its own input, because a name is not translated
+ * letter by letter.
+ */
+const OPERATOR_ADDRESS = 'Tevragh Zeina, Nouakchott-Ouest';
+const OPERATOR_ADDRESS_AR = 'تفرغ زينة، نواكشوط الغربية';
 
 /** The only origin the pre-launch public website may be published at (the owner's brief of 2026-10-17). */
 export const PUBLIC_WEBSITE_ORIGIN = 'https://tsxmr.com';
@@ -88,12 +103,13 @@ export const INPUTS = {
   displayName: { env: 'VITE_ORGANIZATION_DISPLAY_NAME', kind: 'text', required: true, publicSite: 'required', fallback: 'TSX-MR', preview: 'TSX-MR', label: 'Public trading or project name' },
   operatorType: { env: 'VITE_OPERATOR_TYPE', kind: 'operator-type', required: true, publicSite: 'required', fallback: 'individual', preview: 'individual', label: 'Who operates the website: individual (a natural person, no company) or company' },
   legalName: { env: 'VITE_ORGANIZATION_LEGAL_NAME', kind: 'text', required: true, publicSite: 'required', fallback: OPERATOR_NAME, preview: '[TEST] Legal operator name', label: 'The legal operator: the individual’s full name, or the company’s registered name' },
-  publicationDirector: { env: 'VITE_PUBLICATION_DIRECTOR', kind: 'text', required: false, publicSite: 'required', fallback: OPERATOR_NAME, preview: '[TEST] Person responsible for publication', label: 'The person responsible for publication' },
+  publicationDirector: { env: 'VITE_PUBLICATION_DIRECTOR', kind: 'text', required: true, publicSite: 'required', fallback: OPERATOR_NAME, preview: '[TEST] Person responsible for publication', label: 'The person responsible for publication' },
   legalForm: { env: 'VITE_ORGANIZATION_LEGAL_FORM', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Legal form', label: 'Legal form (a company only)' },
   registrationNumber: { env: 'VITE_ORGANIZATION_REGISTRATION_NUMBER', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Registration number', label: 'Trade-register (RCCM) number (a company only)' },
   country: { env: 'VITE_ORGANIZATION_COUNTRY', kind: 'text', required: true, publicSite: 'required', fallback: 'Mauritania', preview: 'Mauritania', label: 'Country' },
   city: { env: 'VITE_ORGANIZATION_CITY', kind: 'text', required: true, publicSite: 'required', fallback: 'Nouakchott', preview: '[TEST] City', label: 'City' },
-  address: { env: 'VITE_ORGANIZATION_ADDRESS', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Street address', label: 'Correspondence address (a company: its registered address)' },
+  address: { env: 'VITE_ORGANIZATION_ADDRESS', kind: 'text', required: true, publicSite: 'required', fallback: OPERATOR_ADDRESS, preview: '[TEST] Street address', label: 'Correspondence address in Latin script, without the country (a company: its registered address)' },
+  addressAr: { env: 'VITE_ORGANIZATION_ADDRESS_AR', kind: 'text', required: false, fallback: OPERATOR_ADDRESS_AR, preview: '', label: 'The same address in Arabic, without the country (blank: the Latin address is shown)' },
   phone: { env: 'VITE_ORGANIZATION_PHONE', kind: 'phone-list', required: false, preview: '', label: 'Public telephone numbers, separated by commas' },
   contactEmail: { env: 'VITE_CONTACT_EMAIL', kind: 'email', required: false, publicSite: 'required', fallback: 'contact@tsxmr.com', preview: 'contact@preview.invalid', label: 'General enquiries email' },
   supportEmail: { env: 'VITE_SUPPORT_EMAIL', kind: 'email', required: true, publicSite: 'required', fallback: 'support@tsxmr.com', preview: 'support@preview.invalid', label: 'Support email' },
@@ -193,6 +209,17 @@ export function readInputs(env: Record<string, string | undefined>, mode: BuildM
       inputs[name] = given;
     }
   }
+  // The Arabic default describes the default address only: a configured address with no Arabic line of its own is
+  // shown in Latin script rather than beside a translation of an address that is no longer the operator's.
+  if ((env[INPUTS.address.env] ?? '').trim() && !(env[INPUTS.addressAr.env] ?? '').trim()) inputs.addressAr = '';
+  if (inputs.operatorType !== 'individual') {
+    for (const name of INDIVIDUAL_ONLY_DEFAULTS) {
+      const spec: InputSpec = INPUTS[name];
+      if ((env[spec.env] ?? '').trim()) continue;
+      inputs[name] = mode === 'production' ? '' : spec.preview;
+      if (mode !== 'production' && !filled.includes(name)) filled.push(name);
+    }
+  }
   if (inputs.operatorType === 'individual') {
     for (const name of COMPANY_ONLY_INPUTS) {
       if (filled.includes(name)) {
@@ -203,6 +230,19 @@ export function readInputs(env: Record<string, string | undefined>, mode: BuildM
   }
   return { inputs, filled };
 }
+
+/**
+ * What an individual operator cannot settle alone before the portal sells access (the owner's brief "Final Legal,
+ * Identity, Portal and Website Production Preparation"). The portal takes applications, trials and subscriptions paid to
+ * TSX-MR. Dropping the company fields does not answer whether that paid activity needs the operator registered first,
+ * so the PORTAL gate keeps this blocker in individual mode. Only counsel's answer, or a registration, lifts it. Company
+ * mode does not carry it: there, the legal form and the RCCM number are required instead.
+ */
+export const OPERATOR_REGISTRATION = {
+  id: 'operator_registration',
+  summary:
+    'TSX-MR is operated by an individual with no trade registration. Mauritanian counsel must confirm whether the paid Dukan ERP service may be sold before the operator registers (for example as an individual trader at the RCCM, with a tax identification number), and what invoices and receipts must then show. The portal stays closed until then.',
+} as const;
 
 export interface ReleaseProblem {
   input?: InputName;
@@ -237,10 +277,10 @@ export function releaseProblems(
       if (value) problems.push({ input: name, env: spec.env, problem: 'forbidden', detail: `${spec.label} — the pre-launch website links to no portal, API, console or app store (docs/96)` });
       continue;
     }
-    // An individual operator has no legal form and no trade-register number: the public site asks for neither, and
-    // refuses one rather than publish a company detail that does not exist (the owner's brief of 2026-10-17, third).
-    // The portal's own rule is unchanged.
-    if (gate === 'PUBLIC_WEBSITE' && inputs.operatorType === 'individual' && (COMPANY_ONLY_INPUTS as readonly string[]).includes(name)) {
+    // An individual operator has no legal form and no trade-register number: neither gate asks for them, and both
+    // refuse one rather than publish a company detail that does not exist (the owner's briefs of 2026-10-17). A company
+    // still needs both on both gates.
+    if (inputs.operatorType === 'individual' && (COMPANY_ONLY_INPUTS as readonly string[]).includes(name)) {
       if (value) problems.push({ input: name, env: spec.env, problem: 'forbidden', detail: `${spec.label} — an individual operator has none; set VITE_OPERATOR_TYPE=company only once a company exists` });
       continue;
     }
@@ -266,6 +306,7 @@ export function releaseProblems(
       problems.push({ input: name, env: spec.env, problem: 'wrong_origin', detail: `the pre-launch website is published at ${PUBLIC_WEBSITE_ORIGIN} only` });
     }
   }
+  if (gate === 'PORTAL' && inputs.operatorType === 'individual') problems.push({ problem: 'legal_blocker', detail: `${OPERATOR_REGISTRATION.id}: ${OPERATOR_REGISTRATION.summary}` });
   for (const b of legalBlockers) problems.push({ problem: 'legal_blocker', detail: `${b.id}: ${b.summary}` });
   for (const d of content.drafts) problems.push({ problem: 'legal_draft', detail: `${d}: still marked DRAFT — REQUIRES TSX-MR APPROVAL` });
   for (const t of content.placeholders) problems.push({ problem: 'placeholder', detail: `a published text is a placeholder: “${t.slice(0, 80)}”` });

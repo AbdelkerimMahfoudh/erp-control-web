@@ -571,6 +571,7 @@ export const en = {
   'org.publicationDirector': "Responsible for publication",
   'org.correspondenceAddress': "Correspondence address",
   'org.contactEmail': "General enquiries",
+  'footer.address': "Correspondence address: {address}.",
   'footer.operatorIndividual': "{name} is a project and trading name operated by {operator}, an individual. It is not a registered company.",
   'country.mauritania': 'Mauritania',
   'preview.banner': 'Preview build — test values are shown and nothing here is for publication.',
