@@ -1,0 +1,505 @@
+{
+  "origin": "https://tsxmr.com",
+  "at": "2026-10-17T14:25:36.986Z",
+  "results": [
+    {
+      "name": "TLS tsxmr.com: valid certificate for the name",
+      "ok": true,
+      "detail": {
+        "authorized": true,
+        "error": null,
+        "validTo": "Jan 15 06:56:11 2027 GMT",
+        "altNames": "DNS:tsxmr.com",
+        "issuer": "Google Trust Services",
+        "daysLeft": 90
+      }
+    },
+    {
+      "name": "TLS www.tsxmr.com: valid certificate for the name",
+      "ok": true,
+      "detail": {
+        "authorized": true,
+        "error": null,
+        "validTo": "Jan 15 06:57:55 2027 GMT",
+        "altNames": "DNS:www.tsxmr.com",
+        "issuer": "Google Trust Services",
+        "daysLeft": 90
+      }
+    },
+    {
+      "name": "http://apex redirects to https://apex",
+      "ok": true,
+      "detail": {
+        "status": 301,
+        "location": "https://tsxmr.com/"
+      }
+    },
+    {
+      "name": "https://www → apex, 301, path and query kept",
+      "ok": true,
+      "detail": {
+        "status": 301,
+        "location": "https://tsxmr.com/privacy?check=1"
+      }
+    },
+    {
+      "name": "http://tsxmr.com/ ends at https://tsxmr.com/ with 200, no loop",
+      "ok": true,
+      "detail": [
+        "301 http://tsxmr.com/",
+        "200 https://tsxmr.com/"
+      ]
+    },
+    {
+      "name": "http://www.tsxmr.com/terms?x=2 ends at https://tsxmr.com/terms?x=2 with 200, no loop",
+      "ok": true,
+      "detail": [
+        "301 http://www.tsxmr.com/terms?x=2",
+        "200 https://tsxmr.com/terms?x=2"
+      ]
+    },
+    {
+      "name": "https://www.tsxmr.com/ ends at https://tsxmr.com/ with 200, no loop",
+      "ok": true,
+      "detail": [
+        "301 https://www.tsxmr.com/",
+        "200 https://tsxmr.com/"
+      ]
+    },
+    {
+      "name": "https://tsxmr.com/fr/contact ends at https://tsxmr.com/fr/contact with 200, no loop",
+      "ok": true,
+      "detail": [
+        "200 https://tsxmr.com/fr/contact"
+      ]
+    },
+    {
+      "name": "security headers on / equal dist/_headers",
+      "ok": true,
+      "detail": [
+        "content-security-policy",
+        "strict-transport-security",
+        "x-content-type-options",
+        "x-frame-options",
+        "referrer-policy",
+        "permissions-policy",
+        "cross-origin-opener-policy"
+      ]
+    },
+    {
+      "name": "HSTS without preload",
+      "ok": true,
+      "detail": "max-age=31536000"
+    },
+    {
+      "name": "every built file is served byte-for-byte as built (77 files)",
+      "ok": false,
+      "detail": [
+        {
+          "path": "/account-deletion",
+          "live": "b769db992f10",
+          "built": "9fe55edecd42",
+          "bytes": [
+            11458,
+            11219
+          ]
+        },
+        {
+          "path": "/ar/account-deletion",
+          "live": "86b53b277b77",
+          "built": "9cc05b367c10",
+          "bytes": [
+            12590,
+            12351
+          ]
+        },
+        {
+          "path": "/ar/contact",
+          "live": "b9ea3b76d614",
+          "built": "0b4251d64c9a",
+          "bytes": [
+            18847,
+            18213
+          ]
+        },
+        {
+          "path": "/ar/in-app/account-deletion",
+          "live": "82a4028a7502",
+          "built": "a481512664d0",
+          "bytes": [
+            7917,
+            7678
+          ]
+        },
+        {
+          "path": "/ar/in-app/legal",
+          "live": "32c7f4afd12c",
+          "built": "8b25e98d80d8",
+          "bytes": [
+            18269,
+            17635
+          ]
+        },
+        {
+          "path": "/ar/in-app/privacy-choices",
+          "live": "3399866159f4",
+          "built": "97cde9807e69",
+          "bytes": [
+            15245,
+            14480
+          ]
+        },
+        {
+          "path": "/ar/in-app/privacy",
+          "live": "d6972baa366d",
+          "built": "85b081dce491",
+          "bytes": [
+            20913,
+            20017
+          ]
+        },
+        {
+          "path": "/ar/in-app/security",
+          "live": "03b3b8c2cde4",
+          "built": "6473d228e6e1",
+          "bytes": [
+            8340,
+            7966
+          ]
+        },
+        {
+          "path": "/ar/in-app/support",
+          "live": "7077929f09c6",
+          "built": "7345eee8bc26",
+          "bytes": [
+            13565,
+            12931
+          ]
+        },
+        {
+          "path": "/ar/in-app/terms",
+          "live": "6832d1883b68",
+          "built": "4677b9c25552",
+          "bytes": [
+            9516,
+            9277
+          ]
+        },
+        {
+          "path": "/ar/legal",
+          "live": "20952cc72aea",
+          "built": "611d8d1faa0c",
+          "bytes": [
+            22860,
+            22226
+          ]
+        },
+        {
+          "path": "/ar/privacy-choices",
+          "live": "d58e3e5fdc58",
+          "built": "3bab00d2f9bf",
+          "bytes": [
+            19915,
+            19150
+          ]
+        },
+        {
+          "path": "/ar/privacy",
+          "live": "534a61af207f",
+          "built": "9e32ef442692",
+          "bytes": [
+            25559,
+            24663
+          ]
+        },
+        {
+          "path": "/ar/security",
+          "live": "b52ca56ac4dd",
+          "built": "1d88cf5d6569",
+          "bytes": [
+            12989,
+            12615
+          ]
+        },
+        {
+          "path": "/ar/support",
+          "live": "1ac20c3ee093",
+          "built": "bd1eaacd526b",
+          "bytes": [
+            18298,
+            17664
+          ]
+        },
+        {
+          "path": "/ar/terms",
+          "live": "398fb7dc7af4",
+          "built": "8c56c05caec2",
+          "bytes": [
+            14156,
+            13917
+          ]
+        },
+        {
+          "path": "/contact",
+          "live": "a0b2252977b3",
+          "built": "47a677f875f5",
+          "bytes": [
+            17535,
+            16901
+          ]
+        },
+        {
+          "path": "/fr/account-deletion",
+          "live": "9d279c189a7e",
+          "built": "83c02cc22a99",
+          "bytes": [
+            12055,
+            11816
+          ]
+        },
+        {
+          "path": "/fr/contact",
+          "live": "c4bed8bce973",
+          "built": "c53674188864",
+          "bytes": [
+            18044,
+            17410
+          ]
+        },
+        {
+          "path": "/fr/in-app/account-deletion",
+          "live": "3f1742c766f3",
+          "built": "7d59b9fe84c5",
+          "bytes": [
+            7647,
+            7408
+          ]
+        }
+      ]
+    },
+    {
+      "name": "57 pages: canonical on https://tsxmr.com, no preview host, tracker, beacon or plain-HTTP resource; in-app noindex",
+      "ok": false,
+      "detail": [
+        {
+          "path": "/account-deletion",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/account-deletion",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/contact",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/in-app/account-deletion",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/in-app/legal",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/in-app/privacy-choices",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/in-app/privacy",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/in-app/security",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/in-app/support",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/in-app/terms",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/legal",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/privacy-choices",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/privacy",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/security",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/support",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/ar/terms",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/contact",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/fr/account-deletion",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/fr/contact",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        },
+        {
+          "path": "/fr/in-app/account-deletion",
+          "problems": [
+            "tracker /cdn-cgi/"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "protected and unknown addresses answer 404",
+      "ok": true,
+      "detail": {
+        "/account": 404,
+        "/account/trial": 404,
+        "/admin": 404,
+        "/admin/businesses": 404,
+        "/apply": 404,
+        "/login": 404,
+        "/application-status": 404,
+        "/fr/apply": 404,
+        "/app-shell.html": 404,
+        "/no-such-page": 404
+      }
+    },
+    {
+      "name": "sitemap: every URL on the production origin, no in-app or protected page",
+      "ok": false,
+      "detail": "36 URLs"
+    },
+    {
+      "name": "MX: the three Cloudflare Email Routing hosts only",
+      "ok": true,
+      "detail": [
+        {
+          "exchange": "route1.mx.cloudflare.net",
+          "priority": 4
+        },
+        {
+          "exchange": "route3.mx.cloudflare.net",
+          "priority": 48
+        },
+        {
+          "exchange": "route2.mx.cloudflare.net",
+          "priority": 50
+        }
+      ]
+    },
+    {
+      "name": "SPF: exactly one record at the root, with Cloudflare Email Routing",
+      "ok": true,
+      "detail": [
+        "v=spf1 include:_spf.mx.cloudflare.net ~all"
+      ]
+    },
+    {
+      "name": "Brevo's code TXT at the root",
+      "ok": true,
+      "detail": [
+        "brevo-code:…",
+        "v=spf1 include:_spf.mx.cloudflare.net ~all"
+      ]
+    },
+    {
+      "name": "DMARC record present",
+      "ok": true,
+      "detail": [
+        "v=DMARC1; p=none; rua=mailto:0124ca1c52ea4d7a94dc5ee5dc248a0b@dmarc-reports.cloudflare.net"
+      ]
+    },
+    {
+      "name": "Cloudflare DKIM (cf2024-1) present",
+      "ok": true,
+      "detail": [
+        "v=DKIM1; h=sha256; k=rsa…"
+      ]
+    },
+    {
+      "name": "Brevo DKIM CNAMEs (brevo1, brevo2) present",
+      "ok": true,
+      "detail": {
+        "brevo1": [
+          "b1.tsxmr-com.dkim.brevo.com"
+        ],
+        "brevo2": [
+          "b2.tsxmr-com.dkim.brevo.com"
+        ]
+      }
+    },
+    {
+      "name": "preview hosts (information only)",
+      "ok": true,
+      "detail": {
+        "https://site-redesign.tsxmr-public.pages.dev/": {
+          "status": 200,
+          "location": null,
+          "robots": "noindex",
+          "canonical": "https://tsxmr.com/"
+        },
+        "https://tsxmr-public.pages.dev/": {
+          "status": 200,
+          "location": null,
+          "robots": null,
+          "canonical": "https://tsxmr.com/"
+        }
+      }
+    }
+  ]
+}
