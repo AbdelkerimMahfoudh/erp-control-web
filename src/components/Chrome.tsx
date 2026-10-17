@@ -1,7 +1,7 @@
-import { useEffect, useRef, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type FocusEvent, type MouseEvent, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { SITE, SURFACE } from '../config/site';
-import { LANGUAGE_LABELS, LANGUAGES, storeLanguage, useI18n, type Language } from '../i18n';
+import { LANGUAGE_CODES, LANGUAGE_LABELS, LANGUAGES, storeLanguage, useI18n, type Language } from '../i18n';
 import { inAppPathOf, pathOf, publicRouteAt, type PublicRouteId } from '../site/routes';
 import { useTheme } from '../theme/theme';
 import { useReveal } from '../lib/reveal';
@@ -14,20 +14,14 @@ import { Icon } from './public/icons';
  * The frame around every page (docs/74 §4): the organization's identity, the public navigation, the languages and the
  * footer with the policies and the company details TSX-MR supplied. The administration area is never linked from a
  * public page (it is reached at its own address until it moves to its own origin, docs/74 §8). On a phone the
- * navigation is a disclosure that works before any script has run, so a prerendered page is navigable on its own.
+ * navigation sits behind a menu button (`PhoneMenu`), which works before any script has run.
  */
 export function Chrome({ children, area }: { children: ReactNode; area: 'public' | 'protected' }) {
   const { t, lang } = useI18n();
   const { pathname } = useLocation();
-  const menu = useRef<HTMLDetailsElement>(null);
   const to = (id: PublicRouteId) => pathOf(id, lang);
   // The public pages' sections rise into view as the reader reaches them (lib/reveal.ts).
   useReveal(pathname);
-
-  // A navigation closes the phone menu.
-  useEffect(() => {
-    if (menu.current) menu.current.open = false;
-  }, [pathname]);
 
   const links: [PublicRouteId, string][] = [
     ['dukanErp', t('nav.dukanErp')],
@@ -74,16 +68,12 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
                 {t('nav.signIn')}
               </Link>
             )}
-            {/* On a phone: the navigation and the languages in one disclosure, so the bar stays one row. */}
-            <details className="menu" ref={menu}>
-              <summary className="btn btn-sm menu-button">{t('nav.menu')}</summary>
-              <div className="nav-narrow">
-                <nav className="nav" aria-label={t('nav.main')}>
-                  {navList}
-                </nav>
-                <Languages area={area} className="languages-narrow" />
-              </div>
-            </details>
+            <PhoneMenu>
+              <nav className="nav" aria-label={t('nav.main')}>
+                {navList}
+              </nav>
+              <Languages area={area} className="languages-narrow" />
+            </PhoneMenu>
           </div>
         </div>
       </header>
@@ -96,7 +86,90 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
   );
 }
 
-/** The current page in each language (a link, so it works without a script); the protected areas switch in place. */
+/**
+ * On a phone: the navigation and the languages behind one icon button, so the bar stays one row (the 2026-10-17
+ * consistency pass; it replaces the "Menu" text button). The prerendered page carries a native disclosure, so the menu
+ * opens before any script has run; once the script runs it becomes a button that names its action ("Open menu" /
+ * "Close menu"), states `aria-expanded` and controls the panel. The panel is not a dialog, so it traps nothing: Escape
+ * closes it and returns focus to the button, as does choosing a destination; a press outside it or Tab past its last
+ * link closes it where the reader is. While closed its links are not rendered (`hidden`), so they take no focus.
+ */
+function PhoneMenu({ children }: { children: ReactNode }) {
+  const { t } = useI18n();
+  const { pathname } = useLocation();
+  const [enhanced, setEnhanced] = useState(false);
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const button = useRef<HTMLButtonElement>(null);
+  useEffect(() => setEnhanced(true), []);
+  // A navigation closes the menu.
+  useEffect(() => setOpen(false), [pathname]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      setOpen(false);
+      button.current?.focus();
+    };
+    const onPointer = (e: PointerEvent) => {
+      if (!root.current?.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onPointer);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPointer);
+    };
+  }, [open]);
+  const icons = (
+    <>
+      <Icon name="menu" size={22} className="menu-icon-open" />
+      <Icon name="close" size={22} className="menu-icon-close" />
+    </>
+  );
+  if (!enhanced) {
+    return (
+      <details className="menu">
+        <summary className="icon-button menu-button" aria-label={t('nav.openMenu')}>
+          {icons}
+        </summary>
+        <div className="nav-narrow">{children}</div>
+      </details>
+    );
+  }
+  // Choosing a destination (the current page too) closes the menu and keeps focus in the header.
+  const onChoose = (e: MouseEvent<HTMLDivElement>) => {
+    if (!(e.target as Element).closest('a, button')) return;
+    setOpen(false);
+    button.current?.focus();
+  };
+  const onLeave = (e: FocusEvent<HTMLDivElement>) => {
+    if (e.relatedTarget && !root.current?.contains(e.relatedTarget as Node)) setOpen(false);
+  };
+  return (
+    <div className="menu" ref={root} onBlur={onLeave}>
+      <button
+        ref={button}
+        type="button"
+        className="icon-button menu-button"
+        aria-expanded={open}
+        aria-controls="site-menu"
+        aria-label={t(open ? 'nav.closeMenu' : 'nav.openMenu')}
+        onClick={() => setOpen((o) => !o)}
+      >
+        {icons}
+      </button>
+      <div id="site-menu" className="nav-narrow" hidden={!open} onClick={onChoose}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The current page in each language (a link, so it works without a script); the protected areas switch in place. Each
+ * shows its short code (EN, FR, AR) and is named in full, in its own language, for assistive technology.
+ */
 function Languages({ area, className }: { area: 'public' | 'protected'; className: string }) {
   const { t, lang, setLanguage } = useI18n();
   const { pathname } = useLocation();
@@ -111,13 +184,14 @@ function Languages({ area, className }: { area: 'public' | 'protected'; classNam
               lang={l}
               hrefLang={l}
               aria-current={l === lang ? 'true' : undefined}
+              aria-label={LANGUAGE_LABELS[l]}
               onClick={() => storeLanguage(l)}
             >
-              {LANGUAGE_LABELS[l]}
+              {LANGUAGE_CODES[l]}
             </Link>
           ) : (
-            <button type="button" className="link-button" lang={l} aria-pressed={l === lang} onClick={() => setLanguage(l)}>
-              {LANGUAGE_LABELS[l]}
+            <button type="button" className="link-button" lang={l} aria-pressed={l === lang} aria-label={LANGUAGE_LABELS[l]} onClick={() => setLanguage(l)}>
+              {LANGUAGE_CODES[l]}
             </button>
           )}
         </li>
@@ -226,8 +300,15 @@ export function InAppChrome({ id, children }: { id: PublicRouteId; children: Rea
           <ul className="languages" aria-label={t('nav.languages')}>
             {LANGUAGES.map((l) => (
               <li key={l}>
-                <Link to={inAppPathOf(id, l)} lang={l} hrefLang={l} aria-current={l === lang ? 'true' : undefined} onClick={() => storeLanguage(l)}>
-                  {LANGUAGE_LABELS[l]}
+                <Link
+                  to={inAppPathOf(id, l)}
+                  lang={l}
+                  hrefLang={l}
+                  aria-current={l === lang ? 'true' : undefined}
+                  aria-label={LANGUAGE_LABELS[l]}
+                  onClick={() => storeLanguage(l)}
+                >
+                  {LANGUAGE_CODES[l]}
                 </Link>
               </li>
             ))}

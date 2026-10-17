@@ -26,7 +26,9 @@ export type IconName =
   | 'mail'
   | 'call'
   | 'sun'
-  | 'moon';
+  | 'moon'
+  | 'menu'
+  | 'close';
 
 const PATHS: Record<IconName, string> = {
   scan: 'M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8v8M11 8v8M15 8v8',
@@ -52,6 +54,8 @@ const PATHS: Record<IconName, string> = {
   call: 'M5 4h3.5l1.8 4.6-2.4 1.6a11 11 0 0 0 5.9 5.9l1.6-2.4L20 15.5V19a1 1 0 0 1-1 1A16 16 0 0 1 4 5a1 1 0 0 1 1-1z',
   sun: 'M12 16.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4',
   moon: 'M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z',
+  menu: 'M4 7h16M4 12h16M4 17h16',
+  close: 'M6 6l12 12M18 6 6 18',
 };
 
 export function Icon({ name, size = 22, className }: { name: IconName; size?: number; className?: string }) {

@@ -521,7 +521,8 @@ export const ar: Catalogue = {
   // ── public site (TSX-MR / Dukan ERP, docs/74) ──
   'skip.toMain': 'الانتقال إلى المحتوى الرئيسي',
   'nav.main': 'التنقل الرئيسي',
-  'nav.menu': 'القائمة',
+  'nav.openMenu': 'فتح القائمة',
+  'nav.closeMenu': 'إغلاق القائمة',
   'nav.about': 'من نحن',
   'nav.products': 'المنتجات',
   'nav.dukanErp': 'Dukan ERP',

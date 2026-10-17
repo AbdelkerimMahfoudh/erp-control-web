@@ -109,15 +109,17 @@ export function Support() {
         after={{
           deletion: (
             <p>
-              <Link to={to('accountDeletion')}>
+              <Link className="text-action" to={to('accountDeletion')}>
                 <RichText text={accountDeletion[lang].title} />
+                <Icon name="arrow" size={16} className="icon-arrow" />
               </Link>
             </p>
           ),
           security: (
             <p>
-              <Link to={to('security')}>
+              <Link className="text-action" to={to('security')}>
                 <RichText text={security[lang].title} />
+                <Icon name="arrow" size={16} className="icon-arrow" />
               </Link>
             </p>
           ),

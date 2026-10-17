@@ -239,6 +239,133 @@ for (const lang of LANGS) {
     }
   });
 
+  test(`public site: the phone menu is an icon button in ${lang} — opens, closes, keeps focus, shows EN FR AR`, async ({ page }) => {
+    const c = CATALOGUE[lang];
+    for (const width of [320, 375]) {
+      await page.setViewportSize({ width, height: 700 });
+      await page.goto(pathOf('privacy', lang));
+      const button = page.locator('.chrome-header button.menu-button');
+      const panel = page.locator('#site-menu');
+      await expect(button).toBeVisible();
+      await expect(button).toHaveAttribute('aria-label', c['nav.openMenu']);
+      await expect(button).toHaveAttribute('aria-expanded', 'false');
+      await expect(button).toHaveAttribute('aria-controls', 'site-menu');
+      expect((await button.innerText()).trim(), 'no visible word on the button').toBe('');
+      const box = (await button.boundingBox())!;
+      expect(box.width).toBeGreaterThanOrEqual(44);
+      expect(box.height).toBeGreaterThanOrEqual(44);
+      // The bar stays one row: the button beside the mark, inside the screen.
+      const mark = (await page.locator('.chrome-header .brand').boundingBox())!;
+      expect(Math.abs(mark.y + mark.height / 2 - (box.y + box.height / 2))).toBeLessThan(8);
+      expect(box.x >= 0 && box.x + box.width <= width).toBe(true);
+      // Closed: none of its links is reachable from the keyboard.
+      await expect(panel).toBeHidden();
+      await button.focus();
+      await page.keyboard.press('Tab');
+      expect(await page.evaluate(() => !!document.activeElement?.closest('#site-menu'))).toBe(false);
+      // Open from the keyboard: the cross, the action's name, the destinations and the three codes.
+      await button.focus();
+      await page.keyboard.press('Enter');
+      await expect(button).toHaveAttribute('aria-expanded', 'true');
+      await expect(button).toHaveAttribute('aria-label', c['nav.closeMenu']);
+      await expect(panel).toBeVisible();
+      const codes = panel.locator('ul.languages a');
+      expect(await codes.allInnerTexts()).toEqual(['EN', 'FR', 'AR']);
+      expect(await codes.evaluateAll((as) => as.map((a) => a.getAttribute('aria-label')))).toEqual(['English', 'Français', 'العربية']);
+      await expect(panel.locator(`ul.languages a[lang="${lang}"]`)).toHaveAttribute('aria-current', 'true');
+      for (const a of await panel.locator('a').all()) expect((await a.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+      const panelBox = (await panel.boundingBox())!;
+      expect(panelBox.x >= 0 && panelBox.x + panelBox.width <= width, 'the open menu stays on screen').toBe(true);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(0);
+      await page.screenshot({ path: shot(`menu-open-${width}`, lang, pathOf('privacy', lang)), type: 'jpeg', quality: 75 });
+      // Escape closes it and gives focus back to the button.
+      await page.keyboard.press('Tab');
+      await page.keyboard.press('Escape');
+      await expect(button).toHaveAttribute('aria-expanded', 'false');
+      await expect(panel).toBeHidden();
+      expect(await page.evaluate(() => document.activeElement?.classList.contains('menu-button'))).toBe(true);
+      // Tab past its last link closes it where the reader is.
+      await page.keyboard.press('Enter');
+      await panel.locator('a').last().focus();
+      await page.keyboard.press('Tab');
+      await expect(button).toHaveAttribute('aria-expanded', 'false');
+    }
+    // Choosing a destination opens that page with the menu closed.
+    await page.locator('.chrome-header button.menu-button').click();
+    await page.locator('#site-menu .nav a').last().click();
+    await expect(page).toHaveURL(new RegExp(`${pathOf('contact', lang)}$`));
+    await expect(page.locator('.chrome-header button.menu-button')).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  test(`public site: choosing a language from the phone menu keeps the page and the appearance (${lang})`, async ({ page }) => {
+    const other = lang === 'ar' ? 'en' : 'ar';
+    await page.setViewportSize({ width: 375, height: 800 });
+    await page.goto(pathOf('privacy', lang));
+    await page.locator('.chrome-header button.theme-toggle').click();
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    await page.locator('.chrome-header button.menu-button').click();
+    await page.locator(`#site-menu ul.languages a[lang="${other}"]`).click();
+    await expect(page).toHaveURL(new RegExp(`${pathOf('privacy', other)}$`));
+    expect(await page.evaluate(() => [document.documentElement.lang, document.documentElement.dir, document.documentElement.dataset.theme])).toEqual([
+      other,
+      other === 'ar' ? 'rtl' : 'ltr',
+      'dark',
+    ]);
+    expect(await page.evaluate(() => localStorage.getItem('erp.web.language'))).toBe(other);
+    await page.reload();
+    expect(await page.evaluate(() => [document.documentElement.lang, document.documentElement.dataset.theme])).toEqual([other, 'dark']);
+  });
+
+  test(`public site: every link looks like what it does in ${lang} — none is a raw template anchor`, async ({ page }) => {
+    const paths = [...ROUTES.map((r) => pathOf(r.id, lang)), ...IN_APP_ROUTE_IDS.map((id) => inAppPathOf(id, lang))];
+    const raw: string[] = [];
+    for (const path of paths) {
+      await page.goto(path);
+      // A link with no family of its own is running text: it must carry the text-link treatment (a set underline offset),
+      // never the browser's default underline.
+      const found = await page.$$eval('main a[href], .in-app-footer a[href]', (as) =>
+        as
+          .filter((a) => {
+            const cs = getComputedStyle(a);
+            return !a.className && cs.textDecorationLine.includes('underline') && cs.textUnderlineOffset === 'auto';
+          })
+          .map((a) => `${a.textContent?.trim()} → ${a.getAttribute('href')}`),
+      );
+      raw.push(...found.map((f) => `${path}: ${f}`));
+    }
+    record(`links-${lang}`, { pages: paths.length, raw });
+    expect(raw).toEqual([]);
+  });
+
+  test(`public site: the contents are rows that land each section below the sticky header (${lang})`, async ({ page }) => {
+    for (const width of [375, 1280]) {
+      await page.setViewportSize({ width, height: 800 });
+      await page.goto(pathOf('privacy', lang));
+      const rows = page.locator('nav.toc a.toc-link');
+      const count = await rows.count();
+      expect(count).toBeGreaterThan(5);
+      for (const row of await rows.all()) expect((await row.boundingBox())!.height).toBeGreaterThanOrEqual(44);
+      // In Arabic the number sits at the start of the line, on the right.
+      const first = rows.first();
+      const [num, text] = [(await first.locator('.toc-num').boundingBox())!, (await first.locator('.toc-text').boundingBox())!];
+      expect(lang === 'ar' ? num.x > text.x : num.x < text.x).toBe(true);
+      for (const i of [Math.floor(count / 2), count - 1]) {
+        await page.goto(pathOf('privacy', lang));
+        await rows.nth(i).click();
+        await page.waitForTimeout(300);
+        const gap = await page.evaluate(() => {
+          const header = document.querySelector('.chrome-header')!.getBoundingClientRect();
+          const heading = document.querySelector(`${location.hash} h2`)!.getBoundingClientRect();
+          return heading.top - header.bottom;
+        });
+        expect(gap, `section ${i + 1} at ${width} px lands below the header`).toBeGreaterThanOrEqual(0);
+      }
+    }
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(pathOf('privacy', lang));
+    await page.locator('nav.toc').screenshot({ path: shot('toc', lang, pathOf('privacy', lang)) });
+  });
+
   test(`public site: the pages the app opens answer in ${lang}, without the site's navigation`, async ({ page }) => {
     for (const id of IN_APP_ROUTE_IDS) {
       const response = await page.goto(inAppPathOf(id, lang));

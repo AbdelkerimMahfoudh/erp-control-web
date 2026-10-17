@@ -235,10 +235,13 @@ test('keyboard: the skip link comes first and lands on the main content; the pho
   await expect(page.locator('a.skip-link')).toBeVisible();
   await page.keyboard.press('Enter');
   expect(await page.evaluate(() => location.hash)).toBe('#main');
-  const summary = page.locator('details.menu > summary');
-  await summary.focus();
+  // Once the script runs, the phone menu is a button that states whether it is open.
+  const menuButton = page.locator('button.menu-button');
+  await expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+  await menuButton.focus();
   await page.keyboard.press('Enter');
-  await expect(page.locator('details.menu .nav-narrow a').first()).toBeVisible();
+  await expect(menuButton).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('#site-menu a').first()).toBeVisible();
   await page.screenshot({ path: shot('keyboard', 'en', '/menu-open'), type: 'jpeg', quality: 70 });
   const focusVisible = await page.evaluate(() => getComputedStyle(document.activeElement!).outlineStyle);
   record({ test: 'keyboard', first, focusOutline: focusVisible });

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { createContext, useContext, useEffect, type HTMLAttributes, type ReactNode } from 'react';
 import { BUILD_MODE, FILLED_INPUTS, IS_PREVIEW, SITE, SURFACE } from '../../config/site';
 import { phoneList } from '../../config/schema';
@@ -172,15 +172,22 @@ export function LegalView({ doc, after }: { doc: LegalDocument; after?: Record<s
           <span>{effective ? t('legal.effective', { date: formatDate(`${effective}T00:00:00Z`, lang) }) : <mark className="pending">{t('legal.effectivePending')}</mark>}</span>
         </p>
       </PageIntro>
+      {/* The sections as rows, each with its number in a marker; the list keeps its semantics (`role` survives the removed
+          bullets in Safari) and the marker is decorative, since a list already says each item's position. */}
       <nav className="toc" aria-labelledby="toc-h">
         <h2 id="toc-h" className="toc-title">
           {t('legal.contents')}
         </h2>
-        <ol>
-          {doc.sections.map((s) => (
+        <ol className="toc-list" role="list">
+          {doc.sections.map((s, i) => (
             <li key={s.id}>
-              <a href={`#${s.id}`}>
-                <RichText text={s.heading} />
+              <a className="toc-link" href={`#${s.id}`}>
+                <span className="toc-num num" aria-hidden="true">
+                  {i + 1}
+                </span>
+                <span className="toc-text">
+                  <RichText text={s.heading} />
+                </span>
               </a>
             </li>
           ))}
@@ -195,7 +202,10 @@ export function LegalView({ doc, after }: { doc: LegalDocument; after?: Record<s
   );
 }
 
-/** The legal and support pages, as links in the current language — on every legal page and the legal notice. */
+/**
+ * The legal and support pages, as links in the current language — on every legal page and the legal notice, and in the
+ * footer of the pages the app opens. Each is a compact pill; the page the reader is on is marked as current.
+ */
 export function LegalLinks() {
   const { t } = useI18n();
   const to = useLegalPath();
@@ -209,10 +219,12 @@ export function LegalLinks() {
     ['legalNotice', t('footer.legalNotice')],
   ];
   return (
-    <ul className="legal-links">
+    <ul className="legal-links" role="list">
       {pages.map(([id, label]) => (
         <li key={id}>
-          <Link to={to(id)}>{label}</Link>
+          <NavLink className="related-link" to={to(id)} end>
+            {label}
+          </NavLink>
         </li>
       ))}
     </ul>
@@ -222,10 +234,17 @@ export function LegalLinks() {
 /** True while the website's operator is an individual, with no separate company (`VITE_OPERATOR_TYPE`). */
 export const INDIVIDUAL_OPERATOR = SITE.operatorType !== 'company';
 
-/** The configured public telephone numbers, each a call link; none is labelled WhatsApp unless one is configured as such. */
+/**
+ * A configured public telephone number as a compact contact row: a call icon and the number, named like the contact
+ * cards ("Call +222 …"). None is labelled WhatsApp unless one is configured as such.
+ */
 function PhoneLink({ phone }: { phone: string }) {
+  const { t } = useI18n();
   return (
-    <a href={`tel:${phone.replace(/\s+/g, '')}`}>
+    <a className="org-phone" href={`tel:${phone.replace(/\s+/g, '')}`} aria-label={t('contact.callName', { value: phone })}>
+      <span className="org-phone-icon">
+        <Icon name="call" size={16} />
+      </span>
       <bdi dir="ltr">{phone}</bdi>
     </a>
   );

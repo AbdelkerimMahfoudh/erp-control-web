@@ -534,7 +534,8 @@ export const en = {
   // ── public site (TSX-MR / Dukan ERP, docs/74) ──
   'skip.toMain': 'Skip to main content',
   'nav.main': 'Main navigation',
-  'nav.menu': 'Menu',
+  'nav.openMenu': 'Open menu',
+  'nav.closeMenu': 'Close menu',
   'nav.about': 'About',
   'nav.products': 'Products',
   'nav.dukanErp': 'Dukan ERP',

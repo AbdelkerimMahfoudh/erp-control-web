@@ -182,7 +182,11 @@ main:focus {
 .link-button {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
+  min-inline-size: 40px;
   padding: 6px 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   border-radius: 8px;
   color: var(--text-2);
   font-size: 0.9rem;
@@ -231,15 +235,22 @@ main:focus {
 .menu > summary::-webkit-details-marker {
   display: none;
 }
-.chrome-header .menu-button {
-  background: var(--ink-glass);
-  border-color: var(--ink-line-strong);
-  color: var(--on-ink);
+/* The phone menu's button: three lines while closed, a cross while open (before and after the script takes over). */
+.menu-icon-close,
+.menu[open] > .menu-button .menu-icon-open,
+.menu-button[aria-expanded='true'] .menu-icon-open {
+  display: none;
 }
-.chrome-header .menu-button:hover {
+.menu[open] > .menu-button .menu-icon-close,
+.menu-button[aria-expanded='true'] .menu-icon-close {
+  display: block;
+}
+.chrome-header .menu[open] > .menu-button,
+.chrome-header .menu-button[aria-expanded='true'] {
   background: var(--ink-line);
+  border-color: var(--on-ink-3);
 }
-/* One size for every icon button (`--tap`, 44 px): the header's theme toggle. */
+/* One size for every icon button (`--tap`, 44 px): the header's theme toggle and the phone menu. */
 .icon-button {
   display: inline-grid;
   place-items: center;
@@ -283,6 +294,10 @@ main:focus {
   z-index: 20;
   min-inline-size: 240px;
   max-inline-size: calc(100vw - 32px);
+  /* A short phone in landscape scrolls the panel, never the page behind it. */
+  max-block-size: calc(100dvh - 96px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--ink-2);
   border: 1px solid var(--ink-line);
   border-radius: var(--radius-m);
@@ -303,10 +318,19 @@ main:focus {
 [dir='rtl'] .chrome-header .nav-narrow .nav a.active {
   box-shadow: inset -3px 0 0 var(--amber);
 }
-.languages-narrow {
-  border-top: 1px solid var(--ink-line);
+/* In the phone menu: the three codes as one segmented row, each a full touch target. */
+.chrome-header .languages-narrow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
   margin-top: 8px;
-  padding-top: 8px;
+  padding: 4px;
+  border: 1px solid var(--ink-line);
+  border-radius: 12px;
+  background: var(--ink-glass);
+}
+.chrome-header .languages-narrow a {
+  min-block-size: 44px;
 }
 @media (max-width: 899px) {
   .nav-wide,
@@ -1420,24 +1444,106 @@ html[lang='fr'] .hero-copy h1 {
   font-size: 0.95rem;
   margin: 0;
 }
+/*
+ * Links, by context (the 2026-10-17 consistency pass). Every link looks like what it does:
+ * - in running text, an underlined word in the brand colour (below);
+ * - in a table of contents, a row with its section number (`.toc-link`);
+ * - to a sibling page, a compact pill (`.related-link`); to a mailbox or number, a contact card or row;
+ * - to the main pages, the header and footer navigation; to an action, a button.
+ */
+.site-main :is(p, li, dd) a:not([class]) {
+  color: var(--brand);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--link-line);
+  text-underline-offset: 0.22em;
+  overflow-wrap: anywhere;
+  border-radius: 3px;
+  transition:
+    color var(--dur) var(--ease),
+    text-decoration-color var(--dur) var(--ease);
+}
+.site-main :is(p, li, dd) a:not([class]):hover,
+.site-main :is(p, li, dd) a:not([class]):focus-visible {
+  color: var(--brand-strong);
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 2px;
+}
 .toc {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-m);
-  padding: 18px 22px;
+  padding: clamp(14px, 2vw, 20px);
   box-shadow: var(--shadow);
 }
 .doc .toc-title {
-  font-size: 1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
   margin: 0 0 8px;
+  padding-inline: 10px;
 }
-.toc ol {
+html[lang='ar'] .doc .toc-title {
+  text-transform: none;
+  letter-spacing: 0;
+  font-size: 0.9rem;
+}
+.toc-list {
+  list-style: none;
   margin: 0;
-  padding-inline-start: 1.3em;
-  columns: 2 240px;
+  padding: 0;
+  columns: 2 260px;
+  column-gap: 12px;
 }
-.toc li {
-  padding-block: 3px;
+.toc-list li {
+  break-inside: avoid;
+}
+.toc-link {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  min-block-size: 44px;
+  padding: 9px 10px;
+  border-radius: var(--radius-s);
+  color: var(--text);
+  text-decoration: none;
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.toc-num {
+  display: grid;
+  place-items: center;
+  block-size: 26px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--text-3);
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition:
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.toc-text {
+  padding-block-start: 2px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.toc-link:hover,
+.toc-link:focus-visible {
+  background: var(--brand-wash);
+  color: var(--brand-strong);
+}
+.toc-link:hover .toc-num,
+.toc-link:focus-visible .toc-num {
+  background: var(--brand);
+  color: var(--on-brand);
+}
+.toc-link:active {
+  background: var(--surface-2);
 }
 mark.pending {
   background: var(--pending-bg);
@@ -1459,6 +1565,13 @@ mark.pending {
   display: grid;
   grid-template-columns: minmax(140px, 200px) 1fr;
   gap: 12px;
+  align-items: center;
+  padding-block-end: 8px;
+  border-block-end: 1px solid var(--border);
+}
+.org-row:last-child {
+  padding-block-end: 0;
+  border-block-end: 0;
 }
 .org-row dt {
   color: var(--text-3);
@@ -1467,8 +1580,43 @@ mark.pending {
   margin: 0;
   overflow-wrap: anywhere;
 }
-.org-row a {
-  overflow-wrap: anywhere;
+/* A telephone among the operator's details: a compact contact row, the same family as the contact cards. */
+.org-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-inline-size: 100%;
+  min-block-size: 44px;
+  padding-block: 6px;
+  padding-inline: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color var(--dur) var(--ease),
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.org-phone-icon {
+  display: grid;
+  place-items: center;
+  inline-size: 30px;
+  block-size: 30px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--brand-wash);
+  color: var(--brand);
+}
+.org-phone:hover,
+.org-phone:focus-visible {
+  border-color: var(--brand);
+  color: var(--brand-strong);
+}
+.org-phone:active {
+  background: var(--surface-2);
 }
 
 /*
@@ -1651,10 +1799,14 @@ html[lang='ar'] .contact-group-title {
   gap: 8px;
 }
 .footer-col a {
+  display: inline-block;
+  padding-block: 3px;
   color: var(--on-ink-2);
   text-decoration: none;
+  text-underline-offset: 0.25em;
 }
-.footer-col a:hover {
+.footer-col a:hover,
+.footer-col a:focus-visible {
   color: var(--on-ink);
   text-decoration: underline;
 }
@@ -1703,14 +1855,66 @@ html[lang='ar'] .contact-group-title {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
+  gap: 8px;
   margin: 0;
   padding: 0;
 }
-.legal-links a {
-  display: inline-block;
+/* A sibling page: a compact pill; the page the reader is on is filled and quiet. */
+.related-link {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 40px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    border-color var(--dur) var(--ease),
+    background var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.related-link:hover,
+.related-link:focus-visible {
+  border-color: var(--brand);
+  background: var(--brand-wash);
+  color: var(--brand-strong);
+}
+.related-link:active {
+  background: var(--surface-2);
+}
+/* A link that stands alone under a section and leads to another page: a text action with its arrow. */
+.text-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   min-block-size: 44px;
-  padding-block: 10px;
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: none;
+  text-underline-offset: 0.25em;
+}
+.text-action .icon-arrow {
+  transition: translate var(--dur) var(--ease);
+}
+.text-action:hover,
+.text-action:focus-visible {
+  color: var(--brand-strong);
+  text-decoration: underline;
+}
+.text-action:hover .icon-arrow {
+  translate: var(--nudge) 0;
+}
+[dir='rtl'] .text-action:hover .icon-arrow {
+  translate: calc(-1 * var(--nudge)) 0;
+}
+.related-link[aria-current='page'] {
+  border-color: transparent;
+  background: var(--surface-2);
+  color: var(--text-3);
 }
 
 /* ── The pages the mobile app opens: light, plain, no marketing ─────────────────────────────────────────────────── */
@@ -1724,6 +1928,7 @@ html[lang='ar'] .contact-group-title {
 }
 .in-app-header .languages a {
   color: var(--text-2);
+  min-block-size: 44px;
 }
 .in-app-header .languages a[aria-current='true'] {
   color: var(--text);

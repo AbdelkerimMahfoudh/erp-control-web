@@ -3,6 +3,9 @@ export type Language = 'en' | 'fr' | 'ar';
 export const LANGUAGES: readonly Language[] = ['en', 'fr', 'ar'];
 /** Each language named in its own words, never translated. */
 export const LANGUAGE_LABELS: Record<Language, string> = { en: 'English', fr: 'Français', ar: 'العربية' };
+/** What a language control shows (2026-10-17): the short code, the same in every language; the full name above stays its
+ * accessible name. Never a flag — a flag is a country, not a language. */
+export const LANGUAGE_CODES: Record<Language, string> = { en: 'EN', fr: 'FR', ar: 'AR' };
 /** The `hreflang` / Open Graph locale of each. */
 export const LANGUAGE_LOCALE: Record<Language, string> = { en: 'en', fr: 'fr', ar: 'ar' };
 export const OG_LOCALE: Record<Language, string> = { en: 'en_US', fr: 'fr_FR', ar: 'ar_AR' };

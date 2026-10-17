@@ -523,7 +523,8 @@ export const fr: Catalogue = {
   // ── public site (TSX-MR / Dukan ERP, docs/74) ──
   'skip.toMain': 'Aller au contenu principal',
   'nav.main': 'Navigation principale',
-  'nav.menu': 'Menu',
+  'nav.openMenu': 'Ouvrir le menu',
+  'nav.closeMenu': 'Fermer le menu',
   'nav.about': 'À propos',
   'nav.products': 'Produits',
   'nav.dukanErp': 'Dukan ERP',

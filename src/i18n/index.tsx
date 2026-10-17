@@ -2,9 +2,9 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState, t
 import { en, type Catalogue, type Key } from './en';
 import { fr } from './fr';
 import { ar } from './ar';
-import { isLanguage, isRtl, LANGUAGE_LABELS, LANGUAGES, type Language } from './languages';
+import { isLanguage, isRtl, LANGUAGE_CODES, LANGUAGE_LABELS, LANGUAGES, type Language } from './languages';
 
-export { isRtl, LANGUAGE_LABELS, LANGUAGES, type Language };
+export { isRtl, LANGUAGE_CODES, LANGUAGE_LABELS, LANGUAGES, type Language };
 export const LANGUAGE_STORAGE_KEY = 'erp.web.language';
 const CATALOGUES: Record<Language, Catalogue> = { en, fr, ar };
 

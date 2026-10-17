@@ -19,6 +19,8 @@
   --brand: #5146d9;
   --brand-strong: #3f35b8;
   --brand-wash: #eeecfc;
+  /* The underline of a link in running text: the brand colour, lighter, until pointed at. */
+  --link-line: rgba(81, 70, 217, 0.4);
   --on-brand: #ffffff;
   --org: #172033;
   --on-org: #ffffff;
@@ -85,6 +87,7 @@
   --brand: #8f87f1;
   --brand-strong: #aaa4f5;
   --brand-wash: #1e1b3d;
+  --link-line: rgba(143, 135, 241, 0.5);
   --on-brand: #0b0f17;
   --org: #e7ecf5;
   --on-org: #0b0f17;
