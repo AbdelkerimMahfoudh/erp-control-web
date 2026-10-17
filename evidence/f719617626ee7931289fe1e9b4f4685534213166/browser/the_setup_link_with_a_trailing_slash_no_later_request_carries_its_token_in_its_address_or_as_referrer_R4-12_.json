@@ -1,0 +1,38 @@
+{
+  "test": "setup-link-trailing-slash",
+  "requests": [
+    {
+      "url": "http://127.0.0.1:4173/fonts/bricolage-grotesque-latin.woff2",
+      "referer": null
+    },
+    {
+      "url": "http://127.0.0.1:4173/fonts/ibm-plex-sans-latin-400.woff2",
+      "referer": null
+    },
+    {
+      "url": "http://127.0.0.1:4173/theme-boot.js",
+      "referer": null
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-BbKcG8sZ.js",
+      "referer": null
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-mRwl8r-L.css",
+      "referer": null
+    },
+    {
+      "url": "http://127.0.0.1:3999/api/v1/platform/my-subscription",
+      "referer": null
+    },
+    {
+      "url": "http://127.0.0.1:4173/fonts/ibm-plex-sans-latin-600.woff2",
+      "referer": "http://127.0.0.1:4173/assets/index-mRwl8r-L.css"
+    },
+    {
+      "url": "http://127.0.0.1:4173/fonts/ibm-plex-sans-latin-500.woff2",
+      "referer": "http://127.0.0.1:4173/assets/index-mRwl8r-L.css"
+    }
+  ],
+  "consoleErrors": []
+}
