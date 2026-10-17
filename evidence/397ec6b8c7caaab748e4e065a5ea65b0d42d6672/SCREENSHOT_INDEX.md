@@ -1,6 +1,6 @@
 # Screenshot index
 
-Generated 2026-10-17T15:59:42.920Z from the CI run; JPEG, full page unless noted.
+Generated 2026-10-17T20:36:10.382Z from the CI run; JPEG, full page unless noted.
 
 ## addons (24)
 
