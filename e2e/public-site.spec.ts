@@ -306,7 +306,8 @@ for (const lang of LANGS) {
     await page.locator('.chrome-header button.menu-button').click();
     await page.locator(`#site-menu ul.languages a[lang="${other}"]`).click();
     await expect(page).toHaveURL(new RegExp(`${pathOf('privacy', other)}$`));
-    expect(await page.evaluate(() => [document.documentElement.lang, document.documentElement.dir, document.documentElement.dataset.theme])).toEqual([
+    // The address changes first; the document's language follows on the next render, so wait for it rather than race it.
+    await expect.poll(() => page.evaluate(() => [document.documentElement.lang, document.documentElement.dir, document.documentElement.dataset.theme])).toEqual([
       other,
       other === 'ar' ? 'rtl' : 'ltr',
       'dark',
