@@ -1,0 +1,48 @@
+{
+  "test": "setup-link",
+  "kept": {
+    "href": "http://127.0.0.1:4173/account/trial",
+    "local": "[]",
+    "session": "[]",
+    "cookie": ""
+  },
+  "requests": [
+    {
+      "url": "http://127.0.0.1:4173/account/trial?t=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "method": "GET",
+      "referer": null,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:4173/theme-boot.js",
+      "method": "GET",
+      "referer": null,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-B0BOFH9I.js",
+      "method": "GET",
+      "referer": null,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:4173/assets/index-DqULs8jY.css",
+      "method": "GET",
+      "referer": null,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:3999/api/v1/platform/my-subscription",
+      "method": "GET",
+      "referer": null,
+      "body": null
+    },
+    {
+      "url": "http://127.0.0.1:3999/api/v1/platform/my-subscription/trial/link",
+      "method": "POST",
+      "referer": null,
+      "body": "(carries the token)"
+    }
+  ],
+  "consoleErrors": []
+}
