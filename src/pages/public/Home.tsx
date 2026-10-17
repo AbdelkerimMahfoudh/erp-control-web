@@ -44,11 +44,16 @@ export function Home() {
             </p>
             <div className="hero-actions">
               <Link className="btn btn-primary btn-lg" to={to('dukanErp')}>
-                <RichText text={c.hero.primary} />
+                <span>
+                  <RichText text={c.hero.primary} />
+                </span>
                 <Icon name="arrow" size={18} className="icon-arrow" />
               </Link>
               <Link className="btn btn-ghost btn-lg" to={to('contact')}>
-                <RichText text={c.hero.secondary} />
+                {/* One element for the sentence: the button's gap would otherwise split it around the inserted name. */}
+                <span>
+                  <RichText text={c.hero.secondary} />
+                </span>
               </Link>
             </div>
           </div>
@@ -262,7 +267,9 @@ export function Home() {
               <RichText text={c.cta.signIn} />
             </AccountLink>
             <Link className={accountLinks ? 'btn btn-ghost btn-lg' : 'btn btn-primary btn-lg'} to={to('contact')}>
-              <RichText text={c.cta.contact} />
+              <span>
+                <RichText text={c.cta.contact} />
+              </span>
             </Link>
           </div>
         </div>

@@ -5,8 +5,9 @@
  * (inline-start/end), so Arabic mirrors without a second stylesheet. Every colour is a token (tokens.css).
  *
  * Motion is small and finite: the hero rises once, sections rise as they are reached (lib/reveal.ts), the product's
- * bars grow once and its scan line passes twice. Nothing loops, nothing starts invisible — the resting state is the
- * styled state — and everything stops for anyone who asks the system for reduced motion.
+ * bars grow once and its scan line passes twice. Movement is by position only — no text ever fades, so its contrast
+ * holds at every instant, for a reader and for an accessibility checker. Nothing loops, and everything stops for
+ * anyone who asks the system for reduced motion.
  */
 html {
   scroll-padding-top: 88px;
@@ -534,14 +535,12 @@ html[lang='fr'] .hero-copy h1 {
   font-size: 0.95rem;
 }
 
-/* The hero's first paint rises once — from a visible state, so a paused animation still shows the page. */
+/* The hero's first paint rises once, by position only: a paused animation still shows the whole page at full contrast. */
 @keyframes rise {
   from {
-    opacity: 0.35;
     transform: translateY(14px);
   }
   to {
-    opacity: 1;
     transform: none;
   }
 }
@@ -568,7 +567,7 @@ html[lang='fr'] .hero-copy h1 {
   position: relative;
   inline-size: min(100%, 470px);
   margin-inline: auto;
-  padding-block: 20px;
+  padding-block: 20px 48px;
 }
 .pv-phone-wrap {
   display: grid;
@@ -713,14 +712,16 @@ html[lang='fr'] .hero-copy h1 {
   display: block;
   color: var(--text-3);
 }
-/* Beside the phone's figures, never over its header or its tab bar. */
+/* Over the empty end of the phone's top bar, and hanging below its bottom corner: never over a figure, a row or the
+   tab bar. */
 .pv-card-a {
-  top: 150px;
-  inset-inline-start: 0;
+  top: 34px;
+  inset-inline-end: 0;
+  inline-size: 214px;
 }
 .pv-card-b {
-  bottom: 104px;
-  inset-inline-end: 0;
+  bottom: 0;
+  inset-inline-start: 0;
 }
 .pv-ic {
   display: grid;
@@ -756,9 +757,9 @@ html[lang='fr'] .hero-copy h1 {
   }
 }
 .pv-demo {
-  display: block;
-  margin-block-start: 14px;
-  text-align: center;
+  position: absolute;
+  bottom: 22px;
+  inset-inline-end: 8px;
   font-size: 0.75rem;
   color: var(--on-ink-3);
 }
@@ -779,7 +780,7 @@ html[lang='fr'] .hero-copy h1 {
     box-shadow: var(--shadow-lift);
   }
   .pv-demo {
-    margin: 0;
+    position: static;
   }
 }
 
@@ -1569,15 +1570,12 @@ mark.pending {
   gap: 8px;
 }
 
-/* ── Sections rising into view (lib/reveal.ts): only once a script runs, never below a readable state ─────────── */
+/* ── Sections rising into view (lib/reveal.ts): only once a script runs, by position only, never faded ────────── */
 html.js [data-reveal] {
-  transition:
-    opacity 0.55s var(--ease),
-    transform 0.55s var(--ease);
+  transition: transform 0.55s var(--ease);
 }
 html.js [data-reveal]:not(.in) {
-  opacity: 0.4;
-  transform: translateY(16px);
+  transform: translateY(18px);
 }
 .stagger > :nth-child(2) {
   transition-delay: 60ms;
@@ -1632,7 +1630,6 @@ html.js [data-reveal]:not(.in) {
     scroll-behavior: auto !important;
   }
   html.js [data-reveal]:not(.in) {
-    opacity: 1;
     transform: none;
   }
   .card-lift:hover,
