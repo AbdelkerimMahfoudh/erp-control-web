@@ -102,7 +102,9 @@ function walk(dir) {
 }
 const files = walk(distDir)
   .map((f) => relative(distDir, f).split('\\').join('/'))
-  .filter((f) => !['_headers', '_redirects', '404.html'].includes(f));
+  // Every 404.html (one per language directory, and per language for /in-app/) is the host's answer to an unknown
+  // address, not a page of its own: never canonical, never indexed. Its 404 behaviour is verify-not-found.mjs's.
+  .filter((f) => !['_headers', '_redirects'].includes(f) && !/(^|\/)404\.html$/.test(f));
 const urlOf = (f) => (f.endsWith('.html') ? `/${f.replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '')}` : `/${f}`);
 const TRACKERS = /cloudflareinsights|googletagmanager|google-analytics|gtag\(|fbq\(|connect\.facebook|plausible|clarity\.ms|hotjar|segment\.com|matomo/i;
 // Cloudflare's zone-level Email Address Obfuscation rewrites every mailto: link at the edge and adds its own script.
