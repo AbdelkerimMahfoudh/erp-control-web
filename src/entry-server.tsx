@@ -14,11 +14,15 @@ import { ThemeProvider } from './theme/theme';
 import { plainText, textValues } from './components/public/RichText';
 import { headFor, headHtml } from './site/head';
 import { metaFor } from './site/meta';
-import type { PublicRouteId } from './site/routes';
+import { publicRoutesFor, type PublicRouteId } from './site/routes';
 
 export { BUILD_MODE, IS_PREVIEW, SITE, FILLED_INPUTS };
 export { LANGUAGES, isRtl } from './i18n/languages';
-export { IN_APP_ROUTE_IDS, PUBLIC_ROUTES, inAppPathOf, pathOf } from './site/routes';
+export { IN_APP_ROUTE_IDS, inAppPathOf, pathOf } from './site/routes';
+
+/** What this build publishes (`schema.ts` SURFACES, docs/95), and so the public pages it prerenders. */
+export const SURFACE = SITE.siteSurface === 'public' ? 'public' : 'full';
+export const ROUTES = publicRoutesFor(SURFACE);
 export { APP_SHELL, fileForPath, headersFile, redirectsFile, robotsTxt, securityTxt, sitemapXml, webManifest } from './site/generated';
 export { translate } from './i18n';
 

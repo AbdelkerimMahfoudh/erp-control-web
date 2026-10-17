@@ -10,7 +10,7 @@
 
 export type BuildMode = 'production' | 'preview' | 'development' | 'test';
 
-export type InputKind = 'https-origin' | 'https-url' | 'text' | 'email' | 'phone' | 'date' | 'deletion-channel';
+export type InputKind = 'https-origin' | 'https-url' | 'text' | 'email' | 'phone' | 'date' | 'deletion-channel' | 'surface';
 
 export interface InputSpec {
   /** The environment variable, `VITE_*`. */
@@ -28,12 +28,25 @@ export interface InputSpec {
 
 /** The only verification channel the backend implements for account deletion (docs/64; account-deletion.service.ts). */
 export const DELETION_CHANNELS = ['whatsapp'] as const;
+
+/**
+ * What one build publishes (the owner's brief of 2026-10-17, docs/95):
+ * - `full` — the public pages, the pages that need the API (apply, sign-in, application status) and the protected
+ *   areas (`/account`, `/admin`) on one origin; the default, and what the tests run.
+ * - `public` — the public pages only, for an origin of their own (`https://tsxmr.com`) while the business account and
+ *   the API live elsewhere: no page, link, rewrite or line of code that needs the API or a sign-in, so `VITE_API_BASE`
+ *   is not asked for. "Sign in" and "Apply" point at `VITE_PORTAL_ORIGIN` once one is given, and are absent before.
+ */
+export const SURFACES = ['full', 'public'] as const;
+export type Surface = (typeof SURFACES)[number];
 export type DeletionChannel = (typeof DELETION_CHANNELS)[number];
 
 export const INPUTS = {
   publicSiteOrigin: { env: 'VITE_PUBLIC_SITE_ORIGIN', kind: 'https-origin', required: true, preview: 'https://preview.invalid', label: 'Public website origin, e.g. https://<domain>' },
   adminSiteOrigin: { env: 'VITE_ADMIN_SITE_ORIGIN', kind: 'https-origin', required: false, preview: '', label: 'Separate Super Admin origin, if one is chosen' },
-  apiBase: { env: 'VITE_API_BASE', kind: 'https-url', required: true, preview: '', label: 'API base URL including /api/v1, e.g. https://api.<domain>/api/v1' },
+  siteSurface: { env: 'VITE_SITE_SURFACE', kind: 'surface', required: true, fallback: 'full', preview: 'full', label: 'What this build publishes: full (one origin) or public (the public pages only)' },
+  apiBase: { env: 'VITE_API_BASE', kind: 'https-url', required: true, preview: '', label: 'API base URL including /api/v1, e.g. https://api.<domain>/api/v1 (not used by a public build)' },
+  portalOrigin: { env: 'VITE_PORTAL_ORIGIN', kind: 'https-origin', required: false, preview: '', label: 'The business account origin when it is separate, e.g. https://dukan.<domain> (a public build links to it)' },
   displayName: { env: 'VITE_ORGANIZATION_DISPLAY_NAME', kind: 'text', required: true, fallback: 'TSX-MR', preview: 'TSX-MR', label: 'Public organization name' },
   legalName: { env: 'VITE_ORGANIZATION_LEGAL_NAME', kind: 'text', required: true, preview: '[TEST] Registered legal name', label: 'Full registered legal name' },
   legalForm: { env: 'VITE_ORGANIZATION_LEGAL_FORM', kind: 'text', required: true, preview: '[TEST] Legal form', label: 'Legal form' },
@@ -97,6 +110,8 @@ function validFormat(kind: InputKind, value: string): boolean {
       return /^\+?[0-9][0-9 ]{6,19}$/.test(value);
     case 'date':
       return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
+    case 'surface':
+      return (SURFACES as readonly string[]).includes(value);
     case 'deletion-channel':
       return (DELETION_CHANNELS as readonly string[]).includes(value);
     case 'text':
@@ -155,7 +170,8 @@ export function releaseProblems(
   for (const [name, spec] of Object.entries(INPUTS) as [InputName, InputSpec][]) {
     const value = inputs[name];
     if (!value) {
-      if (spec.required) problems.push({ input: name, env: spec.env, problem: 'missing', detail: spec.label });
+      // A public build reaches no API: its address is not asked for (and not used).
+      if (spec.required && !(name === 'apiBase' && inputs.siteSurface === 'public')) problems.push({ input: name, env: spec.env, problem: 'missing', detail: spec.label });
       continue;
     }
     if (looksLikeTestValue(value)) {

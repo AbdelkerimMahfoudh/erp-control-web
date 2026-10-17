@@ -95,6 +95,27 @@ jobs:
       - name: Keep the built preview for review
         if: always()
         run: if [ -d dist ]; then cp -r dist "$EV/dist"; fi
+      # The public pages alone, for https://tsxmr.com while the business account and the API live elsewhere (docs/95).
+      - name: Public build (VITE_SITE_SURFACE=public) — refusal without the API, preview, links, bundle
+        if: ${{ !cancelled() }}
+        env:
+          VITE_SITE_SURFACE: public
+        run: |
+          set +e
+          npx vite build --mode production > "$EV/public-production-refusal.log" 2>&1
+          code=$?
+          set -e
+          cat "$EV/public-production-refusal.log"
+          if [ "$code" -eq 0 ]; then echo "FAIL: a public production build succeeded without its inputs"; exit 1; fi
+          grep -q "Nothing was published" "$EV/public-production-refusal.log"
+          if grep -q "VITE_API_BASE" "$EV/public-production-refusal.log"; then echo "FAIL: a public build asked for the API"; exit 1; fi
+          rm -rf dist dist-ssr
+          set -o pipefail
+          npm run build:preview 2>&1 | tee "$EV/public-build.log"
+          (cd dist && find . -type f | sort) > "$EV/public-dist-files.txt"
+          node scripts/audit-links.mjs dist 2>&1 | tee "$EV/public-audit-links.txt"
+          node scripts/audit-bundle.mjs dist --preview --public 2>&1 | tee "$EV/public-audit-bundle.txt"
+          cp -r dist "$EV/dist-public"
       - name: Keep the evidence
         if: always()
         env:

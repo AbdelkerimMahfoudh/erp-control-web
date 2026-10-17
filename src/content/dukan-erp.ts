@@ -24,7 +24,8 @@ export interface DukanErpContent {
   providers: { title: string; body: string };
   start: { title: string; steps: string[] };
   app: { title: string; body: string; noStore: string };
-  subscription: { title: string; body: string };
+  /** `bodyPublic`: the same paragraph in a public build (docs/95), which shows no prices — it reaches no API. */
+  subscription: { title: string; body: string; bodyPublic: string };
 }
 
 export const dukanErp: Record<Language, DukanErpContent> = {
@@ -86,6 +87,7 @@ export const dukanErp: Record<Language, DukanErpContent> = {
     subscription: {
       title: 'Subscription',
       body: 'Subscriptions are arranged between the business and {displayName} and managed on this website. The mobile app contains no purchases. The prices below come from the service itself.',
+      bodyPublic: 'Subscriptions are arranged between the business and {displayName}. The mobile app contains no purchases. For prices, contact {displayName}.',
     },
   },
   fr: {
@@ -146,6 +148,7 @@ export const dukanErp: Record<Language, DukanErpContent> = {
     subscription: {
       title: 'Abonnement',
       body: 'Les abonnements sont convenus entre l’entreprise et {displayName} et gérés sur ce site. L’application mobile ne contient aucun achat. Les prix ci-dessous proviennent du service lui-même.',
+      bodyPublic: 'Les abonnements sont convenus entre l’entreprise et {displayName}. L’application mobile ne contient aucun achat. Pour connaître les prix, contactez {displayName}.',
     },
   },
   ar: {
@@ -206,6 +209,7 @@ export const dukanErp: Record<Language, DukanErpContent> = {
     subscription: {
       title: 'الاشتراك',
       body: 'يُتّفق على الاشتراكات بين الشركة و{displayName}، وتُدار على هذا الموقع. ولا يحتوي تطبيق الهاتف على أي عمليات شراء. والأسعار أدناه صادرة عن الخدمة نفسها.',
+      bodyPublic: 'يُتّفق على الاشتراكات بين الشركة و{displayName}. ولا يحتوي تطبيق الهاتف على أي عمليات شراء. لمعرفة الأسعار، تواصلوا مع {displayName}.',
     },
   },
 };

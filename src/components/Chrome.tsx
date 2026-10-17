@@ -5,6 +5,7 @@ import { LANGUAGE_LABELS, LANGUAGES, storeLanguage, useI18n, type Language } fro
 import { inAppPathOf, pathOf, publicRouteAt, type PublicRouteId } from '../site/routes';
 import { useTheme } from '../theme/theme';
 import { InAppContext, LegalLinks, OrgMark, PreviewBanner, ProductMark } from './public/blocks';
+import { AccountLink, accountHref, linkable } from './AccountLink';
 
 /**
  * The frame around every page (docs/74 §4): the organization's identity, the public navigation, the languages and the
@@ -58,9 +59,15 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
           </nav>
           <div className="controls">
             <Languages area={area} className="languages-wide" />
-            <Link className="btn btn-sm btn-primary" to={area === 'public' ? to('login') : '/account'}>
-              {t('nav.signIn')}
-            </Link>
+            {area === 'public' ? (
+              <AccountLink id="login" lang={lang} className="btn btn-sm btn-primary">
+                {t('nav.signIn')}
+              </AccountLink>
+            ) : (
+              <Link className="btn btn-sm btn-primary" to="/account">
+                {t('nav.signIn')}
+              </Link>
+            )}
             {/* On a phone: the navigation and the languages in one disclosure, so the bar stays one row. */}
             <details className="menu" ref={menu}>
               <summary className="btn btn-sm">{t('nav.menu')}</summary>
@@ -149,11 +156,14 @@ function Footer() {
           <nav key={title} className="footer-col" aria-label={title}>
             <h2 className="footer-title">{title}</h2>
             <ul>
-              {items.map(([id, label]) => (
-                <li key={id}>
-                  <Link to={to(id)}>{label}</Link>
-                </li>
-              ))}
+              {items
+                .filter(([id]) => linkable(id, lang))
+                .map(([id, label]) => {
+                  const account = id === 'apply' || id === 'login' || id === 'applicationStatus' ? accountHref(id, lang) : null;
+                  return (
+                    <li key={id}>{account && 'href' in account ? <a href={account.href}>{label}</a> : <Link to={to(id)}>{label}</Link>}</li>
+                  );
+                })}
             </ul>
           </nav>
         ))}

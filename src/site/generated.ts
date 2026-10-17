@@ -5,7 +5,11 @@
  */
 import { LANGUAGES } from '../i18n/languages';
 import type { SiteInputs } from '../config/schema';
-import { IN_APP_PREFIX, LANGUAGE_PREFIX, pathOf, PROTECTED_PREFIXES, PUBLIC_ROUTES, TRIAL_LANDING } from './routes';
+import { IN_APP_PREFIX, LANGUAGE_PREFIX, pathOf, PROTECTED_PREFIXES, protectedPrefixesFor, publicRoutesFor, TRIAL_LANDING } from './routes';
+
+/** The surface a generated file describes; `full` when a caller does not say (`schema.ts` SURFACES). */
+type WithSurface = Partial<Pick<SiteInputs, 'siteSurface'>>;
+const surfaceOf = (site: WithSurface) => (site.siteSurface === 'public' ? 'public' : 'full');
 
 /** The shell the protected areas load: no prerendered content, never indexed. */
 export const APP_SHELL = '/app-shell.html';
@@ -26,9 +30,9 @@ export function robotsTxt(site: Pick<SiteInputs, 'publicSiteOrigin'>, preview: b
   ].join('\n');
 }
 
-export function sitemapXml(site: Pick<SiteInputs, 'publicSiteOrigin'>, lastmod: string): string {
+export function sitemapXml(site: Pick<SiteInputs, 'publicSiteOrigin'> & WithSurface, lastmod: string): string {
   const origin = site.publicSiteOrigin;
-  const urls = PUBLIC_ROUTES.filter((r) => r.indexable).flatMap((r) =>
+  const urls = publicRoutesFor(surfaceOf(site)).filter((r) => r.indexable).flatMap((r) =>
     LANGUAGES.map((lang) => {
       const alternates = LANGUAGES.map((l) => `    <xhtml:link rel="alternate" hreflang="${l}" href="${origin}${pathOf(r.id, l)}"/>`)
         .concat(`    <xhtml:link rel="alternate" hreflang="x-default" href="${origin}${pathOf(r.id, 'en')}"/>`)
@@ -47,9 +51,9 @@ function originOf(url: string): string | null {
   }
 }
 
-/** The Content Security Policy: same-origin everything, plus the API for requests. No inline script or style. */
-export function contentSecurityPolicy(site: Pick<SiteInputs, 'apiBase'>): string {
-  const api = originOf(site.apiBase);
+/** The Content Security Policy: same-origin everything, plus the API for requests (none in a public build). No inline script or style. */
+export function contentSecurityPolicy(site: Pick<SiteInputs, 'apiBase'> & WithSurface): string {
+  const api = surfaceOf(site) === 'public' ? null : originOf(site.apiBase);
   return [
     "default-src 'self'",
     "script-src 'self'",
@@ -66,7 +70,8 @@ export function contentSecurityPolicy(site: Pick<SiteInputs, 'apiBase'>): string
   ].join('; ');
 }
 
-export function headersFile(site: Pick<SiteInputs, 'apiBase'>, preview: boolean): string {
+export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, preview: boolean): string {
+  const full = surfaceOf(site) === 'full';
   const common = [
     `Content-Security-Policy: ${contentSecurityPolicy(site)}`,
     // One year; `includeSubDomains` waits for the owner's decision on every subdomain (docs/45; staging never sends it).
@@ -79,7 +84,7 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'>, preview: boolean)
     ...(preview ? ['X-Robots-Tag: noindex, nofollow'] : []),
   ];
   const blocks = [`/*\n${common.map((h) => `  ${h}`).join('\n')}`];
-  for (const p of PROTECTED_PREFIXES) {
+  for (const p of protectedPrefixesFor(surfaceOf(site))) {
     blocks.push(`${p}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
     blocks.push(`${p}/*\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
   }
@@ -88,8 +93,10 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'>, preview: boolean)
   // policy is detached first (`! `), or the host would join the two values. The landing answers with a trailing slash
   // too (`/account/trial/?t=`), so that address is covered by its own rule: refusing the token there would not help,
   // as the page's files are asked for — with the address as referrer — before any script could refuse anything.
-  for (const path of [TRIAL_LANDING, `${TRIAL_LANDING}/*`]) blocks.push(`${path}\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer`);
-  blocks.push(`${APP_SHELL}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
+  if (full) {
+    for (const path of [TRIAL_LANDING, `${TRIAL_LANDING}/*`]) blocks.push(`${path}\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer`);
+    blocks.push(`${APP_SHELL}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
+  }
   // The pages the mobile app opens: public texts, never indexed (their public pages are).
   for (const prefix of Object.values(LANGUAGE_PREFIX)) blocks.push(`${prefix}${IN_APP_PREFIX}/*\n  X-Robots-Tag: noindex, nofollow`);
   // Hashed assets never change; everything else is revalidated.
@@ -97,9 +104,13 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'>, preview: boolean)
   return `${blocks.join('\n\n')}\n`;
 }
 
-/** The protected areas load the shell; every other unknown address gets the 404 page (the host's default). */
-export function redirectsFile(): string {
-  return `${PROTECTED_PREFIXES.flatMap((p) => [`${p} ${APP_SHELL} 200`, `${p}/* ${APP_SHELL} 200`]).join('\n')}\n`;
+/**
+ * The protected areas load the shell; every other unknown address gets the 404 page (the host's default). A public
+ * build serves no protected area, so its file rewrites nothing.
+ */
+export function redirectsFile(site: WithSurface = {}): string {
+  const rules = protectedPrefixesFor(surfaceOf(site)).flatMap((p) => [`${p} ${APP_SHELL} 200`, `${p}/* ${APP_SHELL} 200`]);
+  return rules.length ? `${rules.join('\n')}\n` : '';
 }
 
 /** RFC 9116, only when TSX-MR supplied a security contact; it expires a year after the build. */

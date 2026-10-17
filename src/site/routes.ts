@@ -8,6 +8,7 @@
  * are never prerendered, never in the sitemap, and every response for them says `noindex`.
  */
 import type { Language } from '../i18n/languages';
+import type { Surface } from '../config/schema';
 
 export type PublicRouteId =
   | 'home'
@@ -54,6 +55,19 @@ export const PUBLIC_ROUTES: readonly PublicRoute[] = [
 
 /** The areas behind a sign-in: never prerendered, never indexed. */
 export const PROTECTED_PREFIXES = ['/account', '/admin'] as const;
+
+/** The public pages that work only with the API behind them: an application, a sign-in, an application's status. */
+export const API_ROUTE_IDS: readonly PublicRouteId[] = ['apply', 'applicationStatus', 'login'];
+
+/** The public pages a build of this surface publishes (`schema.ts` SURFACES): a public build has none that needs the API. */
+export function publicRoutesFor(surface: Surface): readonly PublicRoute[] {
+  return surface === 'public' ? PUBLIC_ROUTES.filter((r) => !API_ROUTE_IDS.includes(r.id)) : PUBLIC_ROUTES;
+}
+
+/** The protected areas a build of this surface serves: none in a public build. */
+export function protectedPrefixesFor(surface: Surface): readonly string[] {
+  return surface === 'public' ? [] : PROTECTED_PREFIXES;
+}
 
 /**
  * Where the free trial's setup link lands (2026-10-13): inside the account area, so with no language prefix — the

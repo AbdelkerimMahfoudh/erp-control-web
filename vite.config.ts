@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url';
 import { loadEnv, type Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
@@ -35,8 +36,18 @@ function releaseGuard(): Plugin {
  */
 if (process.env.VITEST) process.env.TZ = 'UTC';
 
-export default defineConfig({
+/**
+ * A public build (`VITE_SITE_SURFACE=public`, docs/95) takes the protected areas' stub in place of their routes, so no
+ * line of the business account or the console reaches its bundle — not merely an unlinked route.
+ */
+function surfaceAliases(mode: string) {
+  if (loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_SURFACE !== 'public') return [];
+  return [{ find: /^\.\/protected-areas$/, replacement: fileURLToPath(new URL('./src/protected-areas.public.tsx', import.meta.url)) }];
+}
+
+export default defineConfig(({ mode }) => ({
   plugins: [react(), releaseGuard()],
+  resolve: { alias: surfaceAliases(mode) },
   server: { port: 5173, host: '127.0.0.1' },
   preview: { port: 4173, host: '127.0.0.1' },
   build: { sourcemap: false, target: 'es2022' },
@@ -47,4 +58,4 @@ export default defineConfig({
     include: ['test/**/*.test.ts', 'test/**/*.test.tsx'],
     pool: 'threads',
   },
-});
+}));

@@ -3,12 +3,23 @@
 // Prints every finding with its file; exits 1 on any. A preview build is expected to carry its marked test values —
 // they are counted and reported, never accepted in production (the build refuses them first).
 //
-//   node scripts/audit-bundle.mjs [dist] [--preview]
+// A public build (`VITE_SITE_SURFACE=public`, docs/95) is audited with `--public`: no file of it may hold the console's
+// or the business account's code or routes, nor the protected areas' shell — the areas are not on that origin at all.
+//
+//   node scripts/audit-bundle.mjs [dist] [--preview] [--public]
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
 const dist = resolve(process.argv[2] ?? 'dist');
 const preview = process.argv.includes('--preview');
+const publicSurface = process.argv.includes('--public');
+// What only the console or the business account contains: their API routes and the shell they load in.
+const PROTECTED_ONLY = [
+  ['console sign-in route', /platform\/admin\/(sign-in|mfa|step-up)/],
+  ['console data route', /platform\/(dashboard|businesses|pending|audit)/],
+  ['account data route', /platform\/my-subscription/],
+  ['account trial route', /account\/trial/],
+];
 const walk = (d) => readdirSync(d).flatMap((n) => (statSync(join(d, n)).isDirectory() ? walk(join(d, n)) : [join(d, n)]));
 const files = walk(dist);
 
@@ -36,6 +47,10 @@ for (const f of files) {
   if (!/\.(html|js|css|txt|xml|json|webmanifest|svg)$/.test(rel) && !rel.startsWith('_')) continue;
   const text = readFileSync(f, 'utf8');
   if (/sourceMappingURL=/.test(text)) findings.push({ file: rel, what: 'sourceMappingURL reference' });
+  if (publicSurface) {
+    if (rel === 'app-shell.html') findings.push({ file: rel, what: 'protected-area shell in a public build' });
+    for (const [what, re] of PROTECTED_ONLY) if (re.test(text)) findings.push({ file: rel, what: `${what} in a public build` });
+  }
   for (const [what, re] of SECRETS) if (re.test(text)) findings.push({ file: rel, what });
   for (const m of text.matchAll(PRIVATE)) {
     if (ALLOWED_PRIVATE.has(m[0])) continue;
@@ -53,7 +68,7 @@ for (const f of files) {
       if (re.test(text)) findings.push({ file: rel, what });
   }
 }
-console.log(`files ${files.length}, bytes ${bytes}, mode ${preview ? 'preview' : 'production'}`);
+console.log(`files ${files.length}, bytes ${bytes}, mode ${preview ? 'preview' : 'production'}, surface ${publicSurface ? 'public' : 'full'}`);
 console.log(`marked test values found: ${testValues}${preview ? ' (expected in a preview build)' : ''}`);
 if (!preview && testValues > 0) findings.push({ file: '*', what: `${testValues} test values in a production build` });
 for (const x of findings) console.log(`FINDING ${x.file}: ${x.what}`);

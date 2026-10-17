@@ -5,6 +5,7 @@ import type { ActivityCard } from '../../content/dukan-erp';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
 import { PlanPricing } from '../../components/PlanPricing';
+import { AccountLink } from '../../components/AccountLink';
 import { ProductMark } from '../../components/public/blocks';
 import { RichText } from '../../components/public/RichText';
 
@@ -28,11 +29,14 @@ export function DukanErp() {
           <RichText text={c.intro} />
         </p>
         <div className="row">
-          <Link className="btn btn-primary" to={pathOf('apply', lang)}>
+          <AccountLink id="apply" lang={lang} className="btn btn-primary">
             {t('page.apply.title')}
-          </Link>
-          <Link className="btn" to={pathOf('login', lang)}>
+          </AccountLink>
+          <AccountLink id="login" lang={lang} className="btn">
             {t('nav.signIn')}
+          </AccountLink>
+          <Link className="btn" to={pathOf('contact', lang)}>
+            {t('nav.contact')}
           </Link>
         </div>
       </header>
@@ -109,10 +113,11 @@ export function DukanErp() {
         <h2 id="subscription-h">
           <RichText text={c.subscription.title} />
         </h2>
+        {/* A public build reaches no API (docs/95): no prices, and a paragraph that does not promise them. */}
         <p>
-          <RichText text={c.subscription.body} />
+          <RichText text={SITE.siteSurface === 'public' ? c.subscription.bodyPublic : c.subscription.body} />
         </p>
-        <PlanPricing />
+        {SITE.siteSurface === 'public' ? null : <PlanPricing />}
       </section>
     </div>
   );

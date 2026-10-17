@@ -4,6 +4,7 @@ import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
 import { ProductMark } from '../../components/public/blocks';
 import { RichText } from '../../components/public/RichText';
+import { AccountLink } from '../../components/AccountLink';
 
 /**
  * The TSX-MR home page (docs/74 §4): the organization first, then its product. Every sentence comes from
@@ -127,12 +128,12 @@ export function Home() {
           <RichText text={c.cta.body} />
         </p>
         <div className="row">
-          <Link className="btn btn-primary" to={to('apply')}>
+          <AccountLink id="apply" lang={lang} className="btn btn-primary">
             <RichText text={c.cta.apply} />
-          </Link>
-          <Link className="btn" to={to('login')}>
+          </AccountLink>
+          <AccountLink id="login" lang={lang} className="btn">
             <RichText text={c.cta.signIn} />
-          </Link>
+          </AccountLink>
           <Link className="btn" to={to('contact')}>
             <RichText text={c.cta.contact} />
           </Link>

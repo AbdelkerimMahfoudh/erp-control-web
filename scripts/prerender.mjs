@@ -25,12 +25,13 @@ const page = (lang, head, app) =>
     .replace('<!--app-->', app);
 
 // 1. The shell of the protected areas: no content, never indexed (written before the home page replaces index.html).
-write(ssr.APP_SHELL.slice(1), page('en', `<title>${esc(ssr.SITE.displayName)}</title>\n    <meta name="robots" content="noindex, nofollow" />`, ''));
+//    A public build (docs/95) has no protected area, so no shell.
+if (ssr.SURFACE === 'full') write(ssr.APP_SHELL.slice(1), page('en', `<title>${esc(ssr.SITE.displayName)}</title>\n    <meta name="robots" content="noindex, nofollow" />`, ''));
 
 // 2. Every public page, in every language.
 let pages = 0;
 for (const lang of ssr.LANGUAGES) {
-  for (const route of ssr.PUBLIC_ROUTES) {
+  for (const route of ssr.ROUTES) {
     const url = ssr.pathOf(route.id, lang);
     write(ssr.fileForPath(url), page(lang, ssr.headOf(route.id, lang), ssr.render(url, lang)));
     pages++;
@@ -55,10 +56,10 @@ const builtAt = new Date();
 write('robots.txt', ssr.robotsTxt(ssr.SITE, ssr.IS_PREVIEW));
 if (ssr.SITE.publicSiteOrigin) write('sitemap.xml', ssr.sitemapXml(ssr.SITE, builtAt.toISOString().slice(0, 10)));
 write('_headers', ssr.headersFile(ssr.SITE, ssr.IS_PREVIEW));
-write('_redirects', ssr.redirectsFile());
+write('_redirects', ssr.redirectsFile(ssr.SITE));
 const security = ssr.securityTxt(ssr.SITE, builtAt);
 if (security) write('.well-known/security.txt', security);
 // The manifest's colours are the light theme's background and text (theme/tokens.css).
 write('site.webmanifest', ssr.webManifest(ssr.SITE, '#172033', '#f7f8fb'));
 
-console.log(`prerendered ${pages} pages (${ssr.LANGUAGES.length} languages), mode ${ssr.BUILD_MODE}${ssr.IS_PREVIEW ? ' — PREVIEW: test values, noindex' : ''}`);
+console.log(`prerendered ${pages} pages (${ssr.LANGUAGES.length} languages), mode ${ssr.BUILD_MODE}, surface ${ssr.SURFACE}${ssr.IS_PREVIEW ? ' — PREVIEW: test values, noindex' : ''}`);

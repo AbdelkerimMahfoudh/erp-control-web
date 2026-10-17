@@ -9,11 +9,13 @@ import { Home } from './pages/public/Home';
 import { DukanErp } from './pages/public/DukanErp';
 import { Apply } from './pages/public/Apply';
 import { About, AccountDeletion, ApplicationStatus, Contact, LegalNotice, Login, NotFound, Privacy, PrivacyChoices, Products, Security, Support, Terms } from './pages/public/Legal';
-import { Account } from './pages/account/Account';
-import { Admin } from './pages/admin/Admin';
+import { PROTECTED_AREAS_BUILT, ProtectedRoutes } from './protected-areas';
 import { metaFor } from './site/meta';
 import { applyProtectedHead } from './site/head';
-import { inAppRouteAt, isProtectedPath, localizedPath, PUBLIC_ROUTES, splitLanguage, type PublicRouteId } from './site/routes';
+import { inAppRouteAt, isProtectedPath, localizedPath, publicRoutesFor, splitLanguage, type PublicRouteId } from './site/routes';
+
+/** The public pages this build publishes: a public build (docs/95) has none that needs the API. */
+const ROUTES = publicRoutesFor(SITE.siteSurface === 'public' ? 'public' : 'full');
 
 const PAGES: Record<PublicRouteId, ComponentType> = {
   home: Home,
@@ -41,7 +43,8 @@ const PAGES: Record<PublicRouteId, ComponentType> = {
  */
 export function App() {
   const { pathname } = useLocation();
-  if (isProtectedPath(pathname)) return <ProtectedArea />;
+  // A public build has no protected area: those addresses are unknown pages here (`protected-areas.public.tsx`).
+  if (PROTECTED_AREAS_BUILT && isProtectedPath(pathname)) return <ProtectedArea />;
   const { lang } = splitLanguage(pathname);
   const inApp = inAppRouteAt(pathname);
   if (inApp) {
@@ -59,7 +62,7 @@ export function App() {
       <Chrome area="public">
         <Routes>
           {LANGUAGES.flatMap((l) =>
-            PUBLIC_ROUTES.map((r) => <Route key={`${l}${r.path}`} path={localizedPath(l, r.path)} element={<PublicPage id={r.id} />} />),
+            ROUTES.map((r) => <Route key={`${l}${r.path}`} path={localizedPath(l, r.path)} element={<PublicPage id={r.id} />} />),
           )}
           <Route path="*" element={<NotFound />} />
         </Routes>
@@ -93,7 +96,7 @@ function PreferredLanguage() {
     done.current = true;
     const { lang, path } = splitLanguage(pathname);
     const stored = readStoredLanguage();
-    if (lang === 'en' && stored && stored !== 'en' && PUBLIC_ROUTES.some((r) => r.path === path)) {
+    if (lang === 'en' && stored && stored !== 'en' && ROUTES.some((r) => r.path === path)) {
       navigate(localizedPath(stored, path), { replace: true });
     }
   }, [pathname, navigate]);
@@ -109,10 +112,7 @@ function ProtectedArea() {
   }, [admin, t]);
   return (
     <Chrome area="protected">
-      <Routes>
-        <Route path="/account/*" element={<Account />} />
-        <Route path="/admin/*" element={<Admin />} />
-      </Routes>
+      <ProtectedRoutes />
     </Chrome>
   );
 }
