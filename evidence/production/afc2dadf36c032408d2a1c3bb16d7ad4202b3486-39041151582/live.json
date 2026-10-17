@@ -1,0 +1,407 @@
+{
+  "origin": "https://tsxmr.com",
+  "at": "2026-10-17T14:32:24.721Z",
+  "results": [
+    {
+      "name": "TLS tsxmr.com: valid certificate for the name",
+      "ok": true,
+      "detail": {
+        "authorized": true,
+        "error": null,
+        "validTo": "Jan 15 06:56:11 2027 GMT",
+        "altNames": "DNS:tsxmr.com",
+        "issuer": "Google Trust Services",
+        "daysLeft": 90
+      }
+    },
+    {
+      "name": "TLS www.tsxmr.com: valid certificate for the name",
+      "ok": true,
+      "detail": {
+        "authorized": true,
+        "error": null,
+        "validTo": "Jan 15 06:57:55 2027 GMT",
+        "altNames": "DNS:www.tsxmr.com",
+        "issuer": "Google Trust Services",
+        "daysLeft": 90
+      }
+    },
+    {
+      "name": "http://apex redirects to https://apex",
+      "ok": true,
+      "detail": {
+        "status": 301,
+        "location": "https://tsxmr.com/"
+      }
+    },
+    {
+      "name": "https://www → apex, 301, path and query kept",
+      "ok": true,
+      "detail": {
+        "status": 301,
+        "location": "https://tsxmr.com/privacy?check=1"
+      }
+    },
+    {
+      "name": "http://tsxmr.com/ ends at https://tsxmr.com/ with 200, no loop",
+      "ok": true,
+      "detail": [
+        "301 http://tsxmr.com/",
+        "200 https://tsxmr.com/"
+      ]
+    },
+    {
+      "name": "http://www.tsxmr.com/terms?x=2 ends at https://tsxmr.com/terms?x=2 with 200, no loop",
+      "ok": true,
+      "detail": [
+        "301 http://www.tsxmr.com/terms?x=2",
+        "200 https://tsxmr.com/terms?x=2"
+      ]
+    },
+    {
+      "name": "https://www.tsxmr.com/ ends at https://tsxmr.com/ with 200, no loop",
+      "ok": true,
+      "detail": [
+        "301 https://www.tsxmr.com/",
+        "200 https://tsxmr.com/"
+      ]
+    },
+    {
+      "name": "https://tsxmr.com/fr/contact ends at https://tsxmr.com/fr/contact with 200, no loop",
+      "ok": true,
+      "detail": [
+        "200 https://tsxmr.com/fr/contact"
+      ]
+    },
+    {
+      "name": "security headers on / equal dist/_headers",
+      "ok": true,
+      "detail": [
+        "content-security-policy",
+        "strict-transport-security",
+        "x-content-type-options",
+        "x-frame-options",
+        "referrer-policy",
+        "permissions-policy",
+        "cross-origin-opener-policy"
+      ]
+    },
+    {
+      "name": "HSTS without preload",
+      "ok": true,
+      "detail": "max-age=31536000"
+    },
+    {
+      "name": "every built file is served byte-for-byte as built (77 files)",
+      "ok": false,
+      "detail": [
+        {
+          "path": "/account-deletion",
+          "live": "33457d8daa6c",
+          "built": "9fe55edecd42",
+          "bytes": [
+            11458,
+            11219
+          ],
+          "first": {
+            "at": 8381,
+            "built": " email, by telephone or through WhatsApp, write to <a href=\"mailto:privacy@tsxmr.com\"><bdi>privacy@tsxmr.com</bdi></a> to ask for it to be deleted. We may ask you to confirm who you are. We then delete it, unless the law",
+            "live": " email, by telephone or through WhatsApp, write to <a href=\"/cdn-cgi/l/email-protection#19696b706f787a60596d6a61746b377a7674\"><bdi><span class=\"__cf_email__\" data-cfemail=\"bececcd7c8dfddc7fecacdc6d3cc90ddd1d3\">[email&#160;protected]</span></bdi></a> to ask for it to be deleted. We may ask you to confirm who you are. We"
+          }
+        },
+        {
+          "path": "/ar/account-deletion",
+          "live": "55cfddb2884c",
+          "built": "9cc05b367c10",
+          "bytes": [
+            12590,
+            12351
+          ],
+          "first": {
+            "at": 9057,
+            "built": "تف أو واتساب مثلًا، فراسلوا <a href=\"mailto:privacy@tsxmr.com\"><bdi>privacy@tsxmr.com</bdi></a> لطلب حذفها. وقد نطلب منكم تأكيد هويتكم. ثم نحذفها، ما لم ",
+            "live": "تف أو واتساب مثلًا، فراسلوا <a href=\"/cdn-cgi/l/email-protection#4a3a38233c2b29330a3e3932273864292527\"><bdi><span class=\"__cf_email__\" data-cfemail=\"1060627966717369506463687d623e737f7d\">[email&#160;protected]</span></bdi></a> لطلب حذفها. وقد نطلب منكم تأكيد هويتكم."
+          }
+        },
+        {
+          "path": "/ar/contact",
+          "live": "c6765b582e46",
+          "built": "0b4251d64c9a",
+          "bytes": [
+            18847,
+            18213
+          ]
+        },
+        {
+          "path": "/ar/in-app/account-deletion",
+          "live": "248f60ae2aff",
+          "built": "a481512664d0",
+          "bytes": [
+            7917,
+            7678
+          ]
+        },
+        {
+          "path": "/ar/in-app/legal",
+          "live": "868c50da3d14",
+          "built": "8b25e98d80d8",
+          "bytes": [
+            18269,
+            17635
+          ]
+        },
+        {
+          "path": "/ar/in-app/privacy-choices",
+          "live": "ce79c271c542",
+          "built": "97cde9807e69",
+          "bytes": [
+            15245,
+            14480
+          ]
+        },
+        {
+          "path": "/ar/in-app/privacy",
+          "live": "e6bafb0d9226",
+          "built": "85b081dce491",
+          "bytes": [
+            20913,
+            20017
+          ]
+        },
+        {
+          "path": "/ar/in-app/security",
+          "live": "d220c9216a92",
+          "built": "6473d228e6e1",
+          "bytes": [
+            8340,
+            7966
+          ]
+        },
+        {
+          "path": "/ar/in-app/support",
+          "live": "bdda4667ddfa",
+          "built": "7345eee8bc26",
+          "bytes": [
+            13565,
+            12931
+          ]
+        },
+        {
+          "path": "/ar/in-app/terms",
+          "live": "e98162869ba0",
+          "built": "4677b9c25552",
+          "bytes": [
+            9516,
+            9277
+          ]
+        },
+        {
+          "path": "/ar/legal",
+          "live": "f326ccf56cea",
+          "built": "611d8d1faa0c",
+          "bytes": [
+            22860,
+            22226
+          ]
+        },
+        {
+          "path": "/ar/privacy-choices",
+          "live": "f3f3ccccb02f",
+          "built": "3bab00d2f9bf",
+          "bytes": [
+            19915,
+            19150
+          ]
+        },
+        {
+          "path": "/ar/privacy",
+          "live": "4b1f5345a63b",
+          "built": "9e32ef442692",
+          "bytes": [
+            25559,
+            24663
+          ]
+        },
+        {
+          "path": "/ar/security",
+          "live": "5a39b033fe61",
+          "built": "1d88cf5d6569",
+          "bytes": [
+            12989,
+            12615
+          ]
+        },
+        {
+          "path": "/ar/support",
+          "live": "80856fddcb37",
+          "built": "bd1eaacd526b",
+          "bytes": [
+            18298,
+            17664
+          ]
+        },
+        {
+          "path": "/ar/terms",
+          "live": "cafc9d1a6772",
+          "built": "8c56c05caec2",
+          "bytes": [
+            14156,
+            13917
+          ]
+        },
+        {
+          "path": "/contact",
+          "live": "75dd6450dd1d",
+          "built": "47a677f875f5",
+          "bytes": [
+            17535,
+            16901
+          ]
+        },
+        {
+          "path": "/fr/account-deletion",
+          "live": "1a51f90c9509",
+          "built": "83c02cc22a99",
+          "bytes": [
+            12055,
+            11816
+          ]
+        },
+        {
+          "path": "/fr/contact",
+          "live": "15c972e303fd",
+          "built": "c53674188864",
+          "bytes": [
+            18044,
+            17410
+          ]
+        },
+        {
+          "path": "/fr/in-app/account-deletion",
+          "live": "d27f2a7c6712",
+          "built": "7d59b9fe84c5",
+          "bytes": [
+            7647,
+            7408
+          ]
+        }
+      ]
+    },
+    {
+      "name": "57 pages: canonical on https://tsxmr.com, no preview host, tracker, beacon or plain-HTTP resource; in-app noindex",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "no edge rewriting of the pages (Cloudflare Email Address Obfuscation off)",
+      "ok": false,
+      "detail": "45 pages rewritten: /account-deletion /ar/account-deletion /ar/contact /ar/in-app/account-deletion /ar/in-app/legal /ar/in-app/privacy-choices…"
+    },
+    {
+      "name": "every difference from the build is that rewrite and nothing else",
+      "ok": true,
+      "detail": {
+        "residue": [],
+        "unexplained": []
+      }
+    },
+    {
+      "name": "protected and unknown addresses answer 404",
+      "ok": true,
+      "detail": {
+        "/account": 404,
+        "/account/trial": 404,
+        "/admin": 404,
+        "/admin/businesses": 404,
+        "/apply": 404,
+        "/login": 404,
+        "/application-status": 404,
+        "/fr/apply": 404,
+        "/app-shell.html": 404,
+        "/no-such-page": 404
+      }
+    },
+    {
+      "name": "sitemap: every URL on the production origin, no in-app or protected page",
+      "ok": true,
+      "detail": "36 URLs"
+    },
+    {
+      "name": "MX: the three Cloudflare Email Routing hosts only",
+      "ok": true,
+      "detail": [
+        {
+          "exchange": "route1.mx.cloudflare.net",
+          "priority": 4
+        },
+        {
+          "exchange": "route3.mx.cloudflare.net",
+          "priority": 48
+        },
+        {
+          "exchange": "route2.mx.cloudflare.net",
+          "priority": 50
+        }
+      ]
+    },
+    {
+      "name": "SPF: exactly one record at the root, with Cloudflare Email Routing",
+      "ok": true,
+      "detail": [
+        "v=spf1 include:_spf.mx.cloudflare.net ~all"
+      ]
+    },
+    {
+      "name": "Brevo's code TXT at the root",
+      "ok": true,
+      "detail": [
+        "brevo-code:…",
+        "v=spf1 include:_spf.mx.cloudflare.net ~all"
+      ]
+    },
+    {
+      "name": "DMARC record present",
+      "ok": true,
+      "detail": [
+        "v=DMARC1; p=none; rua=mailto:0124ca1c52ea4d7a94dc5ee5dc248a0b@dmarc-reports.cloudflare.net"
+      ]
+    },
+    {
+      "name": "Cloudflare DKIM (cf2024-1) present",
+      "ok": true,
+      "detail": [
+        "v=DKIM1; h=sha256; k=rsa…"
+      ]
+    },
+    {
+      "name": "Brevo DKIM CNAMEs (brevo1, brevo2) present",
+      "ok": true,
+      "detail": {
+        "brevo1": [
+          "b1.tsxmr-com.dkim.brevo.com"
+        ],
+        "brevo2": [
+          "b2.tsxmr-com.dkim.brevo.com"
+        ]
+      }
+    },
+    {
+      "name": "preview hosts (information only)",
+      "ok": true,
+      "detail": {
+        "https://site-redesign.tsxmr-public.pages.dev/": {
+          "status": 200,
+          "location": null,
+          "robots": "noindex",
+          "canonical": "https://tsxmr.com/"
+        },
+        "https://tsxmr-public.pages.dev/": {
+          "status": 200,
+          "location": null,
+          "robots": null,
+          "canonical": "https://tsxmr.com/"
+        }
+      }
+    }
+  ]
+}
