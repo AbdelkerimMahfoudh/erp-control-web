@@ -58,7 +58,8 @@ describe('a public build, page by page', () => {
       await screen.findAllByRole('heading', { level: 1 });
       const links = hrefs();
       for (const id of ['apply', 'login', 'applicationStatus'] as const) expect(links).not.toContain(pathOf(id, lang));
-      expect(links.some((h) => /\/account|\/admin/.test(h))).toBe(false);
+      // The protected areas themselves (`/account-deletion` is a public page and stays linked).
+      expect(links.filter((h) => /^(\/(fr|ar))?\/(account|admin)(\/|$)/.test(h))).toEqual([]);
       expect(links).toContain(pathOf('contact', lang));
       expect(screen.queryByText(en['home.pricing.loading'])).toBeNull();
       expect(requests).toEqual([]);
