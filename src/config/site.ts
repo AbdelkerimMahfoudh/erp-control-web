@@ -1,19 +1,16 @@
 /**
- * The production inputs as the page reads them (rules in `schema.ts`, docs/74 §3). `import.meta.env` is replaced at
- * build time, so a production bundle carries exactly the values its build was given — and a production build with a
- * blank required value never finishes (`vite.config.ts`). Outside production every blank shows its marked test value
- * and every page says it is a preview.
+ * The production inputs as the page reads them (rules in `schema.ts`, docs/74 §3). They are read at build time
+ * (`vite.config.ts`) and inlined, so a production bundle carries exactly the values its build was given, and not the
+ * rules or the preview values — and a production build with a blank required value never finishes. Outside
+ * production every blank shows its marked test value and every page says it is a preview.
  */
-import { readInputs, type BuildMode, type InputName, type SiteInputs } from './schema';
+import type { BuildMode, InputName, ReadResult, SiteInputs } from './schema';
 
-function buildMode(): BuildMode {
-  const m = import.meta.env.MODE;
-  return m === 'production' || m === 'development' || m === 'test' ? m : 'preview';
-}
+/** Computed by `vite.config.ts` from the build's environment (`siteInputs`) and inlined. */
+declare const __SITE_INPUTS__: ReadResult & { mode: BuildMode };
 
-const env = import.meta.env as unknown as Record<string, string | undefined>;
-const MODE = buildMode();
-const read = readInputs(env, MODE);
+const read = __SITE_INPUTS__;
+const MODE = read.mode;
 
 export const SITE: Readonly<SiteInputs> = Object.freeze(read.inputs);
 

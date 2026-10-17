@@ -4,7 +4,8 @@
 // they are counted and reported, never accepted in production (the build refuses them first).
 //
 // A public build (`VITE_SITE_SURFACE=public`, docs/95) is audited with `--public`: no file of it may hold the console's
-// or the business account's code or routes, nor the protected areas' shell — the areas are not on that origin at all.
+// or the business account's code or routes, nor the protected areas' shell — the areas are not on that origin at all —
+// nor any API route or address, even in a preview: the pre-launch website calls no API (docs/96).
 //
 //   node scripts/audit-bundle.mjs [dist] [--preview] [--public]
 import { readdirSync, readFileSync, statSync } from 'node:fs';
@@ -19,6 +20,8 @@ const PROTECTED_ONLY = [
   ['console data route', /platform\/(dashboard|businesses|pending|audit)/],
   ['account data route', /platform\/my-subscription/],
   ['account trial route', /account\/trial/],
+  // The pre-launch website calls no API at all: no price, quote, application or sign-in request.
+  ['API route', /platform\/(plan|quote|register|portal-sign-out|seat-requests)\b/],
 ];
 const walk = (d) => readdirSync(d).flatMap((n) => (statSync(join(d, n)).isDirectory() ? walk(join(d, n)) : [join(d, n)]));
 const files = walk(dist);
@@ -34,7 +37,8 @@ const SECRETS = [
   ['database URL with credentials', /\bmysql:\/\/[^\s"'@/]+:[^\s"'@/]+@/],
 ];
 const PRIVATE = /\b(10\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|172\.(1[6-9]|2\d|3[01])\.\d+\.\d+|127\.0\.0\.1|localhost)(:\d+)?\b/g;
-const ALLOWED_PRIVATE = preview ? new Set(['127.0.0.1:3999', '127.0.0.1:3010', '127.0.0.1']) : new Set();
+// A full preview talks to its mock API on this machine; a public build has no API to talk to, preview or not.
+const ALLOWED_PRIVATE = preview && !publicSurface ? new Set(['127.0.0.1:3999', '127.0.0.1:3010', '127.0.0.1']) : new Set();
 
 const findings = [];
 let bytes = 0;

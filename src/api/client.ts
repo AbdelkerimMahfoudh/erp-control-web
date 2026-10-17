@@ -12,33 +12,16 @@
  * server response.
  */
 
+import { ApiError, type RequestOptions } from './error';
+
+export { ApiError, type RequestOptions };
+
 const configured = (import.meta.env.VITE_API_BASE as string | undefined)?.trim().replace(/\/+$/, '');
 
 export function apiBase(): string {
   if (configured) return configured;
   if (typeof window === 'undefined') return 'http://127.0.0.1:3010/api/v1';
   return `${window.location.protocol}//${window.location.hostname}:3010/api/v1`;
-}
-
-export class ApiError extends Error {
-  status: number;
-  code: string | null;
-  body: unknown;
-  constructor(message: string, status: number, code: string | null, body: unknown) {
-    super(message);
-    this.name = 'ApiError';
-    this.status = status;
-    this.code = code;
-    this.body = body;
-  }
-}
-
-export interface RequestOptions {
-  method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
-  body?: unknown;
-  token?: string | null;
-  /** Administrator realm: cookie + CSRF header. */
-  admin?: boolean;
 }
 
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {

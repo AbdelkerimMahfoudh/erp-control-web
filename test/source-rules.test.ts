@@ -306,3 +306,27 @@ describe('the payment boundary', () => {
     }
   });
 });
+
+/*
+ * What a public build may carry (docs/96; the brief "Final Legal, Identity, Portal and Website Production Preparation"):
+ * a production release build, with every text approved, failed its own bundle audit — the input table and its
+ * preview values were in the page, and so was the API client with its development address. The page now receives its
+ * inputs computed at build time, and a public build takes stubs for everything that needs the API.
+ */
+describe('a public build carries no API and no preview value', () => {
+  it('the page reads its inputs inlined by the build, never the table of rules and preview values', () => {
+    const site = read(join(SRC, 'config/site.ts'));
+    expect(site).toMatch(/__SITE_INPUTS__/);
+    expect(site).not.toMatch(/import\s*\{[^}]*\breadInputs\b/);
+    expect(site).toMatch(/import type \{[^}]*\} from '\.\/schema'/);
+  });
+
+  it('the stubs a public build takes hold no request, address or credential', () => {
+    for (const f of ['api/client.public.ts', 'components/PlanPricing.public.tsx', 'pages/public/Apply.public.tsx', 'protected-areas.public.tsx']) {
+      const text = read(join(SRC, f));
+      expect({ f, fetch: /\bfetch\s*\(|credentials|127\.0\.0\.1|localhost|platform\//.test(text) }).toEqual({ f, fetch: false });
+    }
+    const config = read(join(process.cwd(), 'vite.config.ts'));
+    for (const stub of ['protected-areas.public.tsx', 'api/client.public.ts', 'components/PlanPricing.public.tsx', 'pages/public/Apply.public.tsx']) expect(config).toContain(stub);
+  });
+});

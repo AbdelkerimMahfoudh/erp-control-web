@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { loadEnv, type Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
-import { formatProblems, gateOfSurface, releaseProblems } from './src/config/schema';
+import { formatProblems, gateOfSurface, readInputs, releaseProblems, type BuildMode } from './src/config/schema';
 import { publishedBlockers, publishedDrafts, publishedPlaceholders } from './src/content';
 
 /**
@@ -40,17 +40,34 @@ function releaseGuard(): Plugin {
 if (process.env.VITEST) process.env.TZ = 'UTC';
 
 /**
- * A public build (`VITE_SITE_SURFACE=public`, docs/95) takes the protected areas' stub in place of their routes, so no
- * line of the business account or the console reaches its bundle — not merely an unlinked route.
+ * A public build (`VITE_SITE_SURFACE=public`, docs/95) takes stubs in place of what needs the API, so none of it reaches
+ * its bundle — not merely an unlinked route: the protected areas' routes, the API client (no address, no request), the
+ * application form and the price table (docs/96).
  */
 function surfaceAliases(mode: string) {
   if (loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_SURFACE !== 'public') return [];
-  return [{ find: /^\.\/protected-areas$/, replacement: fileURLToPath(new URL('./src/protected-areas.public.tsx', import.meta.url)) }];
+  const stub = (path: string) => fileURLToPath(new URL(path, import.meta.url));
+  return [
+    { find: /^\.\/protected-areas$/, replacement: stub('./src/protected-areas.public.tsx') },
+    { find: /^(\.{1,2}\/)+api\/client$/, replacement: stub('./src/api/client.public.ts') },
+    { find: /^(\.{1,2}\/)+components\/PlanPricing$/, replacement: stub('./src/components/PlanPricing.public.tsx') },
+    { find: /^\.\/pages\/public\/Apply$/, replacement: stub('./src/pages/public/Apply.public.tsx') },
+  ];
+}
+
+/**
+ * The inputs as this build reads them, computed here and inlined (`config/site.ts`), so the page carries its values
+ * and not the table of rules and preview values that produced them: a production bundle holds no test value at all.
+ */
+function siteInputs(mode: string) {
+  const buildMode: BuildMode = mode === 'production' || mode === 'development' || mode === 'test' ? mode : 'preview';
+  return { __SITE_INPUTS__: JSON.stringify({ mode: buildMode, ...readInputs(loadEnv(mode, process.cwd(), 'VITE_'), buildMode) }) };
 }
 
 export default defineConfig(({ mode }) => ({
   plugins: [react(), releaseGuard()],
   resolve: { alias: surfaceAliases(mode) },
+  define: siteInputs(mode),
   server: { port: 5173, host: '127.0.0.1' },
   preview: { port: 4173, host: '127.0.0.1' },
   build: { sourcemap: false, target: 'es2022' },
