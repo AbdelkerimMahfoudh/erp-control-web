@@ -599,7 +599,7 @@ export const en = {
   'app.store.google': 'Google Play',
   'page.apply.title': 'Apply for a business account',
   'page.apply.description': 'Apply for a Dukan ERP business account. A new business can start one 7-day free trial on this website; {name} arranges paid access.',
-  'page.home.title': '{name} — Practical digital tools for businesses',
+  'page.home.title': '{name} — Dukan ERP: stock, sales, money and team in one place',
   'page.protected.account': 'Business account — {name}',
   'page.protected.admin': 'Administration — {name}',
 } as const;

@@ -4,6 +4,7 @@ import { SITE, SURFACE } from '../config/site';
 import { LANGUAGE_LABELS, LANGUAGES, storeLanguage, useI18n, type Language } from '../i18n';
 import { inAppPathOf, pathOf, publicRouteAt, type PublicRouteId } from '../site/routes';
 import { useTheme } from '../theme/theme';
+import { useReveal } from '../lib/reveal';
 import { INDIVIDUAL_OPERATOR, InAppContext, LegalLinks, OrgMark, PreviewBanner, ProductMark } from './public/blocks';
 import { AccountLink, accountHref, linkable } from './AccountLink';
 import { textValues } from './public/RichText';
@@ -19,6 +20,8 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
   const { pathname } = useLocation();
   const menu = useRef<HTMLDetailsElement>(null);
   const to = (id: PublicRouteId) => pathOf(id, lang);
+  // The public pages' sections rise into view as the reader reaches them (lib/reveal.ts).
+  useReveal(pathname);
 
   // A navigation closes the phone menu.
   useEffect(() => {
@@ -71,7 +74,7 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
             )}
             {/* On a phone: the navigation and the languages in one disclosure, so the bar stays one row. */}
             <details className="menu" ref={menu}>
-              <summary className="btn btn-sm">{t('nav.menu')}</summary>
+              <summary className="btn btn-sm menu-button">{t('nav.menu')}</summary>
               <div className="nav-narrow">
                 <nav className="nav" aria-label={t('nav.main')}>
                   {navList}
@@ -82,7 +85,8 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
           </div>
         </div>
       </header>
-      <main id="main" className="container" tabIndex={-1}>
+      {/* The public pages lay out their own bands edge to edge; the protected areas keep the plain column. */}
+      <main id="main" className={area === 'public' ? 'site-main' : 'container'} tabIndex={-1}>
         {children}
       </main>
       <Footer />
@@ -219,7 +223,7 @@ export function InAppChrome({ id, children }: { id: PublicRouteId; children: Rea
           </ul>
         </div>
       </header>
-      <main id="main" className="container">
+      <main id="main" className="site-main in-app">
         {children}
       </main>
       <footer className="chrome-footer in-app-footer">

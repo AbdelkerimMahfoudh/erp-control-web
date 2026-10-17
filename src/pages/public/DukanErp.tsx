@@ -1,64 +1,70 @@
 import { Link } from 'react-router-dom';
-import { SITE } from '../../config/site';
+import { SITE, SURFACE } from '../../config/site';
 import { dukanErpFor } from '../../content';
-import { SURFACE } from '../../config/site';
 import { ComingSoon } from '../../components/ComingSoon';
 import type { ActivityCard } from '../../content/dukan-erp';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
 import { PlanPricing } from '../../components/PlanPricing';
-import { AccountLink } from '../../components/AccountLink';
-import { ProductMark } from '../../components/public/blocks';
+import { AccountLink, accountHref } from '../../components/AccountLink';
+import { Band, ProductMark, SectionHead } from '../../components/public/blocks';
+import { Icon, type IconName } from '../../components/public/icons';
+import { ProductVisual } from '../../components/public/ProductVisual';
 import { RichText } from '../../components/public/RichText';
 
 /**
- * The Dukan ERP product page (docs/74 §4): the platform, its two activities kept apart, what it is not (no provider
- * integration), how a business starts, and the prices the server publishes (`GET platform/plan`, D140).
+ * The Dukan ERP product page (docs/74 §4; redesigned 2026-10-17): the product in its hero, its two activities kept
+ * apart, what it is not (no provider integration), how a business starts, the mobile app, and — in a full build only —
+ * the prices the server publishes (`GET platform/plan`, D140). The pre-launch website (docs/96) sells nothing.
  */
 export function DukanErp() {
   const { t, lang } = useI18n();
   const c = dukanErpFor(lang, SURFACE);
+  const accountLinks = accountHref('apply', lang) !== null;
   return (
-    <div className="public-page">
-      <header className="page-intro product-intro">
-        <h1>
-          <ProductMark size="lg" />
-        </h1>
-        <p className="lead">
-          <RichText text={c.summary} />
-        </p>
-        <ComingSoon />
-        <p>
-          <RichText text={c.intro} />
-        </p>
-        <div className="row">
-          <AccountLink id="apply" lang={lang} className="btn btn-primary">
-            {t('page.apply.title')}
-          </AccountLink>
-          <AccountLink id="login" lang={lang} className="btn">
-            {t('nav.signIn')}
-          </AccountLink>
-          <Link className="btn" to={pathOf('contact', lang)}>
-            {t('nav.contact')}
-          </Link>
+    <div className="public-page product">
+      <section className="band band-dark hero hero-product" aria-labelledby="product-h">
+        <div className="container hero-grid">
+          <div className="hero-copy">
+            <ComingSoon />
+            <h1 id="product-h">
+              <ProductMark size="lg" />
+            </h1>
+            <p className="lead hero-lead">
+              <RichText text={c.summary} />
+            </p>
+            <p className="hero-intro">
+              <RichText text={c.intro} />
+            </p>
+            <div className="hero-actions">
+              <AccountLink id="apply" lang={lang} className="btn btn-primary btn-lg">
+                {t('page.apply.title')}
+              </AccountLink>
+              <AccountLink id="login" lang={lang} className="btn btn-ghost btn-lg">
+                {t('nav.signIn')}
+              </AccountLink>
+              <Link className={accountLinks ? 'btn btn-ghost btn-lg' : 'btn btn-primary btn-lg'} to={pathOf('contact', lang)}>
+                {t('nav.contact')}
+                {accountLinks ? null : <Icon name="arrow" size={18} className="icon-arrow" />}
+              </Link>
+            </div>
+          </div>
+          <div className="hero-stage">
+            <ProductVisual />
+          </div>
         </div>
-      </header>
+      </section>
 
-      <section aria-labelledby="activities-h">
-        <h2 id="activities-h">
-          <RichText text={c.activitiesTitle} />
-        </h2>
-        <p className="muted">
-          <RichText text={c.activitiesLead} />
-        </p>
-        <div className="card-grid">
-          <Activity card={c.retail} id="retail" />
-          <Activity card={c.agent} id="agent" />
+      <Band tone="light" aria-labelledby="activities-h">
+        <SectionHead id="activities-h" title={c.activitiesTitle} lead={c.activitiesLead} />
+        <div className="activities stagger">
+          <Activity card={c.retail} id="retail" icon="store" />
+          <Activity card={c.agent} id="agent" icon="swap" />
         </div>
-        <p>
+        <p className="either">
           <RichText text={c.either} />
         </p>
-        <aside className="notice tone-info" aria-labelledby="providers-h">
+        <aside className="notice tone-info providers" aria-labelledby="providers-h">
           <h3 id="providers-h">
             <RichText text={c.providers.title} />
           </h3>
@@ -66,74 +72,78 @@ export function DukanErp() {
             <RichText text={c.providers.body} />
           </p>
         </aside>
-      </section>
+      </Band>
 
-      <section aria-labelledby="start-h">
-        <h2 id="start-h">
-          <RichText text={c.start.title} />
-        </h2>
-        <ol className="steps">
-          {c.start.steps.map((s) => (
-            <li key={s}>
-              {/* One grid cell for the whole sentence: a value inside it (e.g. the organization's name) must not become its own cell. */}
-              <span>
-                <RichText text={s} />
-              </span>
+      <Band tone="tint" aria-labelledby="start-h">
+        <SectionHead id="start-h" title={c.start.title} />
+        <ol className="how-steps how-steps-light stagger">
+          {c.start.steps.map((step, i) => (
+            <li key={step} data-reveal="">
+              <span className="step-num num">{i + 1}</span>
+              {/* One element for the whole sentence: a value inside it (e.g. the organization's name) stays in the line. */}
+              <p>
+                <RichText text={step} />
+              </p>
             </li>
           ))}
         </ol>
-      </section>
+      </Band>
 
-      <section aria-labelledby="app-h">
-        <h2 id="app-h">
-          <RichText text={c.app.title} />
-        </h2>
-        <p>
-          <RichText text={c.app.body} />
-        </p>
-        {SITE.appleAppStoreUrl || SITE.googlePlayUrl ? (
-          <ul className="store-links">
-            {SITE.appleAppStoreUrl ? (
-              <li>
-                <a href={SITE.appleAppStoreUrl} rel="noopener">
-                  {t('app.store.apple')}
-                </a>
-              </li>
-            ) : null}
-            {SITE.googlePlayUrl ? (
-              <li>
-                <a href={SITE.googlePlayUrl} rel="noopener">
-                  {t('app.store.google')}
-                </a>
-              </li>
-            ) : null}
-          </ul>
-        ) : (
-          <p className="muted">
-            <RichText text={c.app.noStore} />
-          </p>
-        )}
-      </section>
+      <Band tone="light" aria-labelledby="app-h">
+        <div className="split app-split">
+          <div>
+            <span className="icon-badge">
+              <Icon name="phone" />
+            </span>
+            <h2 id="app-h">
+              <RichText text={c.app.title} />
+            </h2>
+            <p className="lead">
+              <RichText text={c.app.body} />
+            </p>
+            {SITE.appleAppStoreUrl || SITE.googlePlayUrl ? (
+              <ul className="store-links">
+                {SITE.appleAppStoreUrl ? (
+                  <li>
+                    <a href={SITE.appleAppStoreUrl} rel="noopener">
+                      {t('app.store.apple')}
+                    </a>
+                  </li>
+                ) : null}
+                {SITE.googlePlayUrl ? (
+                  <li>
+                    <a href={SITE.googlePlayUrl} rel="noopener">
+                      {t('app.store.google')}
+                    </a>
+                  </li>
+                ) : null}
+              </ul>
+            ) : (
+              <p className="muted">
+                <RichText text={c.app.noStore} />
+              </p>
+            )}
+          </div>
+        </div>
+      </Band>
 
       {/* The pre-launch website (docs/96) sells nothing: no subscription, no prices, and no request to the API. */}
       {SURFACE === 'public' ? null : (
-        <section aria-labelledby="subscription-h">
-          <h2 id="subscription-h">
-            <RichText text={c.subscription.title} />
-          </h2>
-          <p>
-            <RichText text={c.subscription.body} />
-          </p>
+        <Band tone="tint" aria-labelledby="subscription-h">
+          <SectionHead id="subscription-h" title={c.subscription.title} lead={c.subscription.body} />
           <PlanPricing />
-        </section>
+        </Band>
       )}
     </div>
   );
 }
 
-function Activity({ card, id }: { card: ActivityCard; id: string }) {
+function Activity({ card, id, icon }: { card: ActivityCard; id: string; icon: IconName }) {
   return (
-    <article className={`card activity-card activity-${id}`} aria-labelledby={`${id}-h`}>
+    <article className={`card activity activity-card activity-${id}`} aria-labelledby={`${id}-h`} data-reveal="">
+      <span className="icon-badge">
+        <Icon name={icon} />
+      </span>
       <h3 id={`${id}-h`}>
         <RichText text={card.title} />
       </h3>

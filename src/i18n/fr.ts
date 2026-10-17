@@ -588,7 +588,7 @@ export const fr: Catalogue = {
   'app.store.google': 'Google Play',
   'page.apply.title': 'Demander un compte entreprise',
   'page.apply.description': 'Demandez un compte entreprise Dukan ERP. Une nouvelle entreprise peut démarrer un essai gratuit de 7 jours sur ce site ; {name} organise l’accès payant.',
-  'page.home.title': '{name} — Des outils numériques pratiques pour les entreprises',
+  'page.home.title': '{name} — Dukan ERP : stock, ventes, argent et équipe au même endroit',
   'page.protected.account': 'Compte de l’entreprise — {name}',
   'page.protected.admin': 'Administration — {name}',
 };

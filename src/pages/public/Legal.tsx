@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { applicationStatus, documentsFor, legalDocumentsFor, login } from '../../content';
+import { applicationStatus, documentsFor, homeFor, legalDocumentsFor, login } from '../../content';
+import { ComingSoon } from '../../components/ComingSoon';
+import { Icon, type IconName } from '../../components/public/icons';
 import { SURFACE } from '../../config/site';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
@@ -25,28 +27,48 @@ export function About() {
   );
 }
 
+/** The six parts of Dukan ERP, as the home page names them, each with its icon (`content/home.ts` keeps their order). */
+const CAPABILITY_ICONS: IconName[] = ['box', 'receipt', 'undo', 'wallet', 'users', 'file'];
+
 export function Products() {
   const { t, lang } = useI18n();
   const doc = products[lang];
+  const capabilities = homeFor(lang, SURFACE).capabilities.items;
   return (
     <div className="public-page">
       <PageIntro title={doc.title} summary={doc.summary} />
-      <ul className="card-grid">
+      <ul className="card-grid products-grid">
         {doc.sections.map((s) => (
           <li key={s.id} className="card product-card">
             <h2>
-              <ProductMark />
+              <ProductMark size="lg" />
             </h2>
             {s.blocks.map((b, i) =>
               b.kind === 'p' ? (
-                <p key={i}>
+                <p key={i} className="lead">
                   <RichText text={b.text} />
                 </p>
               ) : null,
             )}
-            <Link className="btn btn-primary" to={pathOf('dukanErp', lang)}>
-              {t('nav.dukanErp')}
-            </Link>
+            <ul className="feature-list">
+              {capabilities.map((capability, i) => (
+                <li key={capability.title}>
+                  <Icon name={CAPABILITY_ICONS[i] ?? 'box'} size={20} />
+                  <span>
+                    <RichText text={capability.title} />
+                  </span>
+                </li>
+              ))}
+            </ul>
+            <ComingSoon />
+            <div className="row">
+              <Link className="btn btn-primary" to={pathOf('dukanErp', lang)}>
+                {t('nav.dukanErp')}
+              </Link>
+              <Link className="btn" to={pathOf('contact', lang)}>
+                {t('nav.contact')}
+              </Link>
+            </div>
           </li>
         ))}
       </ul>

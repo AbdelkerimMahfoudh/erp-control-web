@@ -43,6 +43,31 @@
   --focus: #5146d9;
   --shadow: 0 1px 2px rgba(23, 32, 51, 0.06), 0 8px 24px rgba(23, 32, 51, 0.06);
   --backdrop: rgba(23, 32, 51, 0.45);
+  /* The dark surfaces of the redesign (2026-10-17): the navy of the hero, the product sections and the footer. */
+  --ink: #0d1230;
+  --ink-2: #141a3f;
+  --ink-3: #1c2352;
+  --ink-line: rgba(255, 255, 255, 0.12);
+  --ink-line-strong: rgba(255, 255, 255, 0.24);
+  --ink-glass: rgba(255, 255, 255, 0.07);
+  --on-ink: #ffffff;
+  --on-ink-2: rgba(255, 255, 255, 0.78);
+  --on-ink-3: rgba(255, 255, 255, 0.6);
+  --brand-on-ink: #8f87f1;
+  --amber: #f4b740;
+  --amber-soft: rgba(244, 183, 64, 0.18);
+  --on-amber: #2b1e00;
+  --mint-on-ink: #6fe3ad;
+  --mint-wash-on-ink: rgba(111, 227, 173, 0.16);
+  --brand-glow: rgba(81, 70, 217, 0.5);
+  --amber-glow: rgba(244, 183, 64, 0.14);
+  --surface-tint: #f1f2f8;
+  --focus-on-ink: #d4d0ff;
+  --shadow-lift: 0 14px 34px -18px rgba(13, 18, 48, 0.35);
+  --shadow-deep: 0 36px 70px -30px rgba(0, 0, 0, 0.7);
+  --phone-bezel: #0a0d22;
+  --phone-screen: #161c45;
+  --phone-screen-2: #0f1434;
 }
 
 :root[data-theme='dark'] {
@@ -80,4 +105,28 @@
   --focus: #aaa4f5;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
   --backdrop: rgba(0, 0, 0, 0.6);
+  --ink: #070a1c;
+  --ink-2: #0e1331;
+  --ink-3: #151b40;
+  --ink-line: rgba(255, 255, 255, 0.12);
+  --ink-line-strong: rgba(255, 255, 255, 0.24);
+  --ink-glass: rgba(255, 255, 255, 0.07);
+  --on-ink: #ffffff;
+  --on-ink-2: rgba(255, 255, 255, 0.78);
+  --on-ink-3: rgba(255, 255, 255, 0.6);
+  --brand-on-ink: #9c95f4;
+  --amber: #f6c35a;
+  --amber-soft: rgba(246, 195, 90, 0.18);
+  --on-amber: #2b1e00;
+  --mint-on-ink: #6fe3ad;
+  --mint-wash-on-ink: rgba(111, 227, 173, 0.16);
+  --brand-glow: rgba(81, 70, 217, 0.45);
+  --amber-glow: rgba(244, 183, 64, 0.12);
+  --surface-tint: #0f1424;
+  --focus-on-ink: #d4d0ff;
+  --shadow-lift: 0 14px 34px -18px rgba(0, 0, 0, 0.6);
+  --shadow-deep: 0 36px 70px -30px rgba(0, 0, 0, 0.8);
+  --phone-bezel: #06081a;
+  --phone-screen: #141a40;
+  --phone-screen-2: #0d1230;
 }

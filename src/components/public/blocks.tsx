@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { createContext, useContext, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, type HTMLAttributes, type ReactNode } from 'react';
 import { BUILD_MODE, FILLED_INPUTS, IS_PREVIEW, SITE, SURFACE } from '../../config/site';
 import { phoneList } from '../../config/schema';
 import type { Block, Document, LegalDocument } from '../../content/types';
@@ -104,17 +104,48 @@ export function Sections({ doc, after }: { doc: Document; after?: Record<string,
   );
 }
 
+/**
+ * A page's opening (2026-10-17): a band in the site's navy with the title and its summary, edge to edge; inside the
+ * pages the mobile app opens it is a plain light heading (public.css `.in-app`).
+ */
 export function PageIntro({ title, summary, children }: { title: string; summary: string; children?: ReactNode }) {
   return (
-    <header className="page-intro">
-      <h1>
-        <RichText text={title} />
-      </h1>
-      <p className="lead">
-        <RichText text={summary} />
-      </p>
-      {children}
+    <header className="page-intro band band-dark">
+      <div className="container page-intro-inner">
+        <h1>
+          <RichText text={title} />
+        </h1>
+        <p className="lead">
+          <RichText text={summary} />
+        </p>
+        {children}
+      </div>
     </header>
+  );
+}
+
+/** A full-width band of the public pages, in one of three tones, with its content constrained inside. */
+export function Band({ tone = 'light', className, children, ...rest }: { tone?: 'light' | 'tint' | 'dark'; className?: string; children: ReactNode } & Omit<HTMLAttributes<HTMLElement>, 'className' | 'children'>) {
+  return (
+    <section {...rest} className={['band', `band-${tone}`, className].filter(Boolean).join(' ')}>
+      <div className="container">{children}</div>
+    </section>
+  );
+}
+
+/** A section's heading and its one-line lead, in the page's language. */
+export function SectionHead({ id, title, lead }: { id: string; title: string; lead?: string }) {
+  return (
+    <div className="section-head">
+      <h2 id={id}>
+        <RichText text={title} />
+      </h2>
+      {lead ? (
+        <p className="lead">
+          <RichText text={lead} />
+        </p>
+      ) : null}
+    </div>
   );
 }
 

@@ -20,6 +20,14 @@ export const aboutPrelaunch: Docs = {
       { id: 'who', heading: 'Who we are', blocks: [{ kind: 'p', text: '{displayName} develops digital business-management software in Mauritania. Its work starts from the daily reality of local businesses: stock that moves quickly, money that passes through several channels, and teams that need clear roles.' }] },
       { id: 'product', heading: 'What we build', blocks: [{ kind: 'p', text: 'Dukan ERP is our first product. It is being prepared for launch and is not yet open for public registration. It is developed, and will be operated, under the {displayName} name.' }] },
       {
+        id: 'roles',
+        heading: 'The publisher and the product',
+        blocks: [
+          { kind: 'p', text: '{displayName} is the name under which this website and Dukan ERP are published and operated.' },
+          { kind: 'p', text: 'Dukan ERP is the software product: the application a business’s owner and team use to run their stores.' },
+        ],
+      },
+      {
         id: 'principles',
         heading: 'How we build',
         blocks: [
@@ -43,6 +51,14 @@ export const aboutPrelaunch: Docs = {
       { id: 'who', heading: 'Qui nous sommes', blocks: [{ kind: 'p', text: '{displayName} développe des logiciels de gestion d’entreprise en Mauritanie. Son travail part de la réalité quotidienne des entreprises locales : un stock qui tourne vite, de l’argent qui passe par plusieurs canaux et des équipes qui ont besoin de rôles clairs.' }] },
       { id: 'product', heading: 'Ce que nous construisons', blocks: [{ kind: 'p', text: 'Dukan ERP est notre premier produit. Il est en préparation pour son lancement et n’est pas encore ouvert aux inscriptions. Il est développé, et sera exploité, sous le nom {displayName}.' }] },
       {
+        id: 'roles',
+        heading: 'L’éditeur et le produit',
+        blocks: [
+          { kind: 'p', text: '{displayName} est le nom sous lequel ce site et Dukan ERP sont publiés et exploités.' },
+          { kind: 'p', text: 'Dukan ERP est le produit logiciel : l’application que le propriétaire et l’équipe d’une entreprise utilisent pour gérer leurs magasins.' },
+        ],
+      },
+      {
         id: 'principles',
         heading: 'Notre façon de construire',
         blocks: [
@@ -65,6 +81,14 @@ export const aboutPrelaunch: Docs = {
     sections: [
       { id: 'who', heading: 'من نحن', blocks: [{ kind: 'p', text: 'تطوّر {displayName} برمجيات رقمية لإدارة الأعمال في موريتانيا. وينطلق عملها من الواقع اليومي للشركات المحلية: مخزون يتحرك بسرعة، وأموال تمر عبر عدة قنوات، وفرق تحتاج إلى أدوار واضحة.' }] },
       { id: 'product', heading: 'ما نبنيه', blocks: [{ kind: 'p', text: 'Dukan ERP هو منتجنا الأول. وهو قيد التحضير للإطلاق، والتسجيل فيه غير مفتوح للعموم بعد. ويُطوَّر وسيُشغَّل تحت اسم {displayName}.' }] },
+      {
+        id: 'roles',
+        heading: 'الناشر والمنتج',
+        blocks: [
+          { kind: 'p', text: '{displayName} هو الاسم الذي يُنشر ويُشغَّل تحته هذا الموقع وDukan ERP.' },
+          { kind: 'p', text: 'Dukan ERP هو المنتج البرمجي: التطبيق الذي يستخدمه مالك الشركة وفريقها لإدارة متاجرهم.' },
+        ],
+      },
       {
         id: 'principles',
         heading: 'كيف نبني',
@@ -176,29 +200,25 @@ export const supportPrelaunch: Docs = {
 
 /** What the home page says differently before launch: nothing is offered, and nothing is "available today". */
 export interface HomePrelaunch {
-  heroLead: string;
   capabilitiesLead: string;
-  languagesBody: string;
+  howLead: string;
   cta: { title: string; body: string };
 }
 
 export const homePrelaunch: Record<Language, HomePrelaunch> = {
   en: {
-    heroLead: '{displayName} develops software that helps businesses run their daily operations. Its first product, Dukan ERP, is coming soon: it brings stock, sales, money and teams into one application.',
-    capabilitiesLead: 'Dukan ERP is being prepared for launch. These are the features it is being built with.',
-    languagesBody: 'Dukan ERP and this website are built for Arabic, French and English. Arabic is laid out from right to left throughout, while numbers, amounts and identifiers keep their reading order.',
+    capabilitiesLead: 'Dukan ERP is being prepared for launch. These are the six parts it is being built with.',
+    howLead: 'Three steps, once Dukan ERP opens: from the first conversation to a closed day.',
     cta: { title: 'Dukan ERP is coming soon', body: 'Dukan ERP is not yet open for public registration. To hear about its launch, write to {displayName}.' },
   },
   fr: {
-    heroLead: '{displayName} développe des logiciels qui aident les entreprises à gérer leur activité au quotidien. Son premier produit, Dukan ERP, arrive bientôt : il réunit le stock, les ventes, l’argent et les équipes dans une seule application.',
-    capabilitiesLead: 'Dukan ERP est en préparation pour son lancement. Voici les fonctions avec lesquelles il est construit.',
-    languagesBody: 'Dukan ERP et ce site sont conçus pour l’arabe, le français et l’anglais. L’arabe se lit de droite à gauche partout, tandis que les nombres, les montants et les identifiants gardent leur sens de lecture.',
+    capabilitiesLead: 'Dukan ERP est en préparation pour son lancement. Voici les six parties avec lesquelles il est construit.',
+    howLead: 'Trois étapes, une fois Dukan ERP ouvert : de la première conversation à une journée clôturée.',
     cta: { title: 'Dukan ERP arrive bientôt', body: 'Dukan ERP n’est pas encore ouvert aux inscriptions. Pour être informé de son lancement, écrivez à {displayName}.' },
   },
   ar: {
-    heroLead: 'تطوّر {displayName} برمجيات تساعد الشركات على إدارة عملياتها اليومية. ومنتجها الأول، Dukan ERP، قادم قريبًا: يجمع المخزون والمبيعات والأموال والفرق في تطبيق واحد.',
-    capabilitiesLead: 'Dukan ERP قيد التحضير للإطلاق. وهذه هي الميزات التي يُبنى بها.',
-    languagesBody: 'صُمّم Dukan ERP وهذا الموقع للعربية والفرنسية والإنجليزية. تُعرض العربية من اليمين إلى اليسار في كل مكان، بينما تحتفظ الأرقام والمبالغ والمعرّفات باتجاه قراءتها.',
+    capabilitiesLead: 'Dukan ERP قيد التحضير للإطلاق. وهذه هي الأجزاء الستة التي يُبنى بها.',
+    howLead: 'ثلاث خطوات بعد افتتاح Dukan ERP: من أول محادثة إلى يوم مُقفل.',
     cta: { title: 'Dukan ERP قادم قريبًا', body: 'التسجيل في Dukan ERP غير مفتوح للعموم بعد. لتصلكم أخبار إطلاقه، راسلوا {displayName}.' },
   },
 };
@@ -265,9 +285,8 @@ export const dukanErpPrelaunch: Record<Language, DukanErpPrelaunch> = {
 export function homeAsPrelaunch(c: HomeContent, p: HomePrelaunch): HomeContent {
   return {
     ...c,
-    hero: { ...c.hero, lead: p.heroLead },
     capabilities: { ...c.capabilities, lead: p.capabilitiesLead },
-    languages: { ...c.languages, body: p.languagesBody },
+    how: { ...c.how, lead: p.howLead },
     cta: { ...c.cta, title: p.cta.title, body: p.cta.body },
   };
 }

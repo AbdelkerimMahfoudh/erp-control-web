@@ -586,7 +586,7 @@ export const ar: Catalogue = {
   'app.store.google': 'Google Play',
   'page.apply.title': 'طلب حساب شركة',
   'page.apply.description': 'اطلب حساب شركة على Dukan ERP. يمكن لكل شركة جديدة بدء فترة تجريبية مجانية لمدة 7 أيام على هذا الموقع، وترتّب {name} الوصول المدفوع.',
-  'page.home.title': '{name} — أدوات رقمية عملية للشركات',
+  'page.home.title': '{name} — Dukan ERP: المخزون والمبيعات والأموال والفريق في مكان واحد',
   'page.protected.account': 'حساب الشركة — {name}',
   'page.protected.admin': 'الإدارة — {name}',
 };

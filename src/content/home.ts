@@ -1,81 +1,147 @@
 import type { Language } from '../i18n/languages';
 
 /**
- * The TSX-MR home page (docs/74 §4). Every capability and every security sentence is something the code does
- * (audited 2026-10-12, docs/74 §6) — no figures, clients, awards or availability claims.
+ * The TSX-MR home page (docs/74 §4; redesigned 2026-10-17 on the owner's brief). Every capability and every trust
+ * sentence is something the code does (audited 2026-10-12, docs/74 §6) — no figures, clients, awards or availability
+ * claims. The product visual's words are here too (`visual`); its numbers are ordinary demo values kept in the
+ * component, never a customer's data.
+ *
+ * Order matters where a list carries its own illustration: `capabilities.items` are stock, sales, debts, cash, team,
+ * reports; `previews.items` are sell, stock, close (`pages/public/Home.tsx` draws them by position).
  */
 export interface Card {
   title: string;
   body: string;
 }
 
+export interface ActivityBrief {
+  title: string;
+  lead: string;
+  points: string[];
+}
+
 export interface HomeContent {
   hero: { title: string; lead: string; primary: string; secondary: string };
-  product: { kicker: string; title: string; lead: string; cta: string };
-  problems: { title: string; items: Card[] };
+  proofs: Card[];
+  problems: { title: string; lead: string; items: Card[] };
   capabilities: { title: string; lead: string; items: Card[] };
-  security: { title: string; lead: string; items: string[]; link: string };
-  languages: { title: string; body: string; access: string };
+  activities: { title: string; lead: string; retail: ActivityBrief; agent: ActivityBrief };
+  how: { title: string; lead: string; steps: Card[] };
+  previews: { title: string; lead: string; items: Card[] };
+  local: { title: string; body: string; points: string[] };
+  trust: { title: string; lead: string; items: string[]; privacy: string; security: string; support: string };
   cta: { title: string; body: string; apply: string; signIn: string; contact: string };
+  visual: {
+    store: string;
+    today: string;
+    salesWord: string;
+    returnsWord: string;
+    counted: string;
+    paidCash: string;
+    mobileMoney: string;
+    owed: string;
+    days: string;
+    tabs: string[];
+    drawerTitle: string;
+    drawerSub: string;
+    imeiTitle: string;
+    imeiSub: string;
+    expected: string;
+    countedLabel: string;
+    noDifference: string;
+    inStock: string;
+    sold: string;
+    roles: string[];
+    closing: string;
+    demo: string;
+  };
 }
 
 export const home: Record<Language, HomeContent> = {
   en: {
     hero: {
-      title: 'Practical digital tools for businesses',
-      lead: '{displayName} develops software that helps businesses run their daily operations. Its first product, Dukan ERP, brings stock, sales, money and teams into one application.',
+      title: 'Stock, sales, money and team — all in one place.',
+      lead: 'Dukan ERP replaces the notebooks and scattered records of electronics and retail shops and of money-service agents, for teams that work in Arabic, French or English.',
       primary: 'Discover Dukan ERP',
-      secondary: 'Contact {displayName}',
+      secondary: 'Talk to {displayName}',
     },
-    product: {
-      kicker: 'Our product',
-      title: 'Dukan ERP',
-      lead: 'A business-management platform for retail and electronics shops and for money-services agents — or for a business that does both.',
-      cta: 'Learn about Dukan ERP',
-    },
+    proofs: [
+      { title: 'Every IMEI recorded once', body: 'A phone cannot be received twice or sold twice.' },
+      { title: 'The day closed against what was expected', body: 'Drawer and accounts counted; any difference said in words.' },
+      { title: 'Permissions per person and per store', body: 'Each employee sees and does only what their role allows.' },
+    ],
     problems: {
-      title: 'Built for the problems businesses actually have',
+      title: 'What Dukan ERP replaces',
+      lead: 'The daily tools that cost shops time and money.',
       items: [
-        { title: 'Notebooks and memory', body: 'Stock, credit and cash kept on paper are slow to check and easy to lose. Dukan ERP keeps one record that the whole team works from.' },
-        { title: 'Money that does not add up', body: 'Cash and account movements are recorded as they happen, so each day can be counted and closed against what the application expected.' },
-        { title: 'Devices that are hard to trace', body: 'Phones and other serialised devices are followed by IMEI or serial number, from the moment they are received until they are sold or returned.' },
-        { title: 'Teams and several stores', body: 'Each person sees and does only what their role allows, store by store, and changes are kept in an audit trail.' },
+        { title: 'Notebooks', body: 'Stock, credit and cash on paper are slow to check and easy to lose.' },
+        { title: 'Scattered messages', body: 'Orders, prices and reminders spread across chats that nobody can search later.' },
+        { title: 'Uncertain stock', body: 'Nobody knows for sure what is on the shelf, what was sold and what came back.' },
+        { title: 'Unclear money positions', body: 'Cash, mobile accounts and customer debts that never quite add up at closing time.' },
+        { title: 'Uncontrolled access', body: 'Employees who can see or change anything, with no record of who did what.' },
       ],
     },
     capabilities: {
-      title: 'What Dukan ERP does',
-      lead: 'The features below are available today. Each business uses the activities its subscription includes.',
+      title: 'Everything the shop runs on',
+      lead: 'Six parts of one application, built for the counter and the back room.',
       items: [
-        { title: 'Stock and products', body: 'Product models with their specifications, quantities and prices. Stock is received by scanning, typing or importing a supplier file.' },
-        { title: 'IMEI and serial tracking', body: 'Each phone or serialised device is recorded once by its IMEI or serial number, so the same device cannot be sold twice.' },
-        { title: 'Sales and customer payments', body: 'Sales paid in cash or through the payment accounts the business configures, including partial payments and balances owed.' },
-        { title: 'Cash and account reconciliation', body: 'The drawer and each configured account are counted at the end of the day; any difference is shown in words, not hidden.' },
-        { title: 'Returns and refunds', body: 'Returns and refunds are recorded with their reason, and stock and money are corrected together.' },
-        { title: 'Expenses and results', body: 'Expenses with an optional receipt photo, and the results of the day and of the month.' },
-        { title: 'Multiple stores', body: 'Several stores under one business, each with its own stock, cash and team.' },
-        { title: 'Team access and permissions', body: 'Employees and managers are invited by the owner, who chooses what each person may see and do, store by store.' },
-        { title: 'Store-to-store operations', body: 'Stock moved between the business’s own stores and trade with connected stores, recorded on both sides.' },
-        { title: 'Money-services agent activity', body: 'Where the activity is enabled, cash-for-credit exchanges with mobile-money providers, with their commissions and floats.' },
-        { title: 'Daily and monthly reports', body: 'The daily closing, monthly summaries, and exports as PDF and spreadsheet files.' },
+        { title: 'Stock and IMEI', body: 'Products, quantities and prices; every phone recorded once by its IMEI or serial number.' },
+        { title: 'Sales and payments', body: 'Cash or the accounts the business configures, with partial payments and the receipt.' },
+        { title: 'Debts and returns', body: 'Balances owed by customers, and returns with their reason — stock and money corrected together.' },
+        { title: 'Cash and configured accounts', body: 'The drawer and each account counted at the end of the day, any difference shown in words.' },
+        { title: 'Team and permissions', body: 'Owner, managers and employees, each with a role, store by store.' },
+        { title: 'Reports and closing', body: 'The daily closing, monthly results and exports as PDF and spreadsheet files.' },
       ],
     },
-    security: {
-      title: 'Security and privacy, by design',
+    activities: {
+      title: 'Two activities, one application',
+      lead: 'A business runs one of them or both, store by store.',
+      retail: {
+        title: 'Retail and electronics',
+        lead: 'Phones, accessories, appliances and other goods.',
+        points: ['Stock received by scanning or typing', 'Serialised devices followed from reception to sale or return', 'Sales, returns, expenses and the daily closing'],
+      },
+      agent: {
+        title: 'Money services',
+        lead: 'Cash exchanged for mobile-money credit on behalf of customers.',
+        points: ['Exchanges recorded in both directions', 'The commission typed per exchange and kept as the agent’s own revenue', 'Floats and activity followed provider by provider'],
+      },
+    },
+    how: {
+      title: 'How it works',
+      lead: 'Three steps, from the first conversation to a closed day.',
+      steps: [
+        { title: 'Talk to {displayName}', body: 'Tell us about your shop or agency, its stores and its team.' },
+        { title: 'Set up the business in the app', body: 'Stores, employees and their roles, payment accounts and the first stock.' },
+        { title: 'Run the day', body: 'Sell, receive, record exchanges, count the drawer and close against what was expected.' },
+      ],
+    },
+    previews: {
+      title: 'The screens the team works on',
+      lead: 'Illustrative screens with ordinary demo values — nothing here is a real customer’s data.',
+      items: [
+        { title: 'A sale in a few taps', body: 'Scan or pick the product, choose how the customer pays, and the receipt is ready.' },
+        { title: 'Stock you can trust', body: 'What is on the shelf, by model and by IMEI, with what came in and what went out.' },
+        { title: 'Closing the day', body: 'Expected against counted, for the drawer and for each account, in words.' },
+      ],
+    },
+    local: {
+      title: 'Built in Nouakchott, in three languages',
+      body: 'Dukan ERP and this website are built for Arabic, French and English. Arabic is laid out from right to left throughout, while numbers, amounts and identifiers keep their reading order.',
+      points: ['Support in the language of the business', 'Works on the phones the team already has', 'Made for the way shops and agencies work here'],
+    },
+    trust: {
+      title: 'Trust, privacy and support',
       lead: 'These protections are part of how Dukan ERP is built.',
       items: [
         'Passwords and PINs are stored only as one-way hashes, never in readable form.',
         'Changes to business records are written to an audit trail that the application itself cannot edit or delete.',
         'Permissions are granted per person and per store, and the server checks them on every request.',
-        'The administration area has its own separate sign-in and asks for the administrator’s password again before every decision.',
-        'Customer numbers of money-services exchanges are masked in lists; only people with the permission can see them in full.',
         'Signed-in sessions can be ended, and devices removed from an account, at any time.',
       ],
-      link: 'Read the privacy policy',
-    },
-    languages: {
-      title: 'Arabic, French and English',
-      body: 'Dukan ERP and this website are available in Arabic, French and English. Arabic is laid out from right to left throughout, while numbers, amounts and identifiers keep their reading order.',
-      access: 'This website is built to work with a keyboard and with screen readers, at larger text sizes and on small phone screens.',
+      privacy: 'Read the privacy policy',
+      security: 'Security page',
+      support: 'Support',
     },
     cta: {
       title: 'Bring your business onto Dukan ERP',
@@ -84,63 +150,115 @@ export const home: Record<Language, HomeContent> = {
       signIn: 'Sign in',
       contact: 'Contact {displayName}',
     },
+    visual: {
+      store: 'Store',
+      today: 'Sales today',
+      salesWord: 'sales',
+      returnsWord: 'returns',
+      counted: 'Drawer counted',
+      paidCash: 'paid in cash',
+      mobileMoney: 'mobile money',
+      owed: 'balance owed',
+      days: 'days',
+      tabs: ['Today', 'Sell', 'Inventory', 'Money', 'Team'],
+      drawerTitle: 'Drawer counted',
+      drawerSub: 'Expected and counted match',
+      imeiTitle: 'IMEI recorded once',
+      imeiSub: 'Received once · cannot be sold twice',
+      expected: 'Expected in drawer',
+      countedLabel: 'Counted',
+      noDifference: 'No difference',
+      inStock: 'In stock',
+      sold: 'Sold',
+      roles: ['Owner', 'Manager', 'Employee'],
+      closing: 'Daily closing',
+      demo: 'Demo values',
+    },
   },
   fr: {
     hero: {
-      title: 'Des outils numériques pratiques pour les entreprises',
-      lead: '{displayName} développe des logiciels qui aident les entreprises à gérer leur activité au quotidien. Son premier produit, Dukan ERP, réunit le stock, les ventes, l’argent et les équipes dans une seule application.',
+      title: 'Stock, ventes, argent et équipe — réunis au même endroit.',
+      lead: 'Dukan ERP remplace les cahiers et les notes éparpillées des boutiques d’électronique et de détail et des agents de services monétaires, pour des équipes qui travaillent en arabe, en français ou en anglais.',
       primary: 'Découvrir Dukan ERP',
-      secondary: 'Contacter {displayName}',
+      secondary: 'Parler à {displayName}',
     },
-    product: {
-      kicker: 'Notre produit',
-      title: 'Dukan ERP',
-      lead: 'Une plateforme de gestion pour les commerces de détail et d’électronique et pour les agents de services monétaires — ou pour une entreprise qui fait les deux.',
-      cta: 'En savoir plus sur Dukan ERP',
-    },
+    proofs: [
+      { title: 'Chaque IMEI enregistré une seule fois', body: 'Un téléphone ne peut être ni reçu ni vendu deux fois.' },
+      { title: 'La journée clôturée par rapport à l’attendu', body: 'Caisse et comptes comptés ; tout écart dit en toutes lettres.' },
+      { title: 'Des droits par personne et par magasin', body: 'Chaque employé ne voit et ne fait que ce que son rôle permet.' },
+    ],
     problems: {
-      title: 'Conçu pour les problèmes réels des entreprises',
+      title: 'Ce que Dukan ERP remplace',
+      lead: 'Les outils du quotidien qui coûtent du temps et de l’argent aux commerces.',
       items: [
-        { title: 'Cahiers et mémoire', body: 'Un stock, des crédits et une caisse tenus sur papier sont longs à vérifier et faciles à perdre. Dukan ERP tient un seul registre sur lequel toute l’équipe travaille.' },
-        { title: 'Des comptes qui ne tombent pas juste', body: 'Les mouvements de caisse et de comptes sont enregistrés au moment où ils ont lieu, pour que chaque journée soit comptée et clôturée par rapport à ce que l’application attendait.' },
-        { title: 'Des appareils difficiles à suivre', body: 'Les téléphones et autres appareils à numéro de série sont suivis par IMEI ou numéro de série, de leur réception jusqu’à leur vente ou leur retour.' },
-        { title: 'Des équipes et plusieurs magasins', body: 'Chacun ne voit et ne fait que ce que son rôle permet, magasin par magasin, et les modifications sont conservées dans un journal d’audit.' },
+        { title: 'Les cahiers', body: 'Un stock, des crédits et une caisse sur papier sont longs à vérifier et faciles à perdre.' },
+        { title: 'Les messages éparpillés', body: 'Commandes, prix et rappels dispersés dans des discussions que personne ne retrouve plus tard.' },
+        { title: 'Un stock incertain', body: 'Personne ne sait avec certitude ce qui est en rayon, ce qui a été vendu et ce qui est revenu.' },
+        { title: 'Des positions d’argent floues', body: 'Espèces, comptes mobiles et dettes des clients qui ne tombent jamais tout à fait juste à la clôture.' },
+        { title: 'Des accès sans contrôle', body: 'Des employés qui peuvent tout voir ou tout modifier, sans trace de qui a fait quoi.' },
       ],
     },
     capabilities: {
-      title: 'Ce que fait Dukan ERP',
-      lead: 'Les fonctions ci-dessous sont disponibles aujourd’hui. Chaque entreprise utilise les activités incluses dans son abonnement.',
+      title: 'Tout ce qui fait tourner la boutique',
+      lead: 'Six parties d’une seule application, pensées pour le comptoir et l’arrière-boutique.',
       items: [
-        { title: 'Stock et produits', body: 'Des modèles de produits avec leurs caractéristiques, quantités et prix. Le stock est réceptionné par scan, par saisie ou par import d’un fichier fournisseur.' },
-        { title: 'Suivi des IMEI et numéros de série', body: 'Chaque téléphone ou appareil à numéro de série est enregistré une seule fois par son IMEI ou son numéro de série : le même appareil ne peut pas être vendu deux fois.' },
-        { title: 'Ventes et paiements des clients', body: 'Des ventes payées en espèces ou par les comptes de paiement que l’entreprise configure, y compris les paiements partiels et les soldes dus.' },
-        { title: 'Rapprochement de la caisse et des comptes', body: 'La caisse et chaque compte configuré sont comptés en fin de journée ; tout écart est affiché en toutes lettres, jamais masqué.' },
-        { title: 'Retours et remboursements', body: 'Les retours et remboursements sont enregistrés avec leur motif, et le stock et l’argent sont corrigés ensemble.' },
-        { title: 'Dépenses et résultats', body: 'Des dépenses avec une photo de reçu facultative, et les résultats de la journée et du mois.' },
-        { title: 'Plusieurs magasins', body: 'Plusieurs magasins dans une même entreprise, chacun avec son stock, sa caisse et son équipe.' },
-        { title: 'Accès de l’équipe et autorisations', body: 'Les employés et responsables sont invités par le propriétaire, qui choisit ce que chacun peut voir et faire, magasin par magasin.' },
-        { title: 'Opérations entre magasins', body: 'Du stock déplacé entre les magasins de l’entreprise et des échanges avec des magasins connectés, enregistrés des deux côtés.' },
-        { title: 'Activité d’agent de services monétaires', body: 'Lorsque l’activité est activée, des échanges d’espèces contre du crédit avec des opérateurs de paiement mobile, avec leurs commissions et leurs soldes.' },
-        { title: 'Rapports quotidiens et mensuels', body: 'La clôture quotidienne, les synthèses mensuelles et des exports en PDF et en tableur.' },
+        { title: 'Stock et IMEI', body: 'Produits, quantités et prix ; chaque téléphone enregistré une seule fois par son IMEI ou son numéro de série.' },
+        { title: 'Ventes et paiements', body: 'En espèces ou par les comptes que l’entreprise configure, avec les paiements partiels et le reçu.' },
+        { title: 'Dettes et retours', body: 'Les soldes dus par les clients, et les retours avec leur motif — stock et argent corrigés ensemble.' },
+        { title: 'Caisse et comptes configurés', body: 'La caisse et chaque compte comptés en fin de journée, tout écart affiché en toutes lettres.' },
+        { title: 'Équipe et droits', body: 'Propriétaire, gérants et employés, chacun avec un rôle, magasin par magasin.' },
+        { title: 'Rapports et clôture', body: 'La clôture du jour, les résultats du mois et des exports en PDF et en tableur.' },
       ],
     },
-    security: {
-      title: 'Sécurité et confidentialité, dès la conception',
+    activities: {
+      title: 'Deux activités, une seule application',
+      lead: 'Une entreprise exerce l’une ou les deux, magasin par magasin.',
+      retail: {
+        title: 'Détail et électronique',
+        lead: 'Téléphones, accessoires, électroménager et autres articles.',
+        points: ['Stock réceptionné par scan ou par saisie', 'Appareils sérialisés suivis de la réception à la vente ou au retour', 'Ventes, retours, dépenses et clôture du jour'],
+      },
+      agent: {
+        title: 'Services monétaires',
+        lead: 'Des espèces échangées contre du crédit de paiement mobile pour le compte des clients.',
+        points: ['Échanges enregistrés dans les deux sens', 'La commission saisie à chaque échange et conservée comme revenu propre de l’agent', 'Soldes et activité suivis opérateur par opérateur'],
+      },
+    },
+    how: {
+      title: 'Comment ça marche',
+      lead: 'Trois étapes, de la première conversation à une journée clôturée.',
+      steps: [
+        { title: 'Parler à {displayName}', body: 'Parlez-nous de votre boutique ou de votre agence, de ses magasins et de son équipe.' },
+        { title: 'Configurer l’entreprise dans l’application', body: 'Magasins, employés et leurs rôles, comptes de paiement et premier stock.' },
+        { title: 'Faire tourner la journée', body: 'Vendre, réceptionner, enregistrer les échanges, compter la caisse et clôturer par rapport à l’attendu.' },
+      ],
+    },
+    previews: {
+      title: 'Les écrans sur lesquels l’équipe travaille',
+      lead: 'Des écrans d’illustration avec des valeurs de démonstration ordinaires — rien ici n’est la donnée d’un vrai client.',
+      items: [
+        { title: 'Une vente en quelques gestes', body: 'Scannez ou choisissez le produit, indiquez comment le client paie, et le reçu est prêt.' },
+        { title: 'Un stock fiable', body: 'Ce qui est en rayon, par modèle et par IMEI, avec ce qui est entré et ce qui est sorti.' },
+        { title: 'La clôture du jour', body: 'L’attendu face au compté, pour la caisse et pour chaque compte, en toutes lettres.' },
+      ],
+    },
+    local: {
+      title: 'Conçu à Nouakchott, en trois langues',
+      body: 'Dukan ERP et ce site sont conçus pour l’arabe, le français et l’anglais. L’arabe se lit de droite à gauche partout, tandis que les nombres, les montants et les identifiants gardent leur sens de lecture.',
+      points: ['Une assistance dans la langue de l’entreprise', 'Fonctionne sur les téléphones que l’équipe possède déjà', 'Pensé pour la manière dont les boutiques et les agences travaillent ici'],
+    },
+    trust: {
+      title: 'Confiance, confidentialité et assistance',
       lead: 'Ces protections font partie de la manière dont Dukan ERP est construit.',
       items: [
         'Les mots de passe et codes PIN ne sont conservés que sous forme d’empreintes à sens unique, jamais lisibles.',
         'Les modifications des données de l’entreprise sont inscrites dans un journal d’audit que l’application elle-même ne peut ni modifier ni supprimer.',
         'Les autorisations sont accordées par personne et par magasin, et le serveur les vérifie à chaque requête.',
-        'L’espace d’administration a sa propre connexion, distincte, et redemande le mot de passe de l’administrateur avant chaque décision.',
-        'Les numéros des clients des échanges de services monétaires sont masqués dans les listes ; seules les personnes autorisées les voient en entier.',
         'Les sessions ouvertes peuvent être fermées, et les appareils retirés d’un compte, à tout moment.',
       ],
-      link: 'Lire la politique de confidentialité',
-    },
-    languages: {
-      title: 'Arabe, français et anglais',
-      body: 'Dukan ERP et ce site sont disponibles en arabe, en français et en anglais. L’arabe s’affiche de droite à gauche partout, tandis que les nombres, les montants et les identifiants gardent leur sens de lecture.',
-      access: 'Ce site est conçu pour fonctionner au clavier et avec les lecteurs d’écran, avec un texte agrandi et sur les petits écrans de téléphone.',
+      privacy: 'Lire la politique de confidentialité',
+      security: 'Page sécurité',
+      support: 'Assistance',
     },
     cta: {
       title: 'Passez votre entreprise sur Dukan ERP',
@@ -149,63 +267,115 @@ export const home: Record<Language, HomeContent> = {
       signIn: 'Se connecter',
       contact: 'Contacter {displayName}',
     },
+    visual: {
+      store: 'Magasin',
+      today: 'Ventes du jour',
+      salesWord: 'ventes',
+      returnsWord: 'retours',
+      counted: 'Caisse comptée',
+      paidCash: 'payé en espèces',
+      mobileMoney: 'paiement mobile',
+      owed: 'solde dû',
+      days: 'jours',
+      tabs: ['Aujourd’hui', 'Vendre', 'Stock', 'Argent', 'Équipe'],
+      drawerTitle: 'Caisse comptée',
+      drawerSub: 'L’attendu et le compté concordent',
+      imeiTitle: 'IMEI enregistré une fois',
+      imeiSub: 'Reçu une fois · ne peut être vendu deux fois',
+      expected: 'Attendu en caisse',
+      countedLabel: 'Compté',
+      noDifference: 'Aucun écart',
+      inStock: 'En stock',
+      sold: 'Vendu',
+      roles: ['Propriétaire', 'Gérant', 'Employé'],
+      closing: 'Clôture du jour',
+      demo: 'Valeurs de démonstration',
+    },
   },
   ar: {
     hero: {
-      title: 'أدوات رقمية عملية للشركات',
-      lead: 'تطوّر {displayName} برمجيات تساعد الشركات على إدارة أعمالها اليومية. ويجمع منتجها الأول، Dukan ERP، المخزون والمبيعات والأموال والفرق في تطبيق واحد.',
+      title: 'المخزون والمبيعات والأموال والفريق — كلّها في مكان واحد.',
+      lead: 'يحلّ Dukan ERP محلّ الدفاتر والسجلات المتفرقة في متاجر الإلكترونيات والتجزئة ولدى وكلاء الخدمات المالية، لفرق تعمل بالعربية أو الفرنسية أو الإنجليزية.',
       primary: 'اكتشف Dukan ERP',
-      secondary: 'تواصل مع {displayName}',
+      secondary: 'تحدّث مع {displayName}',
     },
-    product: {
-      kicker: 'منتجنا',
-      title: 'Dukan ERP',
-      lead: 'منصة لإدارة الأعمال موجّهة إلى متاجر التجزئة والإلكترونيات وإلى وكلاء الخدمات المالية — أو إلى الشركة التي تجمع بين النشاطين.',
-      cta: 'تعرّف على Dukan ERP',
-    },
+    proofs: [
+      { title: 'كل IMEI يُسجَّل مرة واحدة', body: 'لا يمكن استلام الهاتف مرتين ولا بيعه مرتين.' },
+      { title: 'يُقفل اليوم مقارنةً بما كان متوقعًا', body: 'يُعدّ الصندوق والحسابات، ويُذكر أي فرق بالكلمات.' },
+      { title: 'صلاحيات لكل شخص ولكل متجر', body: 'لا يرى كل موظف ولا يفعل إلا ما يسمح به دوره.' },
+    ],
     problems: {
-      title: 'مصمَّم لحلّ المشكلات الحقيقية التي تواجهها الشركات',
+      title: 'ما الذي يحلّ Dukan ERP محلّه',
+      lead: 'الأدوات اليومية التي تكلّف المتاجر وقتًا ومالًا.',
       items: [
-        { title: 'الدفاتر والذاكرة', body: 'المخزون والديون والصندوق المدوَّنة على الورق بطيئة المراجعة وسهلة الضياع. يحتفظ Dukan ERP بسجلّ واحد يعمل عليه الفريق كله.' },
-        { title: 'حسابات لا تتطابق', body: 'تُسجَّل حركات الصندوق والحسابات لحظة حدوثها، فيُعدّ كل يوم ويُغلق مقارنةً بما كان التطبيق يتوقّعه.' },
-        { title: 'أجهزة يصعب تتبّعها', body: 'تُتابَع الهواتف وسائر الأجهزة ذات الأرقام التسلسلية برقم IMEI أو الرقم التسلسلي، منذ استلامها حتى بيعها أو إرجاعها.' },
-        { title: 'فرق ومتاجر متعددة', body: 'لا يرى كل شخص ولا يفعل إلا ما يسمح به دوره، متجرًا بمتجر، وتُحفظ التعديلات في سجل تدقيق.' },
+        { title: 'الدفاتر', body: 'المخزون والديون والصندوق على الورق بطيئة المراجعة وسهلة الضياع.' },
+        { title: 'الرسائل المتفرقة', body: 'طلبات وأسعار وتذكيرات موزعة على محادثات لا يستطيع أحد البحث فيها لاحقًا.' },
+        { title: 'مخزون غير مؤكد', body: 'لا أحد يعرف على وجه اليقين ما على الرف، وما بيع، وما أُعيد.' },
+        { title: 'أوضاع مالية غامضة', body: 'نقد وحسابات عبر الهاتف وديون عملاء لا تتطابق تمامًا عند الإقفال.' },
+        { title: 'وصول بلا ضوابط', body: 'موظفون يستطيعون رؤية كل شيء أو تغييره، دون سجل لمن فعل ماذا.' },
       ],
     },
     capabilities: {
-      title: 'ماذا يفعل Dukan ERP',
-      lead: 'الوظائف التالية متاحة اليوم. وتستخدم كل شركة الأنشطة المشمولة في اشتراكها.',
+      title: 'كل ما يدير المتجر',
+      lead: 'ستة أجزاء في تطبيق واحد، صُممت للمنضدة وللمخزن.',
       items: [
-        { title: 'المخزون والمنتجات', body: 'طُرز منتجات بمواصفاتها وكمياتها وأسعارها. ويُستلَم المخزون بالمسح أو بالإدخال اليدوي أو باستيراد ملف المورّد.' },
-        { title: 'تتبّع IMEI والأرقام التسلسلية', body: 'يُسجَّل كل هاتف أو جهاز ذي رقم تسلسلي مرة واحدة برقم IMEI أو رقمه التسلسلي، فلا يمكن بيع الجهاز نفسه مرتين.' },
-        { title: 'المبيعات ومدفوعات العملاء', body: 'مبيعات تُدفع نقدًا أو عبر حسابات الدفع التي تضبطها الشركة، بما في ذلك الدفعات الجزئية والأرصدة المستحقة.' },
-        { title: 'مطابقة الصندوق والحسابات', body: 'يُعدّ الصندوق وكل حساب مضبوط في نهاية اليوم، ويُعرض أي فرق بالكلمات دون إخفائه.' },
-        { title: 'المرتجعات والمبالغ المستردّة', body: 'تُسجَّل المرتجعات والمبالغ المستردّة مع سببها، ويُصحَّح المخزون والمال معًا.' },
-        { title: 'المصروفات والنتائج', body: 'مصروفات مع صورة إيصال اختيارية، ونتائج اليوم والشهر.' },
-        { title: 'متاجر متعددة', body: 'عدة متاجر ضمن شركة واحدة، لكل منها مخزونه وصندوقه وفريقه.' },
-        { title: 'صلاحيات الفريق', body: 'يدعو المالك الموظفين والمسؤولين، ويختار ما يمكن لكل شخص أن يراه ويفعله، متجرًا بمتجر.' },
-        { title: 'العمليات بين المتاجر', body: 'نقل المخزون بين متاجر الشركة نفسها والتعامل مع متاجر متصلة، مع تسجيل ذلك لدى الطرفين.' },
-        { title: 'نشاط وكيل الخدمات المالية', body: 'عند تفعيل النشاط، عمليات تبادل النقد مقابل الرصيد مع مزوّدي الدفع عبر الهاتف، مع عمولاتها وأرصدتها.' },
-        { title: 'تقارير يومية وشهرية', body: 'الإغلاق اليومي والملخّصات الشهرية، والتصدير بصيغة PDF وجداول البيانات.' },
+        { title: 'المخزون وIMEI', body: 'المنتجات والكميات والأسعار؛ ويُسجَّل كل هاتف مرة واحدة برقم IMEI أو الرقم التسلسلي.' },
+        { title: 'المبيعات والمدفوعات', body: 'نقدًا أو عبر الحسابات التي تضبطها الشركة، مع الدفعات الجزئية والإيصال.' },
+        { title: 'الديون والمرتجعات', body: 'الأرصدة المستحقة على العملاء، والمرتجعات مع سببها — ويُصحَّح المخزون والمال معًا.' },
+        { title: 'الصندوق والحسابات المضبوطة', body: 'يُعدّ الصندوق وكل حساب في نهاية اليوم، ويُعرض أي فرق بالكلمات.' },
+        { title: 'الفريق والصلاحيات', body: 'المالك والمديرون والموظفون، لكل منهم دور، متجرًا بمتجر.' },
+        { title: 'التقارير والإقفال', body: 'إقفال اليوم ونتائج الشهر والتصدير بصيغة PDF وجداول البيانات.' },
       ],
     },
-    security: {
-      title: 'الأمان والخصوصية منذ التصميم',
+    activities: {
+      title: 'نشاطان وتطبيق واحد',
+      lead: 'تزاول الشركة أحدهما أو كليهما، متجرًا بمتجر.',
+      retail: {
+        title: 'التجزئة والإلكترونيات',
+        lead: 'الهواتف والإكسسوارات والأجهزة المنزلية وسائر السلع.',
+        points: ['استلام المخزون بالمسح أو بالإدخال اليدوي', 'متابعة الأجهزة ذات الأرقام التسلسلية من الاستلام حتى البيع أو الإرجاع', 'المبيعات والمرتجعات والمصروفات وإقفال اليوم'],
+      },
+      agent: {
+        title: 'الخدمات المالية',
+        lead: 'نقد يُبادَل برصيد الدفع عبر الهاتف لصالح العملاء.',
+        points: ['تسجيل العمليات في الاتجاهين', 'تُدخَل العمولة في كل عملية وتبقى دخلًا خاصًا بالوكيل', 'متابعة الأرصدة والنشاط لكل مزوّد على حدة'],
+      },
+    },
+    how: {
+      title: 'كيف يعمل',
+      lead: 'ثلاث خطوات، من أول محادثة إلى يوم مُقفل.',
+      steps: [
+        { title: 'تحدّث مع {displayName}', body: 'حدّثنا عن متجرك أو وكالتك، وعن فروعها وفريقها.' },
+        { title: 'جهّز الشركة في التطبيق', body: 'المتاجر والموظفون وأدوارهم وحسابات الدفع والمخزون الأول.' },
+        { title: 'أدِر اليوم', body: 'بِع واستلم وسجّل العمليات وعُدّ الصندوق وأقفل مقارنةً بما كان متوقعًا.' },
+      ],
+    },
+    previews: {
+      title: 'الشاشات التي يعمل عليها الفريق',
+      lead: 'شاشات توضيحية بقيم تجريبية عادية — لا شيء هنا بيانات عميل حقيقي.',
+      items: [
+        { title: 'عملية بيع بلمسات قليلة', body: 'امسح المنتج أو اختره، وحدّد كيف يدفع العميل، فيكون الإيصال جاهزًا.' },
+        { title: 'مخزون يمكن الوثوق به', body: 'ما على الرف، حسب الطراز وحسب IMEI، مع ما دخل وما خرج.' },
+        { title: 'إقفال اليوم', body: 'المتوقع مقابل المعدود، للصندوق ولكل حساب، بالكلمات.' },
+      ],
+    },
+    local: {
+      title: 'صُنع في نواكشوط، بثلاث لغات',
+      body: 'صُمّم Dukan ERP وهذا الموقع للعربية والفرنسية والإنجليزية. تُعرض العربية من اليمين إلى اليسار في كل مكان، بينما تحتفظ الأرقام والمبالغ والمعرّفات باتجاه قراءتها.',
+      points: ['دعم بلغة الشركة', 'يعمل على الهواتف التي يملكها الفريق أصلًا', 'مصمَّم لطريقة عمل المتاجر والوكالات هنا'],
+    },
+    trust: {
+      title: 'الثقة والخصوصية والدعم',
       lead: 'هذه الحمايات جزء من طريقة بناء Dukan ERP.',
       items: [
         'لا تُحفظ كلمات المرور والرموز السرية إلا في صورة بصمات أحادية الاتجاه، ولا تُحفظ أبدًا بصيغة مقروءة.',
         'تُدوَّن التعديلات على سجلات الشركة في سجل تدقيق لا يستطيع التطبيق نفسه تعديله أو حذفه.',
         'تُمنح الصلاحيات لكل شخص ولكل متجر، ويتحقق منها الخادم في كل طلب.',
-        'لمساحة الإدارة تسجيل دخول مستقل خاص بها، وتطلب كلمة مرور المسؤول مجددًا قبل كل قرار.',
-        'تُخفى أرقام العملاء في عمليات الخدمات المالية داخل القوائم، ولا يراها كاملة إلا من يملك الصلاحية.',
         'يمكن إنهاء الجلسات المفتوحة وإزالة الأجهزة من الحساب في أي وقت.',
       ],
-      link: 'اقرأ سياسة الخصوصية',
-    },
-    languages: {
-      title: 'العربية والفرنسية والإنجليزية',
-      body: 'يتوفر Dukan ERP وهذا الموقع باللغات العربية والفرنسية والإنجليزية. وتُعرض العربية من اليمين إلى اليسار في كل مكان، مع احتفاظ الأرقام والمبالغ والمعرّفات باتجاه قراءتها.',
-      access: 'صُمّم هذا الموقع ليعمل بلوحة المفاتيح ومع قارئات الشاشة، وبأحجام نص أكبر، وعلى شاشات الهواتف الصغيرة.',
+      privacy: 'اقرأ سياسة الخصوصية',
+      security: 'صفحة الأمان',
+      support: 'الدعم',
     },
     cta: {
       title: 'انقل أعمال شركتك إلى Dukan ERP',
@@ -213,6 +383,30 @@ export const home: Record<Language, HomeContent> = {
       apply: 'اطلب حساب شركة',
       signIn: 'تسجيل الدخول',
       contact: 'تواصل مع {displayName}',
+    },
+    visual: {
+      store: 'المتجر',
+      today: 'مبيعات اليوم',
+      salesWord: 'عمليات بيع',
+      returnsWord: 'مرتجعات',
+      counted: 'الصندوق معدود',
+      paidCash: 'نقدًا',
+      mobileMoney: 'دفع عبر الهاتف',
+      owed: 'رصيد مستحق',
+      days: 'أيام',
+      tabs: ['اليوم', 'بيع', 'المخزون', 'المال', 'الفريق'],
+      drawerTitle: 'الصندوق معدود',
+      drawerSub: 'المتوقع والمعدود متطابقان',
+      imeiTitle: 'IMEI مسجَّل مرة واحدة',
+      imeiSub: 'استُلم مرة واحدة · لا يُباع مرتين',
+      expected: 'المتوقع في الصندوق',
+      countedLabel: 'المعدود',
+      noDifference: 'لا فرق',
+      inStock: 'في المخزون',
+      sold: 'مُباع',
+      roles: ['المالك', 'المدير', 'الموظف'],
+      closing: 'إقفال اليوم',
+      demo: 'قيم تجريبية',
     },
   },
 };

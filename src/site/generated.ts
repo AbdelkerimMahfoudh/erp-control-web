@@ -101,6 +101,8 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, pre
   for (const prefix of Object.values(LANGUAGE_PREFIX)) blocks.push(`${prefix}${IN_APP_PREFIX}/*\n  X-Robots-Tag: noindex, nofollow`);
   // Hashed assets never change; everything else is revalidated.
   blocks.push('/assets/*\n  Cache-Control: public, max-age=31536000, immutable');
+  // The self-hosted fonts (theme/fonts.css): named by family, subset and weight, and renamed when they change.
+  blocks.push('/fonts/*\n  Cache-Control: public, max-age=31536000, immutable');
   return `${blocks.join('\n\n')}\n`;
 }
 
