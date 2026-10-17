@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { readInputs, releaseProblems } from '../src/config/schema';
+import { formatProblems, readInputs, releaseProblems } from '../src/config/schema';
 import { accountHref } from '../src/components/AccountLink';
 import { contentSecurityPolicy, headersFile, redirectsFile, sitemapXml } from '../src/site/generated';
 import { API_ROUTE_IDS, IN_APP_ROUTE_IDS, pathOf, publicRoutesFor, PUBLIC_ROUTES } from '../src/site/routes';
@@ -29,31 +29,68 @@ const REAL: Record<string, string> = {
 const ORIGIN = REAL.VITE_PUBLIC_SITE_ORIGIN!;
 const PORTAL = 'https://portal.company-domain.mr';
 
-describe('the release rule of a public build', () => {
-  it('does not ask for the API a public build never calls; a full build still does', () => {
-    expect(releaseProblems({ ...REAL, VITE_SITE_SURFACE: 'public' }, [])).toEqual([]);
-    expect(releaseProblems(REAL, []).map((p) => `${p.env}:${p.problem}`)).toEqual(['VITE_API_BASE:missing']);
+/** The pre-launch website's own facts (the PUBLIC_WEBSITE gate, docs/96): identity, contacts, the date — and its origin. */
+const PUBLIC_REAL: Record<string, string> = {
+  VITE_SITE_SURFACE: 'public',
+  VITE_PUBLIC_SITE_ORIGIN: 'https://tsxmr.com',
+  VITE_ORGANIZATION_LEGAL_NAME: 'Registered Name SARL',
+  VITE_ORGANIZATION_LEGAL_FORM: 'SARL',
+  VITE_ORGANIZATION_REGISTRATION_NUMBER: 'RC 0000',
+  VITE_ORGANIZATION_CITY: 'Nouakchott',
+  VITE_ORGANIZATION_ADDRESS: 'Street 1',
+  VITE_SUPPORT_EMAIL: 'support@company-domain.mr',
+  VITE_PRIVACY_EMAIL: 'privacy@company-domain.mr',
+  VITE_SECURITY_EMAIL: 'security@company-domain.mr',
+  VITE_LEGAL_EFFECTIVE_DATE: '2026-11-01',
+};
+
+describe('the PUBLIC_WEBSITE gate (a public build)', () => {
+  it('opens on the TSX-MR identity, contacts, effective date and origin alone — no API, no deletion channel, no support hours', () => {
+    expect(releaseProblems(PUBLIC_REAL, [])).toEqual([]);
   });
 
-  it('keeps every other refusal: a blank fact, a test value, a legal blocker or a draft still stops it', () => {
-    const blank = releaseProblems({ ...REAL, VITE_SITE_SURFACE: 'public', VITE_SUPPORT_EMAIL: '' }, []);
-    expect(blank.map((p) => `${p.env}:${p.problem}`)).toEqual(['VITE_SUPPORT_EMAIL:missing']);
-    const test = releaseProblems({ ...REAL, VITE_SITE_SURFACE: 'public', VITE_PUBLIC_SITE_ORIGIN: 'https://preview.invalid' }, []);
-    expect(test.map((p) => p.problem)).toEqual(['test_value']);
-    const legal = releaseProblems({ ...REAL, VITE_SITE_SURFACE: 'public' }, [{ id: 'legal_review', summary: 'x' }], { drafts: ['privacy'], placeholders: [] });
+  it('asks for every fact it publishes, and names exactly those', () => {
+    const missing = releaseProblems({ VITE_SITE_SURFACE: 'public' }, []).filter((p) => p.problem === 'missing').map((p) => p.env).sort();
+    expect(missing).toEqual(
+      ['VITE_LEGAL_EFFECTIVE_DATE', 'VITE_ORGANIZATION_ADDRESS', 'VITE_ORGANIZATION_CITY', 'VITE_ORGANIZATION_LEGAL_FORM', 'VITE_ORGANIZATION_LEGAL_NAME', 'VITE_ORGANIZATION_REGISTRATION_NUMBER', 'VITE_PRIVACY_EMAIL', 'VITE_PUBLIC_SITE_ORIGIN', 'VITE_SECURITY_EMAIL', 'VITE_SUPPORT_EMAIL'].sort(),
+    );
+  });
+
+  it('is published at https://tsxmr.com only', () => {
+    for (const origin of ['https://www.tsxmr.com', 'https://dukan.tsxmr.com', 'https://tsxmr.pages.dev']) {
+      expect(releaseProblems({ ...PUBLIC_REAL, VITE_PUBLIC_SITE_ORIGIN: origin }, []).map((p) => `${p.env}:${p.problem}`)).toEqual(['VITE_PUBLIC_SITE_ORIGIN:wrong_origin']);
+    }
+  });
+
+  it('refuses any portal, API, console or app-store address: the pre-launch website links to none', () => {
+    for (const [env, value] of [
+      ['VITE_PORTAL_ORIGIN', 'https://dukan.tsxmr.com'],
+      ['VITE_API_BASE', 'https://api.tsxmr.com/api/v1'],
+      ['VITE_ADMIN_SITE_ORIGIN', 'https://admin.tsxmr.com'],
+      ['VITE_APPLE_APP_STORE_URL', 'https://apps.apple.com/app/id1'],
+      ['VITE_GOOGLE_PLAY_URL', 'https://play.google.com/store/apps/details?id=mr.tsxmr.dukanerp'],
+    ] as [string, string][]) {
+      expect(releaseProblems({ ...PUBLIC_REAL, [env]: value }, []).map((p) => `${p.env}:${p.problem}`)).toEqual([`${env}:forbidden`]);
+    }
+  });
+
+  it('keeps refusing a test value, a placeholder, a legal blocker and an unapproved text', () => {
+    expect(releaseProblems({ ...PUBLIC_REAL, VITE_SUPPORT_EMAIL: 'support@preview.invalid' }, []).map((p) => p.problem)).toEqual(['test_value']);
+    expect(releaseProblems({ ...PUBLIC_REAL, VITE_ORGANIZATION_ADDRESS: '[TO BE PROVIDED]' }, []).map((p) => p.problem)).toEqual(['placeholder']);
+    const legal = releaseProblems(PUBLIC_REAL, [{ id: 'legal_review', summary: 'x' }], { drafts: ['privacy'], placeholders: [] });
     expect(legal.map((p) => p.problem)).toEqual(['legal_blocker', 'legal_draft']);
+    expect(formatProblems(legal, 'PUBLIC_WEBSITE')).toMatch(/\(gate PUBLIC_WEBSITE\)\. Nothing was published\./);
   });
 
-  it('refuses an unknown surface and a portal origin that is not HTTPS', () => {
-    expect(releaseProblems({ ...REAL, VITE_SITE_SURFACE: 'marketing', VITE_API_BASE: 'https://api.company-domain.mr/api/v1' }, []).map((p) => `${p.env}:${p.problem}`)).toEqual([
-      'VITE_SITE_SURFACE:malformed',
-    ]);
-    expect(releaseProblems({ ...REAL, VITE_SITE_SURFACE: 'public', VITE_PORTAL_ORIGIN: 'http://portal.company-domain.mr' }, []).map((p) => `${p.env}:${p.problem}`)).toEqual([
-      'VITE_PORTAL_ORIGIN:not_https',
-    ]);
+  it('the PORTAL gate (a full build) is as strict as before: the API, the deletion channel and support facts are still required', () => {
+    const { VITE_SITE_SURFACE: _, ...full } = PUBLIC_REAL;
+    const missing = releaseProblems(full, []).map((p) => `${p.env}:${p.problem}`);
+    for (const env of ['VITE_API_BASE', 'VITE_ACCOUNT_DELETION_CHANNEL', 'VITE_SUPPORT_HOURS', 'VITE_SUPPORT_LANGUAGES', 'VITE_SUPPORT_RESPONSE_TIME']) expect(missing).toContain(`${env}:missing`);
+    expect(missing.some((m) => m.includes('forbidden') || m.includes('wrong_origin'))).toBe(false);
   });
 
-  it('a build that names no surface is a full one, as before', () => {
+  it('refuses an unknown surface; a build that names none is a full one, as before', () => {
+    expect(releaseProblems({ ...PUBLIC_REAL, VITE_SITE_SURFACE: 'marketing', VITE_API_BASE: 'https://api.company-domain.mr/api/v1', VITE_ACCOUNT_DELETION_CHANNEL: 'whatsapp', VITE_SUPPORT_HOURS: 'x', VITE_SUPPORT_LANGUAGES: 'x', VITE_SUPPORT_RESPONSE_TIME: 'x' }, []).map((p) => `${p.env}:${p.problem}`)).toEqual(['VITE_SITE_SURFACE:malformed']);
     expect(readInputs({}, 'production').inputs.siteSurface).toBe('full');
     expect(readInputs({}, 'preview').inputs.siteSurface).toBe('full');
   });

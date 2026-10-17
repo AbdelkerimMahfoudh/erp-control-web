@@ -6,9 +6,13 @@ import { defineConfig } from '@playwright/test';
  * directory) or `e2e-output/` locally.
  */
 const EV = process.env.EV ?? 'e2e-output';
+// `E2E_SURFACE=public`: the pre-launch public website (e2e/public-site.spec.ts) against a public build; otherwise the
+// full site (e2e/site.spec.ts). Each against the `dist/` of its own build (docs/96).
+const PUBLIC = process.env.E2E_SURFACE === 'public';
 
 export default defineConfig({
   testDir: 'e2e',
+  testMatch: PUBLIC ? /public-site\.spec\.ts$/ : /(^|[\\/])site\.spec\.ts$/,
   outputDir: `${EV}/playwright-output`,
   timeout: 60_000,
   fullyParallel: true,

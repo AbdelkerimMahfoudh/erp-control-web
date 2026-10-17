@@ -24,3 +24,6 @@ export const IS_PREVIEW = MODE !== 'production';
 export const FILLED_INPUTS: readonly InputName[] = read.filled;
 
 export const BUILD_MODE = MODE;
+
+/** What this build publishes (`schema.ts` SURFACES, docs/95–96): `public` is the pre-launch corporate website. */
+export const SURFACE: 'full' | 'public' = SITE.siteSurface === 'public' ? 'public' : 'full';

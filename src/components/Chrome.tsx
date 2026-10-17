@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import { SITE } from '../config/site';
+import { SITE, SURFACE } from '../config/site';
 import { LANGUAGE_LABELS, LANGUAGES, storeLanguage, useI18n, type Language } from '../i18n';
 import { inAppPathOf, pathOf, publicRouteAt, type PublicRouteId } from '../site/routes';
 import { useTheme } from '../theme/theme';
@@ -144,7 +144,7 @@ function Footer() {
       <div className="container footer-grid">
         <div className="footer-org">
           <OrgMark />
-          <p>{t('footer.relationship', { name: SITE.displayName })}</p>
+          <p>{t(SURFACE === 'public' ? 'footer.relationshipPrelaunch' : 'footer.relationship', { name: SITE.displayName })}</p>
           {identity ? (
             <p className="small">
               <bdi>{identity}</bdi>

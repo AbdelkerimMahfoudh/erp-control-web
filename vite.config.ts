@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { loadEnv, type Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
-import { formatProblems, releaseProblems } from './src/config/schema';
+import { formatProblems, gateOfSurface, releaseProblems } from './src/config/schema';
 import { publishedBlockers, publishedDrafts, publishedPlaceholders } from './src/content';
 
 /**
@@ -23,8 +23,11 @@ function releaseGuard(): Plugin {
     configResolved(config) {
       if (config.mode !== 'production') return;
       const env = loadEnv(config.mode, config.root, 'VITE_');
-      const problems = releaseProblems(env, publishedBlockers(), { drafts: publishedDrafts(), placeholders: publishedPlaceholders() });
-      if (problems.length > 0) throw new Error(formatProblems(problems));
+      // Each surface is its own gate (docs/96): a public build is the pre-launch website (PUBLIC_WEBSITE, its pre-launch
+      // texts); a full build is the portal (PORTAL, the service's texts and every input).
+      const surface = env.VITE_SITE_SURFACE === 'public' ? 'public' : 'full';
+      const problems = releaseProblems(env, publishedBlockers(surface), { drafts: publishedDrafts(surface), placeholders: publishedPlaceholders(surface) });
+      if (problems.length > 0) throw new Error(formatProblems(problems, gateOfSurface(surface)));
     },
   };
 }

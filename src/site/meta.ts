@@ -3,7 +3,9 @@
  * prerenderer and the page itself call this, so the `<title>` a crawler reads is the heading a person reads.
  * Values are raw texts (with `{inputs}`); `plainText` fills them.
  */
-import { about, accountDeletion, applicationStatus, contact, dukanErp, home, legalNotice, login, privacy, privacyChoices, products, security, support, terms } from '../content';
+import { applicationStatus, documentsFor, dukanErpFor, homeFor, login } from '../content';
+import { SURFACE } from '../config/site';
+import type { Surface } from '../config/schema';
 import { translate } from '../i18n';
 import type { Language } from '../i18n/languages';
 import type { PublicRouteId } from './routes';
@@ -15,12 +17,13 @@ export interface PageMeta {
 
 const SUFFIX = ' — {displayName}';
 
-export function metaFor(id: PublicRouteId, lang: Language): PageMeta {
+export function metaFor(id: PublicRouteId, lang: Language, surface: Surface = SURFACE): PageMeta {
+  const { about, contact, products, support, privacy, terms, accountDeletion, privacyChoices, legalNotice, security } = documentsFor(surface);
   switch (id) {
     case 'home':
-      return { title: translate(lang, 'page.home.title', { name: '{displayName}' }), description: home[lang].hero.lead };
+      return { title: translate(lang, 'page.home.title', { name: '{displayName}' }), description: homeFor(lang, surface).hero.lead };
     case 'dukanErp':
-      return { title: `${dukanErp[lang].title}${SUFFIX}`, description: dukanErp[lang].summary };
+      return { title: `${dukanErpFor(lang, surface).title}${SUFFIX}`, description: dukanErpFor(lang, surface).summary };
     case 'apply':
       return { title: `${translate(lang, 'page.apply.title')}${SUFFIX}`, description: translate(lang, 'page.apply.description', { name: '{displayName}' }) };
     case 'about':

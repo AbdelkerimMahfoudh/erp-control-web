@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { createContext, useContext, useEffect, type ReactNode } from 'react';
-import { BUILD_MODE, FILLED_INPUTS, IS_PREVIEW, SITE } from '../../config/site';
+import { BUILD_MODE, FILLED_INPUTS, IS_PREVIEW, SITE, SURFACE } from '../../config/site';
 import type { Block, Document, LegalDocument } from '../../content/types';
 import { useI18n } from '../../i18n';
 import { formatDate } from '../../lib/format';
@@ -129,7 +129,7 @@ export function LegalView({ doc, after }: { doc: LegalDocument; after?: Record<s
     <article className="doc legal">
       {doc.status === 'draft' ? (
         <p className="notice tone-warn legal-draft" role="note">
-          <strong>{t('legal.draft')}</strong>
+          <strong>{t(SURFACE === 'public' ? 'legal.draftPrelaunch' : 'legal.draft')}</strong>
         </p>
       ) : null}
       <PageIntro title={doc.title} summary={doc.summary}>

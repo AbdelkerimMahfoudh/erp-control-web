@@ -53,6 +53,7 @@ jobs:
           cat "$EV/production-refusal.log"
           if [ "$code" -eq 0 ]; then echo "FAIL: a production build succeeded without its inputs"; exit 1; fi
           grep -q "Nothing was published" "$EV/production-refusal.log"
+          grep -q "(gate PORTAL)" "$EV/production-refusal.log"
           if [ -e dist/index.html ]; then echo "FAIL: the refused build left files"; exit 1; fi
       - name: Preview build (marked test values, noindex) and prerender
         env:
@@ -108,7 +109,9 @@ jobs:
           cat "$EV/public-production-refusal.log"
           if [ "$code" -eq 0 ]; then echo "FAIL: a public production build succeeded without its inputs"; exit 1; fi
           grep -q "Nothing was published" "$EV/public-production-refusal.log"
-          if grep -q "VITE_API_BASE" "$EV/public-production-refusal.log"; then echo "FAIL: a public build asked for the API"; exit 1; fi
+          grep -q "(gate PUBLIC_WEBSITE)" "$EV/public-production-refusal.log"
+          # The pre-launch website needs neither the API nor the app's deletion channel (those are the PORTAL and APP_STORE gates).
+          if grep -qE "VITE_API_BASE|VITE_ACCOUNT_DELETION_CHANNEL" "$EV/public-production-refusal.log"; then echo "FAIL: the public gate asked for a portal or app input"; exit 1; fi
           rm -rf dist dist-ssr
           set -o pipefail
           npm run build:preview 2>&1 | tee "$EV/public-build.log"
@@ -116,6 +119,24 @@ jobs:
           node scripts/audit-links.mjs dist 2>&1 | tee "$EV/public-audit-links.txt"
           node scripts/audit-bundle.mjs dist --preview --public 2>&1 | tee "$EV/public-audit-bundle.txt"
           cp -r dist "$EV/dist-public"
+      - name: Public site in a browser (E2E_SURFACE=public) — EN/FR/AR at 375 px and desktop, axe, no foreign request
+        if: ${{ !cancelled() }}
+        env:
+          E2E_SURFACE: public
+        run: |
+          mkdir -p "$EV/public"
+          set -o pipefail
+          EV="$EV/public" npx playwright test 2>&1 | tee "$EV/public/playwright.log"
+      - name: Public site contact sheets
+        if: always()
+        run: if [ -d "$EV/public/screenshots" ]; then node scripts/contact-sheets.mjs "$EV/public" || true; fi
+      - name: Release verdicts — PUBLIC_WEBSITE, PORTAL, APP_STORE (docs/96; recorded, not required here)
+        if: always()
+        run: |
+          if [ -f dist-ssr/entry-server.js ]; then
+            node scripts/release-verdicts.mjs --dist dist --links "$EV/public-audit-links.txt" --browser "$EV/public/playwright-results.json" 2>&1 | tee "$EV/release-verdicts.txt"
+          fi
+          rm -rf "$EV/public/playwright-output"
       - name: Keep the evidence
         if: always()
         env:

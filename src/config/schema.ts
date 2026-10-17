@@ -16,8 +16,14 @@ export interface InputSpec {
   /** The environment variable, `VITE_*`. */
   env: string;
   kind: InputKind;
-  /** Needed before anything is published. */
+  /** Needed before a full build (the PORTAL gate) is published. */
   required: boolean;
+  /**
+   * The PUBLIC_WEBSITE gate (a public build, the pre-launch corporate website, docs/96): `required` — needed before it is
+   * published; `forbidden` — refused there, as the pre-launch website links to no portal, API, console or app store;
+   * absent — optional, shown when given.
+   */
+  publicSite?: 'required' | 'forbidden';
   /** Used when the variable is blank, in every mode — only for values the owner gave in the brief. */
   fallback?: string;
   /** What a preview shows in place of a blank: always visibly a test value, never plausible. */
@@ -38,35 +44,53 @@ export const DELETION_CHANNELS = ['whatsapp'] as const;
  *   is not asked for. "Sign in" and "Apply" point at `VITE_PORTAL_ORIGIN` once one is given, and are absent before.
  */
 export const SURFACES = ['full', 'public'] as const;
+
+/** The only origin the pre-launch public website may be published at (the owner's brief of 2026-10-17). */
+export const PUBLIC_WEBSITE_ORIGIN = 'https://tsxmr.com';
+
+/**
+ * The release gates (docs/96), each with its own verdict:
+ * - `PUBLIC_WEBSITE` — a public build: the pre-launch corporate website. Needs the real TSX-MR identity and contacts,
+ *   the approved pre-launch texts and the exact origin; refuses any portal, API, console or app-store address.
+ * - `PORTAL` — a full build: the business account and the console. Needs everything, the API and the service's approved
+ *   texts with no legal blocker left; and, outside this repository, a running backend with its channels.
+ * - `APP_STORE` — not a website build: the service texts approved, WhatsApp deletion working end to end, and every
+ *   App Store gate (`gates.ts`, docs/94).
+ */
+export type Gate = 'PUBLIC_WEBSITE' | 'PORTAL' | 'APP_STORE';
+
+export function gateOfSurface(surface: string): 'PUBLIC_WEBSITE' | 'PORTAL' {
+  return surface === 'public' ? 'PUBLIC_WEBSITE' : 'PORTAL';
+}
 export type Surface = (typeof SURFACES)[number];
 export type DeletionChannel = (typeof DELETION_CHANNELS)[number];
 
 export const INPUTS = {
-  publicSiteOrigin: { env: 'VITE_PUBLIC_SITE_ORIGIN', kind: 'https-origin', required: true, preview: 'https://preview.invalid', label: 'Public website origin, e.g. https://<domain>' },
-  adminSiteOrigin: { env: 'VITE_ADMIN_SITE_ORIGIN', kind: 'https-origin', required: false, preview: '', label: 'Separate Super Admin origin, if one is chosen' },
+  publicSiteOrigin: { env: 'VITE_PUBLIC_SITE_ORIGIN', kind: 'https-origin', required: true, publicSite: 'required', preview: 'https://preview.invalid', label: 'Public website origin, e.g. https://<domain>' },
+  adminSiteOrigin: { env: 'VITE_ADMIN_SITE_ORIGIN', kind: 'https-origin', required: false, publicSite: 'forbidden', preview: '', label: 'Separate Super Admin origin, if one is chosen' },
   siteSurface: { env: 'VITE_SITE_SURFACE', kind: 'surface', required: true, fallback: 'full', preview: 'full', label: 'What this build publishes: full (one origin) or public (the public pages only)' },
-  apiBase: { env: 'VITE_API_BASE', kind: 'https-url', required: true, preview: '', label: 'API base URL including /api/v1, e.g. https://api.<domain>/api/v1 (not used by a public build)' },
-  portalOrigin: { env: 'VITE_PORTAL_ORIGIN', kind: 'https-origin', required: false, preview: '', label: 'The business account origin when it is separate, e.g. https://dukan.<domain> (a public build links to it)' },
-  displayName: { env: 'VITE_ORGANIZATION_DISPLAY_NAME', kind: 'text', required: true, fallback: 'TSX-MR', preview: 'TSX-MR', label: 'Public organization name' },
-  legalName: { env: 'VITE_ORGANIZATION_LEGAL_NAME', kind: 'text', required: true, preview: '[TEST] Registered legal name', label: 'Full registered legal name' },
-  legalForm: { env: 'VITE_ORGANIZATION_LEGAL_FORM', kind: 'text', required: true, preview: '[TEST] Legal form', label: 'Legal form' },
-  registrationNumber: { env: 'VITE_ORGANIZATION_REGISTRATION_NUMBER', kind: 'text', required: true, preview: '[TEST] Registration number', label: 'Trade-register number' },
-  country: { env: 'VITE_ORGANIZATION_COUNTRY', kind: 'text', required: true, fallback: 'Mauritania', preview: 'Mauritania', label: 'Country' },
-  city: { env: 'VITE_ORGANIZATION_CITY', kind: 'text', required: true, preview: '[TEST] City', label: 'City' },
-  address: { env: 'VITE_ORGANIZATION_ADDRESS', kind: 'text', required: true, preview: '[TEST] Street address', label: 'Registered street address' },
+  apiBase: { env: 'VITE_API_BASE', kind: 'https-url', required: true, publicSite: 'forbidden', preview: '', label: 'API base URL including /api/v1, e.g. https://api.<domain>/api/v1 (not used by a public build)' },
+  portalOrigin: { env: 'VITE_PORTAL_ORIGIN', kind: 'https-origin', required: false, publicSite: 'forbidden', preview: '', label: 'The business account origin when it is separate, e.g. https://dukan.<domain> (a public build links to it)' },
+  displayName: { env: 'VITE_ORGANIZATION_DISPLAY_NAME', kind: 'text', required: true, publicSite: 'required', fallback: 'TSX-MR', preview: 'TSX-MR', label: 'Public organization name' },
+  legalName: { env: 'VITE_ORGANIZATION_LEGAL_NAME', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Registered legal name', label: 'Full registered legal name' },
+  legalForm: { env: 'VITE_ORGANIZATION_LEGAL_FORM', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Legal form', label: 'Legal form' },
+  registrationNumber: { env: 'VITE_ORGANIZATION_REGISTRATION_NUMBER', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Registration number', label: 'Trade-register number' },
+  country: { env: 'VITE_ORGANIZATION_COUNTRY', kind: 'text', required: true, publicSite: 'required', fallback: 'Mauritania', preview: 'Mauritania', label: 'Country' },
+  city: { env: 'VITE_ORGANIZATION_CITY', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] City', label: 'City' },
+  address: { env: 'VITE_ORGANIZATION_ADDRESS', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Street address', label: 'Registered street address' },
   phone: { env: 'VITE_ORGANIZATION_PHONE', kind: 'phone', required: false, preview: '', label: 'Public telephone number' },
-  supportEmail: { env: 'VITE_SUPPORT_EMAIL', kind: 'email', required: true, preview: 'support@preview.invalid', label: 'Support email' },
-  privacyEmail: { env: 'VITE_PRIVACY_EMAIL', kind: 'email', required: true, preview: 'privacy@preview.invalid', label: 'Privacy email' },
+  supportEmail: { env: 'VITE_SUPPORT_EMAIL', kind: 'email', required: true, publicSite: 'required', preview: 'support@preview.invalid', label: 'Support email' },
+  privacyEmail: { env: 'VITE_PRIVACY_EMAIL', kind: 'email', required: true, publicSite: 'required', preview: 'privacy@preview.invalid', label: 'Privacy email' },
   commercialEmail: { env: 'VITE_COMMERCIAL_EMAIL', kind: 'email', required: false, preview: 'sales@preview.invalid', label: 'Commercial email' },
-  securityEmail: { env: 'VITE_SECURITY_EMAIL', kind: 'email', required: true, preview: 'security@preview.invalid', label: 'Security contact email: the /security page and security.txt' },
+  securityEmail: { env: 'VITE_SECURITY_EMAIL', kind: 'email', required: true, publicSite: 'required', preview: 'security@preview.invalid', label: 'Security contact email: the /security page and security.txt' },
   supportHours: { env: 'VITE_SUPPORT_HOURS', kind: 'text', required: true, preview: '[TEST] Support hours', label: 'When support answers, in words (days, hours and time zone), as TSX-MR commits to them' },
   supportLanguages: { env: 'VITE_SUPPORT_LANGUAGES', kind: 'text', required: true, preview: '[TEST] Support languages', label: 'The languages support answers in, in words, as TSX-MR commits to them' },
   supportResponseTime: { env: 'VITE_SUPPORT_RESPONSE_TIME', kind: 'text', required: true, preview: '[TEST] Response time', label: 'How soon support replies, in words, as TSX-MR commits to it' },
   supportWhatsapp: { env: 'VITE_SUPPORT_WHATSAPP', kind: 'phone', required: false, preview: '', label: 'Support WhatsApp number' },
-  appleAppStoreUrl: { env: 'VITE_APPLE_APP_STORE_URL', kind: 'https-url', required: false, preview: '', label: 'App Store listing, once the app is published there' },
-  googlePlayUrl: { env: 'VITE_GOOGLE_PLAY_URL', kind: 'https-url', required: false, preview: '', label: 'Google Play listing, once the app is published there' },
+  appleAppStoreUrl: { env: 'VITE_APPLE_APP_STORE_URL', kind: 'https-url', required: false, publicSite: 'forbidden', preview: '', label: 'App Store listing, once the app is published there' },
+  googlePlayUrl: { env: 'VITE_GOOGLE_PLAY_URL', kind: 'https-url', required: false, publicSite: 'forbidden', preview: '', label: 'Google Play listing, once the app is published there' },
   deletionChannel: { env: 'VITE_ACCOUNT_DELETION_CHANNEL', kind: 'deletion-channel', required: true, preview: '', label: 'The deletion verification channel configured AND tested in production (whatsapp)' },
-  legalEffectiveDate: { env: 'VITE_LEGAL_EFFECTIVE_DATE', kind: 'date', required: true, preview: '', label: 'Effective date of the published privacy policy and terms (YYYY-MM-DD)' },
+  legalEffectiveDate: { env: 'VITE_LEGAL_EFFECTIVE_DATE', kind: 'date', required: true, publicSite: 'required', preview: '', label: 'Effective date of the published privacy policy and terms (YYYY-MM-DD)' },
 } as const satisfies Record<string, InputSpec>;
 
 export type InputName = keyof typeof INPUTS;
@@ -144,7 +168,7 @@ export function readInputs(env: Record<string, string | undefined>, mode: BuildM
 export interface ReleaseProblem {
   input?: InputName;
   env?: string;
-  problem: 'missing' | 'malformed' | 'test_value' | 'placeholder' | 'not_https' | 'legal_blocker' | 'legal_draft';
+  problem: 'missing' | 'malformed' | 'test_value' | 'placeholder' | 'not_https' | 'legal_blocker' | 'legal_draft' | 'forbidden' | 'wrong_origin' | 'external';
   detail: string;
 }
 
@@ -167,11 +191,16 @@ export function releaseProblems(
 ): ReleaseProblem[] {
   const problems: ReleaseProblem[] = [];
   const { inputs } = readInputs(env, 'production');
+  const gate = gateOfSurface(inputs.siteSurface);
   for (const [name, spec] of Object.entries(INPUTS) as [InputName, InputSpec][]) {
     const value = inputs[name];
+    if (gate === 'PUBLIC_WEBSITE' && spec.publicSite === 'forbidden') {
+      if (value) problems.push({ input: name, env: spec.env, problem: 'forbidden', detail: `${spec.label} — the pre-launch website links to no portal, API, console or app store (docs/96)` });
+      continue;
+    }
     if (!value) {
-      // A public build reaches no API: its address is not asked for (and not used).
-      if (spec.required && !(name === 'apiBase' && inputs.siteSurface === 'public')) problems.push({ input: name, env: spec.env, problem: 'missing', detail: spec.label });
+      const required = gate === 'PORTAL' ? spec.required : spec.publicSite === 'required';
+      if (required) problems.push({ input: name, env: spec.env, problem: 'missing', detail: spec.label });
       continue;
     }
     if (looksLikeTestValue(value)) {
@@ -185,6 +214,10 @@ export function releaseProblems(
     if (!validFormat(spec.kind, value)) {
       const httpsKind = spec.kind === 'https-origin' || spec.kind === 'https-url';
       problems.push({ input: name, env: spec.env, problem: httpsKind && value.startsWith('http:') ? 'not_https' : 'malformed', detail: spec.label });
+      continue;
+    }
+    if (gate === 'PUBLIC_WEBSITE' && name === 'publicSiteOrigin' && value !== PUBLIC_WEBSITE_ORIGIN) {
+      problems.push({ input: name, env: spec.env, problem: 'wrong_origin', detail: `the pre-launch website is published at ${PUBLIC_WEBSITE_ORIGIN} only` });
     }
   }
   for (const b of legalBlockers) problems.push({ problem: 'legal_blocker', detail: `${b.id}: ${b.summary}` });
@@ -193,9 +226,9 @@ export function releaseProblems(
   return problems;
 }
 
-export function formatProblems(problems: readonly ReleaseProblem[]): string {
+export function formatProblems(problems: readonly ReleaseProblem[], gate?: Gate): string {
   return [
-    'This website cannot be built for production yet. Nothing was published.',
+    `This website cannot be built for production yet${gate ? ` (gate ${gate})` : ''}. Nothing was published.`,
     ...problems.map((p) => `  - ${p.env ? `${p.env} ` : ''}[${p.problem}] ${p.detail}`),
     'Set the values in the hosting provider’s environment (docs/74 §3) or resolve the legal blockers (docs/74 §7); use `npm run build:preview` for a test build.',
   ].join('\n');

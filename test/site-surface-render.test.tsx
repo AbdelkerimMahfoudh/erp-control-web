@@ -8,7 +8,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
  */
 vi.mock('../src/config/site', async (original) => {
   const real = await original<typeof import('../src/config/site')>();
-  return { ...real, SITE: Object.freeze({ ...real.SITE, siteSurface: 'public', portalOrigin: '' }) };
+  return { ...real, SITE: Object.freeze({ ...real.SITE, siteSurface: 'public', portalOrigin: '' }), SURFACE: 'public' };
 });
 vi.mock('../src/protected-areas', () => import('../src/protected-areas.public'));
 
@@ -18,6 +18,9 @@ const { ThemeProvider } = await import('../src/theme/theme');
 const { en } = await import('../src/i18n/en');
 const { LANGUAGES } = await import('../src/i18n/languages');
 const { pathOf } = await import('../src/site/routes');
+const { fr } = await import('../src/i18n/fr');
+const { ar } = await import('../src/i18n/ar');
+const CATALOGUE = { en, fr, ar } as const;
 
 const requests: string[] = [];
 
@@ -62,6 +65,10 @@ describe('a public build, page by page', () => {
       expect(links.filter((h) => /^(\/(fr|ar))?\/(account|admin)(\/|$)/.test(h))).toEqual([]);
       expect(links).toContain(pathOf('contact', lang));
       expect(screen.queryByText(en['home.pricing.loading'])).toBeNull();
+      // Coming soon, said plainly; no subscription section.
+      expect(screen.getByText(CATALOGUE[lang]['prelaunch.badge'])).toBeTruthy();
+      expect(document.getElementById('subscription-h')).toBeNull();
+      expect(document.body.textContent).not.toMatch(/MRU|7-day|essai gratuit|تجربة مجانية/);
       expect(requests).toEqual([]);
     });
 

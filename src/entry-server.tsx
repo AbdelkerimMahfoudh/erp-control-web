@@ -58,3 +58,6 @@ export function headOf(id: PublicRouteId, lang: Language, inApp = false): string
     }),
   );
 }
+
+/** The three release verdicts for an environment (docs/96), for `scripts/release-verdicts.mjs`. */
+export { releaseVerdicts } from './config/gates';

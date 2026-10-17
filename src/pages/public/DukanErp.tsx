@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { SITE } from '../../config/site';
-import { dukanErp } from '../../content';
+import { dukanErpFor } from '../../content';
+import { SURFACE } from '../../config/site';
+import { ComingSoon } from '../../components/ComingSoon';
 import type { ActivityCard } from '../../content/dukan-erp';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
@@ -15,7 +17,7 @@ import { RichText } from '../../components/public/RichText';
  */
 export function DukanErp() {
   const { t, lang } = useI18n();
-  const c = dukanErp[lang];
+  const c = dukanErpFor(lang, SURFACE);
   return (
     <div className="public-page">
       <header className="page-intro product-intro">
@@ -25,6 +27,7 @@ export function DukanErp() {
         <p className="lead">
           <RichText text={c.summary} />
         </p>
+        <ComingSoon />
         <p>
           <RichText text={c.intro} />
         </p>
@@ -109,16 +112,18 @@ export function DukanErp() {
         )}
       </section>
 
-      <section aria-labelledby="subscription-h">
-        <h2 id="subscription-h">
-          <RichText text={c.subscription.title} />
-        </h2>
-        {/* A public build reaches no API (docs/95): no prices, and a paragraph that does not promise them. */}
-        <p>
-          <RichText text={SITE.siteSurface === 'public' ? c.subscription.bodyPublic : c.subscription.body} />
-        </p>
-        {SITE.siteSurface === 'public' ? null : <PlanPricing />}
-      </section>
+      {/* The pre-launch website (docs/96) sells nothing: no subscription, no prices, and no request to the API. */}
+      {SURFACE === 'public' ? null : (
+        <section aria-labelledby="subscription-h">
+          <h2 id="subscription-h">
+            <RichText text={c.subscription.title} />
+          </h2>
+          <p>
+            <RichText text={c.subscription.body} />
+          </p>
+          <PlanPricing />
+        </section>
+      )}
     </div>
   );
 }

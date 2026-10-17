@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { about, accountDeletion, applicationStatus, contact, legalNotice, login, privacy, privacyChoices, products, security, support, terms } from '../../content';
+import { applicationStatus, documentsFor, legalDocumentsFor, login } from '../../content';
+import { SURFACE } from '../../config/site';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
 import { ContactAddresses, LegalLinks, LegalView, OrgDetails, PageIntro, ProductMark, Sections, useLegalPath } from '../../components/public/blocks';
@@ -8,7 +9,10 @@ import { RichText } from '../../components/public/RichText';
 /**
  * The text pages of the public site (docs/74 §4): each renders its document from `content/`, so its words are the
  * same three-language structure the parity test checks; the company details and addresses come from the inputs.
+ * A public build (docs/96) renders the pre-launch texts: nothing in them says an account or a process works today.
  */
+const { about, contact, products, support } = documentsFor(SURFACE);
+const { accountDeletion, legalNotice, privacy, privacyChoices, security, terms } = legalDocumentsFor(SURFACE);
 
 export function About() {
   const { lang } = useI18n();

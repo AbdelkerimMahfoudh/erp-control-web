@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
-import { home } from '../../content';
+import { homeFor } from '../../content';
+import { SURFACE } from '../../config/site';
+import { ComingSoon } from '../../components/ComingSoon';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
 import { ProductMark } from '../../components/public/blocks';
@@ -12,7 +14,7 @@ import { AccountLink } from '../../components/AccountLink';
  */
 export function Home() {
   const { lang } = useI18n();
-  const c = home[lang];
+  const c = homeFor(lang, SURFACE);
   const to = (id: Parameters<typeof pathOf>[0]) => pathOf(id, lang);
   return (
     <div className="public-page home">
@@ -43,6 +45,7 @@ export function Home() {
         <p className="lead">
           <RichText text={c.product.lead} />
         </p>
+        <ComingSoon />
         <Link className="btn btn-primary" to={to('dukanErp')}>
           <RichText text={c.product.cta} />
         </Link>
