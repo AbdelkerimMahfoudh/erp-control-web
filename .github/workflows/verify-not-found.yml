@@ -1,0 +1,60 @@
+# The "Page not found" behaviour of a deployed site, checked from GitHub's network (the owner's brief of 2026-10-17):
+# real 404 statuses, the page in the address's language, the app's frame under /in-app/, every file loading from any
+# depth, known pages still 200. Push this branch to run it, or run it by hand with another origin. It reads only; it
+# deploys and changes nothing. Its evidence is committed to the `ci-evidence` branch under evidence/not-found/.
+#
+# The default origin is the `site-redesign` preview on Cloudflare Pages, where the page waits for the owner's approval;
+# after a promotion, run it against https://tsxmr.com.
+name: verify-not-found
+
+on:
+  push:
+    branches: [ops/verify-production]
+  workflow_dispatch:
+    inputs:
+      origin:
+        description: The deployed origin to check (https://…, no path)
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-not-found
+  cancel-in-progress: false
+
+jobs:
+  status:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write # only to commit the evidence branch
+    env:
+      ORIGIN: ${{ github.event.inputs.origin || 'https://site-redesign.tsxmr-public.pages.dev' }}
+      EV: evidence/not-found/${{ github.sha }}-${{ github.run_id }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: mkdir -p "$EV"
+      - name: Unknown and known addresses on the deployed site
+        run: set -o pipefail; node scripts/verify-not-found.mjs "$ORIGIN" "$EV/not-found.json" 2>&1 | tee "$EV/not-found.txt"
+      - name: Keep the evidence
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          printf 'commit %s\nbranch %s\nrun %s\nresult %s\norigin %s\n' "$GITHUB_SHA" "$GITHUB_REF_NAME" "$GITHUB_RUN_ID" "$RESULT" "$ORIGIN" > "$EV/summary.txt"
+          cp -r evidence /tmp/evidence
+          git config user.name "ci-evidence"
+          git config user.email "ci-evidence@users.noreply.github.com"
+          git stash -u -q || true
+          git fetch -q origin ci-evidence && git checkout -q -B ci-evidence origin/ci-evidence
+          mkdir -p evidence/not-found; cp -r /tmp/evidence/not-found/. evidence/not-found/
+          git add evidence/not-found
+          git commit -qm "evidence: not-found check of $ORIGIN from $GITHUB_SHA ($RESULT)"
+          for i in 1 2 3 4 5; do git push -q origin ci-evidence && break; git fetch -q origin ci-evidence && git rebase -q origin/ci-evidence; done
