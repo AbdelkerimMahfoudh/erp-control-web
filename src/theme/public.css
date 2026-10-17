@@ -362,7 +362,8 @@ main:focus {
   padding-block-end: 64px;
 }
 .public-page.home,
-.public-page.product {
+.public-page.product,
+.public-page.not-found {
   gap: 0;
   padding-block-end: 0;
 }
@@ -1993,6 +1994,131 @@ html.js [data-reveal]:not(.in) {
   --reveal-delay: 240ms;
 }
 
+/* ── Page not found (pages/public/NotFound.tsx): the navy band, a typographic 404, two ways back ─────────────────── */
+.nf-hero {
+  padding-block: clamp(44px, 2.5rem + 4vw, 96px);
+}
+.nf-grid {
+  display: grid;
+  gap: clamp(28px, 4vw, 56px);
+  align-items: center;
+}
+@media (min-width: 860px) {
+  .nf-grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  }
+}
+.nf-copy {
+  display: grid;
+  gap: 18px;
+  justify-items: start;
+}
+.nf-copy h1 {
+  margin: 0;
+  font-size: clamp(2rem, 1.3rem + 2.4vw, 3rem);
+  max-inline-size: 20ch;
+}
+.nf-copy .lead {
+  max-inline-size: 52ch;
+}
+.nf-eyebrow {
+  display: inline-flex;
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--amber-soft);
+  background: var(--amber-soft);
+  color: var(--amber);
+  font-size: 0.85rem;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+/* The figure: above the words on a phone, beside them from tablet width. It is decoration (aria-hidden). */
+.nf-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.06em;
+  font-size: clamp(4.5rem, 2.5rem + 9vw, 9.5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  user-select: none;
+  order: -1;
+}
+@media (min-width: 860px) {
+  .nf-mark {
+    order: 0;
+  }
+}
+.nf-digit {
+  color: var(--on-ink);
+}
+.nf-ring {
+  inline-size: 0.86em;
+  block-size: 0.86em;
+  flex: none;
+}
+.nf-ring-track,
+.nf-ring-arc {
+  fill: none;
+  stroke-width: 11;
+}
+.nf-ring-track {
+  stroke: var(--ink-line-strong);
+}
+/* Three quarters of the ring, its gap at the top end where the amber point sits. */
+.nf-ring-arc {
+  stroke-linecap: round;
+  stroke-dasharray: 217 289;
+}
+.nf-stop-a {
+  stop-color: var(--brand-on-ink);
+}
+.nf-stop-b {
+  stop-color: var(--product-b);
+}
+.nf-ring-halo {
+  fill: var(--amber-soft);
+}
+.nf-ring-point {
+  fill: var(--amber);
+}
+/* The ways on, on the page's own background: the compact pills of the legal pages, at full touch height. */
+.nf-more {
+  padding-block: clamp(28px, 4vw, 44px) clamp(40px, 5vw, 64px);
+}
+.nf-more-title {
+  margin: 0 0 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-3);
+}
+.nf-links .related-link {
+  min-block-size: 44px;
+}
+/* Among the app's pages: their light frame, so the figure takes the page's colours. */
+.in-app .nf-hero {
+  padding-block: 32px 48px;
+}
+.in-app .nf-digit {
+  color: var(--text);
+}
+.in-app .nf-ring-track {
+  stroke: var(--border);
+}
+.in-app .nf-stop-a {
+  stop-color: var(--brand);
+}
+.in-app .nf-eyebrow {
+  border-color: transparent;
+  background: var(--brand-wash);
+  color: var(--brand-strong);
+}
+.in-app .nf-mark {
+  font-size: clamp(3.5rem, 2.5rem + 5vw, 6rem);
+}
+
 /* A legal page prints as its text: no navigation, no controls, links written out */
 @media print {
   .chrome-header,
@@ -2044,7 +2170,3 @@ html.js [data-reveal]:not(.in) {
   }
 }
 
-/* A page without a band (the 404) starts below the header with room to breathe. */
-.public-page > .page-intro:not(.band) {
-  padding-block-start: clamp(40px, 6vw, 72px);
-}

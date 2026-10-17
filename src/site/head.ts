@@ -168,6 +168,23 @@ export function applyHead(head: Head): void {
   // Structured data is for crawlers, which read the prerendered file; it is not re-added here.
 }
 
+/**
+ * What the not-found page's head says when the router finds nothing after a link inside the site: no canonical, no
+ * alternates, no description left over from the page before — only its title, and never indexed. (A direct request
+ * gets the prerendered 404 file, whose head already says the same, with the host's 404 status.)
+ */
+export function applyNotFoundHead(title: string): void {
+  if (typeof document === 'undefined') return;
+  document.title = title;
+  document.head.querySelectorAll('[data-head]').forEach((n) => n.remove());
+  document.head.querySelectorAll('meta[name="description"], meta[name="robots"], link[rel="canonical"], link[rel="alternate"][hreflang], meta[property^="og:"], meta[name^="twitter:"], script[type="application/ld+json"]').forEach((n) => n.remove());
+  const el = document.createElement('meta');
+  el.setAttribute('name', 'robots');
+  el.setAttribute('content', 'noindex, nofollow');
+  el.setAttribute('data-head', '');
+  document.head.appendChild(el);
+}
+
 /** What a protected page's head says, wherever it is reached. */
 export function applyProtectedHead(title: string): void {
   if (typeof document === 'undefined') return;

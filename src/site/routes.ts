@@ -137,3 +137,13 @@ export function inAppRouteAt(pathname: string): { route: PublicRoute; lang: Lang
   const route = PUBLIC_ROUTES.find((r) => r.path === rest && IN_APP_ROUTE_IDS.includes(r.id));
   return route ? { route, lang } : null;
 }
+
+/**
+ * Whether an address is under the app's pages (`/in-app/…`, `/fr/in-app/…`, `/ar/in-app/…`), known or not. Read from
+ * the address as asked — a trailing slash included — because that is how the host picks the nearest `404.html`: an
+ * unknown address in that directory gets the app's not-found page, with the app's frame, never the public site's.
+ */
+export function isInAppPath(pathname: string): boolean {
+  return /^(?:\/(?:fr|ar))?\/in-app\//.test(pathname);
+}
+

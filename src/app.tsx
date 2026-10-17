@@ -8,11 +8,12 @@ import { LANGUAGES } from './i18n/languages';
 import { Home } from './pages/public/Home';
 import { DukanErp } from './pages/public/DukanErp';
 import { Apply } from './pages/public/Apply';
-import { About, AccountDeletion, ApplicationStatus, Contact, LegalNotice, Login, NotFound, Privacy, PrivacyChoices, Products, Security, Support, Terms } from './pages/public/Legal';
+import { About, AccountDeletion, ApplicationStatus, Contact, LegalNotice, Login, Privacy, PrivacyChoices, Products, Security, Support, Terms } from './pages/public/Legal';
+import { NotFound } from './pages/public/NotFound';
 import { PROTECTED_AREAS_BUILT, ProtectedRoutes } from './protected-areas';
 import { metaFor } from './site/meta';
 import { applyProtectedHead } from './site/head';
-import { inAppRouteAt, isProtectedPath, localizedPath, publicRoutesFor, splitLanguage, type PublicRouteId } from './site/routes';
+import { inAppRouteAt, isInAppPath, isProtectedPath, localizedPath, publicRoutesFor, splitLanguage, type PublicRouteId } from './site/routes';
 
 /** The public pages this build publishes: a public build (docs/95) has none that needs the API. */
 const ROUTES = publicRoutesFor(SITE.siteSurface === 'public' ? 'public' : 'full');
@@ -52,6 +53,16 @@ export function App() {
       <I18nProvider fixed={lang}>
         <InAppChrome id={inApp.route.id}>
           <PublicPage id={inApp.route.id} />
+        </InAppChrome>
+      </I18nProvider>
+    );
+  }
+  // An unknown address among the app's pages keeps their frame: the help and legal pages, nothing that leads to buying.
+  if (isInAppPath(pathname)) {
+    return (
+      <I18nProvider fixed={lang}>
+        <InAppChrome>
+          <NotFound />
         </InAppChrome>
       </I18nProvider>
     );

@@ -376,6 +376,141 @@ for (const lang of LANGS) {
   });
 }
 
+/**
+ * The page for an address that leads nowhere (the owner's brief of 2026-10-17): served with a 404 status, as the nearest
+ * prerendered 404.html — in the address's language, with the app's frame under `/in-app/` — never a redirect and never
+ * a 200. Its files load from any depth, it is never indexed, and it says nothing it was not told.
+ */
+const MISSING = [
+  { path: '/qx7-missing', lang: 'en', inApp: false },
+  { path: '/a/b/c/d/e/missing-deep', lang: 'en', inApp: false },
+  { path: '/fr/inexistante', lang: 'fr', inApp: false },
+  { path: '/fr/a/b/c', lang: 'fr', inApp: false },
+  { path: '/ar/x/y/z', lang: 'ar', inApp: false },
+  { path: '/account', lang: 'en', inApp: false },
+  { path: '/admin/businesses', lang: 'en', inApp: false },
+  { path: '/in-app/nope', lang: 'en', inApp: true },
+  { path: '/fr/in-app/nope', lang: 'fr', inApp: true },
+  { path: '/ar/in-app/a/b', lang: 'ar', inApp: true },
+] as const;
+/** The browser reports the page's own 404 as a console error; that one is the point, not a fault. */
+const realErrors = (errors: string[]) => errors.filter((e) => !/the server responded with a status of 404/.test(e));
+
+for (const m of MISSING) {
+  for (const w of WIDTHS) {
+    test(`public site: not found ${m.path} at ${w.name}`, async ({ page, baseURL }) => {
+      const seen = watch(page, baseURL!);
+      const failed: string[] = [];
+      page.on('response', (r) => r.request().resourceType() !== 'document' && r.status() >= 400 && failed.push(`${r.status()} ${r.url()}`));
+      await page.setViewportSize({ width: w.width, height: w.height });
+      const response = await page.goto(m.path);
+      expect(response?.status(), 'a real 404, not a redirect and not a 200').toBe(404);
+      expect(new URL(page.url()).pathname, 'the address stays as asked').toBe(m.path);
+      await page.waitForLoadState('networkidle');
+      const f = await facts(page);
+      const c = CATALOGUE[m.lang];
+      const head = await page.evaluate(() => ({
+        robots: document.querySelector('meta[name="robots"]')?.getAttribute('content'),
+        canonical: document.querySelectorAll('link[rel="canonical"]').length,
+        h1: document.querySelector('h1')?.textContent,
+        styled: getComputedStyle(document.querySelector('.nf-hero')!).paddingTop !== '0px',
+        inAppFrame: !!document.querySelector('.in-app-header'),
+        publicNav: !!document.querySelector('.nav-wide, .footer-grid'),
+        primary: document.querySelector('.nf-copy .btn-primary')?.getAttribute('href'),
+        secondary: document.querySelector('.nf-copy .btn-ghost')?.getAttribute('href') ?? null,
+      }));
+      const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+      const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+      await page.screenshot({ path: shot(`not-found-${w.name}`, m.lang, m.path.replace(/\//g, '_')), fullPage: true, type: 'jpeg', quality: 70 });
+      let overflow320 = 0;
+      if (w.width === 375) {
+        await page.setViewportSize({ width: 320, height: 720 });
+        overflow320 = (await facts(page)).overflow;
+      }
+      record(`not-found-${w.name}-${m.path}`, { ...m, width: w.width, overflow: f.overflow, overflow320, failed, errors: seen.errors, head });
+      expect(f.lang).toBe(m.lang);
+      expect(f.dir).toBe(m.lang === 'ar' ? 'rtl' : 'ltr');
+      expect(f.h1).toBe(1);
+      expect(head.h1).toBe(c['notFound.title']);
+      expect(head.robots).toBe('noindex, nofollow');
+      expect(head.canonical).toBe(0);
+      expect(head.styled, 'the stylesheet loaded at this depth').toBe(true);
+      expect(failed, 'every file loads from a nested address').toEqual([]);
+      expect(f.overflow).toBeLessThanOrEqual(0);
+      expect(overflow320, 'no sideways scroll at 320 px').toBeLessThanOrEqual(0);
+      expect(seen.foreign).toEqual([]);
+      expect(realErrors(seen.errors), 'no script error, no hydration mismatch').toEqual([]);
+      expect(serious.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+      if (m.inApp) {
+        // The app's frame: its pages only — no home, product, contact, sign-in or site navigation.
+        expect(head.inAppFrame && !head.publicNav).toBe(true);
+        expect(head.primary).toBe(inAppPathOf('support', m.lang));
+        expect(f.links.filter((h) => !h.startsWith('#') && !h.includes('/in-app/'))).toEqual([]);
+      } else {
+        expect(head.inAppFrame).toBe(false);
+        expect(head.primary).toBe(pathOf('home', m.lang));
+        expect(head.secondary).toBe(pathOf('contact', m.lang));
+        expect(f.links.filter((h) => ACCOUNT_LINK.test(h))).toEqual([]);
+      }
+    });
+  }
+}
+
+test('public site: not found — nothing from the address is shown back, and it is not in the sitemap', async ({ page, request }) => {
+  const response = await page.goto('/missing-page-zz9?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E#frag');
+  expect(response?.status()).toBe(404);
+  const text = (await facts(page)).text;
+  expect(text).not.toMatch(/missing-page-zz9|alert\(1\)|<script/);
+  expect(await page.locator('script:not([src]):not([type="application/ld+json"])').count()).toBe(0);
+  const sitemap = await (await request.get('/sitemap.xml')).text();
+  expect(sitemap).not.toMatch(/404|in-app/);
+});
+
+test('public site: not found — after a link inside the site the router shows the same page, never indexed', async ({ page }) => {
+  await page.goto(pathOf('about', 'fr'));
+  await page.waitForLoadState('networkidle');
+  await page.evaluate(() => {
+    history.pushState({}, '', '/fr/plus-rien');
+    dispatchEvent(new PopStateEvent('popstate'));
+  });
+  await expect(page.locator('h1')).toHaveText(fr['notFound.title']);
+  const head = await page.evaluate(() => ({
+    title: document.title,
+    robots: document.querySelector('meta[name="robots"]')?.getAttribute('content'),
+    canonical: document.querySelectorAll('link[rel="canonical"]').length,
+    alternates: document.querySelectorAll('link[rel="alternate"][hreflang]').length,
+  }));
+  expect(head).toEqual({ title: `${fr['notFound.title']} — TSX-MR`, robots: 'noindex, nofollow', canonical: 0, alternates: 0 });
+  // Back to the home page in the same language, by the router.
+  await page.locator('.nf-copy .btn-primary').click();
+  await expect(page).toHaveURL(/\/fr$/);
+});
+
+test('public site: not found — a language choice leads to that language’s home once, and a stored choice never redirects a 404', async ({ page }) => {
+  await page.goto('/deep/missing/path');
+  await page.locator('.languages-wide a[hreflang="ar"]').click();
+  await expect(page).toHaveURL(/\/ar$/);
+  await expect(page.locator('html')).toHaveAttribute('dir', 'rtl');
+  // Arabic is now the stored choice; an unknown English address stays where it is, a 404 in English.
+  const again = await page.goto('/still/missing');
+  expect(again?.status()).toBe(404);
+  await page.waitForLoadState('networkidle');
+  expect(new URL(page.url()).pathname).toBe('/still/missing');
+  await expect(page.locator('h1')).toHaveText(en['notFound.title']);
+});
+
+test('public site: not found — the chosen theme carries over, and the page reads in both', async ({ page }) => {
+  await page.goto('/');
+  const start = await page.evaluate(() => document.documentElement.dataset.theme);
+  await page.locator('.theme-toggle').click();
+  const chosen = await page.evaluate(() => document.documentElement.dataset.theme);
+  expect(chosen).not.toBe(start);
+  await page.goto('/x/y');
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe(chosen);
+  const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+  expect(axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id)).toEqual([]);
+});
+
 test('public site: the host files and the security headers; no account, console or application address', async ({ request }) => {
   const home = await request.get('/');
   const h = home.headers();

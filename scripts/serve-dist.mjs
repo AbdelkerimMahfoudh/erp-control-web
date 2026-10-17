@@ -1,6 +1,8 @@
 // Serves `dist/` the way Cloudflare Pages does (docs/74 §8), for the browser checks and for looking at a build:
 // `/about` → about.html, `/` → index.html, the `_redirects` 200 rewrites, every `_headers` rule (so the Content
-// Security Policy is exercised), and 404.html with a 404 status. Development and CI only — never a production server.
+// Security Policy is exercised), and for an address with no file the NEAREST 404.html up its directories
+// (`/fr/x/y` → fr/404.html), with a 404 status. Development and CI only — never a production server, and not proof of
+// what the host does: the deployed site is checked on its own (`scripts/verify-production.mjs` on ops/verify-production).
 //
 //   node scripts/serve-dist.mjs [port] [dir]
 import { createServer } from 'node:http';
@@ -76,6 +78,17 @@ function fileFor(path) {
   return null;
 }
 
+/** Cloudflare Pages' not-found rule: a 404.html in the address's own directory, else in each parent, up to the root. */
+function notFoundFor(path) {
+  let dir = path.endsWith('/') ? path : path.slice(0, path.lastIndexOf('/') + 1);
+  for (;;) {
+    const full = join(dist, normalize(dir), '404.html');
+    if (full.startsWith(dist) && existsSync(full)) return full;
+    if (dir === '/' || !dir) return join(dist, '404.html');
+    dir = dir.slice(0, dir.slice(0, -1).lastIndexOf('/') + 1);
+  }
+}
+
 createServer((req, res) => {
   const url = new URL(req.url ?? '/', 'http://localhost');
   let path = decodeURIComponent(url.pathname);
@@ -89,7 +102,7 @@ createServer((req, res) => {
   let file = fileFor(path);
   if (!file) {
     status = 404;
-    file = join(dist, '404.html');
+    file = notFoundFor(path);
   }
   const headers = { 'Content-Type': TYPES[extname(file)] ?? 'application/octet-stream' };
   for (const rule of HEADERS) {
