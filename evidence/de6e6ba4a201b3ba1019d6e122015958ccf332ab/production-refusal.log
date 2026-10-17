@@ -19,26 +19,26 @@
   - import "./dukan-erp" without a file extension (src/content/index.ts:20:38). Add the file extension
   - import "./prelaunch" without a file extension (src/content/index.ts:21:140). Add the file extension
   - import "./legal-prelaunch" without a file extension (src/content/index.ts:22:142). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-prelaunch.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-prelaunch.ts:1:31). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
-  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/home.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
   - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
   - import "./types" without a file extension (src/content/legal-prelaunch.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
   - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
   - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
-  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
-  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
-  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
-  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
   - import "./types" without a file extension (src/content/prelaunch.ts:2:31). Add the file extension
-  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
   - import "./home" without a file extension (src/content/prelaunch.ts:3:34). Add the file extension
   - import "./dukan-erp" without a file extension (src/content/prelaunch.ts:4:38). Add the file extension
 Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
@@ -70,7 +70,7 @@ Error: This website cannot be built for production yet (gate PORTAL). Nothing wa
   - [legal_draft] security: still marked DRAFT — REQUIRES TSX-MR APPROVAL
   - [legal_draft] terms: still marked DRAFT — REQUIRES TSX-MR APPROVAL
 Set the values in the hosting provider’s environment (docs/74 §3) or resolve the legal blockers (docs/74 §7); use `npm run build:preview` for a test build.
-    at BasicMinimalPluginContext.configResolved (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/.vite-temp/vite.config.ts.timestamp-1792246999314-5ae8012e57c32.mjs:5961:35)
+    at BasicMinimalPluginContext.configResolved (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/.vite-temp/vite.config.ts.timestamp-1792249625085-9dcd76a3c0231.mjs:5961:35)
     at file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/chunks/node.js:37632:87
     at Array.map (<anonymous>)
     at resolveConfig (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/chunks/node.js:37632:68)
