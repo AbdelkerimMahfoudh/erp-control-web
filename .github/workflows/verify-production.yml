@@ -1,0 +1,77 @@
+# The deployed public website, checked from GitHub's network (docs/95 §7): after Cloudflare Pages reports a production
+# deployment, push this branch (or run it by hand). It rebuilds the production commit with the production variables
+# (docs/96 §6), checks the live domain against that build (scripts/verify-production.mjs: TLS, redirects, headers,
+# every file byte-for-byte, canonical URLs, no tracker or beacon, 404s, sitemap, email DNS), then runs the public
+# browser suite against the live domain. It deploys nothing and changes nothing. Its evidence is committed to the
+# `ci-evidence` branch under evidence/production/, as the CI does, because job logs need admin rights to read.
+name: verify-production
+
+on:
+  push:
+    branches: [ops/verify-production]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-production
+  cancel-in-progress: false
+
+jobs:
+  live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write # only to commit the evidence branch
+    env:
+      ORIGIN: https://tsxmr.com
+      EV: evidence/production/${{ github.sha }}-${{ github.run_id }}
+      VITE_SITE_SURFACE: public
+      VITE_PUBLIC_SITE_ORIGIN: https://tsxmr.com
+      VITE_ORGANIZATION_PHONE: '+222 36 96 38 39, +222 37 67 68 27'
+      VITE_LEGAL_EFFECTIVE_DATE: '2026-10-17'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: mkdir -p "$EV"
+      - name: Install
+        run: set -o pipefail; npm ci --no-audit --no-fund 2>&1 | tee "$EV/install.log"
+      - name: Build the production site as Cloudflare Pages does
+        run: set -o pipefail; npm run build:public-release 2>&1 | tee "$EV/build.log"
+      - name: The live domain against that build
+        if: ${{ !cancelled() }}
+        run: set -o pipefail; node scripts/verify-production.mjs "$ORIGIN" dist "$EV/live.json" 2>&1 | tee "$EV/live.txt"
+      - name: Browser (Playwright Chromium)
+        if: ${{ !cancelled() }}
+        run: npx playwright install --with-deps chromium > "$EV/playwright-install.log" 2>&1
+      - name: The public browser suite against the live domain
+        if: ${{ !cancelled() }}
+        env:
+          E2E_SURFACE: public
+          E2E_BASE_URL: https://tsxmr.com
+        run: set -o pipefail; npx playwright test -c e2e/production.config.ts 2>&1 | tee "$EV/playwright.log"
+      - name: Keep the evidence
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          printf 'commit %s\nbranch %s\nrun %s\nresult %s\norigin %s\n' "$GITHUB_SHA" "$GITHUB_REF_NAME" "$GITHUB_RUN_ID" "$RESULT" "$ORIGIN" > "$EV/summary.txt"
+          rm -rf "$EV/playwright-output"
+          cp -r evidence /tmp/evidence
+          git config user.name "ci-evidence"
+          git config user.email "ci-evidence@users.noreply.github.com"
+          git stash -u -q || true
+          git fetch -q origin ci-evidence && git checkout -q -B ci-evidence origin/ci-evidence
+          mkdir -p evidence/production; cp -r /tmp/evidence/production/. evidence/production/
+          git add evidence/production
+          git commit -qm "evidence: production check of $ORIGIN from $GITHUB_SHA ($RESULT)"
+          for i in 1 2 3 4 5; do git push -q origin ci-evidence && break; git fetch -q origin ci-evidence && git rebase -q origin/ci-evidence; done
