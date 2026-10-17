@@ -7,11 +7,16 @@ import type { LegalDocument } from './types';
  * own, the language and display choice kept in the browser (`erp.web.language`, `erp.web.theme`), delivery by
  * Cloudflare. A process that does not work yet (registration, payment, trial, account deletion) is described as
  * pre-launch information, never as working. The service's own texts (`legal-*.ts`) stay for the portal and the app,
- * whose gates remain closed. DRAFT until TSX-MR approves each text; not legal advice.
+ * whose gates remain closed. Approved by TSX-MR on 2026-10-17 (docs/97); not legal advice, and counsel review stays
+ * recommended (docs/97 §4).
  *
  * Who publishes the website (the owner's brief of 2026-10-17, third): TSX-MR is a project and trading name, not a
  * separately incorporated company, operated by one individual. `{operatorStatus}` says so in each language, and no
  * text names a legal form, a registration number or anything else the owner did not give.
+ *
+ * Version 1.0: the six texts of version 0.3 (docs/97), approved as they are by TSX-MR on 2026-10-17 with the
+ * commitments of docs/97 §3 confirmed — the only change here is each document's `status` and `version`, as docs/97 §1
+ * instructs. The effective date is the deployment day, set as `VITE_LEGAL_EFFECTIVE_DATE` in the host's environment.
  *
  * Version 0.3 (the brief "Final Legal, Identity, Portal and Website Production Preparation", 2026-10-17): the
  * correspondence address (`{postalAddress}`); contact by telephone or WhatsApp; the providers the service is planned to
@@ -22,8 +27,8 @@ type Legal = Record<Language, LegalDocument>;
 
 export const privacyPrelaunch: Legal = {
   en: {
-    version: '0.3 (pre-launch draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Privacy policy',
     summary: 'How {displayName} handles personal information on this website before Dukan ERP opens.',
     sections: [
@@ -55,8 +60,8 @@ export const privacyPrelaunch: Legal = {
     ],
   },
   fr: {
-    version: '0.3 (projet de pré-lancement)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Politique de confidentialité',
     summary: 'Comment {displayName} traite les informations personnelles sur ce site avant l’ouverture de Dukan ERP.',
     sections: [
@@ -88,8 +93,8 @@ export const privacyPrelaunch: Legal = {
     ],
   },
   ar: {
-    version: '0.3 (مسودة ما قبل الإطلاق)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'سياسة الخصوصية',
     summary: 'كيف يتعامل {displayName} مع المعلومات الشخصية على هذا الموقع قبل افتتاح Dukan ERP.',
     sections: [
@@ -124,8 +129,8 @@ export const privacyPrelaunch: Legal = {
 
 export const termsPrelaunch: Legal = {
   en: {
-    version: '0.3 (pre-launch draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Terms of use of this website',
     summary: 'The terms for using this website before Dukan ERP opens.',
     sections: [
@@ -143,8 +148,8 @@ export const termsPrelaunch: Legal = {
     ],
   },
   fr: {
-    version: '0.3 (projet de pré-lancement)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Conditions d’utilisation de ce site',
     summary: 'Les conditions d’utilisation de ce site avant l’ouverture de Dukan ERP.',
     sections: [
@@ -162,8 +167,8 @@ export const termsPrelaunch: Legal = {
     ],
   },
   ar: {
-    version: '0.3 (مسودة ما قبل الإطلاق)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'شروط استخدام هذا الموقع',
     summary: 'شروط استخدام هذا الموقع قبل افتتاح Dukan ERP.',
     sections: [
@@ -184,8 +189,8 @@ export const termsPrelaunch: Legal = {
 
 export const accountDeletionPrelaunch: Legal = {
   en: {
-    version: '0.3 (pre-launch draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Account deletion',
     summary: 'Dukan ERP is not yet open, so there are no public accounts to delete. How deletion will work will be explained here before it opens.',
     sections: [
@@ -195,8 +200,8 @@ export const accountDeletionPrelaunch: Legal = {
     ],
   },
   fr: {
-    version: '0.3 (projet de pré-lancement)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Suppression de compte',
     summary: 'Dukan ERP n’est pas encore ouvert : il n’existe donc aucun compte public à supprimer. Le fonctionnement de la suppression sera expliqué ici avant l’ouverture.',
     sections: [
@@ -206,8 +211,8 @@ export const accountDeletionPrelaunch: Legal = {
     ],
   },
   ar: {
-    version: '0.3 (مسودة ما قبل الإطلاق)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'حذف الحساب',
     summary: 'لم يُفتح Dukan ERP بعد، ولذلك لا توجد حسابات عامة لحذفها. وستُشرح هنا طريقة الحذف قبل الافتتاح.',
     sections: [
@@ -220,8 +225,8 @@ export const accountDeletionPrelaunch: Legal = {
 
 export const privacyChoicesPrelaunch: Legal = {
   en: {
-    version: '0.3 (pre-launch draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Privacy choices',
     summary: 'The choices you have about personal information on this website.',
     sections: [
@@ -233,8 +238,8 @@ export const privacyChoicesPrelaunch: Legal = {
     ],
   },
   fr: {
-    version: '0.3 (projet de pré-lancement)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Choix de confidentialité',
     summary: 'Les choix dont vous disposez sur les informations personnelles de ce site.',
     sections: [
@@ -246,8 +251,8 @@ export const privacyChoicesPrelaunch: Legal = {
     ],
   },
   ar: {
-    version: '0.3 (مسودة ما قبل الإطلاق)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'خيارات الخصوصية',
     summary: 'الخيارات المتاحة لكم بشأن المعلومات الشخصية على هذا الموقع.',
     sections: [
@@ -262,8 +267,8 @@ export const privacyChoicesPrelaunch: Legal = {
 
 export const legalNoticePrelaunch: Legal = {
   en: {
-    version: '0.3 (pre-launch draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Legal notice',
     summary: 'Who publishes this website, and how to reach them.',
     sections: [
@@ -277,8 +282,8 @@ export const legalNoticePrelaunch: Legal = {
     ],
   },
   fr: {
-    version: '0.3 (projet de pré-lancement)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Mentions légales',
     summary: 'Qui publie ce site, et comment le joindre.',
     sections: [
@@ -292,8 +297,8 @@ export const legalNoticePrelaunch: Legal = {
     ],
   },
   ar: {
-    version: '0.3 (مسودة ما قبل الإطلاق)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'إشعار قانوني',
     summary: 'من ينشر هذا الموقع، وكيف يمكن التواصل معه.',
     sections: [
@@ -310,8 +315,8 @@ export const legalNoticePrelaunch: Legal = {
 
 export const securityPrelaunch: Legal = {
   en: {
-    version: '0.3 (pre-launch draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Reporting a security problem',
     summary: 'How to tell {displayName} about a weakness in this website or in Dukan ERP, and what we ask of you.',
     sections: [
@@ -336,8 +341,8 @@ export const securityPrelaunch: Legal = {
     ],
   },
   fr: {
-    version: '0.3 (projet de pré-lancement)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Signaler un problème de sécurité',
     summary: 'Comment signaler à {displayName} une faille dans ce site ou dans Dukan ERP, et ce que nous vous demandons.',
     sections: [
@@ -362,8 +367,8 @@ export const securityPrelaunch: Legal = {
     ],
   },
   ar: {
-    version: '0.3 (مسودة ما قبل الإطلاق)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'الإبلاغ عن مشكلة أمنية',
     summary: 'كيف تُبلغون {displayName} عن ثغرة في هذا الموقع أو في Dukan ERP، وما نطلبه منكم.',
     sections: [
