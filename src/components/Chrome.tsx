@@ -4,7 +4,7 @@ import { SITE, SURFACE } from '../config/site';
 import { LANGUAGE_LABELS, LANGUAGES, storeLanguage, useI18n, type Language } from '../i18n';
 import { inAppPathOf, pathOf, publicRouteAt, type PublicRouteId } from '../site/routes';
 import { useTheme } from '../theme/theme';
-import { InAppContext, LegalLinks, OrgMark, PreviewBanner, ProductMark } from './public/blocks';
+import { INDIVIDUAL_OPERATOR, InAppContext, LegalLinks, OrgMark, PreviewBanner, ProductMark } from './public/blocks';
 import { AccountLink, accountHref, linkable } from './AccountLink';
 
 /**
@@ -124,7 +124,7 @@ function Footer() {
   const { theme, setTheme } = useTheme();
   const to = (id: PublicRouteId) => pathOf(id, lang);
   const columns: [string, [PublicRouteId, string][]][] = [
-    [t('footer.company'), [['about', t('nav.about')], ['contact', t('nav.contact')]]],
+    [INDIVIDUAL_OPERATOR ? SITE.displayName : t('footer.company'), [['about', t('nav.about')], ['contact', t('nav.contact')]]],
     [t('footer.product'), [['dukanErp', t('nav.dukanErp')], ['products', t('nav.products')], ['apply', t('nav.apply')]]],
     [t('footer.help'), [['support', t('nav.support')], ['applicationStatus', t('footer.applicationStatus')], ['accountDeletion', t('footer.deletion')]]],
     [
@@ -138,7 +138,12 @@ function Footer() {
       ],
     ],
   ];
-  const identity = [SITE.legalName, SITE.legalForm, SITE.registrationNumber].filter(Boolean).join(' · ');
+  // An individual operator is named as one, with the plain fact that there is no company (the brief of 2026-10-17, third).
+  const identity = INDIVIDUAL_OPERATOR
+    ? SITE.legalName
+      ? t('footer.operatorIndividual', { name: SITE.displayName, operator: SITE.legalName })
+      : ''
+    : [SITE.legalName, SITE.legalForm, SITE.registrationNumber].filter(Boolean).join(' · ');
   return (
     <footer className="chrome-footer">
       <div className="container footer-grid">
@@ -146,9 +151,8 @@ function Footer() {
           <OrgMark />
           <p>{t(SURFACE === 'public' ? 'footer.relationshipPrelaunch' : 'footer.relationship', { name: SITE.displayName })}</p>
           {identity ? (
-            <p className="small">
-              <bdi>{identity}</bdi>
-            </p>
+            // A company's details are values (isolated); an individual operator's line is a sentence in the reader's language.
+            <p className="small">{INDIVIDUAL_OPERATOR ? identity : <bdi>{identity}</bdi>}</p>
           ) : null}
           <p className="small muted">{t('footer.note')}</p>
         </div>

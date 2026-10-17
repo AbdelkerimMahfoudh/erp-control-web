@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { createContext, useContext, useEffect, type ReactNode } from 'react';
 import { BUILD_MODE, FILLED_INPUTS, IS_PREVIEW, SITE, SURFACE } from '../../config/site';
+import { phoneList } from '../../config/schema';
 import type { Block, Document, LegalDocument } from '../../content/types';
 import { useI18n } from '../../i18n';
 import { formatDate } from '../../lib/format';
@@ -186,21 +187,44 @@ export function LegalLinks() {
   );
 }
 
-/** The registered details TSX-MR supplied — never more than it supplied. */
+/** True while the website's operator is an individual, with no separate company (`VITE_OPERATOR_TYPE`). */
+export const INDIVIDUAL_OPERATOR = SITE.operatorType !== 'company';
+
+/** The configured public telephone numbers, each a call link; none is labelled WhatsApp unless one is configured as such. */
+function PhoneLink({ phone }: { phone: string }) {
+  return (
+    <a href={`tel:${phone.replace(/\s+/g, '')}`}>
+      <bdi dir="ltr">{phone}</bdi>
+    </a>
+  );
+}
+
+/**
+ * Who operates the website, as TSX-MR supplied it — never more. An individual operator is shown as one: a trading
+ * name, the person, the person responsible for publication and a correspondence address, and the plain statement that
+ * there is no company, so no legal form or trade-register number. A company shows its registered details.
+ */
 export function OrgDetails() {
   const { t, lang } = useI18n();
   const v = textValues(lang);
   const rows: [string, ReactNode][] = [];
-  if (SITE.legalName) rows.push([t('org.legalName'), <bdi key="n">{SITE.legalName}</bdi>]);
-  if (SITE.legalForm) rows.push([t('org.legalForm'), <bdi key="f">{SITE.legalForm}</bdi>]);
-  if (SITE.registrationNumber) rows.push([t('org.registration'), <bdi key="r">{SITE.registrationNumber}</bdi>]);
-  const address = [SITE.address, SITE.city, v.country].filter(Boolean).join(', ');
-  if (address) rows.push([t('org.address'), <bdi key="a">{address}</bdi>]);
-  if (SITE.phone) rows.push([t('org.phone'), <a key="p" href={`tel:${SITE.phone.replace(/\s+/g, '')}`} className="ltr">{SITE.phone}</a>]);
+  if (INDIVIDUAL_OPERATOR) {
+    rows.push([t('org.tradingName'), <bdi key="t">{SITE.displayName}</bdi>]);
+    if (SITE.legalName) rows.push([t('org.operator'), <bdi key="n">{SITE.legalName}</bdi>]);
+    rows.push([t('org.status'), t('org.statusIndividual')]);
+  } else {
+    if (SITE.legalName) rows.push([t('org.legalName'), <bdi key="n">{SITE.legalName}</bdi>]);
+    if (SITE.legalForm) rows.push([t('org.legalForm'), <bdi key="f">{SITE.legalForm}</bdi>]);
+    if (SITE.registrationNumber) rows.push([t('org.registration'), <bdi key="r">{SITE.registrationNumber}</bdi>]);
+  }
+  if (SITE.publicationDirector) rows.push([t('org.publicationDirector'), <bdi key="d">{SITE.publicationDirector}</bdi>]);
+  const address = [SITE.address, v.city, v.country].filter(Boolean).join(lang === 'ar' ? '، ' : ', ');
+  if (address) rows.push([t(INDIVIDUAL_OPERATOR ? 'org.correspondenceAddress' : 'org.address'), <bdi key="a">{address}</bdi>]);
+  phoneList(SITE.phone).forEach((phone, i) => rows.push([t('org.phone'), <PhoneLink key={`p${i}`} phone={phone} />]));
   return (
     <dl className="org-details">
-      {rows.map(([label, value]) => (
-        <div key={label} className="org-row">
+      {rows.map(([label, value], i) => (
+        <div key={`${label}-${i}`} className="org-row">
           <dt>{label}</dt>
           <dd>{value}</dd>
         </div>
@@ -209,16 +233,24 @@ export function OrgDetails() {
   );
 }
 
-/** The configured addresses, each a mail link; none configured is said, never left as a dead end. */
+/** The heading over `OrgDetails`: "Operator details" for an individual, "Company details" for a company. */
+export function useOrgTitle(): string {
+  const { t } = useI18n();
+  return t(INDIVIDUAL_OPERATOR ? 'org.titleIndividual' : 'org.title');
+}
+
+/** The configured addresses and numbers, each a link; none configured is said, never left as a dead end. */
 export function ContactAddresses() {
   const { t } = useI18n();
   const entries: [string, string][] = [
+    [t('org.contactEmail'), SITE.contactEmail],
     [t('org.supportEmail'), SITE.supportEmail],
     [t('org.commercialEmail'), SITE.commercialEmail],
     [t('org.privacyEmail'), SITE.privacyEmail],
     [t('org.securityEmail'), SITE.securityEmail],
   ].filter((e): e is [string, string] => Boolean(e[1]));
-  if (entries.length === 0 && !SITE.supportWhatsapp && !SITE.phone) return <p className="notice tone-warn">{t('contact.none')}</p>;
+  const phones = phoneList(SITE.phone);
+  if (entries.length === 0 && !SITE.supportWhatsapp && phones.length === 0) return <p className="notice tone-warn">{t('contact.none')}</p>;
   return (
     <ul className="contact-list">
       {entries.map(([label, email]) => (
@@ -235,14 +267,12 @@ export function ContactAddresses() {
           <span className="ltr">{SITE.supportWhatsapp}</span>
         </li>
       ) : null}
-      {SITE.phone ? (
-        <li>
+      {phones.map((phone) => (
+        <li key={phone}>
           <span className="contact-label">{t('org.phone')}</span>
-          <a href={`tel:${SITE.phone.replace(/\s+/g, '')}`} className="ltr">
-            {SITE.phone}
-          </a>
+          <PhoneLink phone={phone} />
         </li>
-      ) : null}
+      ))}
     </ul>
   );
 }

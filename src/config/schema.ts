@@ -10,7 +10,7 @@
 
 export type BuildMode = 'production' | 'preview' | 'development' | 'test';
 
-export type InputKind = 'https-origin' | 'https-url' | 'text' | 'email' | 'phone' | 'date' | 'deletion-channel' | 'surface';
+export type InputKind = 'https-origin' | 'https-url' | 'text' | 'email' | 'phone' | 'phone-list' | 'date' | 'deletion-channel' | 'surface' | 'operator-type';
 
 export interface InputSpec {
   /** The environment variable, `VITE_*`. */
@@ -45,6 +45,20 @@ export const DELETION_CHANNELS = ['whatsapp'] as const;
  */
 export const SURFACES = ['full', 'public'] as const;
 
+/**
+ * Who operates the website (the owner's brief of 2026-10-17, third): `individual` — a natural person operating under a
+ * trading or project name, with no separate company, so no legal form and no trade-register number exist; `company` —
+ * an incorporated entity, which has both. TSX-MR is today an unincorporated project operated by one individual.
+ */
+export const OPERATOR_TYPES = ['individual', 'company'] as const;
+export type OperatorType = (typeof OPERATOR_TYPES)[number];
+
+/** The inputs that exist only for a company: an individual operator has none, and none is ever invented for one. */
+export const COMPANY_ONLY_INPUTS = ['legalForm', 'registrationNumber'] as const;
+
+/** The owner of the website, as the brief of 2026-10-17 gives it: the defaults below, never a guess. */
+const OPERATOR_NAME = 'Abdel Kerim Taleb Ould Sidi';
+
 /** The only origin the pre-launch public website may be published at (the owner's brief of 2026-10-17). */
 export const PUBLIC_WEBSITE_ORIGIN = 'https://tsxmr.com';
 
@@ -71,18 +85,21 @@ export const INPUTS = {
   siteSurface: { env: 'VITE_SITE_SURFACE', kind: 'surface', required: true, fallback: 'full', preview: 'full', label: 'What this build publishes: full (one origin) or public (the public pages only)' },
   apiBase: { env: 'VITE_API_BASE', kind: 'https-url', required: true, publicSite: 'forbidden', preview: '', label: 'API base URL including /api/v1, e.g. https://api.<domain>/api/v1 (not used by a public build)' },
   portalOrigin: { env: 'VITE_PORTAL_ORIGIN', kind: 'https-origin', required: false, publicSite: 'forbidden', preview: '', label: 'The business account origin when it is separate, e.g. https://dukan.<domain> (a public build links to it)' },
-  displayName: { env: 'VITE_ORGANIZATION_DISPLAY_NAME', kind: 'text', required: true, publicSite: 'required', fallback: 'TSX-MR', preview: 'TSX-MR', label: 'Public organization name' },
-  legalName: { env: 'VITE_ORGANIZATION_LEGAL_NAME', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Registered legal name', label: 'Full registered legal name' },
-  legalForm: { env: 'VITE_ORGANIZATION_LEGAL_FORM', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Legal form', label: 'Legal form' },
-  registrationNumber: { env: 'VITE_ORGANIZATION_REGISTRATION_NUMBER', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Registration number', label: 'Trade-register number' },
+  displayName: { env: 'VITE_ORGANIZATION_DISPLAY_NAME', kind: 'text', required: true, publicSite: 'required', fallback: 'TSX-MR', preview: 'TSX-MR', label: 'Public trading or project name' },
+  operatorType: { env: 'VITE_OPERATOR_TYPE', kind: 'operator-type', required: true, publicSite: 'required', fallback: 'individual', preview: 'individual', label: 'Who operates the website: individual (a natural person, no company) or company' },
+  legalName: { env: 'VITE_ORGANIZATION_LEGAL_NAME', kind: 'text', required: true, publicSite: 'required', fallback: OPERATOR_NAME, preview: '[TEST] Legal operator name', label: 'The legal operator: the individual’s full name, or the company’s registered name' },
+  publicationDirector: { env: 'VITE_PUBLICATION_DIRECTOR', kind: 'text', required: false, publicSite: 'required', fallback: OPERATOR_NAME, preview: '[TEST] Person responsible for publication', label: 'The person responsible for publication' },
+  legalForm: { env: 'VITE_ORGANIZATION_LEGAL_FORM', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Legal form', label: 'Legal form (a company only)' },
+  registrationNumber: { env: 'VITE_ORGANIZATION_REGISTRATION_NUMBER', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Registration number', label: 'Trade-register (RCCM) number (a company only)' },
   country: { env: 'VITE_ORGANIZATION_COUNTRY', kind: 'text', required: true, publicSite: 'required', fallback: 'Mauritania', preview: 'Mauritania', label: 'Country' },
-  city: { env: 'VITE_ORGANIZATION_CITY', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] City', label: 'City' },
-  address: { env: 'VITE_ORGANIZATION_ADDRESS', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Street address', label: 'Registered street address' },
-  phone: { env: 'VITE_ORGANIZATION_PHONE', kind: 'phone', required: false, preview: '', label: 'Public telephone number' },
-  supportEmail: { env: 'VITE_SUPPORT_EMAIL', kind: 'email', required: true, publicSite: 'required', preview: 'support@preview.invalid', label: 'Support email' },
-  privacyEmail: { env: 'VITE_PRIVACY_EMAIL', kind: 'email', required: true, publicSite: 'required', preview: 'privacy@preview.invalid', label: 'Privacy email' },
-  commercialEmail: { env: 'VITE_COMMERCIAL_EMAIL', kind: 'email', required: false, preview: 'sales@preview.invalid', label: 'Commercial email' },
-  securityEmail: { env: 'VITE_SECURITY_EMAIL', kind: 'email', required: true, publicSite: 'required', preview: 'security@preview.invalid', label: 'Security contact email: the /security page and security.txt' },
+  city: { env: 'VITE_ORGANIZATION_CITY', kind: 'text', required: true, publicSite: 'required', fallback: 'Nouakchott', preview: '[TEST] City', label: 'City' },
+  address: { env: 'VITE_ORGANIZATION_ADDRESS', kind: 'text', required: true, publicSite: 'required', preview: '[TEST] Street address', label: 'Correspondence address (a company: its registered address)' },
+  phone: { env: 'VITE_ORGANIZATION_PHONE', kind: 'phone-list', required: false, preview: '', label: 'Public telephone numbers, separated by commas' },
+  contactEmail: { env: 'VITE_CONTACT_EMAIL', kind: 'email', required: false, publicSite: 'required', fallback: 'contact@tsxmr.com', preview: 'contact@preview.invalid', label: 'General enquiries email' },
+  supportEmail: { env: 'VITE_SUPPORT_EMAIL', kind: 'email', required: true, publicSite: 'required', fallback: 'support@tsxmr.com', preview: 'support@preview.invalid', label: 'Support email' },
+  privacyEmail: { env: 'VITE_PRIVACY_EMAIL', kind: 'email', required: true, publicSite: 'required', fallback: 'privacy@tsxmr.com', preview: 'privacy@preview.invalid', label: 'Privacy email' },
+  commercialEmail: { env: 'VITE_COMMERCIAL_EMAIL', kind: 'email', required: false, preview: '', label: 'Commercial email (optional; none given)' },
+  securityEmail: { env: 'VITE_SECURITY_EMAIL', kind: 'email', required: true, publicSite: 'required', fallback: 'security@tsxmr.com', preview: 'security@preview.invalid', label: 'Security contact email: the /security page and security.txt' },
   supportHours: { env: 'VITE_SUPPORT_HOURS', kind: 'text', required: true, preview: '[TEST] Support hours', label: 'When support answers, in words (days, hours and time zone), as TSX-MR commits to them' },
   supportLanguages: { env: 'VITE_SUPPORT_LANGUAGES', kind: 'text', required: true, preview: '[TEST] Support languages', label: 'The languages support answers in, in words, as TSX-MR commits to them' },
   supportResponseTime: { env: 'VITE_SUPPORT_RESPONSE_TIME', kind: 'text', required: true, preview: '[TEST] Response time', label: 'How soon support replies, in words, as TSX-MR commits to it' },
@@ -113,6 +130,16 @@ export function looksLikeTestValue(value: string): boolean {
   return TEST_MARKERS.some((re) => re.test(value));
 }
 
+const PHONE = /^\+?[0-9][0-9 ]{6,19}$/;
+
+/** The public telephone numbers, as configured: one or more, separated by commas, in the order given. */
+export function phoneList(value: string): string[] {
+  return value
+    .split(',')
+    .map((p) => p.trim())
+    .filter(Boolean);
+}
+
 function validFormat(kind: InputKind, value: string): boolean {
   switch (kind) {
     case 'https-origin':
@@ -131,7 +158,11 @@ function validFormat(kind: InputKind, value: string): boolean {
     case 'email':
       return /^[^\s@<>()",;:]+@[^\s@<>()",;:]+\.[a-z]{2,}$/i.test(value) && !/[\r\n]/.test(value);
     case 'phone':
-      return /^\+?[0-9][0-9 ]{6,19}$/.test(value);
+      return PHONE.test(value);
+    case 'phone-list':
+      return phoneList(value).length > 0 && value.split(',').every((p) => PHONE.test(p.trim()));
+    case 'operator-type':
+      return (OPERATOR_TYPES as readonly string[]).includes(value);
     case 'date':
       return /^\d{4}-\d{2}-\d{2}$/.test(value) && !Number.isNaN(Date.parse(`${value}T00:00:00Z`));
     case 'surface':
@@ -160,6 +191,14 @@ export function readInputs(env: Record<string, string | undefined>, mode: BuildM
       filled.push(name);
     } else {
       inputs[name] = given;
+    }
+  }
+  if (inputs.operatorType === 'individual') {
+    for (const name of COMPANY_ONLY_INPUTS) {
+      if (filled.includes(name)) {
+        inputs[name] = '';
+        filled.splice(filled.indexOf(name), 1);
+      }
     }
   }
   return { inputs, filled };
@@ -196,6 +235,13 @@ export function releaseProblems(
     const value = inputs[name];
     if (gate === 'PUBLIC_WEBSITE' && spec.publicSite === 'forbidden') {
       if (value) problems.push({ input: name, env: spec.env, problem: 'forbidden', detail: `${spec.label} — the pre-launch website links to no portal, API, console or app store (docs/96)` });
+      continue;
+    }
+    // An individual operator has no legal form and no trade-register number: the public site asks for neither, and
+    // refuses one rather than publish a company detail that does not exist (the owner's brief of 2026-10-17, third).
+    // The portal's own rule is unchanged.
+    if (gate === 'PUBLIC_WEBSITE' && inputs.operatorType === 'individual' && (COMPANY_ONLY_INPUTS as readonly string[]).includes(name)) {
+      if (value) problems.push({ input: name, env: spec.env, problem: 'forbidden', detail: `${spec.label} — an individual operator has none; set VITE_OPERATOR_TYPE=company only once a company exists` });
       continue;
     }
     if (!value) {

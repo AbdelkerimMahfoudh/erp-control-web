@@ -3,7 +3,7 @@ import { applicationStatus, documentsFor, legalDocumentsFor, login } from '../..
 import { SURFACE } from '../../config/site';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
-import { ContactAddresses, LegalLinks, LegalView, OrgDetails, PageIntro, ProductMark, Sections, useLegalPath } from '../../components/public/blocks';
+import { ContactAddresses, LegalLinks, LegalView, OrgDetails, PageIntro, ProductMark, Sections, useLegalPath, useOrgTitle } from '../../components/public/blocks';
 import { RichText } from '../../components/public/RichText';
 
 /**
@@ -56,6 +56,7 @@ export function Products() {
 
 export function Contact() {
   const { t, lang } = useI18n();
+  const orgTitle = useOrgTitle();
   const doc = contact[lang];
   return (
     <article className="public-page doc">
@@ -72,7 +73,7 @@ export function Contact() {
         }}
       />
       <section className="doc-section" aria-labelledby="org-h">
-        <h2 id="org-h">{t('org.title')}</h2>
+        <h2 id="org-h">{orgTitle}</h2>
         <OrgDetails />
       </section>
     </article>

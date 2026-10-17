@@ -172,7 +172,7 @@ describe('the legal pages as the mobile app opens them (/in-app/…)', () => {
   }
 
   it('are never indexed and name their public page as canonical; the sitemap lists only the public pages', () => {
-    const site = { publicSiteOrigin: 'https://www.company-domain.mr', displayName: 'TSX-MR', legalName: '', country: '', city: '', address: '', supportEmail: '' };
+    const site = { publicSiteOrigin: 'https://www.company-domain.mr', displayName: 'TSX-MR', legalName: '', operatorType: 'individual', country: '', city: '', address: '', supportEmail: '', contactEmail: '' };
     const head = headFor({ id: 'privacy', lang: 'fr', title: 't', description: 'd', site, filled: [], preview: false, productName: 'Dukan ERP', inApp: true });
     expect(head.robots).toBe('noindex, nofollow');
     expect(head.canonical).toBe('https://www.company-domain.mr/fr/privacy');

@@ -11,6 +11,8 @@ const SITE = {
   apiBase: 'https://api.company-domain.mr/api/v1',
   displayName: 'TSX-MR',
   legalName: 'Registered Name SARL',
+  operatorType: 'company',
+  contactEmail: '',
   country: 'Mauritania',
   city: 'Nouakchott',
   address: 'Street 1',
@@ -92,6 +94,14 @@ describe('the head (docs/74 §5)', () => {
     const filled = JSON.stringify(input({ filled: ['legalName', 'address'] }).jsonLd);
     expect(filled).not.toContain('legalName');
     expect(filled).not.toContain('PostalAddress');
+  });
+
+  it('an individual operator: the organization carries no legal name, and the website names the person who publishes it', () => {
+    const json = JSON.stringify(input({ site: { ...SITE, operatorType: 'individual', legalName: 'Abdel Kerim Taleb Ould Sidi', contactEmail: 'contact@tsxmr.com' } }).jsonLd);
+    expect(json).not.toContain('"legalName"');
+    expect(json).toContain('"publisher":{"@type":"Person","name":"Abdel Kerim Taleb Ould Sidi"}');
+    expect(json).toContain('"email":"contact@tsxmr.com"');
+    expect(json).not.toMatch(/SARL|RCCM|taxID|vatID|identifier/);
   });
 
   it('escapes what it writes', () => {

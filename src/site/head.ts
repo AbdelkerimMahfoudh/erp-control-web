@@ -16,7 +16,7 @@ export interface HeadInput {
   lang: Language;
   title: string;
   description: string;
-  site: Pick<SiteInputs, 'publicSiteOrigin' | 'displayName' | 'legalName' | 'country' | 'city' | 'address' | 'supportEmail'>;
+  site: Pick<SiteInputs, 'publicSiteOrigin' | 'displayName' | 'legalName' | 'operatorType' | 'country' | 'city' | 'address' | 'supportEmail' | 'contactEmail'>;
   /** Inputs the preview filled with test values: never put into structured data. */
   filled: readonly string[];
   preview: boolean;
@@ -96,16 +96,29 @@ function structuredData(h: HeadInput, canonical: string | null): object[] {
         addressCountry: real('country', h.site.country),
       }
     : undefined;
+  // An individual operator (the owner's brief of 2026-10-17, third): TSX-MR is a name, not a company, so the
+  // organization carries no legal name; the website names the person who publishes it.
+  const individual = h.site.operatorType !== 'company';
+  const operator = real('legalName', h.site.legalName);
   const organization = {
     '@type': 'Organization',
     '@id': `${origin}/#organization`,
     name: h.site.displayName,
-    legalName: real('legalName', h.site.legalName),
+    legalName: individual ? undefined : operator,
     url: origin,
-    email: real('supportEmail', h.site.supportEmail),
+    email: real('contactEmail', h.site.contactEmail) ?? real('supportEmail', h.site.supportEmail),
     address,
   };
   const graph: object[] = [organization];
+  if (individual && operator) {
+    graph.push({
+      '@type': 'WebSite',
+      '@id': `${origin}/#website`,
+      name: h.site.displayName,
+      url: origin,
+      publisher: { '@type': 'Person', name: operator },
+    });
+  }
   if (h.id === 'dukanErp' && canonical) {
     graph.push({
       '@type': 'SoftwareApplication',

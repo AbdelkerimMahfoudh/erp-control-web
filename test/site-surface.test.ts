@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatProblems, readInputs, releaseProblems } from '../src/config/schema';
+import { formatProblems, phoneList, readInputs, releaseProblems } from '../src/config/schema';
 import { accountHref } from '../src/components/AccountLink';
 import { contentSecurityPolicy, headersFile, redirectsFile, sitemapXml } from '../src/site/generated';
 import { API_ROUTE_IDS, IN_APP_ROUTE_IDS, pathOf, publicRoutesFor, PUBLIC_ROUTES } from '../src/site/routes';
@@ -33,6 +33,7 @@ const PORTAL = 'https://portal.company-domain.mr';
 const PUBLIC_REAL: Record<string, string> = {
   VITE_SITE_SURFACE: 'public',
   VITE_PUBLIC_SITE_ORIGIN: 'https://tsxmr.com',
+  VITE_OPERATOR_TYPE: 'company',
   VITE_ORGANIZATION_LEGAL_NAME: 'Registered Name SARL',
   VITE_ORGANIZATION_LEGAL_FORM: 'SARL',
   VITE_ORGANIZATION_REGISTRATION_NUMBER: 'RC 0000',
@@ -49,10 +50,13 @@ describe('the PUBLIC_WEBSITE gate (a public build)', () => {
     expect(releaseProblems(PUBLIC_REAL, [])).toEqual([]);
   });
 
-  it('asks for every fact it publishes, and names exactly those', () => {
-    const missing = releaseProblems({ VITE_SITE_SURFACE: 'public' }, []).filter((p) => p.problem === 'missing').map((p) => p.env).sort();
-    expect(missing).toEqual(
-      ['VITE_LEGAL_EFFECTIVE_DATE', 'VITE_ORGANIZATION_ADDRESS', 'VITE_ORGANIZATION_CITY', 'VITE_ORGANIZATION_LEGAL_FORM', 'VITE_ORGANIZATION_LEGAL_NAME', 'VITE_ORGANIZATION_REGISTRATION_NUMBER', 'VITE_PRIVACY_EMAIL', 'VITE_PUBLIC_SITE_ORIGIN', 'VITE_SECURITY_EMAIL', 'VITE_SUPPORT_EMAIL'].sort(),
+  it('asks for every fact it publishes and has no default for, and names exactly those', () => {
+    // The owner gave the identity and the mailboxes (the brief of 2026-10-17, third): those are defaults. A company has
+    // a legal form and a trade-register number besides.
+    const missing = (env: Record<string, string>) => releaseProblems(env, []).filter((p) => p.problem === 'missing').map((p) => p.env).sort();
+    expect(missing({ VITE_SITE_SURFACE: 'public' })).toEqual(['VITE_LEGAL_EFFECTIVE_DATE', 'VITE_ORGANIZATION_ADDRESS', 'VITE_PUBLIC_SITE_ORIGIN']);
+    expect(missing({ VITE_SITE_SURFACE: 'public', VITE_OPERATOR_TYPE: 'company' })).toEqual(
+      ['VITE_LEGAL_EFFECTIVE_DATE', 'VITE_ORGANIZATION_ADDRESS', 'VITE_ORGANIZATION_LEGAL_FORM', 'VITE_ORGANIZATION_REGISTRATION_NUMBER', 'VITE_PUBLIC_SITE_ORIGIN'].sort(),
     );
   });
 
@@ -80,6 +84,33 @@ describe('the PUBLIC_WEBSITE gate (a public build)', () => {
     const legal = releaseProblems(PUBLIC_REAL, [{ id: 'legal_review', summary: 'x' }], { drafts: ['privacy'], placeholders: [] });
     expect(legal.map((p) => p.problem)).toEqual(['legal_blocker', 'legal_draft']);
     expect(formatProblems(legal, 'PUBLIC_WEBSITE')).toMatch(/\(gate PUBLIC_WEBSITE\)\. Nothing was published\./);
+  });
+
+  it('an individual operator: no legal form or trade-register number is asked for, and one given is refused, never published', () => {
+    const individual = { VITE_SITE_SURFACE: 'public', VITE_PUBLIC_SITE_ORIGIN: 'https://tsxmr.com', VITE_ORGANIZATION_ADDRESS: 'A correspondence address', VITE_LEGAL_EFFECTIVE_DATE: '2026-11-01' };
+    expect(releaseProblems(individual, [])).toEqual([]);
+    for (const env of ['VITE_ORGANIZATION_LEGAL_FORM', 'VITE_ORGANIZATION_REGISTRATION_NUMBER']) {
+      expect(releaseProblems({ ...individual, [env]: 'invented' }, []).map((p) => `${p.env}:${p.problem}`)).toEqual([`${env}:forbidden`]);
+    }
+    const { inputs } = readInputs(individual, 'production');
+    expect([inputs.operatorType, inputs.legalName, inputs.publicationDirector, inputs.city, inputs.country]).toEqual(['individual', 'Abdel Kerim Taleb Ould Sidi', 'Abdel Kerim Taleb Ould Sidi', 'Nouakchott', 'Mauritania']);
+    expect([inputs.contactEmail, inputs.supportEmail, inputs.privacyEmail, inputs.securityEmail]).toEqual(['contact@tsxmr.com', 'support@tsxmr.com', 'privacy@tsxmr.com', 'security@tsxmr.com']);
+    // A preview shows no test legal form for an individual: there is none to stand in for.
+    expect(readInputs({ VITE_SITE_SURFACE: 'public' }, 'preview').inputs.legalForm).toBe('');
+    expect(readInputs({ VITE_SITE_SURFACE: 'public' }, 'preview').filled).not.toContain('registrationNumber');
+  });
+
+  it('the public telephone numbers: one or several, separated by commas; a malformed one is refused', () => {
+    const base = { VITE_SITE_SURFACE: 'public', VITE_PUBLIC_SITE_ORIGIN: 'https://tsxmr.com', VITE_ORGANIZATION_ADDRESS: 'A correspondence address', VITE_LEGAL_EFFECTIVE_DATE: '2026-11-01' };
+    expect(releaseProblems({ ...base, VITE_ORGANIZATION_PHONE: '+222 36 96 38 39, +222 37 67 68 27' }, [])).toEqual([]);
+    expect(phoneList('+222 36 96 38 39, +222 37 67 68 27')).toEqual(['+222 36 96 38 39', '+222 37 67 68 27']);
+    expect(releaseProblems({ ...base, VITE_ORGANIZATION_PHONE: '+222 36 96 38 39, call me' }, []).map((p) => `${p.env}:${p.problem}`)).toEqual(['VITE_ORGANIZATION_PHONE:malformed']);
+    // An unknown operator type is refused, and meanwhile held to the stricter company rule (fail closed).
+    expect(releaseProblems({ ...base, VITE_OPERATOR_TYPE: 'partnership' }, []).map((p) => `${p.env}:${p.problem}`)).toEqual([
+      'VITE_OPERATOR_TYPE:malformed',
+      'VITE_ORGANIZATION_LEGAL_FORM:missing',
+      'VITE_ORGANIZATION_REGISTRATION_NUMBER:missing',
+    ]);
   });
 
   it('the PORTAL gate (a full build) is as strict as before: the API, the deletion channel and support facts are still required', () => {

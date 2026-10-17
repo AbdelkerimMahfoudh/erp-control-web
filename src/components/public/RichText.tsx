@@ -2,6 +2,7 @@ import { Fragment, type ReactNode } from 'react';
 import { FILLED_INPUTS, IS_PREVIEW, SITE } from '../../config/site';
 import { useI18n } from '../../i18n';
 import type { Language } from '../../i18n/languages';
+import { operatorStatus } from '../../content/operator';
 
 /**
  * Texts with their inputs filled (docs/74 §4). `{supportEmail}` becomes a mail link, a value that reads left to right
@@ -13,15 +14,23 @@ const COUNTRY: Record<string, Record<Language, string>> = {
   mauritania: { en: 'Mauritania', fr: 'Mauritanie', ar: 'موريتانيا' },
 };
 
+/** The configured city in the reader's language, when its name is known; otherwise exactly as configured. */
+const CITY: Record<string, Record<Language, string>> = {
+  nouakchott: { en: 'Nouakchott', fr: 'Nouakchott', ar: 'نواكشوط' },
+};
+
 const DELETION_CHANNEL_NAMES: Record<string, string> = { whatsapp: 'WhatsApp' };
 
 /** Every value a text may name: the inputs, and the few derived from them. */
 export function textValues(lang: Language): Record<string, string> {
   const country = COUNTRY[SITE.country.trim().toLowerCase()]?.[lang] ?? SITE.country;
+  const city = CITY[SITE.city.trim().toLowerCase()]?.[lang] ?? SITE.city;
   return {
     ...SITE,
     country,
+    city,
     deletionChannelName: DELETION_CHANNEL_NAMES[SITE.deletionChannel] ?? '',
+    operatorStatus: operatorStatus(lang, SITE),
     productName: 'Dukan ERP',
   };
 }
@@ -61,6 +70,10 @@ export function RichText({ text }: { text: string }) {
             {t('pending.value', { name })}
           </mark>,
         );
+      } else if (name === 'operatorStatus') {
+        // A sentence in the reader's language, not a value: it takes the paragraph's direction. Isolated, a sentence that
+        // starts with the Latin "TSX-MR" would be laid out left to right inside Arabic.
+        parts.push(<Fragment key={i++}>{value}</Fragment>);
       } else if (name.endsWith('Email')) {
         parts.push(
           <a key={i++} href={`mailto:${value}`} className={testValue ? 'test-value' : undefined}>

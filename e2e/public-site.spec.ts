@@ -106,6 +106,30 @@ for (const lang of LANGS) {
     }
   });
 
+  test(`public site: who operates it, said plainly in ${lang} — an individual, no company, nothing invented`, async ({ page }) => {
+    const c = CATALOGUE[lang];
+    for (const id of ['legalNotice', 'contact', 'about'] as const) {
+      await page.goto(pathOf(id, lang));
+      const text = (await facts(page)).text;
+      expect(text).toContain(c['org.statusIndividual']);
+      expect(text).toContain('Abdel Kerim Taleb Ould Sidi');
+      // No legal form, trade-register number or company label is ever shown for an individual operator.
+      expect(text).not.toContain(c['org.legalForm']);
+      expect(text).not.toContain(c['org.registration']);
+    }
+    await page.goto(pathOf('legalNotice', lang));
+    expect((await facts(page)).text).toContain(c['org.publicationDirector']);
+    // The footer of every page says the same in one sentence.
+    expect((await facts(page)).text).toContain(c['footer.operatorIndividual'].replace('{name}', 'TSX-MR').replace('{operator}', 'Abdel Kerim Taleb Ould Sidi'));
+    // The contacts: the four mailboxes as mail links; the configured numbers as call links, none labelled WhatsApp.
+    await page.goto(pathOf('contact', lang));
+    const links = (await facts(page)).links;
+    for (const box of ['contact', 'support', 'privacy', 'security']) expect(links).toContain(`mailto:${box}@tsxmr.com`);
+    const phones = (process.env.VITE_ORGANIZATION_PHONE ?? '').split(',').map((p) => p.trim()).filter(Boolean);
+    for (const phone of phones) expect(links).toContain(`tel:${phone.replace(/\s+/g, '')}`);
+    expect(await page.locator('.contact-label', { hasText: c['org.whatsapp'] }).count()).toBe(0);
+  });
+
   test(`public site: the pages the app opens answer in ${lang}, without the site's navigation`, async ({ page }) => {
     for (const id of IN_APP_ROUTE_IDS) {
       const response = await page.goto(inAppPathOf(id, lang));

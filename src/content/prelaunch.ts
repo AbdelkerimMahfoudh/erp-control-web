@@ -18,7 +18,7 @@ export const aboutPrelaunch: Docs = {
     summary: '{displayName} develops digital business-management software in Mauritania. Its first product, Dukan ERP, is being prepared for launch.',
     sections: [
       { id: 'who', heading: 'Who we are', blocks: [{ kind: 'p', text: '{displayName} develops digital business-management software in Mauritania. Its work starts from the daily reality of local businesses: stock that moves quickly, money that passes through several channels, and teams that need clear roles.' }] },
-      { id: 'product', heading: 'What we build', blocks: [{ kind: 'p', text: 'Dukan ERP is our first product. It is being prepared for launch and is not yet open for public registration. {displayName} develops it and will operate it.' }] },
+      { id: 'product', heading: 'What we build', blocks: [{ kind: 'p', text: 'Dukan ERP is our first product. It is being prepared for launch and is not yet open for public registration. It is developed, and will be operated, under the {displayName} name.' }] },
       {
         id: 'principles',
         heading: 'How we build',
@@ -33,7 +33,7 @@ export const aboutPrelaunch: Docs = {
           },
         ],
       },
-      { id: 'details', heading: 'Company details', blocks: [{ kind: 'p', text: 'The registered details of {displayName} are listed below.' }] },
+      { id: 'details', heading: 'Who operates {displayName}', blocks: [{ kind: 'p', text: '{operatorStatus} The operator’s details are listed below.' }] },
     ],
   },
   fr: {
@@ -41,7 +41,7 @@ export const aboutPrelaunch: Docs = {
     summary: '{displayName} développe des logiciels de gestion d’entreprise en Mauritanie. Son premier produit, Dukan ERP, est en préparation pour son lancement.',
     sections: [
       { id: 'who', heading: 'Qui nous sommes', blocks: [{ kind: 'p', text: '{displayName} développe des logiciels de gestion d’entreprise en Mauritanie. Son travail part de la réalité quotidienne des entreprises locales : un stock qui tourne vite, de l’argent qui passe par plusieurs canaux et des équipes qui ont besoin de rôles clairs.' }] },
-      { id: 'product', heading: 'Ce que nous construisons', blocks: [{ kind: 'p', text: 'Dukan ERP est notre premier produit. Il est en préparation pour son lancement et n’est pas encore ouvert aux inscriptions. {displayName} le développe et l’exploitera.' }] },
+      { id: 'product', heading: 'Ce que nous construisons', blocks: [{ kind: 'p', text: 'Dukan ERP est notre premier produit. Il est en préparation pour son lancement et n’est pas encore ouvert aux inscriptions. Il est développé, et sera exploité, sous le nom {displayName}.' }] },
       {
         id: 'principles',
         heading: 'Notre façon de construire',
@@ -56,7 +56,7 @@ export const aboutPrelaunch: Docs = {
           },
         ],
       },
-      { id: 'details', heading: 'Informations sur l’entreprise', blocks: [{ kind: 'p', text: 'Les informations d’immatriculation de {displayName} figurent ci-dessous.' }] },
+      { id: 'details', heading: 'Qui exploite {displayName}', blocks: [{ kind: 'p', text: '{operatorStatus} Les informations sur l’exploitant figurent ci-dessous.' }] },
     ],
   },
   ar: {
@@ -64,7 +64,7 @@ export const aboutPrelaunch: Docs = {
     summary: 'تطوّر {displayName} برمجيات رقمية لإدارة الأعمال في موريتانيا. ومنتجها الأول، Dukan ERP، قيد التحضير للإطلاق.',
     sections: [
       { id: 'who', heading: 'من نحن', blocks: [{ kind: 'p', text: 'تطوّر {displayName} برمجيات رقمية لإدارة الأعمال في موريتانيا. وينطلق عملها من الواقع اليومي للشركات المحلية: مخزون يتحرك بسرعة، وأموال تمر عبر عدة قنوات، وفرق تحتاج إلى أدوار واضحة.' }] },
-      { id: 'product', heading: 'ما نبنيه', blocks: [{ kind: 'p', text: 'Dukan ERP هو منتجنا الأول. وهو قيد التحضير للإطلاق، والتسجيل فيه غير مفتوح للعموم بعد. تطوّره {displayName} وستتولى تشغيله.' }] },
+      { id: 'product', heading: 'ما نبنيه', blocks: [{ kind: 'p', text: 'Dukan ERP هو منتجنا الأول. وهو قيد التحضير للإطلاق، والتسجيل فيه غير مفتوح للعموم بعد. ويُطوَّر وسيُشغَّل تحت اسم {displayName}.' }] },
       {
         id: 'principles',
         heading: 'كيف نبني',
@@ -79,7 +79,7 @@ export const aboutPrelaunch: Docs = {
           },
         ],
       },
-      { id: 'details', heading: 'بيانات الشركة', blocks: [{ kind: 'p', text: 'البيانات المسجلة لـ{displayName} مذكورة أدناه.' }] },
+      { id: 'details', heading: 'من يشغّل {displayName}', blocks: [{ kind: 'p', text: '{operatorStatus} وبيانات المشغّل مذكورة أدناه.' }] },
     ],
   },
 };
@@ -89,7 +89,7 @@ export const contactPrelaunch: Docs = {
     title: 'Contact {displayName}',
     summary: 'How to reach {displayName} about Dukan ERP or this website.',
     sections: [
-      { id: 'write', heading: 'Write to us', blocks: [{ kind: 'p', text: 'Choose the address that fits your question. Each one opens your email application with the address already filled in.' }] },
+      { id: 'write', heading: 'Write or call', blocks: [{ kind: 'p', text: 'Choose the address or number that fits your question. Each address opens your email application with the address already filled in.' }] },
       {
         id: 'before',
         heading: 'Before you write',
@@ -106,7 +106,7 @@ export const contactPrelaunch: Docs = {
     title: 'Contacter {displayName}',
     summary: 'Comment joindre {displayName} au sujet de Dukan ERP ou de ce site.',
     sections: [
-      { id: 'write', heading: 'Nous écrire', blocks: [{ kind: 'p', text: 'Choisissez l’adresse qui correspond à votre question. Chacune ouvre votre messagerie avec l’adresse déjà remplie.' }] },
+      { id: 'write', heading: 'Écrire ou appeler', blocks: [{ kind: 'p', text: 'Choisissez l’adresse ou le numéro qui correspond à votre question. Chaque adresse ouvre votre messagerie avec l’adresse déjà remplie.' }] },
       {
         id: 'before',
         heading: 'Avant d’écrire',
@@ -123,7 +123,7 @@ export const contactPrelaunch: Docs = {
     title: 'التواصل مع {displayName}',
     summary: 'كيف تتواصلون مع {displayName} بشأن Dukan ERP أو هذا الموقع.',
     sections: [
-      { id: 'write', heading: 'راسلونا', blocks: [{ kind: 'p', text: 'اختاروا العنوان الذي يناسب سؤالكم. يفتح كل عنوان تطبيق البريد لديكم والعنوان مكتوب فيه مسبقًا.' }] },
+      { id: 'write', heading: 'راسلونا أو اتصلوا بنا', blocks: [{ kind: 'p', text: 'اختاروا العنوان أو الرقم الذي يناسب سؤالكم. يفتح كل عنوان بريد تطبيق البريد لديكم والعنوان مكتوب فيه مسبقًا.' }] },
       {
         id: 'before',
         heading: 'قبل أن تكتبوا',

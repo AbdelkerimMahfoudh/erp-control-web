@@ -11,7 +11,7 @@ import { INPUTS } from '../src/config/schema';
  */
 const LANGS = ['en', 'fr', 'ar'] as const;
 /** Values a text may name: the inputs, and those derived from them (RichText.textValues). */
-const KNOWN_INPUTS = new Set([...Object.keys(INPUTS), 'deletionChannelName', 'productName']);
+const KNOWN_INPUTS = new Set([...Object.keys(INPUTS), 'deletionChannelName', 'operatorStatus', 'productName']);
 /** Strings that are the same in every language: names, words French writes as English does, and texts made only of placeholders and blockers. */
 const NAME_ONLY = /^(Dukan ERP|Contact|(\s*(\{[a-zA-Z]+\}|\[\[blocker:[a-z_]+\]\])\s*)+)$/;
 

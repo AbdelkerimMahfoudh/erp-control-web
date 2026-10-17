@@ -10,7 +10,7 @@ import { EXTERNAL_CONDITIONS, releaseVerdicts } from '../src/config/gates';
  * works, and the three release verdicts.
  */
 const LANGS = ['en', 'fr', 'ar'] as const;
-const KNOWN_INPUTS = new Set([...Object.keys(INPUTS), 'deletionChannelName', 'productName']);
+const KNOWN_INPUTS = new Set([...Object.keys(INPUTS), 'deletionChannelName', 'operatorStatus', 'productName']);
 
 /** Everything a visitor of the pre-launch website reads, per language. */
 function prelaunchTexts(lang: (typeof LANGS)[number]): string[] {
@@ -80,8 +80,10 @@ describe('the pre-launch texts', () => {
 });
 
 describe('the three release verdicts', () => {
+  /** TSX-MR as a company would be (the PORTAL fixtures elsewhere use the same shape). */
   const REAL_PUBLIC = {
     VITE_PUBLIC_SITE_ORIGIN: 'https://tsxmr.com',
+    VITE_OPERATOR_TYPE: 'company',
     VITE_ORGANIZATION_LEGAL_NAME: 'Registered Name SARL',
     VITE_ORGANIZATION_LEGAL_FORM: 'SARL',
     VITE_ORGANIZATION_REGISTRATION_NUMBER: 'RC 0000',
@@ -92,6 +94,15 @@ describe('the three release verdicts', () => {
     VITE_SECURITY_EMAIL: 'security@company-domain.mr',
     VITE_LEGAL_EFFECTIVE_DATE: '2026-11-01',
   };
+
+  it('TSX-MR as it is today — an individual operator, phones configured — waits on exactly three things: the correspondence address, the effective date and the approval of the six texts', () => {
+    const [pub] = releaseVerdicts({ VITE_PUBLIC_SITE_ORIGIN: 'https://tsxmr.com', VITE_ORGANIZATION_PHONE: '+222 36 96 38 39, +222 37 67 68 27' });
+    expect(pub!.problems.map((p) => `${p.problem}:${p.env ?? p.detail.split(':')[0]}`)).toEqual([
+      'missing:VITE_ORGANIZATION_ADDRESS',
+      'missing:VITE_LEGAL_EFFECTIVE_DATE',
+      ...['accountDeletion', 'legalNotice', 'privacy', 'privacyChoices', 'security', 'terms'].map((d) => `legal_draft:${d}`),
+    ]);
+  });
 
   it('with no environment, all three are NO-GO, each for its own reasons', () => {
     const [pub, portal, app] = releaseVerdicts({});

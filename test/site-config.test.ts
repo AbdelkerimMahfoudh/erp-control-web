@@ -74,11 +74,25 @@ describe('the production refusal (docs/74 §3)', () => {
     }
     const inText = releaseProblems(COMPLETE, [], { drafts: [], placeholders: ['Support hours: [TO BE PROVIDED]'] });
     expect(inText.map((p) => p.problem)).toEqual(['placeholder']);
-    // Read back, a blank stays blank in production — never a guessed value.
+    // Read back, a blank stays blank in production — never a guessed value. Only what the owner gave is a default.
     const { inputs } = readInputs({}, 'production');
-    for (const name of ['legalName', 'legalForm', 'registrationNumber', 'address', 'city', 'supportEmail', 'privacyEmail', 'securityEmail', 'supportHours', 'supportLanguages', 'supportResponseTime', 'publicSiteOrigin'] as InputName[]) {
+    for (const name of ['legalForm', 'registrationNumber', 'address', 'phone', 'supportHours', 'supportLanguages', 'supportResponseTime', 'publicSiteOrigin', 'legalEffectiveDate'] as InputName[]) {
       expect({ name, value: inputs[name] }).toEqual({ name, value: '' });
     }
+    const given = Object.entries(INPUTS).filter(([, spec]) => 'fallback' in spec).map(([name, spec]) => [name, (spec as { fallback: string }).fallback]);
+    expect(Object.fromEntries(given)).toEqual({
+      siteSurface: 'full',
+      displayName: 'TSX-MR',
+      operatorType: 'individual',
+      legalName: 'Abdel Kerim Taleb Ould Sidi',
+      publicationDirector: 'Abdel Kerim Taleb Ould Sidi',
+      country: 'Mauritania',
+      city: 'Nouakchott',
+      contactEmail: 'contact@tsxmr.com',
+      supportEmail: 'support@tsxmr.com',
+      privacyEmail: 'privacy@tsxmr.com',
+      securityEmail: 'security@tsxmr.com',
+    });
   });
 
   it('refuses a legal document still marked draft, by name', () => {
