@@ -3,8 +3,8 @@
 # depth, known pages still 200. Push this branch to run it, or run it by hand with another origin. It reads only; it
 # deploys and changes nothing. Its evidence is committed to the `ci-evidence` branch under evidence/not-found/.
 #
-# The default origin is the `site-redesign` preview on Cloudflare Pages, where the page waits for the owner's approval;
-# after a promotion, run it against https://tsxmr.com.
+# The default origin is the production site (the page was approved and promoted on 2026-10-17); run it by hand with a
+# preview's origin to check a page before its promotion.
 name: verify-not-found
 
 on:
@@ -30,7 +30,7 @@ jobs:
     permissions:
       contents: write # only to commit the evidence branch
     env:
-      ORIGIN: ${{ github.event.inputs.origin || 'https://site-redesign.tsxmr-public.pages.dev' }}
+      ORIGIN: ${{ github.event.inputs.origin || 'https://tsxmr.com' }}
       EV: evidence/not-found/${{ github.sha }}-${{ github.run_id }}
     defaults:
       run:
