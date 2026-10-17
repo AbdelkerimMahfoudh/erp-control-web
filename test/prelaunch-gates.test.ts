@@ -66,9 +66,9 @@ describe('the pre-launch texts', () => {
     }
   });
 
-  it('are drafts, each awaiting TSX-MR’s approval, and none is a placeholder', () => {
-    for (const [name, doc] of Object.entries(PRELAUNCH_LEGAL_DOCUMENTS)) for (const lang of LANGS) expect({ name, lang, status: doc[lang].status }).toEqual({ name, lang, status: 'draft' });
-    expect(publishedDrafts('public')).toEqual(['accountDeletion', 'legalNotice', 'privacy', 'privacyChoices', 'security', 'terms']);
+  it('are approved by TSX-MR (2026-10-17, docs/97 §1: version 1.0 in every language), and none is a placeholder', () => {
+    for (const [name, doc] of Object.entries(PRELAUNCH_LEGAL_DOCUMENTS)) for (const lang of LANGS) expect({ name, lang, status: doc[lang].status, version: doc[lang].version }).toEqual({ name, lang, status: 'approved', version: '1.0' });
+    expect(publishedDrafts('public')).toEqual([]);
     expect(publishedPlaceholders('public')).toEqual([]);
     expect(publishedBlockers('public')).toEqual([]);
   });
@@ -95,12 +95,9 @@ describe('the three release verdicts', () => {
     VITE_LEGAL_EFFECTIVE_DATE: '2026-11-01',
   };
 
-  it('TSX-MR as it is today — an individual operator, address and phones given — waits on exactly two things: the effective date and the approval of the six texts', () => {
+  it('TSX-MR as it is today — an individual operator, address and phones given, the six texts approved — waits on exactly one thing: the effective date, the deployment day', () => {
     const [pub] = releaseVerdicts({ VITE_PUBLIC_SITE_ORIGIN: 'https://tsxmr.com', VITE_ORGANIZATION_PHONE: '+222 36 96 38 39, +222 37 67 68 27' });
-    expect(pub!.problems.map((p) => `${p.problem}:${p.env ?? p.detail.split(':')[0]}`)).toEqual([
-      'missing:VITE_LEGAL_EFFECTIVE_DATE',
-      ...['accountDeletion', 'legalNotice', 'privacy', 'privacyChoices', 'security', 'terms'].map((d) => `legal_draft:${d}`),
-    ]);
+    expect(pub!.problems.map((p) => `${p.problem}:${p.env ?? p.detail.split(':')[0]}`)).toEqual(['missing:VITE_LEGAL_EFFECTIVE_DATE']);
   });
 
   it('with no environment, all three are NO-GO, each for its own reasons', () => {
@@ -110,11 +107,10 @@ describe('the three release verdicts', () => {
     expect(pub!.problems.some((p) => p.env === 'VITE_API_BASE' || p.env === 'VITE_ACCOUNT_DELETION_CHANNEL')).toBe(false);
   });
 
-  it('with the TSX-MR facts given, the public website waits only on TSX-MR’s approval of its six pre-launch texts', () => {
+  it('with the TSX-MR facts given and the six texts approved, the public website is GO', () => {
     const [pub] = releaseVerdicts(REAL_PUBLIC);
-    expect(pub!.problems.map((p) => `${p.problem}:${p.detail.split(':')[0]}`)).toEqual(
-      ['accountDeletion', 'legalNotice', 'privacy', 'privacyChoices', 'security', 'terms'].map((d) => `legal_draft:${d}`),
-    );
+    expect(pub!.problems).toEqual([]);
+    expect(pub!.go).toBe(true);
   });
 
   it('the portal and the App Store stay closed, whatever the website’s facts: they need proof from outside this repository', () => {
