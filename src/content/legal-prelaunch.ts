@@ -300,7 +300,7 @@ export const legalNoticePrelaunch: Legal = {
       { id: 'entity', heading: 'الناشر', blocks: [{ kind: 'p', text: '{operatorStatus} ويُنشر هذا الموقع بهذا الاسم. وبيانات المشغّل مذكورة أدناه.' }] },
       { id: 'responsible', heading: 'المسؤول عن النشر', blocks: [{ kind: 'p', text: 'المسؤول عن النشر: {publicationDirector}.' }] },
       { id: 'product', heading: 'Dukan ERP', blocks: [{ kind: 'p', text: 'Dukan ERP منتج يُشغَّل تحت اسم {displayName}. وهو قيد التحضير للإطلاق، والتسجيل فيه غير مفتوح للعموم بعد.' }] },
-      { id: 'hosting', heading: 'الاستضافة', blocks: [{ kind: 'p', text: 'تستضيف هذا الموقعَ شركة Cloudflare, Inc.، ‏101 Townsend Street, San Francisco, CA 94107، الولايات المتحدة.' }] },
+      { id: 'hosting', heading: 'الاستضافة', blocks: [{ kind: 'p', text: 'تستضيف هذا الموقعَ شركة \u2066Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107\u2069، الولايات المتحدة.' }] },
       { id: 'contact', heading: 'التواصل', blocks: [{ kind: 'p', text: 'راسلوا العنوان الذي يناسب سؤالكم:' }] },
       { id: 'ip', heading: 'حقوق النشر والعلامات التجارية', blocks: [{ kind: 'p', text: 'نصوص هذا الموقع وتصميمه وبرمجياته ملك لـ{legalName}، ما لم يُذكر خلاف ذلك. ولا يجوز نسخها أو إعادة استخدامها دون إذن كتابي.' }] },
       { id: 'policies', heading: 'السياسات', blocks: [{ kind: 'p', text: 'تشرح هذه الصفحات كيف يتعامل هذا الموقع مع المعلومات:' }] },

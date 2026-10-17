@@ -84,3 +84,12 @@ describe('the public pages', () => {
     expect(container.querySelector('a[href^="tel:"] bdi')?.getAttribute('dir')).toBe('ltr');
   });
 });
+
+describe('the host’s address in Arabic', () => {
+  it('is one left-to-right isolate, so its street number keeps its place inside the Arabic sentence', async () => {
+    const { legalNoticePrelaunch } = await import('../src/content/legal-prelaunch');
+    const hosting = legalNoticePrelaunch.ar.sections.find((s) => s.id === 'hosting')!.blocks[0]!;
+    const text = hosting.kind === 'p' ? hosting.text : '';
+    expect(text).toContain('\u2066Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107\u2069');
+  });
+});
