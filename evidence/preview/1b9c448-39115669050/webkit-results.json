@@ -1,0 +1,1493 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/site/node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "playwright.preview.config.ts"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/site/playwright.preview.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/dba64a37e66d4193853f7c9f2205da947ab795aa",
+        "commitHash": "dba64a37e66d4193853f7c9f2205da947ab795aa",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39115669050"
+      },
+      "gitCommit": {
+        "shortHash": "1b9c448",
+        "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+        "subject": "Notes: the shared handoff as it stood at the end of this work",
+        "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+        "author": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1792313335000
+        },
+        "committer": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1792313335000
+        },
+        "branch": "HEAD"
+      },
+      "actualWorkers": 3
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "commitHash": "dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39115669050"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "id": "webkit-iphone-17",
+        "name": "webkit-iphone-17",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "commitHash": "dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39115669050"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "id": "webkit-iphone-se-3",
+        "name": "webkit-iphone-se-3",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "commitHash": "dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39115669050"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "id": "webkit-desktop-safari",
+        "name": "webkit-desktop-safari",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "commitHash": "dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39115669050"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "name": "webkit-iphone-17",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Mobile/15E148 Safari/604.1",
+          "viewport": {
+            "width": 402,
+            "height": 681
+          },
+          "screen": {
+            "width": 402,
+            "height": 874
+          },
+          "deviceScaleFactor": 3,
+          "isMobile": true,
+          "hasTouch": true,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-iphone-17"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "commitHash": "dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39115669050"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "name": "webkit-iphone-se-3",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/27.2 Mobile/19E241 Safari/602.1",
+          "viewport": {
+            "width": 375,
+            "height": 667
+          },
+          "deviceScaleFactor": 2,
+          "isMobile": true,
+          "hasTouch": true,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-iphone-se-3"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "commitHash": "dba64a37e66d4193853f7c9f2205da947ab795aa",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39115669050"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "name": "webkit-desktop-safari",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15",
+          "viewport": {
+            "width": 1280,
+            "height": 900
+          },
+          "screen": {
+            "width": 1792,
+            "height": 1120
+          },
+          "deviceScaleFactor": 2,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-desktop-safari"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 3,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "recordings.spec.ts",
+      "file": "recordings.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "electronics then agent walkthrough, played",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 24652,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:32:18.022Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/recordings-electronics-then-agent-walkthrough-played-webkit-iphone-17/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-0b5dfb0b4d81ec187666",
+          "file": "recordings.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "cards entering while scrolling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 7271,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:32:18.030Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/recordings-cards-entering-while-scrolling-webkit-iphone-17/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-460579465352a0fa198c",
+          "file": "recordings.spec.ts",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "electronics then agent walkthrough, played",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 20381,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:33:55.112Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/recordings-electronics-then-agent-walkthrough-played-webkit-iphone-se-3/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-ca2ed064b366ef10bb42",
+          "file": "recordings.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "cards entering while scrolling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 6832,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:34:13.990Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/recordings-cards-entering-while-scrolling-webkit-iphone-se-3/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-4e64881f493689962b24",
+          "file": "recordings.spec.ts",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "electronics then agent walkthrough, played",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 21172,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:34:58.537Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/recordings-electronics-then-agent-walkthrough-played-webkit-desktop-safari/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-3a0ea3a5fdff8ec804f3",
+          "file": "recordings.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "cards entering while scrolling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 6802,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:35:07.393Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/recordings-cards-entering-while-scrolling-webkit-desktop-safari/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-de1016782b2635b63e65",
+          "file": "recordings.spec.ts",
+          "line": 30,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "webkit.spec.ts",
+      "file": "webkit.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "tabs and steps keep one height, nothing overflows (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 87415,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:32:17.998Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-04a4e9d2aa781a5ceae9",
+          "file": "webkit.spec.ts",
+          "line": 35,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (fr)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 75389,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:32:26.904Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-c9a0e6ba916645b275b8",
+          "file": "webkit.spec.ts",
+          "line": 35,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 66605,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:32:44.732Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-ed32dcdd58600524b454",
+          "file": "webkit.spec.ts",
+          "line": 35,
+          "column": 3
+        },
+        {
+          "title": "scrolling: cards appear as they are reached, once; nothing stays hidden",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 8360,
+                  "error": {
+                    "message": "Error: every card shown after scrolling through\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 52\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 2267.9375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 3644.75,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 8542.234375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 8709.828125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 8902.21875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 9354.03125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 9668.171875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 11202.546875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 11337.203125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 11471.859375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: every card shown after scrolling through\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 52\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 2267.9375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 3644.75,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 8542.234375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 8709.828125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 8902.21875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 9354.03125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 9668.171875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 11202.546875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 11337.203125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 11471.859375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:89:103",
+                    "location": {
+                      "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                      "column": 103,
+                      "line": 89
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 87 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m1200\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 88 |\u001b[39m   \u001b[36mconst\u001b[39m after \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m state()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 89 |\u001b[39m   expect(after\u001b[33m.\u001b[39mfilter((c) \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39mc\u001b[33m.\u001b[39m\u001b[36min\u001b[39m \u001b[33m||\u001b[39m c\u001b[33m.\u001b[39mopacity \u001b[33m!==\u001b[39m \u001b[32m'1'\u001b[39m)\u001b[33m,\u001b[39m \u001b[32m'every card shown after scrolling through'\u001b[39m)\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 90 |\u001b[39m   \u001b[36mawait\u001b[39m scrollTo(page\u001b[33m,\u001b[39m \u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 91 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m400\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 92 |\u001b[39m   expect((\u001b[36mawait\u001b[39m state())\u001b[33m.\u001b[39mevery((c) \u001b[33m=>\u001b[39m c\u001b[33m.\u001b[39m\u001b[36min\u001b[39m \u001b[33m&&\u001b[39m c\u001b[33m.\u001b[39mopacity \u001b[33m===\u001b[39m \u001b[32m'1'\u001b[39m)\u001b[33m,\u001b[39m \u001b[32m'once: still shown after scrolling back'\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                        "column": 103,
+                        "line": 89
+                      },
+                      "message": "Error: every card shown after scrolling through\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 52\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 2267.9375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 3644.75,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 8542.234375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 8709.828125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 8902.21875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 9354.03125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 9668.171875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 11202.546875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 11337.203125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 11471.859375,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  87 |   await page.waitForTimeout(1200);\n  88 |   const after = await state();\n> 89 |   expect(after.filter((c) => !c.in || c.opacity !== '1'), 'every card shown after scrolling through').toEqual([]);\n     |                                                                                                       ^\n  90 |   await scrollTo(page, 0);\n  91 |   await page.waitForTimeout(400);\n  92 |   expect((await state()).every((c) => c.in && c.opacity === '1'), 'once: still shown after scrolling back').toBe(true);\n    at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:89:103"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:33:42.489Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/webkit-scrolling-cards-app-7eb19-d-once-nothing-stays-hidden-webkit-iphone-17/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                    "column": 103,
+                    "line": 89
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-0ba1f56ed6928920c3ec",
+          "file": "webkit.spec.ts",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 27323,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:33:46.067Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-4f1bfad4ac7eb97d11f9",
+          "file": "webkit.spec.ts",
+          "line": 96,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: at load every card at rest and no Play; switched on live, playback stops",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 2062,
+                  "error": {
+                    "message": "Error: page.screenshot: Cannot take screenshot larger than 32767 pixels on any dimension\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n",
+                    "stack": "Error: page.screenshot: Cannot take screenshot larger than 32767 pixels on any dimension\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\n    at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:148:14",
+                    "location": {
+                      "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                      "column": 14,
+                      "line": 148
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 146 |\u001b[39m     }))\u001b[33m;\u001b[39m\n \u001b[90m 147 |\u001b[39m   expect(\u001b[36mawait\u001b[39m motion())\u001b[33m.\u001b[39mtoEqual({ hidden\u001b[33m:\u001b[39m \u001b[35m0\u001b[39m\u001b[33m,\u001b[39m play\u001b[33m:\u001b[39m \u001b[32m'none'\u001b[39m })\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 148 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mscreenshot({ path\u001b[33m:\u001b[39m join(shots\u001b[33m,\u001b[39m \u001b[32m`${info.project.name}-reduced-motion-at-load.png`\u001b[39m)\u001b[33m,\u001b[39m fullPage\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 149 |\u001b[39m   \u001b[36mawait\u001b[39m panel(page)\u001b[33m.\u001b[39mlocator(\u001b[32m'.sc-step button'\u001b[39m)\u001b[33m.\u001b[39mnth(\u001b[35m2\u001b[39m)\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 150 |\u001b[39m   \u001b[36mawait\u001b[39m expect(panel(page)\u001b[33m.\u001b[39mlocator(\u001b[32m'.sc-frame[data-on=\"true\"]'\u001b[39m))\u001b[33m.\u001b[39mtoContainText(dukanDemo\u001b[33m.\u001b[39men\u001b[33m.\u001b[39melectronics\u001b[33m.\u001b[39mrecorded)\u001b[33m;\u001b[39m\n \u001b[90m 151 |\u001b[39m   \u001b[36mawait\u001b[39m reduced\u001b[33m.\u001b[39mclose()\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                        "column": 14,
+                        "line": 148
+                      },
+                      "message": "Error: page.screenshot: Cannot take screenshot larger than 32767 pixels on any dimension\nCall log:\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\n\n  146 |     }));\n  147 |   expect(await motion()).toEqual({ hidden: 0, play: 'none' });\n> 148 |   await page.screenshot({ path: join(shots, `${info.project.name}-reduced-motion-at-load.png`), fullPage: true });\n      |              ^\n  149 |   await panel(page).locator('.sc-step button').nth(2).click();\n  150 |   await expect(panel(page).locator('.sc-frame[data-on=\"true\"]')).toContainText(dukanDemo.en.electronics.recorded);\n  151 |   await reduced.close();\n    at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:148:14"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:33:51.686Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/webkit-reduced-motion-at-l-3091e-ched-on-live-playback-stops-webkit-iphone-17/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                    "column": 14,
+                    "line": 148
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-9010d4b395bffc8b489e",
+          "file": "webkit.spec.ts",
+          "line": 136,
+          "column": 1
+        },
+        {
+          "title": "screens for review: French on a phone, Arabic RTL, dark mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 21629,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:33:51.549Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-9ad600153dcb213f228b",
+          "file": "webkit.spec.ts",
+          "line": 169,
+          "column": 1
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 33140,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:34:14.399Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-3724a92334144f7defec",
+          "file": "webkit.spec.ts",
+          "line": 35,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (fr)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 29218,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:34:16.496Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-12cc6879a59b66e70dc4",
+          "file": "webkit.spec.ts",
+          "line": 35,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 27580,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:34:21.823Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-8ae99e3ff1f6836ed327",
+          "file": "webkit.spec.ts",
+          "line": 35,
+          "column": 3
+        },
+        {
+          "title": "scrolling: cards appear as they are reached, once; nothing stays hidden",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 8383,
+                  "error": {
+                    "message": "Error: every card shown after scrolling through\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 12\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 3499.203125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 9019.671875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: every card shown after scrolling through\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 12\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 3499.203125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 9019.671875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:89:103",
+                    "location": {
+                      "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                      "column": 103,
+                      "line": 89
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 87 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m1200\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 88 |\u001b[39m   \u001b[36mconst\u001b[39m after \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m state()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 89 |\u001b[39m   expect(after\u001b[33m.\u001b[39mfilter((c) \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39mc\u001b[33m.\u001b[39m\u001b[36min\u001b[39m \u001b[33m||\u001b[39m c\u001b[33m.\u001b[39mopacity \u001b[33m!==\u001b[39m \u001b[32m'1'\u001b[39m)\u001b[33m,\u001b[39m \u001b[32m'every card shown after scrolling through'\u001b[39m)\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 90 |\u001b[39m   \u001b[36mawait\u001b[39m scrollTo(page\u001b[33m,\u001b[39m \u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 91 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m400\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 92 |\u001b[39m   expect((\u001b[36mawait\u001b[39m state())\u001b[33m.\u001b[39mevery((c) \u001b[33m=>\u001b[39m c\u001b[33m.\u001b[39m\u001b[36min\u001b[39m \u001b[33m&&\u001b[39m c\u001b[33m.\u001b[39mopacity \u001b[33m===\u001b[39m \u001b[32m'1'\u001b[39m)\u001b[33m,\u001b[39m \u001b[32m'once: still shown after scrolling back'\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                        "column": 103,
+                        "line": 89
+                      },
+                      "message": "Error: every card shown after scrolling through\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 12\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 3499.203125,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 9019.671875,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  87 |   await page.waitForTimeout(1200);\n  88 |   const after = await state();\n> 89 |   expect(after.filter((c) => !c.in || c.opacity !== '1'), 'every card shown after scrolling through').toEqual([]);\n     |                                                                                                       ^\n  90 |   await scrollTo(page, 0);\n  91 |   await page.waitForTimeout(400);\n  92 |   expect((await state()).every((c) => c.in && c.opacity === '1'), 'once: still shown after scrolling back').toBe(true);\n    at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:89:103"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:34:45.913Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/webkit-scrolling-cards-app-7eb19-d-once-nothing-stays-hidden-webkit-iphone-se-3/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                    "column": 103,
+                    "line": 89
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-07b7dcb7304905f805b2",
+          "file": "webkit.spec.ts",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 24462,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:34:47.759Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-6baeeeed669f53e9d3f0",
+          "file": "webkit.spec.ts",
+          "line": 96,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: at load every card at rest and no Play; switched on live, playback stops",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8147,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:34:49.583Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-b4915dcb719fe0a250b8",
+          "file": "webkit.spec.ts",
+          "line": 136,
+          "column": 1
+        },
+        {
+          "title": "screens for review: French on a phone, Arabic RTL, dark mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 11445,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:34:54.993Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-0f06d9ec91b57b202c45",
+          "file": "webkit.spec.ts",
+          "line": 169,
+          "column": 1
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 58760,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:35:13.276Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-bac0cfa818487351bc65",
+          "file": "webkit.spec.ts",
+          "line": 35,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (fr)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 15,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 58633,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:35:16.083Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-40d5890a757c922f0ce0",
+          "file": "webkit.spec.ts",
+          "line": 35,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 16,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 51207,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:35:21.145Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-3aa2ad8656baf7badf77",
+          "file": "webkit.spec.ts",
+          "line": 35,
+          "column": 3
+        },
+        {
+          "title": "scrolling: cards appear as they are reached, once; nothing stays hidden",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 2,
+                  "status": "failed",
+                  "duration": 5427,
+                  "error": {
+                    "message": "Error: every card shown after scrolling through\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 32\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 5616.640625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 5616.640625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 5616.640625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 6554.25,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 6688.90625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 6823.5625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m",
+                    "stack": "Error: every card shown after scrolling through\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 32\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 5616.640625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 5616.640625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 5616.640625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 6554.25,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 6688.90625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 6823.5625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n    at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:89:103",
+                    "location": {
+                      "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                      "column": 103,
+                      "line": 89
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 87 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m1200\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 88 |\u001b[39m   \u001b[36mconst\u001b[39m after \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m state()\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 89 |\u001b[39m   expect(after\u001b[33m.\u001b[39mfilter((c) \u001b[33m=>\u001b[39m \u001b[33m!\u001b[39mc\u001b[33m.\u001b[39m\u001b[36min\u001b[39m \u001b[33m||\u001b[39m c\u001b[33m.\u001b[39mopacity \u001b[33m!==\u001b[39m \u001b[32m'1'\u001b[39m)\u001b[33m,\u001b[39m \u001b[32m'every card shown after scrolling through'\u001b[39m)\u001b[33m.\u001b[39mtoEqual([])\u001b[33m;\u001b[39m\n \u001b[90m    |\u001b[39m                                                                                                       \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 90 |\u001b[39m   \u001b[36mawait\u001b[39m scrollTo(page\u001b[33m,\u001b[39m \u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 91 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m400\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m 92 |\u001b[39m   expect((\u001b[36mawait\u001b[39m state())\u001b[33m.\u001b[39mevery((c) \u001b[33m=>\u001b[39m c\u001b[33m.\u001b[39m\u001b[36min\u001b[39m \u001b[33m&&\u001b[39m c\u001b[33m.\u001b[39mopacity \u001b[33m===\u001b[39m \u001b[32m'1'\u001b[39m)\u001b[33m,\u001b[39m \u001b[32m'once: still shown after scrolling back'\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[36mtrue\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                        "column": 103,
+                        "line": 89
+                      },
+                      "message": "Error: every card shown after scrolling through\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  -  1\u001b[39m\n\u001b[31m+ Received  + 32\u001b[39m\n\n\u001b[32m- Array []\u001b[39m\n\u001b[31m+ Array [\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 5616.640625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 5616.640625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 5616.640625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 6554.25,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 6688.90625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+   Object {\u001b[39m\n\u001b[31m+     \"in\": false,\u001b[39m\n\u001b[31m+     \"opacity\": \"0\",\u001b[39m\n\u001b[31m+     \"top\": 6823.5625,\u001b[39m\n\u001b[31m+   },\u001b[39m\n\u001b[31m+ ]\u001b[39m\n\n  87 |   await page.waitForTimeout(1200);\n  88 |   const after = await state();\n> 89 |   expect(after.filter((c) => !c.in || c.opacity !== '1'), 'every card shown after scrolling through').toEqual([]);\n     |                                                                                                       ^\n  90 |   await scrollTo(page, 0);\n  91 |   await page.waitForTimeout(400);\n  92 |   expect((await state()).every((c) => c.in && c.opacity === '1'), 'once: still shown after scrolling back').toBe(true);\n    at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:89:103"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:36:12.313Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/webkit-scrolling-cards-app-7eb19-d-once-nothing-stays-hidden-webkit-desktop-safari/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                    "column": 103,
+                    "line": 89
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-c81818a41b1573a87899",
+          "file": "webkit.spec.ts",
+          "line": 67,
+          "column": 1
+        },
+        {
+          "title": "playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 16,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 20866,
+                  "error": {
+                    "message": "Error: Pause holds\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m",
+                    "stack": "Error: Pause holds\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\n    at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:121:43",
+                    "location": {
+                      "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                      "column": 43,
+                      "line": 121
+                    },
+                    "snippet": "\u001b[0m \u001b[90m 119 |\u001b[39m   \u001b[36mawait\u001b[39m expect(play)\u001b[33m.\u001b[39mtoHaveText(d\u001b[33m.\u001b[39mplay)\u001b[33m;\u001b[39m\n \u001b[90m 120 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mwaitForTimeout(\u001b[35m3500\u001b[39m)\u001b[33m;\u001b[39m\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 121 |\u001b[39m   expect(\u001b[36mawait\u001b[39m step(page)\u001b[33m,\u001b[39m \u001b[32m'Pause holds'\u001b[39m)\u001b[33m.\u001b[39mtoBe(\u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\n \u001b[90m     |\u001b[39m                                           \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 122 |\u001b[39m   \u001b[90m// Playing, then scrolled out of sight: it pauses and does not start again on return.\u001b[39m\n \u001b[90m 123 |\u001b[39m   \u001b[36mawait\u001b[39m play\u001b[33m.\u001b[39mclick()\u001b[33m;\u001b[39m\n \u001b[90m 124 |\u001b[39m   \u001b[36mawait\u001b[39m scrollTo(page\u001b[33m,\u001b[39m \u001b[35m0\u001b[39m)\u001b[33m;\u001b[39m\u001b[0m"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                        "column": 43,
+                        "line": 121
+                      },
+                      "message": "Error: Pause holds\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\n\n  119 |   await expect(play).toHaveText(d.play);\n  120 |   await page.waitForTimeout(3500);\n> 121 |   expect(await step(page), 'Pause holds').toBe(0);\n      |                                           ^\n  122 |   // Playing, then scrolled out of sight: it pauses and does not start again on return.\n  123 |   await play.click();\n  124 |   await scrollTo(page, 0);\n    at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:121:43"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:36:12.619Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39115669050/webkit-output/webkit-playback-only-when--4ead3-use-holds-off-screen-pauses-webkit-desktop-safari/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts",
+                    "column": 43,
+                    "line": 121
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-6251591e234ba64a614c",
+          "file": "webkit.spec.ts",
+          "line": 96,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: at load every card at rest and no Play; switched on live, playback stops",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 15,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 14299,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:36:14.960Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-fb124d0d1141a9cb0d2e",
+          "file": "webkit.spec.ts",
+          "line": 136,
+          "column": 1
+        },
+        {
+          "title": "screens for review: French on a phone, Arabic RTL, dark mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 17,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 18000,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-18T09:36:18.488Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-ceef5fe5cdc8aa1f5405",
+          "file": "webkit.spec.ts",
+          "line": 169,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-18T09:32:17.088Z",
+    "duration": 259692.37,
+    "expected": 22,
+    "skipped": 0,
+    "unexpected": 5,
+    "flaky": 0
+  }
+}

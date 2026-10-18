@@ -1,0 +1,241 @@
+
+Running 27 tests using 3 workers
+
+  ✓   3 [webkit-iphone-17] › e2e-preview/recordings.spec.ts:30:1 › cards entering while scrolling (7.3s)
+  ✓   2 [webkit-iphone-17] › e2e-preview/recordings.spec.ts:19:1 › electronics then agent walkthrough, played (24.7s)
+  ✓   4 [webkit-iphone-17] › e2e-preview/webkit.spec.ts:35:3 › tabs and steps keep one height, nothing overflows (fr) (1.3m)
+  ✓   1 [webkit-iphone-17] › e2e-preview/webkit.spec.ts:35:3 › tabs and steps keep one height, nothing overflows (en) (1.5m)
+  ✘   6 [webkit-iphone-17] › e2e-preview/webkit.spec.ts:67:1 › scrolling: cards appear as they are reached, once; nothing stays hidden (8.4s)
+  ✓   5 [webkit-iphone-17] › e2e-preview/webkit.spec.ts:35:3 › tabs and steps keep one height, nothing overflows (ar) (1.1m)
+  ✘   9 [webkit-iphone-17] › e2e-preview/webkit.spec.ts:136:1 › reduced motion: at load every card at rest and no Play; switched on live, playback stops (2.1s)
+  ✓   8 [webkit-iphone-17] › e2e-preview/webkit.spec.ts:169:1 › screens for review: French on a phone, Arabic RTL, dark mode (21.6s)
+  ✓   7 [webkit-iphone-17] › e2e-preview/webkit.spec.ts:96:1 › playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses (27.3s)
+  ✓  10 [webkit-iphone-se-3] › e2e-preview/recordings.spec.ts:19:1 › electronics then agent walkthrough, played (20.4s)
+  ✓  11 [webkit-iphone-se-3] › e2e-preview/recordings.spec.ts:30:1 › cards entering while scrolling (6.8s)
+  ✓  13 [webkit-iphone-se-3] › e2e-preview/webkit.spec.ts:35:3 › tabs and steps keep one height, nothing overflows (fr) (29.2s)
+  ✓  12 [webkit-iphone-se-3] › e2e-preview/webkit.spec.ts:35:3 › tabs and steps keep one height, nothing overflows (en) (33.1s)
+  ✓  14 [webkit-iphone-se-3] › e2e-preview/webkit.spec.ts:35:3 › tabs and steps keep one height, nothing overflows (ar) (27.6s)
+  ✘  15 [webkit-iphone-se-3] › e2e-preview/webkit.spec.ts:67:1 › scrolling: cards appear as they are reached, once; nothing stays hidden (8.4s)
+  ✓  17 [webkit-iphone-se-3] › e2e-preview/webkit.spec.ts:136:1 › reduced motion: at load every card at rest and no Play; switched on live, playback stops (8.1s)
+  ✓  18 [webkit-iphone-se-3] › e2e-preview/webkit.spec.ts:169:1 › screens for review: French on a phone, Arabic RTL, dark mode (11.4s)
+  ✓  16 [webkit-iphone-se-3] › e2e-preview/webkit.spec.ts:96:1 › playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses (24.5s)
+  ✓  20 [webkit-desktop-safari] › e2e-preview/recordings.spec.ts:30:1 › cards entering while scrolling (6.8s)
+  ✓  19 [webkit-desktop-safari] › e2e-preview/recordings.spec.ts:19:1 › electronics then agent walkthrough, played (21.2s)
+  ✓  21 [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:35:3 › tabs and steps keep one height, nothing overflows (en) (58.8s)
+  ✓  23 [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:35:3 › tabs and steps keep one height, nothing overflows (ar) (51.2s)
+  ✓  22 [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:35:3 › tabs and steps keep one height, nothing overflows (fr) (58.6s)
+  ✘  24 [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:67:1 › scrolling: cards appear as they are reached, once; nothing stays hidden (5.4s)
+  ✓  26 [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:136:1 › reduced motion: at load every card at rest and no Play; switched on live, playback stops (14.3s)
+  ✘  25 [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:96:1 › playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses (20.9s)
+  ✓  27 [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:169:1 › screens for review: French on a phone, Arabic RTL, dark mode (18.0s)
+
+
+  1) [webkit-iphone-17] › e2e-preview/webkit.spec.ts:67:1 › scrolling: cards appear as they are reached, once; nothing stays hidden 
+
+    Error: every card shown after scrolling through
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 52
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 2267.9375,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 3644.75,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 8542.234375,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 8709.828125,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 8902.21875,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 9354.03125,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 9668.171875,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 11202.546875,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 11337.203125,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 11471.859375,
+    +   },
+    + ]
+
+      87 |   await page.waitForTimeout(1200);
+      88 |   const after = await state();
+    > 89 |   expect(after.filter((c) => !c.in || c.opacity !== '1'), 'every card shown after scrolling through').toEqual([]);
+         |                                                                                                       ^
+      90 |   await scrollTo(page, 0);
+      91 |   await page.waitForTimeout(400);
+      92 |   expect((await state()).every((c) => c.in && c.opacity === '1'), 'once: still shown after scrolling back').toBe(true);
+        at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:89:103
+
+    Error Context: ../evidence/preview/1b9c448-39115669050/webkit-output/webkit-scrolling-cards-app-7eb19-d-once-nothing-stays-hidden-webkit-iphone-17/error-context.md
+
+  2) [webkit-iphone-17] › e2e-preview/webkit.spec.ts:136:1 › reduced motion: at load every card at rest and no Play; switched on live, playback stops 
+
+    Error: page.screenshot: Cannot take screenshot larger than 32767 pixels on any dimension
+    Call log:
+      - taking page screenshot
+      - waiting for fonts to load...
+      - fonts loaded
+
+
+      146 |     }));
+      147 |   expect(await motion()).toEqual({ hidden: 0, play: 'none' });
+    > 148 |   await page.screenshot({ path: join(shots, `${info.project.name}-reduced-motion-at-load.png`), fullPage: true });
+          |              ^
+      149 |   await panel(page).locator('.sc-step button').nth(2).click();
+      150 |   await expect(panel(page).locator('.sc-frame[data-on="true"]')).toContainText(dukanDemo.en.electronics.recorded);
+      151 |   await reduced.close();
+        at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:148:14
+
+    Error Context: ../evidence/preview/1b9c448-39115669050/webkit-output/webkit-reduced-motion-at-l-3091e-ched-on-live-playback-stops-webkit-iphone-17/error-context.md
+
+  3) [webkit-iphone-se-3] › e2e-preview/webkit.spec.ts:67:1 › scrolling: cards appear as they are reached, once; nothing stays hidden 
+
+    Error: every card shown after scrolling through
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 12
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 3499.203125,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 9019.671875,
+    +   },
+    + ]
+
+      87 |   await page.waitForTimeout(1200);
+      88 |   const after = await state();
+    > 89 |   expect(after.filter((c) => !c.in || c.opacity !== '1'), 'every card shown after scrolling through').toEqual([]);
+         |                                                                                                       ^
+      90 |   await scrollTo(page, 0);
+      91 |   await page.waitForTimeout(400);
+      92 |   expect((await state()).every((c) => c.in && c.opacity === '1'), 'once: still shown after scrolling back').toBe(true);
+        at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:89:103
+
+    Error Context: ../evidence/preview/1b9c448-39115669050/webkit-output/webkit-scrolling-cards-app-7eb19-d-once-nothing-stays-hidden-webkit-iphone-se-3/error-context.md
+
+  4) [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:67:1 › scrolling: cards appear as they are reached, once; nothing stays hidden 
+
+    Error: every card shown after scrolling through
+
+    expect(received).toEqual(expected) // deep equality
+
+    - Expected  -  1
+    + Received  + 32
+
+    - Array []
+    + Array [
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 5616.640625,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 5616.640625,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 5616.640625,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 6554.25,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 6688.90625,
+    +   },
+    +   Object {
+    +     "in": false,
+    +     "opacity": "0",
+    +     "top": 6823.5625,
+    +   },
+    + ]
+
+      87 |   await page.waitForTimeout(1200);
+      88 |   const after = await state();
+    > 89 |   expect(after.filter((c) => !c.in || c.opacity !== '1'), 'every card shown after scrolling through').toEqual([]);
+         |                                                                                                       ^
+      90 |   await scrollTo(page, 0);
+      91 |   await page.waitForTimeout(400);
+      92 |   expect((await state()).every((c) => c.in && c.opacity === '1'), 'once: still shown after scrolling back').toBe(true);
+        at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:89:103
+
+    Error Context: ../evidence/preview/1b9c448-39115669050/webkit-output/webkit-scrolling-cards-app-7eb19-d-once-nothing-stays-hidden-webkit-desktop-safari/error-context.md
+
+  5) [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:96:1 › playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses 
+
+    Error: Pause holds
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 1
+
+      119 |   await expect(play).toHaveText(d.play);
+      120 |   await page.waitForTimeout(3500);
+    > 121 |   expect(await step(page), 'Pause holds').toBe(0);
+          |                                           ^
+      122 |   // Playing, then scrolled out of sight: it pauses and does not start again on return.
+      123 |   await play.click();
+      124 |   await scrollTo(page, 0);
+        at /home/runner/work/erp-control-web/erp-control-web/site/e2e-preview/webkit.spec.ts:121:43
+
+    Error Context: ../evidence/preview/1b9c448-39115669050/webkit-output/webkit-playback-only-when--4ead3-use-holds-off-screen-pauses-webkit-desktop-safari/error-context.md
+
+  5 failed
+    [webkit-iphone-17] › e2e-preview/webkit.spec.ts:67:1 › scrolling: cards appear as they are reached, once; nothing stays hidden 
+    [webkit-iphone-17] › e2e-preview/webkit.spec.ts:136:1 › reduced motion: at load every card at rest and no Play; switched on live, playback stops 
+    [webkit-iphone-se-3] › e2e-preview/webkit.spec.ts:67:1 › scrolling: cards appear as they are reached, once; nothing stays hidden 
+    [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:67:1 › scrolling: cards appear as they are reached, once; nothing stays hidden 
+    [webkit-desktop-safari] › e2e-preview/webkit.spec.ts:96:1 › playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses 
+  22 passed (4.3m)
