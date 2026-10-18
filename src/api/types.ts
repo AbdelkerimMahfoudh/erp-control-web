@@ -183,13 +183,16 @@ export interface GraceView {
 
 export type NoticeKind = 'portal_instructions' | 'trial_reminder' | 'trial_expired' | 'paid_reminder' | 'paid_expired' | 'grace_reminder' | 'grace_ended';
 
+/** What became of a message: waiting, on its way, handed to a provider, delivered, not sent, cancelled or replaced. */
+export type NoticeState = 'pending' | 'sending' | 'accepted' | 'delivered' | 'failed' | 'cancelled' | 'superseded';
+
 /** The subscription messages' timeline, as the server keeps it: the next one due, and the newest one, whatever became of it. */
 export interface NoticeTimeline {
   next: { kind: NoticeKind; threshold: string; dueAt: string } | null;
   last: {
     kind: NoticeKind;
     threshold: string;
-    state: 'pending' | 'sending' | 'accepted' | 'delivered' | 'failed' | 'cancelled' | 'superseded';
+    state: NoticeState;
     channel: TrialChannel | null;
     destination: string | null;
     fallbackReason: FallbackReason | null;
@@ -211,6 +214,97 @@ export interface PortalStatus {
   notices: NoticeTimeline;
   actions: { claimTrial: boolean; resendInstructions: boolean; paymentInstructions: boolean };
   timeZone: string;
+  calculatedAt: string;
+}
+
+/**
+ * A subscription message as the console lists it (GET platform/notices, GET platform/businesses/:id/notices; 0099): its
+ * kind and threshold, what became of it, the channel, the destination masked as the Owner is shown it, and each reason
+ * the server recorded — why it went by email, why nothing carried it, why it was cancelled. `resend`: the portal
+ * instructions sent again at the Owner's request. `business` on the cross-business list only.
+ */
+export interface NoticeRow {
+  id: string;
+  kind: NoticeKind;
+  threshold: string;
+  variant: string | null;
+  state: NoticeState;
+  channel: TrialChannel | null;
+  destination: string | null;
+  fallbackReason: FallbackReason | null;
+  failureReason: FailureReason | null;
+  cancelReason: string | null;
+  attempts: number;
+  resend: boolean;
+  dueAt: string;
+  acceptedAt: string | null;
+  completedAt: string | null;
+  createdAt: string;
+  business?: { id: string; name: string; publicStoreId: string };
+}
+
+export interface NoticeLog {
+  rows: NoticeRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+  /** Every message counted by state, whatever the filter. */
+  byState: Record<NoticeState, number>;
+}
+
+export interface BusinessNotices {
+  timeline: NoticeTimeline;
+  messages: NoticeRow[];
+}
+
+/** One paid period end's grace decision as recorded (0099): granted, or none because the allowance was used. */
+export interface GraceEpisodeRow {
+  id: string;
+  business: { id: string; name: string; publicStoreId: string };
+  decision: 'granted' | 'refused';
+  periodEnd: string;
+  startedAt: string;
+  endsAt: string;
+  /** Granted activations already counted in the 12 months before it. */
+  usesBefore: number;
+  recordedBy: 'evaluation' | 'sweeper' | 'lifecycle';
+  recordedAt: string;
+  /** Granted, within its 72 hours, and still the period's grace: not renewed past it, not stopped. */
+  running: boolean;
+  timeZone: string;
+}
+
+/** GET platform/grace — the grace decisions, newest first, and how they stand now. */
+export interface GraceUsage {
+  rules: { allowance: number; windowMonths: number; durationHours: number };
+  summary: { running: number; atAllowance: number; withUse: number };
+  rows: GraceEpisodeRow[];
+  total: number;
+  page: number;
+  pageSize: number;
+  calculatedAt: string;
+}
+
+/** A free trial claimed on the portal, as the console lists it. */
+export interface TrialClaimRow {
+  id: string;
+  business: { id: string; name: string; publicStoreId: string };
+  registrationMethod: 'email' | 'phone' | 'both' | null;
+  status: 'active' | 'expired';
+  claimedAt: string;
+  endsAt: string;
+  expiryRecordedAt: string | null;
+  termsVersion: string;
+  timeZone: string;
+}
+
+/** GET platform/trial-claims — the trials claimed, newest first, and the eligible businesses that have not claimed. */
+export interface TrialClaims {
+  summary: { active: number; expired: number; eligibleUnclaimed: number };
+  rows: TrialClaimRow[];
+  total: number;
+  page: number;
+  pageSize: number;
   calculatedAt: string;
 }
 

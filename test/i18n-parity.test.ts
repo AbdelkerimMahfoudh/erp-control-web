@@ -12,8 +12,8 @@ const SAME_EVERYWHERE = new Set([
   'WhatsApp', 'E-mail', 'Email', 'MRU', 'Mobile money', 'Action', 'Version {n}', '{from} → {to}',
   // The public site (docs/74): names (the product, the stores) and words French writes as English does.
   'Dukan ERP', 'App Store', 'Google Play', 'Menu', 'Contact', 'Services', 'Version {version}', '© {year} {name}', 'Administration — {name}',
-  // The portal's messages heading (docs/101): the same word in French.
-  'Messages',
+  // The portal's and the console's messages (docs/101): the same words in French.
+  'Messages', 'Message',
 ]);
 
 /**

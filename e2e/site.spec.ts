@@ -81,6 +81,65 @@ function ownerStatus(trial: Session['trial']) {
   });
 }
 
+/** What the console's oversight pages read (0099): a message of each outcome, a grace of each decision, a trial claimed. */
+const OVERSIGHT = (() => {
+  const business = { id: BUSINESS.id, name: BUSINESS.name, publicStoreId: BUSINESS.publicStoreId };
+  const message = (over: Record<string, unknown>) => ({
+    id: `n-${Object.values(over).join('-')}`,
+    kind: 'paid_reminder',
+    threshold: 'h72',
+    variant: null,
+    state: 'accepted',
+    channel: 'whatsapp',
+    destination: '+222••••1234',
+    fallbackReason: null,
+    failureReason: null,
+    cancelReason: null,
+    attempts: 1,
+    resend: false,
+    dueAt: '2026-10-29T09:30:00.000Z',
+    acceptedAt: '2026-10-29T09:30:05.000Z',
+    completedAt: '2026-10-29T09:30:05.000Z',
+    createdAt: '2026-10-29T09:30:00.000Z',
+    business,
+    ...over,
+  });
+  return {
+    notices: {
+      rows: [
+        message({}),
+        message({ kind: 'portal_instructions', threshold: 'resend:x', resend: true, channel: 'email', destination: 'o•••@preview.invalid', fallbackReason: 'number_undeliverable' }),
+        message({ kind: 'grace_ended', threshold: 'end', state: 'failed', channel: null, destination: null, failureReason: 'opted_out', acceptedAt: null }),
+        message({ kind: 'trial_reminder', threshold: 'h24', state: 'cancelled', cancelReason: 'suspended', acceptedAt: null }),
+      ],
+      total: 4,
+      page: 1,
+      pageSize: 50,
+      byState: { pending: 2, sending: 0, accepted: 31, delivered: 12, failed: 3, cancelled: 4, superseded: 1 },
+    },
+    grace: {
+      rules: { allowance: 3, windowMonths: 12, durationHours: 72 },
+      summary: { running: 2, atAllowance: 1, withUse: 5 },
+      rows: [
+        { id: 'g1', business, decision: 'granted', periodEnd: '2026-11-01T09:30:00.000Z', startedAt: '2026-11-01T09:30:00.000Z', endsAt: '2026-11-04T09:30:00.000Z', usesBefore: 1, recordedBy: 'evaluation', recordedAt: '2026-11-01T09:31:00.000Z', running: true, timeZone: TRIAL_ZONE },
+        { id: 'g2', business, decision: 'refused', periodEnd: '2026-10-01T09:30:00.000Z', startedAt: '2026-10-01T09:30:00.000Z', endsAt: '2026-10-01T09:30:00.000Z', usesBefore: 3, recordedBy: 'sweeper', recordedAt: '2026-10-01T09:31:00.000Z', running: false, timeZone: TRIAL_ZONE },
+      ],
+      total: 2,
+      page: 1,
+      pageSize: 50,
+      calculatedAt: '2026-11-02T12:00:00.000Z',
+    },
+    trials: {
+      summary: { active: 4, expired: 9, eligibleUnclaimed: 6 },
+      rows: [{ id: 't1', business, registrationMethod: 'phone', status: 'active', claimedAt: TRIAL_START, endsAt: TRIAL_END, expiryRecordedAt: null, termsVersion: '2026-10-18', timeZone: TRIAL_ZONE }],
+      total: 1,
+      page: 1,
+      pageSize: 50,
+      calculatedAt: TRIAL_START,
+    },
+  };
+})();
+
 /** The API the pages may call, answered from fixtures: signed out unless a test says otherwise. */
 async function mockApi(page: Page, signedIn: Session = {}) {
   if (signedIn.lang) await page.addInitScript((lang) => localStorage.setItem('erp.web.language', lang), signedIn.lang);
@@ -96,6 +155,10 @@ async function mockApi(page: Page, signedIn: Session = {}) {
     if (url.endsWith('/platform/my-subscription/trial')) return signedIn.owner ? json(signedIn.trial ? TRIALS[signedIn.trial] : NO_TRIAL) : json({ message: 'Unauthorized' }, 401);
     if (url.endsWith('/platform/payment-instructions')) return signedIn.owner ? json({ available: false, providers: [], defaultProvider: null, placeholder: false }) : json({ message: 'Unauthorized' }, 401);
     if (url.endsWith('/platform/admin/me')) return signedIn.admin ? json({ id: 'a1', email: 'admin@preview.invalid', name: 'Preview administrator' }) : json({ message: 'Unauthorized' }, 401);
+    // The console's oversight of the lifecycle (0099): messages, grace decisions, trials claimed.
+    if (signedIn.admin && url.includes('/platform/notices')) return json(OVERSIGHT.notices);
+    if (signedIn.admin && url.includes('/platform/grace')) return json(OVERSIGHT.grace);
+    if (signedIn.admin && url.includes('/platform/trial-claims')) return json(OVERSIGHT.trials);
     if (url.endsWith('/platform/dashboard'))
       return json({ byState: { pending: 2, active: 7, grace: 1, complimentary: 3, suspended: 0, expired: 1, cancelled: 0, rejected: 1 }, businesses: 15, branches: 21, activeUsers: 48, pendingSeatRequests: 2, pendingStaff: 1, revenue: null, calculatedAt: '2026-10-12T08:00:00.000Z' });
     if (url.includes('/platform/my-subscription/activity-options')) return json({ stores: [], newStore: [] });
@@ -346,6 +409,15 @@ const PROTECTED: [string, string, Session, number][] = [
   ['admin-sign-in', '/admin', {}, 1280],
   ['admin-dashboard', '/admin', { admin: true }, 1280],
   ['admin-dashboard-375', '/admin', { admin: true }, 375],
+  // The lifecycle's oversight (0099): every message, the grace decisions, the trials claimed — at both widths, in Arabic too.
+  ['admin-messages', '/admin/messages', { admin: true }, 1280],
+  ['admin-messages-375', '/admin/messages', { admin: true }, 375],
+  ['admin-messages-ar-375', '/admin/messages', { admin: true, lang: 'ar' }, 375],
+  ['admin-grace', '/admin/grace', { admin: true }, 1280],
+  ['admin-grace-375', '/admin/grace', { admin: true }, 375],
+  ['admin-grace-fr-375', '/admin/grace', { admin: true, lang: 'fr' }, 375],
+  ['admin-trials', '/admin/trials', { admin: true }, 1280],
+  ['admin-trials-ar-375', '/admin/trials', { admin: true, lang: 'ar' }, 375],
 ];
 for (const [name, path, signedIn, width] of PROTECTED) {
   test(`protected: ${name} (mock data, noindex)`, async ({ page }) => {
@@ -362,6 +434,31 @@ for (const [name, path, signedIn, width] of PROTECTED) {
     expect(errors).toEqual([]);
     if (signedIn.lang) expect([l.lang, l.dir]).toEqual([signedIn.lang, signedIn.lang === 'ar' ? 'rtl' : 'ltr']);
   });
+}
+
+for (const [path, name] of [
+  ['/admin/messages', 'messages'],
+  ['/admin/grace', 'grace'],
+  ['/admin/trials', 'trials'],
+] as const) {
+  for (const lang of ['en', 'ar'] as const) {
+    test(`the console's ${name} (0099), ${lang} at 375 px: one table to read, no sideways scroll, no serious violation`, async ({ page }) => {
+      const errors = watchConsole(page);
+      await mockApi(page, { admin: true, lang });
+      await page.setViewportSize({ width: 375, height: 812 });
+      await page.goto(path);
+      await expect(page.locator('table.data')).toBeVisible();
+      await page.waitForLoadState('networkidle');
+      const l = await layout(page);
+      const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+      const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+      record({ test: `console-${name}`, lang, layout: l, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
+      expect([l.lang, l.dir]).toEqual([lang, lang === 'ar' ? 'rtl' : 'ltr']);
+      expect(l.overflow, 'no sideways scroll').toBeLessThanOrEqual(0);
+      expect(serious.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+      expect(errors).toEqual([]);
+    });
+  }
 }
 
 /*

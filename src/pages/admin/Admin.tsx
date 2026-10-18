@@ -11,6 +11,9 @@ import { Businesses } from './Businesses';
 import { Business } from './Business';
 import { SeatRequests } from './SeatRequests';
 import { Audit } from './Audit';
+import { Grace } from './Grace';
+import { Messages } from './Messages';
+import { TrialClaims } from './TrialClaims';
 import { Plans } from './Plans';
 
 type Session =
@@ -63,6 +66,9 @@ export function Admin() {
           <NavLink to="/admin/pending">{t('admin.nav.pending')}</NavLink>
           <NavLink to="/admin/businesses">{t('admin.nav.businesses')}</NavLink>
           <NavLink to="/admin/seat-requests">{t('admin.nav.seats')}</NavLink>
+          <NavLink to="/admin/trials">{t('admin.trial.nav')}</NavLink>
+          <NavLink to="/admin/grace">{t('admin.nav.grace')}</NavLink>
+          <NavLink to="/admin/messages">{t('admin.nav.messages')}</NavLink>
           <NavLink to="/admin/audit">{t('admin.nav.audit')}</NavLink>
           <NavLink to="/admin/plans">{t('admin.nav.plans')}</NavLink>
         </nav>
@@ -86,6 +92,9 @@ export function Admin() {
         <Route path="businesses" element={<Businesses />} />
         <Route path="businesses/:id" element={<Business />} />
         <Route path="seat-requests" element={<SeatRequests />} />
+        <Route path="trials" element={<TrialClaims />} />
+        <Route path="grace" element={<Grace />} />
+        <Route path="messages" element={<Messages />} />
         <Route path="audit" element={<Audit />} />
         <Route path="plans" element={<Plans />} />
       </Routes>

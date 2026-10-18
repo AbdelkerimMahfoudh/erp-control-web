@@ -93,7 +93,7 @@ const executable = (src: string) => src.split('\n').filter((line) => !line.trim(
 describe('the free trial’s dates are the server’s', () => {
   it('finds the trial’s sources (the rules below would pass on nothing)', () => {
     expect(trialFiles.map((f) => relative(SRC, f)).sort()).toEqual(
-      [join('components', 'trial.tsx'), join('lib', 'trial.ts'), join('pages', 'portal', 'TrialCard.tsx'), join('pages', 'admin', 'BusinessTrial.tsx')].sort(),
+      [join('components', 'trial.tsx'), join('lib', 'trial.ts'), join('pages', 'portal', 'TrialCard.tsx'), join('pages', 'admin', 'BusinessTrial.tsx'), join('pages', 'admin', 'TrialClaims.tsx')].sort(),
     );
   });
 

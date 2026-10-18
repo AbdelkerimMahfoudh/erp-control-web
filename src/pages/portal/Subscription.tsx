@@ -8,7 +8,6 @@ import type {
   GraceView,
   MySubscription,
   NewStoreOption,
-  NoticeKind,
   NoticeTimeline,
   PaymentInstructions,
   PortalStatus,
@@ -21,7 +20,7 @@ import type {
 import { isUnauthorized, ownerRequest, portalChooseAccount, portalSession, portalSignIn, portalSignOut, type AccountChoice, type PortalSession } from '../../auth/owner';
 import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
-import { FailureNote, FallbackNote, Where } from '../../components/notices';
+import { FailureNote, FallbackNote, NoticeStateBadge, Where, noticeName } from '../../components/notices';
 import { PublicLink } from '../../components/PortalChrome';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
 import { Timeline, type TimelineTrial } from '../../components/timeline';
@@ -528,27 +527,6 @@ function RenewalLine({ status, at }: { status: PortalStatus; at: (iso: string | 
   );
 }
 
-const NOTICE_HOURS: Record<string, number> = { h72: 72, h48: 48, h24: 24 };
-
-const isReminder = (kind: NoticeKind): kind is 'trial_reminder' | 'paid_reminder' | 'grace_reminder' =>
-  kind === 'trial_reminder' || kind === 'paid_reminder' || kind === 'grace_reminder';
-
-/** A message of the timeline, in words: its kind, and the hours of a reminder. */
-function noticeName(kind: NoticeKind, threshold: string, t: ReturnType<typeof useI18n>['t'], lang: Language): string {
-  const hours = NOTICE_HOURS[threshold];
-  return hours !== undefined && isReminder(kind) ? t(`notice.kind.${kind}.hours`, { hours: formatInt(hours, lang) }) : t(`notice.kind.${kind}`);
-}
-
-const NOTICE_STATE_TONE: Record<NonNullable<NoticeTimeline['last']>['state'], Tone> = {
-  pending: 'info',
-  sending: 'info',
-  accepted: 'ok',
-  delivered: 'ok',
-  failed: 'danger',
-  cancelled: 'muted',
-  superseded: 'muted',
-};
-
 /** Where the subscription messages stand: the next one due as things are now, and the newest one, whatever became of it. */
 function NoticeLines({ notices, at }: { notices: NoticeTimeline; at: (iso: string | null) => string }) {
   const { t, lang } = useI18n();
@@ -566,7 +544,7 @@ function NoticeLines({ notices, at }: { notices: NoticeTimeline; at: (iso: strin
         <div className="stack-tight">
           <p>
             <Phrase text={t('portal.messages.last')} values={{ name: noticeName(last.kind, last.threshold, t, lang), date: at(last.at) }} />{' '}
-            <Badge tone={NOTICE_STATE_TONE[last.state]}>{t(`notice.state.${last.state}`)}</Badge>
+            <NoticeStateBadge state={last.state} />
           </p>
           {last.channel && last.state !== 'cancelled' && last.state !== 'superseded' ? (
             <p className="muted small">

@@ -12,6 +12,7 @@ import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatDateTime, formatInstant, formatInt } from '../../lib/format';
 import { detailOf } from '../../lib/trial';
 import { BusinessTrial } from './BusinessTrial';
+import { BusinessGrace, BusinessMessages } from './BusinessLifecycle';
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
 
@@ -103,6 +104,10 @@ export function Business() {
       <ErrorNotice error={error} />
 
       <BusinessTrial business={data} />
+
+      <BusinessGrace grace={ent?.grace} timeZone={ent?.timeZone} />
+
+      <BusinessMessages businessId={id} timeZone={ent?.timeZone} version={data} />
 
       <Decisions business={data} ask={ask} onDone={load} />
 
