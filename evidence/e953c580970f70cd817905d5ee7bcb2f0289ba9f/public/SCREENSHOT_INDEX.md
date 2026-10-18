@@ -1,6 +1,6 @@
 # Screenshot index
 
-Generated 2026-10-18T02:23:14.551Z from the CI run; JPEG, full page unless noted.
+Generated 2026-10-18T02:23:44.920Z from the CI run; JPEG, full page unless noted.
 
 ## ar-375 (13)
 
