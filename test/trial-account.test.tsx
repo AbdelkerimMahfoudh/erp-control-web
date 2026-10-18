@@ -725,7 +725,7 @@ describe('the history: every event in words, the trial’s own from its facts in
       'created', 'extended', 'branches_changed', 'seats_changed', 'complimentary_granted', 'complimentary_revoked', 'backfilled', 'registered',
       'administrative_grant', 'suspended', 'reinstated', 'cancelled', 'approved', 'rejected', 'period_corrected', 'seat_requested', 'seat_paid',
       'staff_activated', 'seat_closed', 'store_requested', 'activity_requested', 'activity_changed', 'activity_scheduled', 'renewed',
-      'trial_eligible', 'trial_claimed', 'trial_expired',
+      'trial_eligible', 'trial_claimed', 'trial_expired', 'grace_started', 'grace_unavailable',
     ];
     for (const [lang, cat] of [['en', en], ['fr', fr], ['ar', ar]] as const) {
       localStorage.setItem('erp.web.language', lang);
@@ -741,6 +741,45 @@ describe('the history: every event in words, the trial’s own from its facts in
       cleanup();
     }
   });
+
+  /*
+   * A paid period end's grace decision (0099): told in the catalogue's words with the period end the server recorded,
+   * in the business's zone — never the server's English note, whose instants are raw UTC.
+   */
+  const PERIOD_END = '2026-10-17T06:24:30.565Z';
+  const GRACE_NOTES = [
+    'The paid period ended: 72 hours of grace started (1 of 3 in 12 months).',
+    'The paid period ended with the 3 grace periods of the last 12 months already used: no grace.',
+  ];
+  const GRACE_EVENTS: TimelineEvent[] = [
+    { id: 'g3', kind: 'grace_unavailable', note: GRACE_NOTES[1]!, actor: 'system', periodEndAfter: PERIOD_END, createdAt: '2026-10-20T07:00:00.000Z' },
+    { id: 'g2', kind: 'grace_started', note: GRACE_NOTES[0]!, actor: 'system', periodEndAfter: PERIOD_END, createdAt: '2026-10-17T06:25:00.000Z' },
+    { id: 'g1', kind: 'grace_started', note: GRACE_NOTES[0]!, actor: 'system', periodEndAfter: null, createdAt: '2026-09-01T00:00:00.000Z' },
+  ];
+
+  for (const [lang, cat, locale] of [['fr', fr, 'fr-FR'], ['ar', ar, 'ar-MR']] as const) {
+    it(`grace in ${lang === 'fr' ? 'French' : 'Arabic'}: its own words, the period end in the business’s zone — never the server’s English note`, async () => {
+      localStorage.setItem('erp.web.language', lang);
+      account('trial_expired', { state: 'trial_expired', trial: trialView('expired'), offer: null, setup: null, calculatedAt: TRIAL_END }, undefined, (sub) => {
+        sub.events = GRACE_EVENTS;
+      });
+      const history = (await screen.findByRole('heading', { name: cat['account.timeline'], level: 2 })).closest('section')!;
+      const text = history.textContent!;
+      const end = `${new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeStyle: 'short', timeZone: TRIAL_ZONE }).format(new Date(PERIOD_END))} (${zoneName(TRIAL_ZONE, locale, PERIOD_END)})`;
+      expect([...history.querySelectorAll('li strong')].map((e) => e.textContent)).toEqual([cat['event.grace_unavailable'], cat['event.grace_started'], cat['event.grace_started']]);
+      for (const note of GRACE_NOTES) expect(text).not.toContain(note);
+      expect(text).not.toMatch(/\d{4}-\d{2}-\d{2}T/);
+      // An event the server recorded with no period end says so without a date.
+      expect(text).toContain(cat['event.grace_started.note.undated']);
+      if (lang === 'fr') {
+        expect(text).toContain(cat['event.grace_started.note'].replace('{end}', end));
+        expect(text).toContain(cat['event.grace_unavailable.note'].replace('{end}', end));
+      } else {
+        // Isolated, so the date keeps its own order inside the Arabic sentence.
+        expect([...history.querySelectorAll('bdi')].map((b) => b.textContent)).toContain(end);
+      }
+    });
+  }
 
   /*
    * A business that registered itself and was approved before it claimed (C18): the server gives no trial view, yet the

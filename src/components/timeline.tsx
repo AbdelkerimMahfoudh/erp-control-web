@@ -3,7 +3,7 @@ import { useI18n, type Key } from '../i18n';
 import { formatDateTime, formatInstant } from '../lib/format';
 import { Empty, Phrase } from './ui';
 
-/** Every kind of event the server records on a subscription's history (its `SubscriptionEventKind`, 0095 included). */
+/** Every kind of event the server records on a subscription's history (its `SubscriptionEventKind`, 0095 and 0099 included). */
 const EVENT_KINDS = [
   'created',
   'extended',
@@ -32,6 +32,8 @@ const EVENT_KINDS = [
   'trial_eligible',
   'trial_claimed',
   'trial_expired',
+  'grace_started',
+  'grace_unavailable',
 ] as const;
 type EventKind = (typeof EVENT_KINDS)[number];
 
@@ -42,6 +44,8 @@ function kindWords(kind: string): Key {
 
 /** The free trial's own events: told from the trial's facts, never from the server's note. */
 const TRIAL_KINDS: ReadonlySet<string> = new Set<EventKind>(['trial_eligible', 'trial_claimed', 'trial_expired']);
+/** A paid period end's grace decision (0099): told from the recorded period end, never from the server's note. */
+const GRACE_KINDS: ReadonlySet<string> = new Set<EventKind>(['grace_started', 'grace_unavailable']);
 
 /** The trial's facts the page already holds: the business's zone, and the recorded start and end once claimed. */
 export interface TimelineTrial {
@@ -52,9 +56,9 @@ export interface TimelineTrial {
 
 /**
  * A subscription's history, one way for the account page and the console: each event's kind in words, then its note.
- * The free trial's events (2026-10-13) are told from catalogue sentences, their dates the server's UTC instants shown
- * in the business's zone with the zone's name — the server's own note, in English with raw instants, is never shown
- * for them. Every other kind keeps the note the server wrote. A business that never claimed has no trial view once its
+ * The free trial's events (2026-10-13) and a paid period end's grace decision (0099) are told from catalogue
+ * sentences, their dates the server's UTC instants shown in the business's zone with the zone's name — the server's own
+ * note, in English with raw instants, is never shown for them. Every other kind keeps the note the server wrote. A business that never claimed has no trial view once its
  * chance to claim closed: the console still holds its zone with the trial's recorded facts, and the account page has
  * it from the business itself (C18). A page given no zone — an API older than both — dates the trial's eligibility as it
  * dates every other row.
@@ -78,7 +82,9 @@ export function Timeline({ events, trial, actors = false }: { events: TimelineEv
                 </>
               ) : null}
             </div>
-            <time dateTime={e.createdAt}>{TRIAL_KINDS.has(e.kind) && trial ? formatInstant(e.createdAt, trial.timeZone, lang) : formatDateTime(e.createdAt, lang)}</time>
+            <time dateTime={e.createdAt}>
+              {(TRIAL_KINDS.has(e.kind) || GRACE_KINDS.has(e.kind)) && trial ? formatInstant(e.createdAt, trial.timeZone, lang) : formatDateTime(e.createdAt, lang)}
+            </time>
           </div>
         </li>
       ))}
@@ -110,6 +116,17 @@ function EventNote({ event, trial }: { event: TimelineEvent; trial: TimelineTria
         </>
       ) : (
         <> — {t('event.trial_expired.note.undated')}</>
+      );
+    case 'grace_started':
+    case 'grace_unavailable':
+      // The paid period end the decision was made for — the server's instant, in the business's zone.
+      return event.periodEndAfter ? (
+        <>
+          {' — '}
+          <Phrase text={t(`event.${event.kind}.note`)} values={{ end: at(event.periodEndAfter) }} />
+        </>
+      ) : (
+        <> — {t(`event.${event.kind}.note.undated`)}</>
       );
     default:
       // The server writes its notes in English: isolated, so an Arabic line does not turn their punctuation around.

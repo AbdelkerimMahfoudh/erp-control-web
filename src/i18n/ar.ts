@@ -488,6 +488,12 @@ export const ar: Catalogue = {
   'event.trial_expired': 'انتهت الفترة التجريبية المجانية',
   'event.trial_expired.note': 'انتهت في {end}. لم يُطلب أي دفع.',
   'event.trial_expired.note.undated': 'لم يُطلب أي دفع.',
+  'event.grace_started': 'بدأت فترة السماح',
+  'event.grace_started.note': 'انتهت الفترة المدفوعة في {end}: بدأت إحدى فترات السماح الثلاث المتاحة خلال أي 12 شهرًا — 72 ساعة.',
+  'event.grace_started.note.undated': 'انتهت الفترة المدفوعة: بدأت إحدى فترات السماح الثلاث المتاحة خلال أي 12 شهرًا — 72 ساعة.',
+  'event.grace_unavailable': 'لا فترة سماح',
+  'event.grace_unavailable.note': 'انتهت الفترة المدفوعة في {end} وقد استُخدمت فترات السماح الثلاث خلال آخر 12 شهرًا: للقراءة فقط.',
+  'event.grace_unavailable.note.undated': 'انتهت الفترة المدفوعة وقد استُخدمت فترات السماح الثلاث خلال آخر 12 شهرًا: للقراءة فقط.',
   'event.unknown': 'سُجّل تغيير',
 
   // ── public site (TSX-MR / Dukan ERP, docs/74) ──
@@ -638,6 +644,8 @@ export const ar: Catalogue = {
   'notice.kind.paid_reminder': 'تذكير بالتجديد',
   'notice.kind.paid_reminder.hours': 'تذكير بالتجديد، قبل {hours} ساعة من نهاية الفترة المدفوعة',
   'notice.kind.paid_expired': 'انتهاء الفترة المدفوعة',
+  'notice.kind.paid_expired.grace_started': 'انتهاء الفترة المدفوعة — بدأت فترة السماح',
+  'notice.kind.paid_expired.no_grace': 'انتهاء الفترة المدفوعة — لا فترة سماح متبقية',
   'notice.kind.grace_reminder': 'تذكير بفترة السماح',
   'notice.kind.grace_reminder.hours': 'تذكير بفترة السماح، تبقّت {hours} ساعة',
   'notice.kind.grace_ended': 'انتهاء فترة السماح',

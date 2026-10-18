@@ -489,6 +489,12 @@ export const fr: Catalogue = {
   'event.trial_expired': 'Essai gratuit terminé',
   'event.trial_expired.note': 'Il s’est terminé le {end}. Rien n’a été facturé.',
   'event.trial_expired.note.undated': 'Rien n’a été facturé.',
+  'event.grace_started': 'Période de grâce commencée',
+  'event.grace_started.note': 'La période payée s’est terminée le {end} : l’une des 3 périodes de grâce sur 12 mois glissants a commencé — 72 heures.',
+  'event.grace_started.note.undated': 'La période payée s’est terminée : l’une des 3 périodes de grâce sur 12 mois glissants a commencé — 72 heures.',
+  'event.grace_unavailable': 'Aucune période de grâce',
+  'event.grace_unavailable.note': 'La période payée s’est terminée le {end}, les 3 périodes de grâce des 12 derniers mois étant déjà utilisées : lecture seule.',
+  'event.grace_unavailable.note.undated': 'La période payée s’est terminée, les 3 périodes de grâce des 12 derniers mois étant déjà utilisées : lecture seule.',
   'event.unknown': 'Modification enregistrée',
 
   // ── public site (TSX-MR / Dukan ERP, docs/74) ──
@@ -639,6 +645,8 @@ export const fr: Catalogue = {
   'notice.kind.paid_reminder': 'rappel de renouvellement',
   'notice.kind.paid_reminder.hours': 'rappel de renouvellement, {hours} heures avant la fin de la période payée',
   'notice.kind.paid_expired': 'fin de la période payée',
+  'notice.kind.paid_expired.grace_started': 'fin de la période payée — période de grâce commencée',
+  'notice.kind.paid_expired.no_grace': 'fin de la période payée — aucune période de grâce restante',
   'notice.kind.grace_reminder': 'rappel de la période de grâce',
   'notice.kind.grace_reminder.hours': 'rappel de la période de grâce, encore {hours} heures',
   'notice.kind.grace_ended': 'fin de la période de grâce',

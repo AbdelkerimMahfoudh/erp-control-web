@@ -86,7 +86,7 @@ export function BusinessMessages({ businessId, timeZone, version }: { businessId
               label: t('admin.messages.message'),
               render: (r) => (
                 <span className="stack-tight">
-                  <span>{noticeName(r.kind, r.threshold, t, lang)}</span>
+                  <span>{noticeName(r.kind, r.threshold, t, lang, r.variant)}</span>
                   {r.resend ? <span className="muted small">{t('admin.messages.resend')}</span> : null}
                 </span>
               ),

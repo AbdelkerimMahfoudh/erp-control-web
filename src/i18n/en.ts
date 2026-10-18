@@ -500,6 +500,12 @@ export const en = {
   'event.trial_expired': 'Free trial ended',
   'event.trial_expired.note': 'It ended on {end}. Nothing was charged.',
   'event.trial_expired.note.undated': 'Nothing was charged.',
+  'event.grace_started': 'Grace period started',
+  'event.grace_started.note': 'The paid period ended on {end}: one of the 3 grace periods of any 12 months started — 72 hours.',
+  'event.grace_started.note.undated': 'The paid period ended: one of the 3 grace periods of any 12 months started — 72 hours.',
+  'event.grace_unavailable': 'No grace period',
+  'event.grace_unavailable.note': 'The paid period ended on {end} with the 3 grace periods of the last 12 months already used: read-only.',
+  'event.grace_unavailable.note.undated': 'The paid period ended with the 3 grace periods of the last 12 months already used: read-only.',
   'event.unknown': 'Change recorded',
 
   // ── legal / support ──
@@ -651,6 +657,8 @@ export const en = {
   'notice.kind.paid_reminder': 'renewal reminder',
   'notice.kind.paid_reminder.hours': 'renewal reminder, {hours} hours before the paid period ends',
   'notice.kind.paid_expired': 'paid period ended',
+  'notice.kind.paid_expired.grace_started': 'paid period ended — grace started',
+  'notice.kind.paid_expired.no_grace': 'paid period ended — no grace left',
   'notice.kind.grace_reminder': 'grace period reminder',
   'notice.kind.grace_reminder.hours': 'grace period reminder, {hours} hours left',
   'notice.kind.grace_ended': 'grace period ended',

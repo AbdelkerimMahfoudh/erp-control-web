@@ -65,6 +65,8 @@ describe('the console: every subscription message', () => {
               row({ kind: 'portal_instructions', threshold: 'resend:x', resend: true, channel: 'email', destination: 'o•••@example.test', fallbackReason: 'number_undeliverable' }),
               row({ kind: 'grace_ended', threshold: 'end', state: 'failed', channel: null, destination: null, failureReason: 'opted_out', acceptedAt: null }),
               row({ kind: 'trial_reminder', threshold: 'h24', state: 'cancelled', cancelReason: 'suspended', acceptedAt: null }),
+              row({ kind: 'paid_expired', threshold: 'end', variant: 'grace_started' }),
+              row({ kind: 'paid_expired', threshold: 'end', variant: 'no_grace' }),
             ]),
           }
         : undefined,
@@ -79,6 +81,9 @@ describe('the console: every subscription message', () => {
     expect(rows[1]).toContain(en['admin.messages.reason.failure.opted_out']);
     expect(rows[2]).toContain('free trial reminder, 24 hours before it ends');
     expect(rows[2]).toContain(en['admin.messages.reason.cancel.suspended']);
+    // A paid end's message says which it was: grace started, or none left.
+    expect(rows[3]).toContain(en['notice.kind.paid_expired.grace_started']);
+    expect(rows[4]).toContain(en['notice.kind.paid_expired.no_grace']);
     // Each business links to its page; each state is a badge in colour and words; every state is counted above.
     expect(within(table).getAllByRole('link', { name: 'Boutique Aicha' })[0]!.getAttribute('href')).toBe(`/admin/businesses/${ID}`);
     expect(within(table).getByText('not sent').className).toBe('badge tone-danger');
@@ -187,7 +192,7 @@ describe('the console: a business’s grace and messages', () => {
         return {
           body: {
             timeline: { next: { kind: 'grace_reminder', threshold: 'h24', dueAt: '2026-11-03T09:30:00.000Z' }, last: null },
-            messages: [row({ kind: 'paid_expired', threshold: 'end', variant: 'grace', business: undefined, acceptedAt: '2026-11-01T09:31:00.000Z' })],
+            messages: [row({ kind: 'paid_expired', threshold: 'end', variant: 'grace_started', business: undefined, acceptedAt: '2026-11-01T09:31:00.000Z' })],
           },
         };
       }
@@ -209,7 +214,7 @@ describe('the console: a business’s grace and messages', () => {
     business();
     const card = (await screen.findByRole('heading', { name: en['admin.business.messages.title'], level: 2 }, SLOW_WAIT)).closest('section')!;
     expect(card.textContent).toContain(`Next: grace period reminder, 24 hours left, due ${LAGOS('2026-11-03T09:30:00.000Z')}.`);
-    expect(card.textContent).toContain('paid period ended');
+    expect(card.textContent).toContain('paid period ended — grace started');
     expect(card.textContent).toContain(LAGOS('2026-11-01T09:31:00.000Z'));
     expect(card.textContent).toContain('by WhatsApp to +222••••1234');
   });

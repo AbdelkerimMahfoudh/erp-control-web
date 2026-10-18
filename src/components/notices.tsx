@@ -15,9 +15,12 @@ const isReminder = (kind: NoticeKind): kind is 'trial_reminder' | 'paid_reminder
   kind === 'trial_reminder' || kind === 'paid_reminder' || kind === 'grace_reminder';
 
 /** A message in words: its kind, and the hours of a reminder. */
-export function noticeName(kind: NoticeKind, threshold: string, t: ReturnType<typeof useI18n>['t'], lang: Language): string {
+export function noticeName(kind: NoticeKind, threshold: string, t: ReturnType<typeof useI18n>['t'], lang: Language, variant?: string | null): string {
   const hours = NOTICE_HOURS[threshold];
-  return hours !== undefined && isReminder(kind) ? t(`notice.kind.${kind}.hours`, { hours: formatInt(hours, lang) }) : t(`notice.kind.${kind}`);
+  if (hours !== undefined && isReminder(kind)) return t(`notice.kind.${kind}.hours`, { hours: formatInt(hours, lang) });
+  // A paid end's message says which it was, when the row says so: grace started, or none left.
+  if (kind === 'paid_expired' && (variant === 'grace_started' || variant === 'no_grace')) return t(`notice.kind.paid_expired.${variant}`);
+  return t(`notice.kind.${kind}`);
 }
 
 const NOTICE_STATE_TONE: Record<NoticeState, Tone> = {
