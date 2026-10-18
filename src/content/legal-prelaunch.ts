@@ -14,6 +14,11 @@ import type { LegalDocument } from './types';
  * separately incorporated company, operated by one individual. `{operatorStatus}` says so in each language, and no
  * text names a legal form, a registration number or anything else the owner did not give.
  *
+ * Version 1.1 (the owner's brief of 2026-10-17, fourth; D196): privacy, terms and the legal notice name the operator once
+ * and then say "the operator"; the legal notice's "Policies" list gives way to the page's related pages. Editorial only:
+ * no commitment changes. Published on 2026-10-18, its own effective date (`effective`); the three unchanged texts keep
+ * the site's.
+ *
  * Version 1.0: the six texts of version 0.3 (docs/97), approved as they are by TSX-MR on 2026-10-17 with the
  * commitments of docs/97 §3 confirmed — the only change here is each document's `status` and `version`, as docs/97 §1
  * instructs. The effective date is the deployment day, set as `VITE_LEGAL_EFFECTIVE_DATE` in the host's environment.
@@ -29,6 +34,7 @@ export const privacyPrelaunch: Legal = {
   en: {
     version: '1.1',
     status: 'approved',
+    effective: '2026-10-18',
     title: 'Privacy policy',
     summary: 'How {displayName} handles personal information on this website before Dukan ERP opens.',
     sections: [
@@ -62,6 +68,7 @@ export const privacyPrelaunch: Legal = {
   fr: {
     version: '1.1',
     status: 'approved',
+    effective: '2026-10-18',
     title: 'Politique de confidentialité',
     summary: 'Comment {displayName} traite les informations personnelles sur ce site avant l’ouverture de Dukan ERP.',
     sections: [
@@ -95,6 +102,7 @@ export const privacyPrelaunch: Legal = {
   ar: {
     version: '1.1',
     status: 'approved',
+    effective: '2026-10-18',
     title: 'سياسة الخصوصية',
     summary: 'كيف يتعامل {displayName} مع المعلومات الشخصية على هذا الموقع قبل افتتاح Dukan ERP.',
     sections: [
@@ -131,6 +139,7 @@ export const termsPrelaunch: Legal = {
   en: {
     version: '1.1',
     status: 'approved',
+    effective: '2026-10-18',
     title: 'Terms of use of this website',
     summary: 'The terms for using this website before Dukan ERP opens.',
     sections: [
@@ -150,6 +159,7 @@ export const termsPrelaunch: Legal = {
   fr: {
     version: '1.1',
     status: 'approved',
+    effective: '2026-10-18',
     title: 'Conditions d’utilisation de ce site',
     summary: 'Les conditions d’utilisation de ce site avant l’ouverture de Dukan ERP.',
     sections: [
@@ -169,6 +179,7 @@ export const termsPrelaunch: Legal = {
   ar: {
     version: '1.1',
     status: 'approved',
+    effective: '2026-10-18',
     title: 'شروط استخدام هذا الموقع',
     summary: 'شروط استخدام هذا الموقع قبل افتتاح Dukan ERP.',
     sections: [
@@ -269,6 +280,7 @@ export const legalNoticePrelaunch: Legal = {
   en: {
     version: '1.1',
     status: 'approved',
+    effective: '2026-10-18',
     title: 'Legal notice',
     summary: 'Who publishes this website, and how to reach them.',
     sections: [
@@ -283,6 +295,7 @@ export const legalNoticePrelaunch: Legal = {
   fr: {
     version: '1.1',
     status: 'approved',
+    effective: '2026-10-18',
     title: 'Mentions légales',
     summary: 'Qui publie ce site, et comment le joindre.',
     sections: [
@@ -297,6 +310,7 @@ export const legalNoticePrelaunch: Legal = {
   ar: {
     version: '1.1',
     status: 'approved',
+    effective: '2026-10-18',
     title: 'إشعار قانوني',
     summary: 'من ينشر هذا الموقع، وكيف يمكن التواصل معه.',
     sections: [

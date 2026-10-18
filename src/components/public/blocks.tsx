@@ -157,7 +157,7 @@ export function SectionHead({ id, title, lead }: { id: string; title: string; le
  */
 export function LegalView({ doc, after }: { doc: LegalDocument; after?: Record<string, ReactNode> }) {
   const { t, lang } = useI18n();
-  const effective = SITE.legalEffectiveDate;
+  const effective = doc.effective ?? SITE.legalEffectiveDate;
   return (
     <article className="doc legal">
       {doc.status === 'draft' ? (

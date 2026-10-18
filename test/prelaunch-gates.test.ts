@@ -70,6 +70,9 @@ describe('the pre-launch texts', () => {
     // Version 1.1: privacy, terms and the legal notice name the operator once and then say "the operator".
     const VERSION: Record<string, string> = { privacy: '1.1', terms: '1.1', legalNotice: '1.1', accountDeletion: '1.0', privacyChoices: '1.0', security: '1.0' };
     for (const [name, doc] of Object.entries(PRELAUNCH_LEGAL_DOCUMENTS)) for (const lang of LANGS) expect({ name, lang, status: doc[lang].status, version: doc[lang].version }).toEqual({ name, lang, status: 'approved', version: VERSION[name] });
+    // A revised version takes effect on its own publication day; the unchanged texts keep the site's date (D199).
+    const EFFECTIVE: Record<string, string | undefined> = { privacy: '2026-10-18', terms: '2026-10-18', legalNotice: '2026-10-18' };
+    for (const [name, doc] of Object.entries(PRELAUNCH_LEGAL_DOCUMENTS)) for (const lang of LANGS) expect({ name, lang, effective: doc[lang].effective }).toEqual({ name, lang, effective: EFFECTIVE[name] });
     expect(publishedDrafts('public')).toEqual([]);
     expect(publishedPlaceholders('public')).toEqual([]);
     expect(publishedBlockers('public')).toEqual([]);
@@ -130,5 +133,17 @@ describe('the three release verdicts', () => {
   it('the App Store gate asks for the WhatsApp deletion channel', () => {
     const [, , app] = releaseVerdicts(REAL_PUBLIC);
     expect(app!.problems.find((p) => p.env === 'VITE_ACCOUNT_DELETION_CHANNEL')?.problem).toBe('missing');
+  });
+});
+
+describe('client work', () => {
+  it('names Blemhader.com as a site TSX-MR built for a client — no figure, no link, no claim of ownership (D199)', () => {
+    for (const lang of LANGS) {
+      const work = brandFor(lang).work;
+      expect(work.items.map((w) => w.name)).toEqual(['Blemhader.com']);
+      for (const w of work.items) {
+        expect({ lang, digits: /\d/.test(w.body), url: /https?:|www\./.test(w.body) }).toEqual({ lang, digits: false, url: false });
+      }
+    }
   });
 });

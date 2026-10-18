@@ -3,7 +3,7 @@ import { brandFor } from '../../content';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
 import { Band, PageIntro, ProductMark } from '../../components/public/blocks';
-import { ContactCta, SERVICE_ICONS } from '../../components/public/brand';
+import { ClientWork, ContactCta, SERVICE_ICONS } from '../../components/public/brand';
 import { Icon } from '../../components/public/icons';
 import { RichText } from '../../components/public/RichText';
 
@@ -53,6 +53,7 @@ export function Services() {
             </li>
           ))}
         </ul>
+        <ClientWork />
       </Band>
 
       <Band tone="tint" aria-labelledby="prepare-h">

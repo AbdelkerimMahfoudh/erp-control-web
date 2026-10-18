@@ -1876,6 +1876,42 @@ html[lang='ar'] .contact-group-title {
 .section-more {
   margin: 20px 0 0;
 }
+/* Client work under the services: a quiet line of fact, not a showcase (D199). */
+.client-work {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: baseline;
+  margin-block-start: 20px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: var(--surface-tint);
+}
+.client-work-label {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.client-work-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.client-work-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  color: var(--text-2);
+}
+.client-work-list strong {
+  color: var(--text);
+}
 /* The one product TSX-MR owns, told apart from the services by its own mark, colour and label. */
 .featured-product {
   display: grid;

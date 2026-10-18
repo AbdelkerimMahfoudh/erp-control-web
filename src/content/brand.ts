@@ -8,9 +8,10 @@ import type { Card } from './dukan-overview';
  * detail stays on its own page (`dukan-overview.ts`, `dukan-erp.ts`).
  *
  * What these texts never say, because none of it is true or confirmed: a team, a number of clients or projects, a
- * qualification, an award, a completed project or a client's name, a guarantee, a price or a delay. They name no
- * client work at all until its owner allows it to be shown (docs/21). Services, offered to clients, and Dukan ERP,
- * owned by TSX-MR, are always told apart.
+ * qualification, an award, a guarantee, a price or a delay. Client work is named only with its owner's permission, and
+ * only as far as that permission goes: Blemhader.com's owner confirmed on 2026-10-18 that TSX-MR may say it developed
+ * the site, with no figure or detail of it (docs/21 D199) — so its name and that sentence, no logo, screenshot or link.
+ * Services, offered to clients, and Dukan ERP, owned by TSX-MR, are always told apart.
  *
  * `services.items` are websites, mobile applications and business tools, in that order (each page draws its icon by
  * position).
@@ -21,9 +22,16 @@ export interface ServiceCard {
   points: string[];
 }
 
+/** Work done for a client, shown with the client's permission: the site's name and what TSX-MR did — never its figures. */
+export interface ClientWork {
+  name: string;
+  body: string;
+}
+
 export interface BrandContent {
   hero: { eyebrow: string; title: string; lead: string; primary: string; secondary: string };
   services: { title: string; lead: string; items: ServiceCard[]; more: string };
+  work: { label: string; items: ClientWork[] };
   product: { eyebrow: string; body: string; link: string };
   process: { title: string; lead: string; steps: Card[] };
   cta: { title: string; body: string; action: string };
@@ -65,6 +73,10 @@ export const brand: Record<Language, BrandContent> = {
         },
       ],
       more: 'See the services in detail',
+    },
+    work: {
+      label: 'Client work',
+      items: [{ name: 'Blemhader.com', body: 'A website designed and built by {displayName} for a client. The site and its content belong to its owner.' }],
     },
     product: {
       eyebrow: '{displayName}’s own product',
@@ -130,6 +142,10 @@ export const brand: Record<Language, BrandContent> = {
       ],
       more: 'Voir le détail des services',
     },
+    work: {
+      label: 'Réalisé pour un client',
+      items: [{ name: 'Blemhader.com', body: 'Un site web conçu et réalisé par {displayName} pour un client. Le site et son contenu appartiennent à son propriétaire.' }],
+    },
     product: {
       eyebrow: 'Le produit de {displayName}',
       body: 'Une application de gestion pour les commerces de détail et d’électronique et pour les agents de services monétaires : stock, ventes, argent et équipe au même endroit.',
@@ -193,6 +209,10 @@ export const brand: Record<Language, BrandContent> = {
         },
       ],
       more: 'تفاصيل الخدمات',
+    },
+    work: {
+      label: 'عمل منجز لعميل',
+      items: [{ name: 'Blemhader.com', body: 'موقع ويب صمّمته {displayName} وطوّرته لأحد العملاء. والموقع ومحتواه ملك لصاحبه.' }],
     },
     product: {
       eyebrow: 'منتج {displayName} الخاص',

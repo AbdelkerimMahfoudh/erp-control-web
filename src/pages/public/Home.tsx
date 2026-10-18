@@ -5,7 +5,7 @@ import { ComingSoon } from '../../components/ComingSoon';
 import { useI18n } from '../../i18n';
 import { pathOf, type PublicRouteId } from '../../site/routes';
 import { Band, ProductMark, SectionHead } from '../../components/public/blocks';
-import { BrandVisual, ContactCta, SERVICE_ICONS } from '../../components/public/brand';
+import { BrandVisual, ClientWork, ContactCta, SERVICE_ICONS } from '../../components/public/brand';
 import { Icon, type IconName } from '../../components/public/icons';
 import { RichText } from '../../components/public/RichText';
 
@@ -74,6 +74,7 @@ export function Home() {
             </li>
           ))}
         </ul>
+        <ClientWork />
         <p className="section-more">
           <Link className="text-action" to={to('services')}>
             <RichText text={c.services.more} />

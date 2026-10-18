@@ -36,6 +36,11 @@ export interface Document {
 export interface LegalDocument extends Document {
   version: string;
   status: 'draft' | 'approved';
+  /**
+   * The day this version took effect (`YYYY-MM-DD`), for a version published after the site's first legal texts; without
+   * it the text takes effect on the site's legal effective date (`VITE_LEGAL_EFFECTIVE_DATE`).
+   */
+  effective?: string;
 }
 
 export const BLOCKER_TOKEN = /\[\[blocker:([a-z0-9_]+)\]\]/g;

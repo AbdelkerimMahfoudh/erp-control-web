@@ -63,6 +63,34 @@ export function BrandVisual() {
   );
 }
 
+/**
+ * Client work, under the services on the home and Services pages: each site by name with what TSX-MR did, shown with
+ * its owner's permission (D199) — no logo, screenshot, figure or link. The name is a value, kept in its own direction.
+ */
+export function ClientWork() {
+  const { lang } = useI18n();
+  const work = brandFor(lang).work;
+  return (
+    <aside className="client-work" aria-label={work.label}>
+      <p className="client-work-label">
+        <RichText text={work.label} />
+      </p>
+      <ul className="client-work-list">
+        {work.items.map((item) => (
+          <li key={item.name}>
+            <strong>
+              <bdi dir="ltr">{item.name}</bdi>
+            </strong>
+            <span>
+              <RichText text={item.body} />
+            </span>
+          </li>
+        ))}
+      </ul>
+    </aside>
+  );
+}
+
 /** The closing invitation of the home and Services pages: one action, to the contact page. */
 export function ContactCta() {
   const { lang } = useI18n();
