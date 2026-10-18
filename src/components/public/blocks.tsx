@@ -310,7 +310,11 @@ export function OrgDetails() {
  * A number has no purpose of its own here (none is documented), so each is simply a number to call, and none is
  * labelled WhatsApp unless `VITE_SUPPORT_WHATSAPP` names one. Nothing configured is said, never left as a dead end.
  */
-export function ContactMethods() {
+/**
+ * `reveal`: the cards appear as the reader reaches them (lib/reveal.ts) — on the Contact page only, never inside a
+ * legal text or a page the app opens.
+ */
+export function ContactMethods({ reveal = false }: { reveal?: boolean } = {}) {
   const { t } = useI18n();
   const emails: [string, string][] = [
     [t('org.contactEmail'), SITE.contactEmail],
@@ -336,6 +340,7 @@ export function ContactMethods() {
                 value={email}
                 action={t('contact.write')}
                 name={t('contact.writeName', { purpose, value: email })}
+                reveal={reveal}
               />
             ))}
           </ul>
@@ -353,10 +358,11 @@ export function ContactMethods() {
                 value={phone}
                 action={t('contact.call')}
                 name={t('contact.callName', { value: phone })}
+                reveal={reveal}
               />
             ))}
             {SITE.supportWhatsapp ? (
-              <li className="contact-card elevated">
+              <li className="contact-card elevated" data-reveal={reveal ? '' : undefined}>
                 <div className="contact-body">
                   <span className="icon-badge contact-icon">
                     <Icon name="messages" />
@@ -378,9 +384,9 @@ export function ContactMethods() {
 }
 
 /** One way to reach TSX-MR: the whole card is the link, the value stays visible and left to right in Arabic. */
-function ContactCard({ icon, href, purpose, value, action, name }: { icon: IconName; href: string; purpose?: string; value: string; action: string; name: string }) {
+function ContactCard({ icon, href, purpose, value, action, name, reveal }: { icon: IconName; href: string; purpose?: string; value: string; action: string; name: string; reveal: boolean }) {
   return (
-    <li className="contact-card elevated">
+    <li className="contact-card elevated" data-reveal={reveal ? '' : undefined}>
       <a className="contact-body contact-link" href={href} aria-label={name}>
         <span className="icon-badge contact-icon">
           <Icon name={icon} />

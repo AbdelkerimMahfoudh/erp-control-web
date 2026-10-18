@@ -287,6 +287,27 @@ describe('the payment boundary', () => {
     });
   });
 
+  /**
+   * The showcase's agent walkthrough (the owner's approval of 2026-10-18) shows the provider the operator picks, as the
+   * counter in the app does: two labels, declared once, on one line of `content/dukan-demo.ts`. It is cut out exactly
+   * once, like the agent's trade; the labels' use is pinned below.
+   */
+  const DEMO_PROVIDERS_LINE = "export const DEMO_PROVIDERS = ['Bankily', 'Sedad'] as const;";
+  const DEMO_FILE = join('content', 'dukan-demo.ts');
+
+  it('the showcase names a provider only as a label of its walkthrough', () => {
+    for (const f of code) {
+      const src = read(f);
+      const rel = relative(SRC, f);
+      if (rel === DEMO_FILE) expect(src.split(DEMO_PROVIDERS_LINE).length - 1).toBe(1);
+      // The labels are read in one component only, which never writes them into a sentence.
+      else if (/\bDEMO_PROVIDERS\b/.test(src)) expect(rel).toBe(join('components', 'public', 'DukanShowcase.tsx'));
+    }
+    const showcase = read(join(SRC, 'components', 'public', 'DukanShowcase.tsx'));
+    expect(showcase.match(/DEMO_PROVIDERS\[\d\]|DEMO_PROVIDERS\.map/g)?.sort()).toEqual(['DEMO_PROVIDERS.map', 'DEMO_PROVIDERS[0]', 'DEMO_PROVIDERS[1]']);
+    expect(showcase).not.toMatch(/sent|envoy|أُرسل|verified|vérifié|partner|partenaire|bank\b|banque|مصرف|بنك/i);
+  });
+
   it('no page names a payment destination number or a provider', () => {
     for (const f of code) {
       let src = read(f);
@@ -295,6 +316,7 @@ describe('the payment boundary', () => {
         expect({ file: relative(SRC, f), found: src.split(trade).length - 1 }).toEqual({ file: relative(SRC, f), found: 1 });
         src = src.replace(trade, '');
       }
+      if (relative(SRC, f) === DEMO_FILE) src = src.replace(DEMO_PROVIDERS_LINE, '');
       if (relative(SRC, f) === join('content', 'legal-terms.ts')) {
         for (const block of NOT_A_PROVIDER) {
           const text = (block as { text: string }).text.replace(/'/g, "\\'");

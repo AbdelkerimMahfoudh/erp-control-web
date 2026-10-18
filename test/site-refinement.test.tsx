@@ -178,17 +178,38 @@ describe('one card elevation and motion system', () => {
   });
 
   it('rises on hover only where hover exists, and on keyboard focus; never by a one-off rule', () => {
-    expect(css).toMatch(/@media \(hover: hover\) and \(pointer: fine\) \{\s*\.elevated:hover \{\s*translate: 0 var\(--lift\);/);
-    expect(css).toMatch(/\.elevated:has\(:focus-visible\) \{\s*translate: 0 var\(--lift\);/);
+    const lift = /translate: 0 var\(--lift\);\s*box-shadow: var\(--shadow-raised\);\s*border-color: var\(--border-brand\);/;
+    expect(css).toMatch(new RegExp(/@media \(hover: hover\) and \(pointer: fine\) \{\s*\.elevated:hover \{\s*/.source + lift.source));
+    expect(css).toMatch(new RegExp(/\.elevated:has\(:focus-visible\) \{\s*/.source + lift.source));
     expect(css).not.toMatch(/card-lift|\.tile:hover/);
     // The reveal's stagger delays only the reveal, never the hover.
     expect(css).not.toMatch(/transition-delay/);
-    expect(css).toMatch(/transform 0\.55s var\(--ease\) var\(--reveal-delay, 0s\)/);
+    expect(css).toMatch(/transform var\(--dur-enter\) var\(--ease-enter\) var\(--reveal-delay, 0s\),\s*translate var\(--dur-lift\) var\(--ease\),/);
+  });
+
+  it('uses the Balanced values, once, for every card family', () => {
+    const global = readFileSync(join(process.cwd(), 'src/theme/global.css'), 'utf8');
+    for (const value of [
+      '--ease-enter: cubic-bezier(0.2, 0.75, 0.25, 1);',
+      '--dur-enter: 650ms;',
+      '--rise: 18px;',
+      '--stagger: 75ms;',
+      '--lift: -4px;',
+      '--dur-lift: 210ms;',
+    ])
+      expect(global).toContain(value);
+    // Hidden only once the script is ready, and then without a transition, so a card is never animated away.
+    expect(css).toMatch(/html\.reveal-ready \[data-reveal\]:not\(\.in\) \{\s*opacity: 0;\s*transform: translateY\(var\(--rise\)\);\s*\}/);
+    expect(css).not.toMatch(/html\.js \[data-reveal\]/);
+    // The stagger is capped: five places at most, the last 4 × 75 ms.
+    expect(css.match(/\[data-reveal-order='(\d)'\]/g)).toEqual([1, 2, 3, 4].map((n) => `[data-reveal-order='${n}']`));
+    expect(css).not.toMatch(/nth-child\(\d\)\s*\{\s*--reveal-delay/);
   });
 
   it('reduced motion keeps the shadow and drops the movement', () => {
     const reduced = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'));
-    expect(reduced).toMatch(/:root \{\s*--lift: 0px;\s*--nudge: 0px;\s*\}/);
+    expect(reduced).toMatch(/:root \{\s*--lift: 0px;\s*--nudge: 0px;\s*--rise: 0px;\s*--stagger: 0ms;\s*\}/);
+    expect(reduced).toMatch(/html\.reveal-ready \[data-reveal\]:not\(\.in\) \{\s*opacity: 1;\s*transform: none;\s*\}/);
     expect(css).not.toMatch(/translate: -?\d+px 0/);
     // Every rise is the token, so the reset reaches all of them.
     expect(css.match(/translate: 0 var\(--lift\)/g)?.length).toBeGreaterThanOrEqual(2);

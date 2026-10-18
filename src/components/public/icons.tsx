@@ -28,7 +28,10 @@ export type IconName =
   | 'sun'
   | 'moon'
   | 'menu'
-  | 'close';
+  | 'close'
+  | 'play'
+  | 'pause'
+  | 'replay';
 
 const PATHS: Record<IconName, string> = {
   scan: 'M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8v8M11 8v8M15 8v8',
@@ -56,6 +59,9 @@ const PATHS: Record<IconName, string> = {
   moon: 'M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z',
   menu: 'M4 7h16M4 12h16M4 17h16',
   close: 'M6 6l12 12M18 6 6 18',
+  play: 'M8 5.5v13l10.5-6.5z',
+  pause: 'M9 5.5v13M15 5.5v13',
+  replay: 'M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4.5 4.5v4h4',
 };
 
 export function Icon({ name, size = 22, className }: { name: IconName; size?: number; className?: string }) {

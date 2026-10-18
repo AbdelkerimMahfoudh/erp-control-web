@@ -68,7 +68,7 @@ export function Products() {
       <PageIntro title={doc.title} summary={doc.summary} />
       <ul className="card-grid products-grid">
         {doc.sections.map((s) => (
-          <li key={s.id} className="card product-card elevated">
+          <li key={s.id} className="card product-card elevated" data-reveal="">
             <h2>
               <ProductMark size="lg" />
             </h2>
@@ -123,7 +123,7 @@ export function Contact() {
       <Sections
         doc={doc}
         after={{
-          write: <ContactMethods />,
+          write: <ContactMethods reveal />,
         }}
       />
       {postal ? (

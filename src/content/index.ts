@@ -13,6 +13,7 @@ import { security } from './legal-security';
 import { dukanOverview } from './dukan-overview';
 import { brand, type BrandContent } from './brand';
 import { dukanErp } from './dukan-erp';
+import { dukanDemo } from './dukan-demo';
 import { BLOCKERS, type Blocker } from './blockers';
 import { looksLikePlaceholder } from '../config/schema';
 import { blockersIn, textsOf, type Document, type LegalDocument } from './types';
@@ -22,7 +23,7 @@ import type { DukanErpContent } from './dukan-erp';
 import { aboutPrelaunch, contactPrelaunch, dukanErpAsPrelaunch, dukanErpPrelaunch, dukanOverviewAsPrelaunch, dukanOverviewPrelaunch, supportPrelaunch } from './prelaunch';
 import { accountDeletionPrelaunch, legalNoticePrelaunch, privacyChoicesPrelaunch, privacyPrelaunch, securityPrelaunch, termsPrelaunch } from './legal-prelaunch';
 
-export { about, applicationStatus, contact, login, products, support, accountDeletion, privacy, terms, privacyChoices, legalNotice, security, brand, dukanOverview, dukanErp };
+export { about, applicationStatus, contact, login, products, support, accountDeletion, privacy, terms, privacyChoices, legalNotice, security, brand, dukanOverview, dukanErp, dukanDemo };
 
 export const DOCUMENTS = { about, applicationStatus, contact, login, products, support, accountDeletion, privacy, terms, privacyChoices, legalNotice, security } satisfies Record<string, Record<Language, Document>>;
 
@@ -81,7 +82,13 @@ export function dukanErpFor(lang: Language, surface: Surface): DukanErpContent {
 export function allTexts(lang: Language, surface: Surface = 'full'): string[] {
   const dukan = dukanErpFor(lang, surface);
   const shown = surface === 'public' ? { ...dukan, subscription: { title: '', body: '' } } : dukan;
-  return [...Object.values(documentsFor(surface)).flatMap((d) => (d ? textsOf(d[lang]) : [])), ...stringsOf(brandFor(lang)), ...stringsOf(dukanOverviewFor(lang, surface)), ...stringsOf(shown)];
+  return [
+    ...Object.values(documentsFor(surface)).flatMap((d) => (d ? textsOf(d[lang]) : [])),
+    ...stringsOf(brandFor(lang)),
+    ...stringsOf(dukanOverviewFor(lang, surface)),
+    ...stringsOf(shown),
+    ...stringsOf(dukanDemo[lang]),
+  ];
 }
 
 /** The blockers still present in any language's published text — a production build refuses while any remains. */
