@@ -1,0 +1,30 @@
+PASS  /qx7-missing  404  en/ltr  public  Page not found
+PASS  /a/b/c/d/e/missing-deep  404  en/ltr  public  Page not found
+PASS  /fr/inexistante  404  fr/ltr  public  Page introuvable
+PASS  /fr/a/b/c  404  fr/ltr  public  Page introuvable
+PASS  /ar/x/y/z  404  ar/rtl  public  الصفحة غير موجودة
+PASS  /ar/%D8%BA%D9%8A%D8%B1-%D9%85%D9%88%D8%AC%D9%88%D8%AF  404  ar/rtl  public  الصفحة غير موجودة
+PASS  /account  404  en/ltr  public  Page not found
+PASS  /account/trial  404  en/ltr  public  Page not found
+PASS  /admin  404  en/ltr  public  Page not found
+PASS  /admin/businesses  404  en/ltr  public  Page not found
+PASS  /in-app/nope  404  en/ltr  in-app  Page not found
+PASS  /in-app/a/b  404  en/ltr  in-app  Page not found
+PASS  /fr/in-app/nope  404  fr/ltr  in-app  Page introuvable
+PASS  /ar/in-app/nope  404  ar/rtl  in-app  الصفحة غير موجودة
+PASS  /missing?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E  404  en/ltr  public  Page not found
+PASS  /  200  en/ltr  public  Stock, sales, money and team
+PASS  /about  200  en/ltr  public  About 
+PASS  /fr  200  fr/ltr  public  Stock, ventes, argent et équipe
+PASS  /ar  200  ar/rtl  public  المخزون والمبيعات والأموال والفريق
+PASS  /fr/privacy  200  fr/ltr  public  Politique de confidentialité
+PASS  /ar/terms  200  ar/rtl  public  شروط استخدام هذا الموقع
+PASS  /products/dukan-erp  200  en/ltr  public  
+PASS  /in-app/privacy  200  en/ltr  in-app  Privacy policy
+PASS  /fr/in-app/support  200  fr/ltr  in-app  Assistance
+PASS  /ar/in-app/legal  200  ar/rtl  in-app  إشعار قانوني
+INFO  /in-app/  404  en/ltr  in-app  Page not found
+INFO  /fr/in-app  404  fr/ltr  public  Page introuvable
+INFO  /404  200  en/ltr  public  Page not found
+
+25 passed, 0 failed, 3 recorded (info) — https://tsxmr.com
