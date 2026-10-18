@@ -158,9 +158,19 @@ describe('one card elevation and motion system', () => {
     expect(steps.length).toBe(3);
     for (const step of steps) expect(step.classList.contains('elevated')).toBe(true);
     for (const card of product.container.querySelectorAll('.activity-card')) expect(card.classList.contains('elevated')).toBe(true);
+    // The product's detail lives on its page (the brief of 2026-10-17, fourth); the home page has the brand's cards.
+    for (const [page, selectors] of [
+      [product, ['.problem-grid > li', '.bento > li', '.activities > .card', '.how-steps > li', '.previews > li', '.lang-cards > li']],
+    ] as const) {
+      for (const selector of selectors) {
+        const cards = [...page.container.querySelectorAll(selector)];
+        expect({ selector, count: cards.length > 0 }).toEqual({ selector, count: true });
+        for (const card of cards) expect({ selector, elevated: card.classList.contains('elevated') }).toEqual({ selector, elevated: true });
+      }
+    }
     product.unmount();
     const home = mount(pathOf('home', 'en'));
-    for (const selector of ['.problem-grid > li', '.bento > li', '.activities > .card', '.how-steps > li', '.previews > li', '.lang-cards > li']) {
+    for (const selector of ['.services-grid > li', '.featured-product', '.how-steps > li']) {
       const cards = [...home.container.querySelectorAll(selector)];
       expect({ selector, count: cards.length > 0 }).toEqual({ selector, count: true });
       for (const card of cards) expect({ selector, elevated: card.classList.contains('elevated') }).toEqual({ selector, elevated: true });

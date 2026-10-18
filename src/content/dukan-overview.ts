@@ -1,36 +1,29 @@
 import type { Language } from '../i18n/languages';
 
 /**
- * The TSX-MR home page (docs/74 §4; redesigned 2026-10-17 on the owner's brief). Every capability and every trust
- * sentence is something the code does (audited 2026-10-12, docs/74 §6) — no figures, clients, awards or availability
- * claims. The product visual's words are here too (`visual`); its numbers are ordinary demo values kept in the
- * component, never a customer's data.
+ * What Dukan ERP is made of, as its product page shows it below the product's own introduction (`dukan-erp.ts`): the
+ * three proofs, what it replaces, its six parts, the screens, the three languages and trust. Until the owner's brief of
+ * 2026-10-17 (fourth) these sections were the TSX-MR home page; the home page now introduces TSX-MR itself
+ * (`brand.ts`), and the product's detail lives on the product's page. Every capability and every trust sentence is
+ * something the code does (audited 2026-10-12, docs/74 §6) — no figures, clients, awards or availability claims. The
+ * product visual's words are here too (`visual`); its numbers are ordinary demo values kept in the component, never a
+ * customer's data.
  *
  * Order matters where a list carries its own illustration: `capabilities.items` are stock, sales, debts, cash, team,
- * reports; `previews.items` are sell, stock, close (`pages/public/Home.tsx` draws them by position).
+ * reports; `previews.items` are sell, stock, close (`pages/public/DukanErp.tsx` draws them by position).
  */
 export interface Card {
   title: string;
   body: string;
 }
 
-export interface ActivityBrief {
-  title: string;
-  lead: string;
-  points: string[];
-}
-
-export interface HomeContent {
-  hero: { title: string; lead: string; primary: string; secondary: string };
+export interface DukanOverview {
   proofs: Card[];
   problems: { title: string; lead: string; items: Card[] };
   capabilities: { title: string; lead: string; items: Card[] };
-  activities: { title: string; lead: string; retail: ActivityBrief; agent: ActivityBrief };
-  how: { title: string; lead: string; steps: Card[] };
   previews: { title: string; lead: string; items: Card[] };
   local: { title: string; body: string; points: string[] };
   trust: { title: string; lead: string; items: string[]; privacy: string; security: string; support: string };
-  cta: { title: string; body: string; apply: string; signIn: string; contact: string };
   visual: {
     store: string;
     today: string;
@@ -57,14 +50,8 @@ export interface HomeContent {
   };
 }
 
-export const home: Record<Language, HomeContent> = {
+export const dukanOverview: Record<Language, DukanOverview> = {
   en: {
-    hero: {
-      title: 'Stock, sales, money and team — all in one place.',
-      lead: 'Dukan ERP replaces the notebooks and scattered records of electronics and retail shops and of money-service agents, for teams that work in Arabic, French or English.',
-      primary: 'Discover Dukan ERP',
-      secondary: 'Talk to {displayName}',
-    },
     proofs: [
       { title: 'Every IMEI recorded once', body: 'A phone cannot be received twice or sold twice.' },
       { title: 'The day closed against what was expected', body: 'Drawer and accounts counted; any difference said in words.' },
@@ -91,29 +78,6 @@ export const home: Record<Language, HomeContent> = {
         { title: 'Cash and configured accounts', body: 'The drawer and each account counted at the end of the day, any difference shown in words.' },
         { title: 'Team and permissions', body: 'Owner, managers and employees, each with a role, store by store.' },
         { title: 'Reports and closing', body: 'The daily closing, monthly results and exports as PDF and spreadsheet files.' },
-      ],
-    },
-    activities: {
-      title: 'Two activities, one application',
-      lead: 'A business runs one of them or both, store by store.',
-      retail: {
-        title: 'Retail and electronics',
-        lead: 'Phones, accessories, appliances and other goods.',
-        points: ['Stock received by scanning or typing', 'Serialised devices followed from reception to sale or return', 'Sales, returns, expenses and the daily closing'],
-      },
-      agent: {
-        title: 'Money services',
-        lead: 'Cash exchanged for mobile-money credit on behalf of customers.',
-        points: ['Exchanges recorded in both directions', 'The commission typed per exchange and kept as the agent’s own revenue', 'Floats and activity followed provider by provider'],
-      },
-    },
-    how: {
-      title: 'How it works',
-      lead: 'Three steps, from the first conversation to a closed day.',
-      steps: [
-        { title: 'Talk to {displayName}', body: 'Tell us about your shop or agency, its stores and its team.' },
-        { title: 'Set up the business in the app', body: 'Stores, employees and their roles, payment accounts and the first stock.' },
-        { title: 'Run the day', body: 'Sell, receive, record exchanges, count the drawer and close against what was expected.' },
       ],
     },
     previews: {
@@ -143,13 +107,6 @@ export const home: Record<Language, HomeContent> = {
       security: 'Security page',
       support: 'Support',
     },
-    cta: {
-      title: 'Bring your business onto Dukan ERP',
-      body: 'Businesses apply for an account online. A new business can start one 7-day free trial from its business account; paid access afterwards is arranged with the {displayName} team.',
-      apply: 'Apply for a business account',
-      signIn: 'Sign in',
-      contact: 'Contact {displayName}',
-    },
     visual: {
       store: 'Store',
       today: 'Sales today',
@@ -176,12 +133,6 @@ export const home: Record<Language, HomeContent> = {
     },
   },
   fr: {
-    hero: {
-      title: 'Stock, ventes, argent et équipe — réunis au même endroit.',
-      lead: 'Dukan ERP remplace les cahiers et les notes éparpillées des boutiques d’électronique et de détail et des agents de services monétaires, pour des équipes qui travaillent en arabe, en français ou en anglais.',
-      primary: 'Découvrir Dukan ERP',
-      secondary: 'Parler à {displayName}',
-    },
     proofs: [
       { title: 'Chaque IMEI enregistré une seule fois', body: 'Un téléphone ne peut être ni reçu ni vendu deux fois.' },
       { title: 'La journée clôturée par rapport à l’attendu', body: 'Caisse et comptes comptés ; tout écart dit en toutes lettres.' },
@@ -208,29 +159,6 @@ export const home: Record<Language, HomeContent> = {
         { title: 'Caisse et comptes configurés', body: 'La caisse et chaque compte comptés en fin de journée, tout écart affiché en toutes lettres.' },
         { title: 'Équipe et droits', body: 'Propriétaire, gérants et employés, chacun avec un rôle, magasin par magasin.' },
         { title: 'Rapports et clôture', body: 'La clôture du jour, les résultats du mois et des exports en PDF et en tableur.' },
-      ],
-    },
-    activities: {
-      title: 'Deux activités, une seule application',
-      lead: 'Une entreprise exerce l’une ou les deux, magasin par magasin.',
-      retail: {
-        title: 'Détail et électronique',
-        lead: 'Téléphones, accessoires, électroménager et autres articles.',
-        points: ['Stock réceptionné par scan ou par saisie', 'Appareils sérialisés suivis de la réception à la vente ou au retour', 'Ventes, retours, dépenses et clôture du jour'],
-      },
-      agent: {
-        title: 'Services monétaires',
-        lead: 'Des espèces échangées contre du crédit de paiement mobile pour le compte des clients.',
-        points: ['Échanges enregistrés dans les deux sens', 'La commission saisie à chaque échange et conservée comme revenu propre de l’agent', 'Soldes et activité suivis opérateur par opérateur'],
-      },
-    },
-    how: {
-      title: 'Comment ça marche',
-      lead: 'Trois étapes, de la première conversation à une journée clôturée.',
-      steps: [
-        { title: 'Parler à {displayName}', body: 'Parlez-nous de votre boutique ou de votre agence, de ses magasins et de son équipe.' },
-        { title: 'Configurer l’entreprise dans l’application', body: 'Magasins, employés et leurs rôles, comptes de paiement et premier stock.' },
-        { title: 'Faire tourner la journée', body: 'Vendre, réceptionner, enregistrer les échanges, compter la caisse et clôturer par rapport à l’attendu.' },
       ],
     },
     previews: {
@@ -260,13 +188,6 @@ export const home: Record<Language, HomeContent> = {
       security: 'Page sécurité',
       support: 'Assistance',
     },
-    cta: {
-      title: 'Passez votre entreprise sur Dukan ERP',
-      body: 'Les entreprises demandent un compte en ligne. Une nouvelle entreprise peut démarrer un essai gratuit de 7 jours depuis son compte entreprise ; l’accès payant qui suit s’organise avec l’équipe de {displayName}.',
-      apply: 'Demander un compte entreprise',
-      signIn: 'Se connecter',
-      contact: 'Contacter {displayName}',
-    },
     visual: {
       store: 'Magasin',
       today: 'Ventes du jour',
@@ -293,12 +214,6 @@ export const home: Record<Language, HomeContent> = {
     },
   },
   ar: {
-    hero: {
-      title: 'المخزون والمبيعات والأموال والفريق — كلّها في مكان واحد.',
-      lead: 'يحلّ Dukan ERP محلّ الدفاتر والسجلات المتفرقة في متاجر الإلكترونيات والتجزئة ولدى وكلاء الخدمات المالية، لفرق تعمل بالعربية أو الفرنسية أو الإنجليزية.',
-      primary: 'اكتشف Dukan ERP',
-      secondary: 'تحدّث مع {displayName}',
-    },
     proofs: [
       { title: 'كل IMEI يُسجَّل مرة واحدة', body: 'لا يمكن استلام الهاتف مرتين ولا بيعه مرتين.' },
       { title: 'يُقفل اليوم مقارنةً بما كان متوقعًا', body: 'يُعدّ الصندوق والحسابات، ويُذكر أي فرق بالكلمات.' },
@@ -327,29 +242,6 @@ export const home: Record<Language, HomeContent> = {
         { title: 'التقارير والإقفال', body: 'إقفال اليوم ونتائج الشهر والتصدير بصيغة PDF وجداول البيانات.' },
       ],
     },
-    activities: {
-      title: 'نشاطان وتطبيق واحد',
-      lead: 'تزاول الشركة أحدهما أو كليهما، متجرًا بمتجر.',
-      retail: {
-        title: 'التجزئة والإلكترونيات',
-        lead: 'الهواتف والإكسسوارات والأجهزة المنزلية وسائر السلع.',
-        points: ['استلام المخزون بالمسح أو بالإدخال اليدوي', 'متابعة الأجهزة ذات الأرقام التسلسلية من الاستلام حتى البيع أو الإرجاع', 'المبيعات والمرتجعات والمصروفات وإقفال اليوم'],
-      },
-      agent: {
-        title: 'الخدمات المالية',
-        lead: 'نقد يُبادَل برصيد الدفع عبر الهاتف لصالح العملاء.',
-        points: ['تسجيل العمليات في الاتجاهين', 'تُدخَل العمولة في كل عملية وتبقى دخلًا خاصًا بالوكيل', 'متابعة الأرصدة والنشاط لكل مزوّد على حدة'],
-      },
-    },
-    how: {
-      title: 'كيف يعمل',
-      lead: 'ثلاث خطوات، من أول محادثة إلى يوم مُقفل.',
-      steps: [
-        { title: 'تحدّث مع {displayName}', body: 'حدّثنا عن متجرك أو وكالتك، وعن فروعها وفريقها.' },
-        { title: 'جهّز الشركة في التطبيق', body: 'المتاجر والموظفون وأدوارهم وحسابات الدفع والمخزون الأول.' },
-        { title: 'أدِر اليوم', body: 'بِع واستلم وسجّل العمليات وعُدّ الصندوق وأقفل مقارنةً بما كان متوقعًا.' },
-      ],
-    },
     previews: {
       title: 'الشاشات التي يعمل عليها الفريق',
       lead: 'شاشات توضيحية بقيم تجريبية عادية — لا شيء هنا بيانات عميل حقيقي.',
@@ -376,13 +268,6 @@ export const home: Record<Language, HomeContent> = {
       privacy: 'اقرأ سياسة الخصوصية',
       security: 'صفحة الأمان',
       support: 'الدعم',
-    },
-    cta: {
-      title: 'انقل أعمال شركتك إلى Dukan ERP',
-      body: 'تتقدّم الشركات بطلب حساب عبر الإنترنت، ويمكن لكل شركة جديدة بدء فترة تجريبية مجانية لمدة 7 أيام من حساب شركتها، ثم يُرتَّب الوصول المدفوع مع فريق {displayName}.',
-      apply: 'اطلب حساب شركة',
-      signIn: 'تسجيل الدخول',
-      contact: 'تواصل مع {displayName}',
     },
     visual: {
       store: 'المتجر',

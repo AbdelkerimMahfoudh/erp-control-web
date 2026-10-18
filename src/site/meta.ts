@@ -3,7 +3,7 @@
  * prerenderer and the page itself call this, so the `<title>` a crawler reads is the heading a person reads.
  * Values are raw texts (with `{inputs}`); `plainText` fills them.
  */
-import { applicationStatus, documentsFor, dukanErpFor, homeFor, login } from '../content';
+import { applicationStatus, brandFor, documentsFor, dukanErpFor, login } from '../content';
 import { SURFACE } from '../config/site';
 import type { Surface } from '../config/schema';
 import { translate } from '../i18n';
@@ -21,7 +21,9 @@ export function metaFor(id: PublicRouteId, lang: Language, surface: Surface = SU
   const { about, contact, products, support, privacy, terms, accountDeletion, privacyChoices, legalNotice, security } = documentsFor(surface);
   switch (id) {
     case 'home':
-      return { title: translate(lang, 'page.home.title', { name: '{displayName}' }), description: homeFor(lang, surface).hero.lead };
+      return { title: translate(lang, 'page.home.title', { name: '{displayName}' }), description: brandFor(lang).hero.lead };
+    case 'services':
+      return { title: `${brandFor(lang).servicesPage.title}${SUFFIX}`, description: brandFor(lang).servicesPage.summary };
     case 'dukanErp':
       return { title: `${dukanErpFor(lang, surface).title}${SUFFIX}`, description: dukanErpFor(lang, surface).summary };
     case 'apply':

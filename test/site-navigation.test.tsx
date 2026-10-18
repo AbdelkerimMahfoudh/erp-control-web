@@ -83,6 +83,12 @@ describe('the phone menu', () => {
     act(() => fireEvent.click(button));
     act(() => fireEvent.click(within(document.getElementById('site-menu')!).getByRole('link', { name: en['nav.about'] })));
     expect(button.getAttribute('aria-expanded')).toBe('false');
+    // Another page: focus goes to its heading, never back to the menu (RouteScroll).
+    expect(document.activeElement).toBe(container.querySelector('main h1'));
+    // The page already open: nothing moves, so focus returns to the button rather than to a hidden link.
+    act(() => fireEvent.click(button));
+    act(() => fireEvent.click(within(document.getElementById('site-menu')!).getByRole('link', { name: en['nav.about'] })));
+    expect(button.getAttribute('aria-expanded')).toBe('false');
     expect(document.activeElement).toBe(button);
     act(() => fireEvent.click(button));
     act(() => fireEvent.pointerDown(container.querySelector('main')!));
@@ -109,7 +115,8 @@ describe('the language controls', () => {
     for (const list of container.querySelectorAll('.chrome-header ul.languages')) {
       const links = [...list.querySelectorAll('a')];
       expect(links.map((a) => a.textContent)).toEqual(['EN', 'FR', 'AR']);
-      expect(links.map((a) => a.getAttribute('aria-label'))).toEqual(['English', 'Français', 'العربية']);
+      // The visible code first, then the language in full (the brief of 2026-10-17, fourth).
+      expect(links.map((a) => a.getAttribute('aria-label'))).toEqual(['EN, English', 'FR, Français', 'AR, العربية']);
       expect(links.map((a) => a.getAttribute('lang'))).toEqual(['en', 'fr', 'ar']);
       expect(links.map((a) => a.getAttribute('href'))).toEqual([pathOf('privacy', 'en'), pathOf('privacy', 'fr'), pathOf('privacy', 'ar')]);
       expect(links.filter((a) => a.getAttribute('aria-current') === 'true').map((a) => a.getAttribute('lang'))).toEqual([lang]);
@@ -131,9 +138,9 @@ describe('the language controls', () => {
     const { container } = mount(inAppPathOf('privacy', 'fr'));
     const links = [...container.querySelectorAll('.in-app-header .languages a')];
     expect(links.map((a) => [a.textContent, a.getAttribute('aria-label')])).toEqual([
-      ['EN', 'English'],
-      ['FR', 'Français'],
-      ['AR', 'العربية'],
+      ['EN', 'EN, English'],
+      ['FR', 'FR, Français'],
+      ['AR', 'AR, العربية'],
     ]);
     expect(container.querySelector('.menu-button')).toBeNull();
     expect(container.querySelector('.nav')).toBeNull();
@@ -148,7 +155,8 @@ describe('the legal pages’ links', () => {
     const links = [...list.querySelectorAll('a')];
     const sections = [...container.querySelectorAll('article.doc > section.doc-section')];
     expect(links.length).toBeGreaterThan(5);
-    expect(links.map((a) => a.getAttribute('href'))).toEqual(sections.map((s) => `#${s.id}`));
+    // A real address for each section, on this page, followed through the router (RouteScroll scrolls and focuses it).
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(sections.map((s) => `${pathOf('privacy', lang)}#${s.id}`));
     expect(links.map((a) => a.textContent?.replace(/^\d+/, ''))).toEqual(sections.map((s) => s.querySelector('h2')!.textContent));
     // The marker is decorative: the list already gives each item its position.
     expect(links.map((a) => a.querySelector('[aria-hidden="true"]')?.textContent)).toEqual(links.map((_, i) => String(i + 1)));
@@ -156,8 +164,10 @@ describe('the legal pages’ links', () => {
 
   it('the related pages mark the one the reader is on', () => {
     const { container } = mount(pathOf('terms', 'en'));
-    const current = [...container.querySelectorAll('.legal-related a[aria-current="page"]')];
-    expect(current.map((a) => a.getAttribute('href'))).toEqual([pathOf('terms', 'en')]);
+    // Marked as current, as text: not a link that leads back to the page the reader is on.
+    const current = [...container.querySelectorAll('.legal-related [aria-current="page"]')];
+    expect(current.map((el) => [el.tagName, el.textContent])).toEqual([['SPAN', en['footer.terms']]]);
+    expect(container.querySelector(`.legal-related a[href="${pathOf('terms', 'en')}"]`)).toBeNull();
   });
 
   it.each(['en', 'fr', 'ar'] as const)('the operator’s telephones keep their exact numbers and tel: links, named as a call (%s)', (lang) => {

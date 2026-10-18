@@ -68,7 +68,8 @@ describe('a public build, page by page', () => {
       // Coming soon, said plainly; no subscription section.
       expect(screen.getByText(CATALOGUE[lang]['prelaunch.badge'])).toBeTruthy();
       expect(document.getElementById('subscription-h')).toBeNull();
-      expect(document.body.textContent).not.toMatch(/MRU|7-day|essai gratuit|تجربة مجانية/);
+      // A whole word: the footer's "TSX-MR" runs into the next line's first letter in `textContent` ("TSX-MRUne …").
+      expect(document.body.textContent).not.toMatch(/\bMRU\b|7-day|essai gratuit|تجربة مجانية/);
       expect(requests).toEqual([]);
     });
 

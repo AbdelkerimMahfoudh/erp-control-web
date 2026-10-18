@@ -171,58 +171,71 @@ main:focus {
 .chrome-bar > .nav-wide + .controls {
   margin-inline-start: 0;
 }
+/*
+ * The languages (the owner's brief of 2026-10-17, fourth): one segmented control wherever it appears — the header, the
+ * phone menu, the app's pages and the protected areas — with three equal segments. Each segment is a whole 44 px
+ * target (`--tap`); the current one is filled inside it, inset by the same 4 px on every side and between segments
+ * (2 px of the control's inline padding plus 2 px of each segment's, and 4 px top and bottom), so EN, FR and AR have
+ * the same filled shape in either direction. The edge is an inset ring, so it adds nothing to the 44 px. The codes are
+ * set without letter-spacing, which would leave a trailing space after the last letter and pull each label off
+ * centre.
+ */
 .languages {
   list-style: none;
-  display: flex;
-  gap: 2px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(var(--tap), 1fr));
   margin: 0;
-  padding: 0;
+  padding: 0 2px;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.languages li {
+  display: flex;
+  min-inline-size: 0;
 }
 .languages a,
-.link-button {
-  display: inline-flex;
+.languages .link-button {
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-inline-size: 40px;
-  padding: 6px 10px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  border-radius: 8px;
-  color: var(--text-2);
-  font-size: 0.9rem;
-  text-decoration: none;
-  background: none;
+  inline-size: 100%;
+  min-block-size: var(--tap);
+  padding: 4px 2px;
+  background-clip: content-box;
   border: 0;
+  border-radius: 12px;
+  color: var(--text-2);
   font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-decoration: none;
+  background-color: transparent;
   cursor: pointer;
-  min-block-size: 36px;
 }
 .languages a[aria-current='true'],
-.link-button[aria-pressed='true'] {
+.languages .link-button[aria-pressed='true'] {
   color: var(--text);
   font-weight: 700;
-  background: var(--surface-2);
+  background-color: var(--surface-2);
 }
-/* On navy: a segmented control, the current language filled. */
-.chrome-header .languages-wide {
-  padding: 3px;
-  border: 1px solid var(--ink-line);
-  border-radius: 11px;
+/* On navy: the control on glass, the current language filled. */
+.chrome-header .languages {
+  box-shadow: inset 0 0 0 1px var(--ink-line);
   background: var(--ink-glass);
 }
 .chrome-header .languages a,
-.chrome-header .link-button {
+.chrome-header .languages .link-button {
   color: var(--on-ink-2);
-  min-block-size: 32px;
 }
 .chrome-header .languages a:hover,
-.chrome-header .link-button:hover {
+.chrome-header .languages .link-button:hover {
   color: var(--on-ink);
 }
 .chrome-header .languages a[aria-current='true'],
-.chrome-header .link-button[aria-pressed='true'] {
+.chrome-header .languages .link-button[aria-pressed='true'] {
   color: var(--ink);
-  background: var(--on-ink);
+  background-color: var(--on-ink);
 }
 .menu {
   display: none;
@@ -318,19 +331,9 @@ main:focus {
 [dir='rtl'] .chrome-header .nav-narrow .nav a.active {
   box-shadow: inset -3px 0 0 var(--amber);
 }
-/* In the phone menu: the three codes as one segmented row, each a full touch target. */
+/* In the phone menu: the same control, the width of the panel. */
 .chrome-header .languages-narrow {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 4px;
   margin-top: 8px;
-  padding: 4px;
-  border: 1px solid var(--ink-line);
-  border-radius: 12px;
-  background: var(--ink-glass);
-}
-.chrome-header .languages-narrow a {
-  min-block-size: 44px;
 }
 @media (max-width: 899px) {
   .nav-wide,
@@ -362,6 +365,7 @@ main:focus {
   padding-block-end: 64px;
 }
 .public-page.home,
+.public-page.services,
 .public-page.product,
 .public-page.not-found {
   gap: 0;
@@ -1840,6 +1844,301 @@ html[lang='ar'] .contact-group-title {
   }
 }
 
+/* ── TSX-MR itself: the home page's services, featured product and process, and the Services page ─────────────── */
+.how-steps-light h3 {
+  color: var(--text);
+}
+@media (min-width: 760px) {
+  .how-steps-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1100px) {
+  .how-steps-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.how-steps-4 p {
+  margin-block-start: 0;
+  color: var(--text-2);
+}
+.services-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+}
+.service-card {
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.service-card h2 {
+  margin-block: 14px 6px;
+  font-size: 1.3rem;
+}
+.section-more {
+  margin: 20px 0 0;
+}
+/* Client work under the services: a quiet line of fact, not a showcase (D199). */
+.client-work {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: baseline;
+  margin-block-start: 20px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: var(--surface-tint);
+}
+.client-work-label {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.client-work-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.client-work-list li {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  color: var(--text-2);
+}
+.client-work-list strong {
+  color: var(--text);
+}
+/* The one product TSX-MR owns, told apart from the services by its own mark, colour and label. */
+.featured-product {
+  display: grid;
+  gap: 28px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+@media (min-width: 960px) {
+  .featured-product {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 48px;
+  }
+}
+.featured-copy {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+.featured-copy h2,
+.featured-copy .lead,
+.featured-eyebrow {
+  margin: 0;
+}
+.featured-eyebrow {
+  color: var(--text-3);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@media (min-width: 640px) {
+  .featured-parts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.services-split h2 {
+  margin-block-start: 0;
+}
+.own-product {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.own-product .own-product-title {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text-2);
+}
+.own-product p {
+  margin: 0;
+}
+.products-services {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  align-items: center;
+  margin: 0;
+  color: var(--text-2);
+}
+
+/* The home page's hero drawing (components/public/brand.tsx): a website, a phone and a small dashboard, no words. */
+.bv {
+  position: relative;
+  inline-size: min(100%, 470px);
+  block-size: 360px;
+  margin-inline: auto;
+}
+.bv-site {
+  position: absolute;
+  inset-block-start: 8px;
+  inset-inline-start: 0;
+  inline-size: 80%;
+  overflow: hidden;
+  border-radius: var(--radius-m);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-deep);
+}
+.bv-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--surface-2);
+  border-block-end: 1px solid var(--border);
+}
+.bv-bar i {
+  inline-size: 8px;
+  block-size: 8px;
+  border-radius: 50%;
+  background: var(--border-raised);
+}
+.bv-url {
+  flex: 1;
+  block-size: 10px;
+  margin-inline-start: 8px;
+  border-radius: 999px;
+  background: var(--surface);
+}
+.bv-site-body {
+  display: grid;
+  gap: 10px;
+  padding: 18px 18px 22px;
+}
+.bv-line {
+  display: block;
+  block-size: 10px;
+  border-radius: 999px;
+  background: var(--surface-2);
+}
+.bv-strong {
+  block-size: 14px;
+  background: var(--brand-wash);
+}
+.bv-w40 {
+  inline-size: 40%;
+}
+.bv-w50 {
+  inline-size: 50%;
+}
+.bv-w60 {
+  inline-size: 60%;
+}
+.bv-w80 {
+  inline-size: 80%;
+}
+.bv-button {
+  inline-size: 34%;
+  block-size: 26px;
+  margin-block: 4px;
+  border-radius: 999px;
+  background: var(--brand);
+}
+.bv-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.bv-tiles span {
+  block-size: 44px;
+  border-radius: 10px;
+  background: var(--surface-tint);
+  border: 1px solid var(--border);
+}
+.bv-app {
+  position: absolute;
+  inset-block-start: 56px;
+  inset-inline-end: 0;
+  inline-size: 150px;
+  padding: 7px;
+  border-radius: 28px;
+  background: var(--phone-bezel);
+  border: 1px solid var(--ink-line-strong);
+  box-shadow: var(--shadow-deep);
+}
+.bv-app-screen {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-block-size: 240px;
+  padding: 16px 10px;
+  border-radius: 22px;
+  background: linear-gradient(180deg, var(--phone-screen), var(--phone-screen-2));
+}
+.bv-app .bv-line {
+  background: var(--ink-line);
+}
+.bv-app .bv-strong {
+  background: var(--ink-line-strong);
+}
+.bv-app-card {
+  block-size: 64px;
+  border-radius: 12px;
+  background: var(--ink-glass);
+  border: 1px solid var(--ink-line);
+}
+.bv-app-row {
+  block-size: 26px;
+  border-radius: 8px;
+  background: var(--ink-glass);
+}
+.bv-tool {
+  position: absolute;
+  inset-block-end: 0;
+  inset-inline-start: 10%;
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-m);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-deep);
+}
+.bv-tool-ic {
+  display: grid;
+  place-items: center;
+  inline-size: 36px;
+  block-size: 36px;
+  border-radius: 10px;
+  background: var(--brand-wash);
+  color: var(--brand);
+}
+.art-bars.bv-bars {
+  block-size: 40px;
+  inline-size: 96px;
+  gap: 5px;
+}
+@media (max-width: 520px) {
+  .bv {
+    block-size: 300px;
+  }
+  .bv-site {
+    inline-size: 84%;
+  }
+  .bv-app {
+    inline-size: 120px;
+    inset-block-start: 72px;
+  }
+  .bv-app-screen {
+    min-block-size: 190px;
+  }
+}
+
 /* A legal text TSX-MR has not approved says so above everything else (brief of 2026-10-16) */
 .legal-draft {
   margin: 16px 0 0;
@@ -1927,13 +2226,19 @@ html[lang='ar'] .contact-group-title {
 .in-app-header .chrome-bar {
   justify-content: space-between;
 }
+.in-app-header .languages {
+  box-shadow: inset 0 0 0 1px var(--border);
+  background: none;
+}
 .in-app-header .languages a {
   color: var(--text-2);
-  min-block-size: 44px;
+}
+.in-app-header .languages a:hover {
+  color: var(--text);
 }
 .in-app-header .languages a[aria-current='true'] {
   color: var(--text);
-  background: var(--surface-2);
+  background-color: var(--surface-2);
 }
 .in-app-header :focus-visible {
   outline-color: var(--focus);
@@ -2021,7 +2326,8 @@ html.js [data-reveal]:not(.in) {
 .nf-copy .lead {
   max-inline-size: 52ch;
 }
-.nf-eyebrow {
+.nf-eyebrow,
+.eyebrow {
   display: inline-flex;
   margin: 0;
   padding: 6px 14px;

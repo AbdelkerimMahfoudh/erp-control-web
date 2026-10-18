@@ -83,9 +83,16 @@ describe('the public legal and support pages', () => {
         expect(within(main).getByText(new RegExp(doc.version.replace(/[()]/g, '\\$&')))).toBeTruthy();
         // Drafts say so at the top, in the page's language.
         expect(main.querySelector('.legal-draft')?.textContent).toMatch(/TSX-MR/);
+        // One group of related pages (the brief of 2026-10-17, fourth): every other page a link, this one plain text
+        // marked current — never a link back to itself.
+        expect(main.querySelectorAll('.legal-related')).toHaveLength(1);
         const related = main.querySelector('.legal-related')!;
         const hrefs = [...related.querySelectorAll('a')].map((a) => a.getAttribute('href'));
-        expect(hrefs).toEqual(LEGAL.map(([r]) => pathOf(r, lang)).sort((a, b) => order(a, lang) - order(b, lang)));
+        const others = LEGAL.map(([r]) => pathOf(r, lang)).filter((h) => h !== pathOf(id, lang));
+        expect(hrefs).toEqual(others.sort((a, b) => order(a, lang) - order(b, lang)));
+        const current = related.querySelector('[aria-current="page"]')!;
+        expect(current.tagName).toBe('SPAN');
+        expect(related.querySelector(`a[href="${pathOf(id, lang)}"]`)).toBeNull();
       });
     }
   }
@@ -163,7 +170,11 @@ describe('the legal pages as the mobile app opens them (/in-app/…)', () => {
         expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
         const hrefs = [...document.querySelectorAll('a[href]')].map((a) => a.getAttribute('href')!);
         const allowed = new Set([...IN_APP_ROUTE_IDS.flatMap((r) => LANGS.map((l) => inAppPathOf(r, l))), '#main']);
-        const outside = hrefs.filter((h) => !allowed.has(h) && !h.startsWith('#') && !h.startsWith('mailto:') && !h.startsWith('tel:'));
+        // A link to a section of the same page keeps its page (`/in-app/privacy#who`).
+        const outside = hrefs.filter((h) => !allowed.has(h.split('#')[0]!) && !h.startsWith('#') && !h.startsWith('mailto:') && !h.startsWith('tel:'));
+        // The page adds no group of its own: the app's footer is the only list of the legal pages.
+        expect(document.querySelector('main .legal-related')).toBeNull();
+        expect(document.querySelectorAll('.in-app-footer .legal-links')).toHaveLength(1);
         expect({ page: inAppPathOf(id, lang), outside }).toEqual({ page: inAppPathOf(id, lang), outside: [] });
         expect(screen.queryAllByRole('button')).toEqual([]);
         expect(document.querySelector('form')).toBeNull();

@@ -1,11 +1,13 @@
 import { useEffect, useRef, type ComponentType } from 'react';
 import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { Chrome, InAppChrome } from './components/Chrome';
+import { RouteScroll, type ArrivalState } from './components/RouteScroll';
 import { PageHead } from './components/public/blocks';
 import { SITE } from './config/site';
 import { I18nProvider, readStoredLanguage, useI18n } from './i18n';
 import { LANGUAGES } from './i18n/languages';
 import { Home } from './pages/public/Home';
+import { Services } from './pages/public/Services';
 import { DukanErp } from './pages/public/DukanErp';
 import { Apply } from './pages/public/Apply';
 import { About, AccountDeletion, ApplicationStatus, Contact, LegalNotice, Login, Privacy, PrivacyChoices, Products, Security, Support, Terms } from './pages/public/Legal';
@@ -20,6 +22,7 @@ const ROUTES = publicRoutesFor(SITE.siteSurface === 'public' ? 'public' : 'full'
 
 const PAGES: Record<PublicRouteId, ComponentType> = {
   home: Home,
+  services: Services,
   about: About,
   products: Products,
   dukanErp: DukanErp,
@@ -40,9 +43,18 @@ const PAGES: Record<PublicRouteId, ComponentType> = {
  * Two areas, structurally apart (docs/38, docs/74 §2): the public site — every page in three languages, the language
  * in the address — and the protected areas, `/account` for a business Owner on their tenant session and `/admin` for
  * a platform administrator on a separate realm, never prerendered and never indexed. An Owner arriving at `/admin`
- * carries nothing the administrator guard will even look at.
+ * carries nothing the administrator guard will even look at. A public page starts where `RouteScroll` puts it.
  */
 export function App() {
+  return (
+    <>
+      <RouteScroll />
+      <Areas />
+    </>
+  );
+}
+
+function Areas() {
   const { pathname } = useLocation();
   // A public build has no protected area: those addresses are unknown pages here (`protected-areas.public.tsx`).
   if (PROTECTED_AREAS_BUILT && isProtectedPath(pathname)) return <ProtectedArea />;
@@ -99,7 +111,7 @@ function PublicPage({ id }: { id: PublicRouteId }) {
  * language — once, on arrival; a crawler has no stored choice and always reads the address it asked for.
  */
 function PreferredLanguage() {
-  const { pathname } = useLocation();
+  const { pathname, search, hash } = useLocation();
   const navigate = useNavigate();
   const done = useRef(false);
   useEffect(() => {
@@ -108,9 +120,11 @@ function PreferredLanguage() {
     const { lang, path } = splitLanguage(pathname);
     const stored = readStoredLanguage();
     if (lang === 'en' && stored && stored !== 'en' && ROUTES.some((r) => r.path === path)) {
-      navigate(localizedPath(stored, path), { replace: true });
+      // The section and query asked for come along; the page stays where the reader arrived (`RouteScroll`).
+      const arrival: ArrivalState = { arrival: true };
+      navigate(localizedPath(stored, path) + search + hash, { replace: true, state: arrival });
     }
-  }, [pathname, navigate]);
+  }, [pathname, search, hash, navigate]);
   return null;
 }
 

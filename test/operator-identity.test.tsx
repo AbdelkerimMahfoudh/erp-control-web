@@ -44,9 +44,9 @@ afterEach(() => {
 
 describe('the operator sentence', () => {
   it('says, in each language, that TSX-MR is a name and not a company, operated by the individual the owner named', () => {
-    expect(operatorStatus('en', site)).toBe(`TSX-MR is a project and trading name. It is not a separately incorporated company: it is operated by ${NAME}, an individual.`);
-    expect(operatorStatus('fr', site)).toContain(`exploité par ${NAME}, personne physique`);
-    expect(operatorStatus('ar', site)).toContain(`شخصٌ طبيعي هو ${NAME}`);
+    expect(operatorStatus('en', site)).toBe(`TSX-MR is a project and trading name. It is not a separately incorporated company: it is operated by ${NAME}, an individual (“the operator”).`);
+    expect(operatorStatus('fr', site)).toContain(`exploité par ${NAME}, personne physique (ci-après « l’exploitant »)`);
+    expect(operatorStatus('ar', site)).toContain(`شخصٌ طبيعي هو ${NAME}، ويُشار إليه فيما يلي بـ«المشغّل»`);
   });
 
   it('assumes nothing about the person: no gendered pronoun in English or French', () => {
@@ -55,7 +55,7 @@ describe('the operator sentence', () => {
   });
 
   it('names a company only when one is configured, and says nothing when no operator is known', () => {
-    expect(operatorStatus('en', { ...site, operatorType: 'company', legalName: 'Example SARL' })).toBe('TSX-MR is a trading name of Example SARL.');
+    expect(operatorStatus('en', { ...site, operatorType: 'company', legalName: 'Example SARL' })).toBe('TSX-MR is a trading name of Example SARL (“the operator”).');
     expect(operatorStatus('en', { ...site, legalName: '' })).toBe('');
   });
 });
@@ -83,6 +83,40 @@ describe('the public pages', () => {
     // Phone numbers keep their reading order inside Arabic.
     expect(container.querySelector('a[href^="tel:"] bdi')?.getAttribute('dir')).toBe('ltr');
   });
+});
+
+/**
+ * Where the person's name appears (the brief of 2026-10-17, fourth): once in each legal text that must say who is
+ * accountable — then "the operator" — and a second time on the legal notice, for the person responsible for
+ * publication. Never in the marketing pages, the footer or their structured data.
+ */
+describe('the name, only where a legal text needs it', () => {
+  const count = (text: string) => text.split(NAME).length - 1;
+  for (const lang of ['en', 'fr', 'ar'] as const) {
+    it(`in ${lang}: the brand pages and the footer never name the person; each legal text names them as it must`, () => {
+      const expected: Record<string, number> = {
+        home: 0,
+        services: 0,
+        about: 0,
+        products: 0,
+        dukanErp: 0,
+        contact: 0,
+        support: 0,
+        privacy: 1,
+        terms: 1,
+        legalNotice: 2,
+        privacyChoices: 0,
+        accountDeletion: 0,
+        security: 0,
+      };
+      for (const [id, times] of Object.entries(expected)) {
+        const { container } = mount(pathOf(id as Parameters<typeof pathOf>[0], lang));
+        expect({ id, lang, times: count(container.textContent ?? '') }).toEqual({ id, lang, times });
+        expect({ id, lang, footer: count(container.querySelector('footer.chrome-footer')?.textContent ?? '') }).toEqual({ id, lang, footer: 0 });
+        cleanup();
+      }
+    });
+  }
 });
 
 describe('the host’s address in Arabic', () => {

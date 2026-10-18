@@ -10,18 +10,19 @@ import { terms } from './legal-terms';
 import { privacyChoices } from './legal-choices';
 import { legalNotice } from './legal-notice';
 import { security } from './legal-security';
-import { home } from './home';
+import { dukanOverview } from './dukan-overview';
+import { brand, type BrandContent } from './brand';
 import { dukanErp } from './dukan-erp';
 import { BLOCKERS, type Blocker } from './blockers';
 import { looksLikePlaceholder } from '../config/schema';
 import { blockersIn, textsOf, type Document, type LegalDocument } from './types';
 import type { Surface } from '../config/schema';
-import type { HomeContent } from './home';
+import type { DukanOverview } from './dukan-overview';
 import type { DukanErpContent } from './dukan-erp';
-import { aboutPrelaunch, contactPrelaunch, dukanErpAsPrelaunch, dukanErpPrelaunch, homeAsPrelaunch, homePrelaunch, supportPrelaunch } from './prelaunch';
+import { aboutPrelaunch, contactPrelaunch, dukanErpAsPrelaunch, dukanErpPrelaunch, dukanOverviewAsPrelaunch, dukanOverviewPrelaunch, supportPrelaunch } from './prelaunch';
 import { accountDeletionPrelaunch, legalNoticePrelaunch, privacyChoicesPrelaunch, privacyPrelaunch, securityPrelaunch, termsPrelaunch } from './legal-prelaunch';
 
-export { about, applicationStatus, contact, login, products, support, accountDeletion, privacy, terms, privacyChoices, legalNotice, security, home, dukanErp };
+export { about, applicationStatus, contact, login, products, support, accountDeletion, privacy, terms, privacyChoices, legalNotice, security, brand, dukanOverview, dukanErp };
 
 export const DOCUMENTS = { about, applicationStatus, contact, login, products, support, accountDeletion, privacy, terms, privacyChoices, legalNotice, security } satisfies Record<string, Record<Language, Document>>;
 
@@ -62,8 +63,14 @@ export function legalDocumentsFor(surface: Surface): Record<keyof typeof LEGAL_D
   return surface === 'public' ? PRELAUNCH_LEGAL_DOCUMENTS : LEGAL_DOCUMENTS;
 }
 
-export function homeFor(lang: Language, surface: Surface): HomeContent {
-  return surface === 'public' ? homeAsPrelaunch(home[lang], homePrelaunch[lang]) : home[lang];
+/** TSX-MR itself — the home page and the services (`brand.ts`): the same on every surface. */
+export function brandFor(lang: Language): BrandContent {
+  return brand[lang];
+}
+
+/** What Dukan ERP is made of, on its product page (`dukan-overview.ts`). */
+export function dukanOverviewFor(lang: Language, surface: Surface): DukanOverview {
+  return surface === 'public' ? dukanOverviewAsPrelaunch(dukanOverview[lang], dukanOverviewPrelaunch[lang]) : dukanOverview[lang];
 }
 
 export function dukanErpFor(lang: Language, surface: Surface): DukanErpContent {
@@ -74,7 +81,7 @@ export function dukanErpFor(lang: Language, surface: Surface): DukanErpContent {
 export function allTexts(lang: Language, surface: Surface = 'full'): string[] {
   const dukan = dukanErpFor(lang, surface);
   const shown = surface === 'public' ? { ...dukan, subscription: { title: '', body: '' } } : dukan;
-  return [...Object.values(documentsFor(surface)).flatMap((d) => (d ? textsOf(d[lang]) : [])), ...stringsOf(homeFor(lang, surface)), ...stringsOf(shown)];
+  return [...Object.values(documentsFor(surface)).flatMap((d) => (d ? textsOf(d[lang]) : [])), ...stringsOf(brandFor(lang)), ...stringsOf(dukanOverviewFor(lang, surface)), ...stringsOf(shown)];
 }
 
 /** The blockers still present in any language's published text — a production build refuses while any remains. */

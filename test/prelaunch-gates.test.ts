@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { dukanErpFor, homeFor, PRELAUNCH_DOCUMENTS, PRELAUNCH_LEGAL_DOCUMENTS, publishedBlockers, publishedDrafts, publishedPlaceholders, stringsOf } from '../src/content';
-import { homePrelaunch, dukanErpPrelaunch } from '../src/content/prelaunch';
+import { brandFor, dukanErpFor, dukanOverviewFor, PRELAUNCH_DOCUMENTS, PRELAUNCH_LEGAL_DOCUMENTS, publishedBlockers, publishedDrafts, publishedPlaceholders, stringsOf } from '../src/content';
+import { dukanOverviewPrelaunch, dukanErpPrelaunch } from '../src/content/prelaunch';
 import { blockersIn, inputsIn, shapeOf, textsOf } from '../src/content/types';
 import { INPUTS } from '../src/config/schema';
 import { EXTERNAL_CONDITIONS, releaseVerdicts } from '../src/config/gates';
@@ -17,7 +17,8 @@ function prelaunchTexts(lang: (typeof LANGS)[number]): string[] {
   const dukan = dukanErpFor(lang, 'public');
   return [
     ...Object.values(PRELAUNCH_DOCUMENTS).flatMap((d) => textsOf(d[lang])),
-    ...stringsOf(homeFor(lang, 'public')),
+    ...stringsOf(brandFor(lang)),
+    ...stringsOf(dukanOverviewFor(lang, 'public')),
     ...stringsOf({ ...dukan, subscription: null }),
   ];
 }
@@ -30,7 +31,7 @@ describe('the pre-launch texts', () => {
     }
     for (const lang of ['fr', 'ar'] as const) {
       expect(dukanErpPrelaunch[lang].start.steps).toHaveLength(dukanErpPrelaunch.en.start.steps.length);
-      for (const [name, value] of [['home', homePrelaunch], ['dukanErp', dukanErpPrelaunch]] as const) {
+      for (const [name, value] of [['dukanOverview', dukanOverviewPrelaunch], ['dukanErp', dukanErpPrelaunch]] as const) {
         expect({ name, lang, inputs: inputsIn(stringsOf(value[lang])) }).toEqual({ name, lang, inputs: inputsIn(stringsOf(value.en)) });
       }
     }
@@ -62,12 +63,16 @@ describe('the pre-launch texts', () => {
         expect({ lang, name, says: textsOf(PRELAUNCH_DOCUMENTS[name][lang]).some((t) => SAYS[lang].test(t)) }).toEqual({ lang, name, says: true });
       }
       expect({ lang, intro: SAYS[lang].test(dukanErpFor(lang, 'public').intro) }).toEqual({ lang, intro: true });
-      expect({ lang, cta: SAYS[lang].test(homeFor(lang, 'public').cta.body) }).toEqual({ lang, cta: true });
     }
   });
 
-  it('are approved by TSX-MR (2026-10-17, docs/97 §1: version 1.0 in every language), and none is a placeholder', () => {
-    for (const [name, doc] of Object.entries(PRELAUNCH_LEGAL_DOCUMENTS)) for (const lang of LANGS) expect({ name, lang, status: doc[lang].status, version: doc[lang].version }).toEqual({ name, lang, status: 'approved', version: '1.0' });
+  it('are approved by TSX-MR (2026-10-17, docs/97 §1; the name references of 1.1, the brief of 2026-10-17, fourth), and none is a placeholder', () => {
+    // Version 1.1: privacy, terms and the legal notice name the operator once and then say "the operator".
+    const VERSION: Record<string, string> = { privacy: '1.1', terms: '1.1', legalNotice: '1.1', accountDeletion: '1.0', privacyChoices: '1.0', security: '1.0' };
+    for (const [name, doc] of Object.entries(PRELAUNCH_LEGAL_DOCUMENTS)) for (const lang of LANGS) expect({ name, lang, status: doc[lang].status, version: doc[lang].version }).toEqual({ name, lang, status: 'approved', version: VERSION[name] });
+    // A revised version takes effect on its own publication day; the unchanged texts keep the site's date (D199).
+    const EFFECTIVE: Record<string, string | undefined> = { privacy: '2026-10-18', terms: '2026-10-18', legalNotice: '2026-10-18' };
+    for (const [name, doc] of Object.entries(PRELAUNCH_LEGAL_DOCUMENTS)) for (const lang of LANGS) expect({ name, lang, effective: doc[lang].effective }).toEqual({ name, lang, effective: EFFECTIVE[name] });
     expect(publishedDrafts('public')).toEqual([]);
     expect(publishedPlaceholders('public')).toEqual([]);
     expect(publishedBlockers('public')).toEqual([]);
@@ -128,5 +133,17 @@ describe('the three release verdicts', () => {
   it('the App Store gate asks for the WhatsApp deletion channel', () => {
     const [, , app] = releaseVerdicts(REAL_PUBLIC);
     expect(app!.problems.find((p) => p.env === 'VITE_ACCOUNT_DELETION_CHANNEL')?.problem).toBe('missing');
+  });
+});
+
+describe('client work', () => {
+  it('names Blemhader.com as a site TSX-MR built for a client — no figure, no link, no claim of ownership (D199)', () => {
+    for (const lang of LANGS) {
+      const work = brandFor(lang).work;
+      expect(work.items.map((w) => w.name)).toEqual(['Blemhader.com']);
+      for (const w of work.items) {
+        expect({ lang, digits: /\d/.test(w.body), url: /https?:|www\./.test(w.body) }).toEqual({ lang, digits: false, url: false });
+      }
+    }
   });
 });

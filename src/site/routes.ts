@@ -12,6 +12,7 @@ import type { Surface } from '../config/schema';
 
 export type PublicRouteId =
   | 'home'
+  | 'services'
   | 'about'
   | 'products'
   | 'dukanErp'
@@ -36,6 +37,7 @@ export interface PublicRoute {
 
 export const PUBLIC_ROUTES: readonly PublicRoute[] = [
   { id: 'home', path: '/', indexable: true },
+  { id: 'services', path: '/services', indexable: true },
   { id: 'about', path: '/about', indexable: true },
   { id: 'products', path: '/products', indexable: true },
   { id: 'dukanErp', path: '/products/dukan-erp', indexable: true },

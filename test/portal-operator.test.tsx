@@ -119,7 +119,7 @@ describe('the portal’s own texts under the individual operator', () => {
   it('the legal notice names the operator as an individual and the person responsible for publication — no pending mark, no company detail', () => {
     const { container } = mount(pathOf('legalNotice', 'en'));
     const text = container.textContent ?? '';
-    expect(text).toContain(`it is operated by ${NAME}, an individual.`);
+    expect(text).toContain(`it is operated by ${NAME}, an individual (“the operator”).`);
     expect(text).toContain(`The person responsible for publication is ${NAME}.`);
     expect(container.querySelector('[data-blocker="publisher"]')).toBeNull();
     expect(text).not.toMatch(/Legal form|Registration number|trading as/);
@@ -139,9 +139,11 @@ describe('the portal’s own texts under the individual operator', () => {
     expect(container.querySelector('.chrome-footer')?.textContent).toContain('تفرغ زينة، نواكشوط الغربية، موريتانيا');
   });
 
-  it('the about page says who operates the name instead of listing company details', () => {
+  it('the about page presents the brand and leaves who operates it to the legal notice, with no company details', () => {
     const { container } = mount(pathOf('about', 'fr'));
-    expect(container.textContent).toContain('Qui exploite TSX-MR');
+    expect(container.textContent).toContain('une marque indépendante de développement, gérée par un développeur mauritanien');
+    expect(container.textContent).not.toContain(NAME);
     expect(container.textContent).not.toContain('Informations sur la société');
+    expect(container.querySelector('#publisher a')?.getAttribute('href')).toBe(pathOf('legalNotice', 'fr'));
   });
 });
