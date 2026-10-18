@@ -19,6 +19,10 @@ Status: **in development — not for production until the owner approves it.**
   - The owner's brief of 2026-10-18 explicitly authorises this concurrent, website-only work. The handoff was read,
     not claimed and not edited.
   - This file is the record. Its last section is written for later integration into `erp-docs`.
+  - By the end of this work the local session had finished: `erp-docs` `origin/master` `5ed2849` reads
+    `READY_FOR_HANDOFF`, owner NONE ("Production API package rehearsed on tsxmr-app-01 and torn down", D200). The
+    brief still keeps `erp-docs` out of this task's scope, so nothing was written there; D200 is the latest decision
+    number, so the entry proposed in §6 would be the next free one at integration time.
 - **Reference concept.** The owner's private concept page (`tsxmr-motion-study…chatgpt.site`) did not resolve from this
   environment (DNS failure). It was not inspected, and no attempt was made to reach it otherwise. Everything here
   follows the written specification in the brief.
