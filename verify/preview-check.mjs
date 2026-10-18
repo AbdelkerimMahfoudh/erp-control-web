@@ -5,7 +5,8 @@
 //   node verify/preview-check.mjs https://website-balanced-motion.tsxmr-public.pages.dev site/dist preview.json https://tsxmr.com
 //
 // Checks, each recorded as { name, ok, detail }:
-//  - every built page and file is served by the preview byte-for-byte as built: the preview is that commit;
+//  - every built page and file is served by the preview byte-for-byte as built (security.txt's build-time Expires
+//    line aside): the preview is that commit;
 //  - every page carries `X-Robots-Tag: noindex`, and its canonical names the production origin, never the preview;
 //  - the security headers equal `_headers`;
 //  - production keeps its indexing (no `X-Robots-Tag`; `robots.txt` as built) and is not this build (not promoted).
@@ -38,7 +39,31 @@ const files = walk(distDir)
   .map((f) => relative(distDir, f).split('\\').join('/'))
   .filter((f) => !['_headers', '_redirects'].includes(f) && !/(^|\/)404\.html$/.test(f));
 const urlOf = (f) => (f.endsWith('.html') ? `/${f.replace(/(^|\/)index\.html$/, '$1').replace(/\.html$/, '')}` : `/${f}`);
+// As ops/verify-production: security.txt's Expires line is stamped at build time, and Cloudflare's zone-level Email
+// Address Obfuscation, where it applies, rewrites every mailto: link at the edge. A rewritten page counts as served as
+// built only if decoding the rewrite gives back the built bytes exactly; each one is reported.
+const OBFUSCATION = /\/cdn-cgi\/l\/email-protection|__cf_email__|email-decode\.min\.js/;
+const cfDecode = (hex) => {
+  const key = parseInt(hex.slice(0, 2), 16);
+  let out = '';
+  for (let i = 2; i < hex.length; i += 2) out += String.fromCharCode(parseInt(hex.slice(i, i + 2), 16) ^ key);
+  return out;
+};
+const decode = (html) =>
+  html
+    .replace(/<script data-cfasync="false" src="\/cdn-cgi\/scripts\/[^"]+\/email-decode\.min\.js"><\/script>/g, '')
+    .replace(/<a([^>]*?) href="\/cdn-cgi\/l\/email-protection#([0-9a-f]+)"/g, (_, attrs, hex) => `<a${attrs} href="mailto:${cfDecode(hex)}"`)
+    .replace(/<span class="__cf_email__" data-cfemail="([0-9a-f]+)">\[email(?:&#160;| | )protected\]<\/span>/g, (_, hex) => cfDecode(hex));
+const sameAsBuilt = (f, live, built) => {
+  if (f === '.well-known/security.txt') {
+    const strip = (b) => b.toString('utf8').replace(/^Expires:.*$/m, '');
+    return strip(live) === strip(built);
+  }
+  if (sha(live) === sha(built)) return true;
+  return f.endsWith('.html') && OBFUSCATION.test(live.toString('utf8')) && decode(live.toString('utf8')) === built.toString('utf8');
+};
 const mismatched = [];
+const rewritten = [];
 const notNoindex = [];
 const badCanonical = [];
 let pages = 0;
@@ -47,7 +72,8 @@ for (const f of files) {
   const r = await get(url);
   const live = Buffer.from(await r.arrayBuffer());
   const built = readFileSync(join(distDir, f));
-  if (r.status !== 200 || sha(live) !== sha(built)) mismatched.push({ file: f, status: r.status, live: live.length, built: built.length });
+  if (r.status !== 200 || !sameAsBuilt(f, live, built)) mismatched.push({ file: f, status: r.status, live: live.length, built: built.length });
+  if (f.endsWith('.html') && OBFUSCATION.test(live.toString('utf8'))) rewritten.push(urlOf(f));
   if (f.endsWith('.html')) {
     pages++;
     if (!/noindex/i.test(r.headers.get('x-robots-tag') ?? '')) notNoindex.push({ url: urlOf(f), xRobotsTag: r.headers.get('x-robots-tag') });
@@ -55,7 +81,8 @@ for (const f of files) {
     if (canonical && (!canonical.startsWith(`${production}/`) && canonical !== production)) badCanonical.push({ url: urlOf(f), canonical });
   }
 }
-check(`every built file (${files.length}) is served byte-for-byte as built`, mismatched.length === 0, mismatched.slice(0, 20));
+check(`every built file (${files.length}) is served byte-for-byte as built (security.txt's Expires line aside)`, mismatched.length === 0, mismatched.slice(0, 20));
+if (rewritten.length) console.log(`NOTE  ${rewritten.length} pages carry Cloudflare's email rewrite; each decodes back to the build exactly: ${rewritten.slice(0, 6).join(' ')}…`);
 check(`every page (${pages}) carries X-Robots-Tag: noindex`, notNoindex.length === 0, notNoindex.slice(0, 20));
 check(`every canonical names ${production}, never the preview`, badCanonical.length === 0, badCanonical.slice(0, 20));
 {
@@ -93,7 +120,7 @@ const expected = Object.fromEntries(
 }
 
 mkdirSync(dirname(out), { recursive: true });
-writeFileSync(out, JSON.stringify({ origin, production, checkedAt: new Date().toISOString(), results }, null, 2));
+writeFileSync(out, JSON.stringify({ origin, production, checkedAt: new Date().toISOString(), results, rewritten }, null, 2));
 const failed = results.filter((r) => !r.ok).length;
 console.log(`${results.length - failed}/${results.length} checks passed`);
 process.exit(failed ? 1 : 0);
