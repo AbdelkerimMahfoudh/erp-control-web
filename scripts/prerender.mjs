@@ -1,7 +1,9 @@
 // Writes the public site as static files (docs/74 §5), after `vite build` (the page) and `vite build --ssr` (this
 // renderer), both in the same mode. Every public page in every language becomes its own HTML file with its own
 // language, direction and head; the protected areas get an empty, never-indexed shell; robots, sitemap, the host's
-// headers and rewrites, security.txt and the manifest are generated from the same inputs.
+// headers and rewrites, security.txt and the manifest are generated from the same inputs. A portal build (docs/101)
+// publishes no public page: the shell answers every address it serves, and its not-found page is the shell too, so the
+// portal's own "Page not found" is rendered in the reader's language.
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -24,9 +26,12 @@ const page = (lang, head, app) =>
     .replace('<!--head-->', head)
     .replace('<!--app-->', app);
 
+const portal = ssr.SURFACE === 'portal';
+const shell = (title) => page('en', `<title>${esc(title)}</title>\n    <meta name="robots" content="noindex, nofollow" />`, '');
+
 // 1. The shell of the protected areas: no content, never indexed (written before the home page replaces index.html).
 //    A public build (docs/95) has no protected area, so no shell.
-if (ssr.SURFACE === 'full') write(ssr.APP_SHELL.slice(1), page('en', `<title>${esc(ssr.SITE.displayName)}</title>\n    <meta name="robots" content="noindex, nofollow" />`, ''));
+if (ssr.SURFACE !== 'public') write(ssr.APP_SHELL.slice(1), shell(portal ? 'Dukan ERP' : ssr.SITE.displayName));
 
 // 2. Every public page, in every language.
 let pages = 0;
@@ -38,8 +43,9 @@ for (const lang of ssr.LANGUAGES) {
   }
 }
 
-// 2b. The legal and support pages as the mobile app opens them: same texts, no navigation, never indexed.
-for (const lang of ssr.LANGUAGES) {
+// 2b. The legal and support pages as the mobile app opens them: same texts, no navigation, never indexed. Not on the
+//     portal: the app's pages are the company site's.
+for (const lang of portal ? [] : ssr.LANGUAGES) {
   for (const id of ssr.IN_APP_ROUTE_IDS) {
     const url = ssr.inAppPathOf(id, lang);
     write(ssr.fileForPath(url), page(lang, ssr.headOf(id, lang, true), ssr.render(url, lang)));
@@ -52,7 +58,14 @@ for (const lang of ssr.LANGUAGES) {
 //    and one per language for the app's pages (`/in-app/…` → in-app/404.html, which keeps their frame). Each is
 //    rendered at an address of its own directory, so the page that hydrates it at the real address renders the same.
 let notFound = 0;
-for (const lang of ssr.LANGUAGES) {
+if (portal) {
+  // The portal's root is sent on to its Owner page (`_redirects`); its index is the shell all the same, never the
+  // unrendered template, for a host that serves the file first.
+  write('index.html', shell('Dukan ERP'));
+  write('404.html', shell(`${ssr.translate('en', 'notFound.title')} — Dukan ERP`));
+  notFound++;
+}
+for (const lang of portal ? [] : ssr.LANGUAGES) {
   const prefix = lang === 'en' ? '' : `/${lang}`;
   const head = `<title>${esc(`${ssr.translate(lang, 'notFound.title')} — ${ssr.SITE.displayName}`)}</title>\n    <meta name="robots" content="noindex, nofollow" />`;
   for (const dir of [prefix, `${prefix}/in-app`]) {
@@ -64,7 +77,7 @@ for (const lang of ssr.LANGUAGES) {
 // 4. The generated files.
 const builtAt = new Date();
 write('robots.txt', ssr.robotsTxt(ssr.SITE, ssr.IS_PREVIEW));
-if (ssr.SITE.publicSiteOrigin) write('sitemap.xml', ssr.sitemapXml(ssr.SITE, builtAt.toISOString().slice(0, 10)));
+if (ssr.SITE.publicSiteOrigin && !portal) write('sitemap.xml', ssr.sitemapXml(ssr.SITE, builtAt.toISOString().slice(0, 10)));
 write('_headers', ssr.headersFile(ssr.SITE, ssr.IS_PREVIEW));
 write('_redirects', ssr.redirectsFile(ssr.SITE));
 const security = ssr.securityTxt(ssr.SITE, builtAt);

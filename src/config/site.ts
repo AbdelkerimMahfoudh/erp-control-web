@@ -5,6 +5,7 @@
  * production every blank shows its marked test value and every page says it is a preview.
  */
 import type { BuildMode, InputName, ReadResult, SiteInputs } from './schema';
+import { surfaceOf, type Surface } from './surface';
 
 /** Computed by `vite.config.ts` from the build's environment (`siteInputs`) and inlined. */
 declare const __SITE_INPUTS__: ReadResult & { mode: BuildMode };
@@ -22,5 +23,8 @@ export const FILLED_INPUTS: readonly InputName[] = read.filled;
 
 export const BUILD_MODE = MODE;
 
-/** What this build publishes (`schema.ts` SURFACES, docs/95–96): `public` is the pre-launch corporate website. */
-export const SURFACE: 'full' | 'public' = SITE.siteSurface === 'public' ? 'public' : 'full';
+/**
+ * What this build publishes (`schema.ts` SURFACES, docs/95–96, docs/101): `public` is the pre-launch corporate website,
+ * `portal` the Dukan ERP portal.
+ */
+export const SURFACE: Surface = surfaceOf(SITE.siteSurface);

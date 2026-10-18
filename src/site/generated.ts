@@ -5,11 +5,15 @@
  */
 import { LANGUAGES } from '../i18n/languages';
 import type { SiteInputs } from '../config/schema';
-import { IN_APP_PREFIX, LANGUAGE_PREFIX, pathOf, PROTECTED_PREFIXES, protectedPrefixesFor, publicRoutesFor, TRIAL_LANDING } from './routes';
+import { surfaceOf as namedSurface } from '../config/surface';
+import { IN_APP_PREFIX, LANGUAGE_PREFIX, pathOf, PORTAL_HOME, protectedPrefixesFor, publicRoutesFor, RETIRED_PREFIXES } from './routes';
 
 /** The surface a generated file describes; `full` when a caller does not say (`schema.ts` SURFACES). */
 type WithSurface = Partial<Pick<SiteInputs, 'siteSurface'>>;
-const surfaceOf = (site: WithSurface) => (site.siteSurface === 'public' ? 'public' : 'full');
+const surfaceOf = (site: WithSurface) => namedSurface(site.siteSurface);
+
+/** The addresses that send on to the Owner's page, in a build that has it (`routes.ts` RETIRED_PREFIXES). */
+const retiredFor = (site: WithSurface) => (surfaceOf(site) === 'public' ? [] : RETIRED_PREFIXES);
 
 /** The shell the protected areas load: no prerendered content, never indexed. */
 export const APP_SHELL = '/app-shell.html';
@@ -19,11 +23,12 @@ export function fileForPath(path: string): string {
   return path === '/' ? 'index.html' : `${path.slice(1)}.html`;
 }
 
-export function robotsTxt(site: Pick<SiteInputs, 'publicSiteOrigin'>, preview: boolean): string {
-  if (preview) return 'User-agent: *\nDisallow: /\n';
+/** Nothing of a preview, and nothing of the portal, is crawled: the portal is a signed-in service, never a page to find. */
+export function robotsTxt(site: Pick<SiteInputs, 'publicSiteOrigin'> & WithSurface, preview: boolean): string {
+  if (preview || surfaceOf(site) === 'portal') return 'User-agent: *\nDisallow: /\n';
   return [
     'User-agent: *',
-    ...PROTECTED_PREFIXES.map((p) => `Disallow: ${p}`),
+    ...[...protectedPrefixesFor(surfaceOf(site)), ...retiredFor(site)].map((p) => `Disallow: ${p}`),
     '',
     `Sitemap: ${site.publicSiteOrigin}/sitemap.xml`,
     '',
@@ -71,7 +76,7 @@ export function contentSecurityPolicy(site: Pick<SiteInputs, 'apiBase'> & WithSu
 }
 
 export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, preview: boolean): string {
-  const full = surfaceOf(site) === 'full';
+  const surface = surfaceOf(site);
   const common = [
     `Content-Security-Policy: ${contentSecurityPolicy(site)}`,
     // One year; `includeSubDomains` waits for the owner's decision on every subdomain (docs/45; staging never sends it).
@@ -81,24 +86,17 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, pre
     'Referrer-Policy: strict-origin-when-cross-origin',
     'Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
     'Cross-Origin-Opener-Policy: same-origin',
-    ...(preview ? ['X-Robots-Tag: noindex, nofollow'] : []),
+    // Nothing of a preview is indexed, and nothing of the portal ever is (the owner's brief of 2026-10-18).
+    ...(preview || surface === 'portal' ? ['X-Robots-Tag: noindex, nofollow'] : []),
   ];
   const blocks = [`/*\n${common.map((h) => `  ${h}`).join('\n')}`];
-  for (const p of protectedPrefixesFor(surfaceOf(site))) {
+  for (const p of [...protectedPrefixesFor(surface), ...retiredFor(site)]) {
     blocks.push(`${p}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
     blocks.push(`${p}/*\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
   }
-  // The free trial's setup link lands here with its token in the address (`?t=` from WhatsApp): the page's own
-  // scripts and styles load before the token is taken out of it, so no request may carry it as a referrer. The site's
-  // policy is detached first (`! `), or the host would join the two values. The landing answers with a trailing slash
-  // too (`/account/trial/?t=`), so that address is covered by its own rule: refusing the token there would not help,
-  // as the page's files are asked for — with the address as referrer — before any script could refuse anything.
-  if (full) {
-    for (const path of [TRIAL_LANDING, `${TRIAL_LANDING}/*`]) blocks.push(`${path}\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer`);
-    blocks.push(`${APP_SHELL}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
-  }
-  // The pages the mobile app opens: public texts, never indexed (their public pages are).
-  for (const prefix of Object.values(LANGUAGE_PREFIX)) blocks.push(`${prefix}${IN_APP_PREFIX}/*\n  X-Robots-Tag: noindex, nofollow`);
+  if (surface !== 'public') blocks.push(`${APP_SHELL}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
+  // The pages the mobile app opens: public texts, never indexed (their public pages are). Not on the portal.
+  if (surface !== 'portal') for (const prefix of Object.values(LANGUAGE_PREFIX)) blocks.push(`${prefix}${IN_APP_PREFIX}/*\n  X-Robots-Tag: noindex, nofollow`);
   // Hashed assets never change; everything else is revalidated.
   blocks.push('/assets/*\n  Cache-Control: public, max-age=31536000, immutable');
   // The self-hosted fonts (theme/fonts.css): named by family, subset and weight, and renamed when they change.
@@ -107,33 +105,46 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, pre
 }
 
 /**
- * The protected areas load the shell; every other unknown address gets the 404 page (the host's default). A public
- * build serves no protected area, so its file rewrites nothing.
+ * The protected areas load the shell; the Owner's page's old address (`/account`, `/account/trial`) is sent on to it
+ * for good; every other unknown address gets the 404 page (the host's default). The portal's own root is its Owner's
+ * page — sent there, not served. A public build serves no protected area, so its file rewrites nothing.
  */
 export function redirectsFile(site: WithSurface = {}): string {
-  const rules = protectedPrefixesFor(surfaceOf(site)).flatMap((p) => [`${p} ${APP_SHELL} 200`, `${p}/* ${APP_SHELL} 200`]);
+  const surface = surfaceOf(site);
+  const rules = [
+    ...(surface === 'portal' ? [`/ ${PORTAL_HOME} 302`] : []),
+    ...retiredFor(site).flatMap((p) => [`${p} ${PORTAL_HOME} 301`, `${p}/* ${PORTAL_HOME} 301`]),
+    ...protectedPrefixesFor(surface).flatMap((p) => [`${p} ${APP_SHELL} 200`, `${p}/* ${APP_SHELL} 200`]),
+  ];
   return rules.length ? `${rules.join('\n')}\n` : '';
 }
 
-/** RFC 9116, only when TSX-MR supplied a security contact; it expires a year after the build. */
-export function securityTxt(site: Pick<SiteInputs, 'securityEmail' | 'publicSiteOrigin'>, builtAt: Date): string | null {
+/**
+ * RFC 9116, only when TSX-MR supplied a security contact; it expires a year after the build. Its canonical address is
+ * the origin it is published at: the portal's own on the portal.
+ */
+export function securityTxt(site: Pick<SiteInputs, 'securityEmail' | 'publicSiteOrigin'> & Partial<Pick<SiteInputs, 'portalOrigin'>> & WithSurface, builtAt: Date): string | null {
   if (!site.securityEmail) return null;
   const expires = new Date(builtAt.getTime() + 365 * 24 * 3600 * 1000).toISOString();
+  const origin = surfaceOf(site) === 'portal' ? site.portalOrigin : site.publicSiteOrigin;
   return [
     `Contact: mailto:${site.securityEmail}`,
     `Expires: ${expires}`,
     'Preferred-Languages: en, fr, ar',
-    ...(site.publicSiteOrigin ? [`Canonical: ${site.publicSiteOrigin}/.well-known/security.txt`] : []),
+    ...(origin ? [`Canonical: ${origin}/.well-known/security.txt`] : []),
     '',
   ].join('\n');
 }
 
-export function webManifest(site: Pick<SiteInputs, 'displayName'>, themeColor: string, background: string): string {
+/** The portal is the product's, and opens on the Owner's page; the company site is the company's, and opens on its home. */
+export function webManifest(site: Pick<SiteInputs, 'displayName'> & WithSurface, themeColor: string, background: string): string {
+  const portal = surfaceOf(site) === 'portal';
+  const name = portal ? 'Dukan ERP' : site.displayName;
   return `${JSON.stringify(
     {
-      name: site.displayName,
-      short_name: site.displayName,
-      start_url: '/',
+      name,
+      short_name: name,
+      start_url: portal ? PORTAL_HOME : '/',
       display: 'browser',
       background_color: background,
       theme_color: themeColor,

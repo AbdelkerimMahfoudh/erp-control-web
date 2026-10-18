@@ -137,6 +137,43 @@ jobs:
             node scripts/release-verdicts.mjs --dist dist --links "$EV/public-audit-links.txt" --browser "$EV/public/playwright-results.json" 2>&1 | tee "$EV/release-verdicts.txt"
           fi
           rm -rf "$EV/public/playwright-output"
+      # The Dukan ERP portal alone, for https://dukan.tsxmr.com (docs/101): the Owner's /subscription and the console, no
+      # page of the company site, nothing indexed.
+      - name: Portal build (VITE_SITE_SURFACE=portal) — refusal without its inputs, preview, links, bundle
+        if: ${{ !cancelled() }}
+        env:
+          VITE_SITE_SURFACE: portal
+        run: |
+          set +e
+          npx vite build --mode production > "$EV/portal-production-refusal.log" 2>&1
+          code=$?
+          set -e
+          cat "$EV/portal-production-refusal.log"
+          if [ "$code" -eq 0 ]; then echo "FAIL: a portal production build succeeded without its inputs"; exit 1; fi
+          grep -q "Nothing was published" "$EV/portal-production-refusal.log"
+          grep -q "(gate PORTAL)" "$EV/portal-production-refusal.log"
+          grep -q "VITE_PORTAL_ORIGIN" "$EV/portal-production-refusal.log"
+          rm -rf dist dist-ssr
+          set -o pipefail
+          # The browser checks answer the API from a mock on this origin; a preview's CSP allows it.
+          VITE_API_BASE=http://127.0.0.1:3999/api/v1 npm run build:preview 2>&1 | tee "$EV/portal-build.log"
+          (cd dist && find . -type f | sort) > "$EV/portal-dist-files.txt"
+          node scripts/audit-links.mjs dist 2>&1 | tee "$EV/portal-audit-links.txt"
+          node scripts/audit-bundle.mjs dist --preview --portal 2>&1 | tee "$EV/portal-audit-bundle.txt"
+          cp -r dist "$EV/dist-portal"
+      - name: Portal in a browser (E2E_SURFACE=portal) — EN/FR/AR at 375 px and desktop, axe, headers, the claim
+        if: ${{ !cancelled() }}
+        env:
+          E2E_SURFACE: portal
+        run: |
+          mkdir -p "$EV/portal"
+          set -o pipefail
+          EV="$EV/portal" npx playwright test 2>&1 | tee "$EV/portal/playwright.log"
+      - name: Portal contact sheets
+        if: always()
+        run: |
+          if [ -d "$EV/portal/screenshots" ]; then node scripts/contact-sheets.mjs "$EV/portal" || true; fi
+          rm -rf "$EV/portal/playwright-output"
       - name: Keep the evidence
         if: always()
         env:

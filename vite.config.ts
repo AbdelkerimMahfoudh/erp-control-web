@@ -2,7 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { loadEnv, type Plugin } from 'vite';
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
-import { formatProblems, gateOfSurface, readInputs, releaseProblems, type BuildMode } from './src/config/schema';
+import { formatProblems, gateOfSurface, readInputs, releaseProblems, surfaceOf, type BuildMode } from './src/config/schema';
 import { publishedBlockers, publishedDrafts, publishedPlaceholders } from './src/content';
 
 /**
@@ -24,8 +24,8 @@ function releaseGuard(): Plugin {
       if (config.mode !== 'production') return;
       const env = loadEnv(config.mode, config.root, 'VITE_');
       // Each surface is its own gate (docs/96): a public build is the pre-launch website (PUBLIC_WEBSITE, its pre-launch
-      // texts); a full build is the portal (PORTAL, the service's texts and every input).
-      const surface = env.VITE_SITE_SURFACE === 'public' ? 'public' : 'full';
+      // texts); a full or a portal build is the portal (PORTAL, the service's texts and every input).
+      const surface = surfaceOf(env.VITE_SITE_SURFACE);
       const problems = releaseProblems(env, publishedBlockers(surface), { drafts: publishedDrafts(surface), placeholders: publishedPlaceholders(surface) });
       if (problems.length > 0) throw new Error(formatProblems(problems, gateOfSurface(surface)));
     },
@@ -42,11 +42,14 @@ if (process.env.VITEST) process.env.TZ = 'UTC';
 /**
  * A public build (`VITE_SITE_SURFACE=public`, docs/95) takes stubs in place of what needs the API, so none of it reaches
  * its bundle — not merely an unlinked route: the protected areas' routes, the API client (no address, no request), the
- * application form and the price table (docs/96).
+ * application form and the price table (docs/96). A portal build (`VITE_SITE_SURFACE=portal`, docs/101) takes the
+ * reverse: a stub in place of the company site's pages, so none of them, and no link into them, reaches its bundle.
  */
 function surfaceAliases(mode: string) {
-  if (loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_SURFACE !== 'public') return [];
+  const surface = surfaceOf(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_SURFACE);
   const stub = (path: string) => fileURLToPath(new URL(path, import.meta.url));
+  if (surface === 'portal') return [{ find: /^\.\/public-areas$/, replacement: stub('./src/public-areas.portal.tsx') }];
+  if (surface !== 'public') return [];
   return [
     { find: /^\.\/protected-areas$/, replacement: stub('./src/protected-areas.public.tsx') },
     { find: /^(\.{1,2}\/)+api\/client$/, replacement: stub('./src/api/client.public.ts') },

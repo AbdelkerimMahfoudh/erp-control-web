@@ -28,7 +28,7 @@ const REAL: Record<string, string> = {
   VITE_LEGAL_EFFECTIVE_DATE: '2026-11-01',
 };
 const ORIGIN = REAL.VITE_PUBLIC_SITE_ORIGIN!;
-const PORTAL = 'https://portal.company-domain.mr';
+const PORTAL = 'https://dukan.company-domain.mr';
 
 /** The pre-launch website's own facts (the PUBLIC_WEBSITE gate, docs/96): identity, contacts, the date — and its origin. */
 const PUBLIC_REAL: Record<string, string> = {
@@ -152,7 +152,7 @@ describe('what a public build publishes', () => {
     for (const lang of LANGUAGES) expect(locs).toContain(`${ORIGIN}${pathOf('privacy', lang)}`);
   });
 
-  it('rewrites nothing, so /account and /admin are unknown pages here (404)', () => {
+  it('rewrites nothing, so /subscription, /account and /admin are unknown pages here (404)', () => {
     expect(redirectsFile(site)).toBe('');
     expect(redirectsFile()).toContain('/admin/* /app-shell.html 200');
   });
@@ -165,9 +165,8 @@ describe('what a public build publishes', () => {
     expect(file).toContain('X-Frame-Options: DENY');
     expect(file).toContain('Strict-Transport-Security: max-age=31536000');
     expect(file).toContain('/assets/*\n  Cache-Control: public, max-age=31536000, immutable');
-    expect(file).not.toMatch(/^\/(account|admin)/m);
+    expect(file).not.toMatch(/^\/(subscription|account|admin)/m);
     expect(file).not.toContain('app-shell');
-    expect(file).not.toContain('/account/trial');
     // The pages the app opens stay public and unindexed.
     expect(file).toContain('/in-app/*\n  X-Robots-Tag: noindex, nofollow');
   });
@@ -183,9 +182,11 @@ describe('links into the business account', () => {
     expect(accountHref('login', 'fr', { siteSurface: 'full', portalOrigin: '' })).toEqual({ to: '/fr/login' });
   });
 
-  it('a public build links nowhere until a portal origin is given, then to the same page there', () => {
-    expect(accountHref('apply', 'en', { siteSurface: 'public', portalOrigin: '' })).toBeNull();
-    expect(accountHref('apply', 'ar', { siteSurface: 'public', portalOrigin: PORTAL })).toEqual({ href: `${PORTAL}/ar/apply` });
-    expect(accountHref('login', 'en', { siteSurface: 'public', portalOrigin: PORTAL })).toEqual({ href: `${PORTAL}/login` });
+  it('a public build links nowhere until a portal origin is given; then the sign-in leads to the portal’s Owner page, and nothing else leads there', () => {
+    expect(accountHref('login', 'en', { siteSurface: 'public', portalOrigin: '' })).toBeNull();
+    for (const lang of LANGUAGES) expect(accountHref('login', lang, { siteSurface: 'public', portalOrigin: PORTAL })).toEqual({ href: `${PORTAL}/subscription` });
+    // The portal publishes no application and no status page.
+    expect(accountHref('apply', 'ar', { siteSurface: 'public', portalOrigin: PORTAL })).toBeNull();
+    expect(accountHref('applicationStatus', 'fr', { siteSurface: 'public', portalOrigin: PORTAL })).toBeNull();
   });
 });

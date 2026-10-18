@@ -1,22 +1,22 @@
 import { useEffect, useRef, useState, type FocusEvent, type MouseEvent, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { SITE } from '../config/site';
-import { LANGUAGE_CODES, LANGUAGE_LABELS, LANGUAGES, storeLanguage, useI18n, type Language } from '../i18n';
+import { LANGUAGE_CODES, LANGUAGES, storeLanguage, useI18n, type Language } from '../i18n';
 import { inAppPathOf, pathOf, publicRouteAt, type PublicRouteId } from '../site/routes';
-import { useTheme } from '../theme/theme';
 import { useReveal } from '../lib/reveal';
+import { languageName, ThemeToggle } from './controls';
 import { INDIVIDUAL_OPERATOR, InAppContext, LegalLinks, OrgMark, PreviewBanner, ProductMark } from './public/blocks';
 import { AccountLink, accountHref, linkable } from './AccountLink';
 import { textValues } from './public/RichText';
 import { Icon } from './public/icons';
 
 /**
- * The frame around every page (docs/74 §4): the organization's identity, the public navigation, the languages and the
- * footer with the policies and the brand in one line. The administration area is never linked from a
- * public page (it is reached at its own address until it moves to its own origin, docs/74 §8). On a phone the
- * navigation sits behind a menu button (`PhoneMenu`), which works before any script has run.
+ * The frame around every public page (docs/74 §4): the organization's identity, the public navigation, the languages
+ * and the footer with the policies and the brand in one line. The signed-in areas have their own frame
+ * (`PortalChrome`), and the administration area is never linked from a public page. On a phone the navigation sits
+ * behind a menu button (`PhoneMenu`), which works before any script has run.
  */
-export function Chrome({ children, area }: { children: ReactNode; area: 'public' | 'protected' }) {
+export function Chrome({ children }: { children: ReactNode }) {
   const { t, lang } = useI18n();
   const { pathname } = useLocation();
   const to = (id: PublicRouteId) => pathOf(id, lang);
@@ -58,28 +58,22 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
             {navList}
           </nav>
           <div className="controls">
-            <Languages area={area} className="languages-wide" />
+            <Languages className="languages-wide" />
             <ThemeToggle />
-            {area === 'public' ? (
-              <AccountLink id="login" lang={lang} className="btn btn-sm btn-primary">
-                {t('nav.signIn')}
-              </AccountLink>
-            ) : (
-              <Link className="btn btn-sm btn-primary" to="/account">
-                {t('nav.signIn')}
-              </Link>
-            )}
+            <AccountLink id="login" lang={lang} className="btn btn-sm btn-primary">
+              {t('nav.signIn')}
+            </AccountLink>
             <PhoneMenu>
               <nav className="nav" aria-label={t('nav.main')}>
                 {navList}
               </nav>
-              <Languages area={area} className="languages-narrow" />
+              <Languages className="languages-narrow" />
             </PhoneMenu>
           </div>
         </div>
       </header>
-      {/* The public pages lay out their own bands edge to edge; the protected areas keep the plain column. */}
-      <main id="main" className={area === 'public' ? 'site-main' : 'container'} tabIndex={-1}>
+      {/* The public pages lay out their own bands edge to edge. */}
+      <main id="main" className="site-main" tabIndex={-1}>
         {children}
       </main>
       <Footer />
@@ -170,60 +164,34 @@ function PhoneMenu({ children }: { children: ReactNode }) {
   );
 }
 
-/** "EN, English", "FR, Français", "AR, العربية". */
-const languageName = (l: Language) => `${LANGUAGE_CODES[l]}, ${LANGUAGE_LABELS[l]}`;
-
 /**
- * The current page in each language (a link, so it works without a script); the protected areas switch in place. Each
- * shows its short code (EN, FR, AR) and is named by the code and the language in full, in that language — the visible
- * label first, so a voice command that says what it sees reaches it. The control is three equal segments
- * (`public.css` `.languages`), the same in the header, the phone menu, the app's pages and the protected areas.
- * Switching keeps the page and stores the choice; the page in the other language starts at its top (`RouteScroll`).
+ * The current page in each language (a link, so it works without a script). Each shows its short code (EN, FR, AR) and
+ * is named by the code and the language in full, in that language — the visible label first, so a voice command that
+ * says what it sees reaches it. The control is three equal segments (`public.css` `.languages`), the same in the
+ * header, the phone menu, the app's pages and the signed-in areas (`controls.tsx`). Switching keeps the page and stores
+ * the choice; the page in the other language starts at its top (`RouteScroll`).
  */
-function Languages({ area, className }: { area: 'public' | 'protected'; className: string }) {
-  const { t, lang, setLanguage } = useI18n();
+function Languages({ className }: { className: string }) {
+  const { t, lang } = useI18n();
   const { pathname } = useLocation();
   const here = publicRouteAt(pathname);
   return (
     <ul className={`languages ${className}`} aria-label={t('nav.languages')}>
       {LANGUAGES.map((l: Language) => (
         <li key={l}>
-          {area === 'public' ? (
-            <Link
-              to={pathOf(here?.route.id ?? 'home', l)}
-              lang={l}
-              hrefLang={l}
-              aria-current={l === lang ? 'true' : undefined}
-              aria-label={languageName(l)}
-              onClick={() => storeLanguage(l)}
-            >
-              {LANGUAGE_CODES[l]}
-            </Link>
-          ) : (
-            <button type="button" className="link-button" lang={l} aria-pressed={l === lang} aria-label={languageName(l)} onClick={() => setLanguage(l)}>
-              {LANGUAGE_CODES[l]}
-            </button>
-          )}
+          <Link
+            to={pathOf(here?.route.id ?? 'home', l)}
+            lang={l}
+            hrefLang={l}
+            aria-current={l === lang ? 'true' : undefined}
+            aria-label={languageName(l)}
+            onClick={() => storeLanguage(l)}
+          >
+            {LANGUAGE_CODES[l]}
+          </Link>
         </li>
       ))}
     </ul>
-  );
-}
-
-/**
- * The appearance, one tap from every page (the 2026-10-17 refinement; it replaces the footer's select). The icon shows
- * where a press leads — a moon while light, a sun while dark — and is chosen by CSS from `data-theme`, so it is right
- * before any script runs; the name says the action, in the reader's language.
- */
-function ThemeToggle() {
-  const { t } = useI18n();
-  const { theme, toggleTheme } = useTheme();
-  const label = t(theme === 'dark' ? 'theme.toLight' : 'theme.toDark');
-  return (
-    <button type="button" className="icon-button theme-toggle" onClick={toggleTheme} aria-label={label} title={label}>
-      <Icon name="moon" size={20} className="theme-icon-moon" />
-      <Icon name="sun" size={20} className="theme-icon-sun" />
-    </button>
   );
 }
 

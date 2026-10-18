@@ -7,7 +7,7 @@ import { ar } from '../src/i18n/ar';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
 import { pathOf, PUBLIC_ROUTES } from '../src/site/routes';
-import { B1, B2, BRANCHES, LINES, NO_TRIAL, TRIAL_END, TRIAL_START, TRIAL_ZONE, allocation, scheduledRequest, subscription, trialOffer, trialSetup, trialStatus, trialView } from '../test/fixtures-data';
+import { B1, B2, BRANCHES, LINES, NO_TRIAL, PORTAL_SESSION, TRIAL_END, TRIAL_START, TRIAL_ZONE, allocation, portalStatus, scheduledRequest, subscription, trialStatus, trialView } from '../test/fixtures-data';
 
 /**
  * The built site in a real browser (docs/74 §9): every public page in every language, at a desktop width and at
@@ -35,19 +35,11 @@ function shot(variant: string, lang: string, path: string): string {
 }
 
 /**
- * The free trial's states as the account page meets them (2026-10-13), from the component tests' fixtures: the business
- * state, the Owner's trial read, and the trial the entitlement carries.
+ * The free trial's states as the portal's Owner page meets them (2026-10-13, docs/101), from the component tests'
+ * fixtures: the business state, the Owner's trial read, and the trial the entitlement carries.
  */
 const TRIALS: Record<'available' | 'active' | 'paidAfter' | 'expired', TrialStatus> = {
-  available: trialStatus({
-    setup: trialSetup({
-      sentTo: ['email', 'whatsapp'],
-      destinations: [
-        { channel: 'email', masked: 'o•••@preview.invalid' },
-        { channel: 'whatsapp', masked: '+222••••1234' },
-      ],
-    }),
-  }),
+  available: trialStatus(),
   active: { state: 'trial_active', trial: trialView('active'), offer: null, setup: null, calculatedAt: TRIAL_START },
   // Paid access approved during the trial, starting at its end (C6).
   paidAfter: { state: 'trial_active', trial: trialView('active', { accessAfterTrial: { kind: 'paid', startsAt: TRIAL_END } }), offer: null, setup: null, calculatedAt: TRIAL_START },
@@ -76,6 +68,19 @@ function ownerAccount(trial: Session['trial']) {
   return { ...sub, entitlement: { ...sub.entitlement, state: status.state as EntitlementState, periodEnd: null, trial: status.trial } };
 }
 
+/** The portal's status panel for the business of `trial`, or the paid business of the other fixtures. */
+function ownerStatus(trial: Session['trial']) {
+  if (!trial) return portalStatus();
+  const status = TRIALS[trial];
+  return portalStatus({
+    access: status.state === 'trial_expired' ? 'read_only' : 'operational',
+    state: status.state as EntitlementState,
+    period: { start: null, end: null },
+    grace: { ...portalStatus().grace, availableAtPeriodEnd: null, usesInWindow: 0, usesRemaining: 3, nextUseRestoredAt: null },
+    notices: status.state === 'trial_active' ? { next: { kind: 'trial_reminder', threshold: 'h72', dueAt: '2026-10-17T09:30:00.000Z' }, last: null } : { next: null, last: null },
+  });
+}
+
 /** The API the pages may call, answered from fixtures: signed out unless a test says otherwise. */
 async function mockApi(page: Page, signedIn: Session = {}) {
   if (signedIn.lang) await page.addInitScript((lang) => localStorage.setItem('erp.web.language', lang), signedIn.lang);
@@ -83,11 +88,13 @@ async function mockApi(page: Page, signedIn: Session = {}) {
     const url = route.request().url();
     const json = (body: unknown, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
     if (url.endsWith('/platform/plan')) return json(PLAN);
+    // The Owner's portal session (0099): the session route names who is signed in; nothing to refresh.
+    if (url.endsWith('/platform/portal/session')) return signedIn.owner ? json(PORTAL_SESSION) : json({ message: 'Unauthorized' }, 401);
+    if (url.endsWith('/platform/portal/refresh')) return json({ message: 'Unauthorized' }, 401);
     if (url.endsWith('/platform/my-subscription')) return signedIn.owner ? json(ownerAccount(signedIn.trial)) : json({ message: 'Unauthorized' }, 401);
+    if (url.endsWith('/platform/my-subscription/status')) return signedIn.owner ? json(ownerStatus(signedIn.trial)) : json({ message: 'Unauthorized' }, 401);
     if (url.endsWith('/platform/my-subscription/trial')) return signedIn.owner ? json(signedIn.trial ? TRIALS[signedIn.trial] : NO_TRIAL) : json({ message: 'Unauthorized' }, 401);
-    if (url.endsWith('/platform/my-subscription/trial/link')) {
-      return signedIn.owner ? json({ link: 'valid', offer: trialOffer(), trial: trialView('available'), state: 'trial_available' }) : json({ message: 'Unauthorized' }, 401);
-    }
+    if (url.endsWith('/platform/payment-instructions')) return signedIn.owner ? json({ available: false, providers: [], defaultProvider: null, placeholder: false }) : json({ message: 'Unauthorized' }, 401);
     if (url.endsWith('/platform/admin/me')) return signedIn.admin ? json({ id: 'a1', email: 'admin@preview.invalid', name: 'Preview administrator' }) : json({ message: 'Unauthorized' }, 401);
     if (url.endsWith('/platform/dashboard'))
       return json({ byState: { pending: 2, active: 7, grace: 1, complimentary: 3, suspended: 0, expired: 1, cancelled: 0, rejected: 1 }, businesses: 15, branches: 21, activeUsers: 48, pendingSeatRequests: 2, pendingStaff: 1, revenue: null, calculatedAt: '2026-10-12T08:00:00.000Z' });
@@ -277,9 +284,9 @@ test('a table-of-contents link lands below the sticky header, not behind it', as
 test('the host files: robots, sitemap, security headers, protected areas noindex, unknown address 404', async ({ request }) => {
   const robots = await (await request.get('/robots.txt')).text();
   const home = await request.get('/');
-  const account = await request.get('/account');
-  const landing = await request.get('/account/trial');
-  const landingSlash = await request.get('/account/trial/');
+  const subscription = await request.get('/subscription');
+  const retired = await request.get('/account', { maxRedirects: 0 });
+  const retiredLanding = await request.get('/account/trial', { maxRedirects: 0 });
   const admin = await request.get('/admin/businesses');
   const missing = await request.get('/no-such-page');
   const csp = home.headers()['content-security-policy'] ?? '';
@@ -287,9 +294,9 @@ test('the host files: robots, sitemap, security headers, protected areas noindex
     robots,
     csp,
     homeHeaders: home.headers(),
-    accountRobots: account.headers()['x-robots-tag'],
-    landingHeaders: landing.headers(),
-    landingSlashHeaders: landingSlash.headers(),
+    subscriptionHeaders: subscription.headers(),
+    retired: [retired.status(), retired.headers()['location']],
+    retiredLanding: [retiredLanding.status(), retiredLanding.headers()['location']],
     adminRobots: admin.headers()['x-robots-tag'],
     missingStatus: missing.status(),
   });
@@ -298,50 +305,42 @@ test('the host files: robots, sitemap, security headers, protected areas noindex
   expect(csp).not.toContain('unsafe-inline');
   expect(home.headers()['x-frame-options']).toBe('DENY');
   expect(home.headers()['x-content-type-options']).toBe('nosniff');
-  expect(account.status()).toBe(200);
-  expect(account.headers()['x-robots-tag']).toBe('noindex, nofollow');
-  // The setup link's landing loads the account shell and sends no referrer; every other page keeps the site's policy.
-  expect(landing.status()).toBe(200);
-  expect(landing.headers()['x-robots-tag']).toBe('noindex, nofollow');
-  expect(landing.headers()['referrer-policy']).toBe('no-referrer');
-  // The landing answers with a trailing slash too, and sends no referrer there either (review R4-12).
-  expect(landingSlash.status()).toBe(200);
-  expect(landingSlash.headers()['referrer-policy']).toBe('no-referrer');
+  expect(subscription.status()).toBe(200);
+  expect(subscription.headers()['x-robots-tag']).toBe('noindex, nofollow');
+  expect(subscription.headers()['cache-control']).toBe('no-store');
+  // The Owner page's old address — and the retired setup link's landing — lead to it for good.
+  expect([retired.status(), retired.headers()['location']]).toEqual([301, '/subscription']);
+  expect([retiredLanding.status(), retiredLanding.headers()['location']]).toEqual([301, '/subscription']);
+  // No address holds a token any more: every page keeps the site's referrer policy.
   expect(home.headers()['referrer-policy']).toBe('strict-origin-when-cross-origin');
-  expect(account.headers()['referrer-policy']).toBe('strict-origin-when-cross-origin');
+  expect(subscription.headers()['referrer-policy']).toBe('strict-origin-when-cross-origin');
   expect(admin.headers()['x-robots-tag']).toBe('noindex, nofollow');
   // The protected shell carries no prerendered content and no business data.
-  expect(await account.text()).not.toMatch(/<h1|Dukan ERP est|platform\/dashboard/);
+  expect(await subscription.text()).not.toMatch(/<h1|Dukan ERP est|platform\/dashboard/);
   expect(missing.status()).toBe(404);
 });
 
-/** A setup link as the WhatsApp button builds it (`?t=`): plainly fake, shaped like the server's 43 characters. */
-const SETUP_LINK = `/account/trial?t=${'x'.repeat(43)}`;
-
 const PROTECTED: [string, string, Session, number][] = [
-  ['account-signed-out', '/account', {}, 1280],
-  ['account-signed-in', '/account', { owner: true }, 1280],
-  ['account-signed-in-375', '/account', { owner: true }, 375],
-  ['account-trial-available', '/account', { owner: true, trial: 'available' }, 1280],
-  ['account-trial-available-375', '/account', { owner: true, trial: 'available' }, 375],
-  ['account-trial-available-ar-375', '/account', { owner: true, trial: 'available', lang: 'ar' }, 375],
-  ['account-trial-available-fr-375', '/account', { owner: true, trial: 'available', lang: 'fr' }, 375],
-  ['account-trial-active-375', '/account', { owner: true, trial: 'active' }, 375],
-  ['account-trial-paid-after-375', '/account', { owner: true, trial: 'paidAfter' }, 375],
-  ['account-trial-paid-after-ar-375', '/account', { owner: true, trial: 'paidAfter', lang: 'ar' }, 375],
-  ['account-trial-expired-375', '/account', { owner: true, trial: 'expired' }, 375],
-  ['account-trial-link-signed-out-375', SETUP_LINK, {}, 375],
-  ['account-trial-link-signed-in', SETUP_LINK, { owner: true, trial: 'available' }, 1280],
-  ['account-trial-link-signed-in-ar-375', SETUP_LINK, { owner: true, trial: 'available', lang: 'ar' }, 375],
+  ['subscription-signed-out', '/subscription', {}, 1280],
+  ['subscription-signed-in', '/subscription', { owner: true }, 1280],
+  ['subscription-signed-in-375', '/subscription', { owner: true }, 375],
+  ['subscription-trial-available', '/subscription', { owner: true, trial: 'available' }, 1280],
+  ['subscription-trial-available-375', '/subscription', { owner: true, trial: 'available' }, 375],
+  ['subscription-trial-available-ar-375', '/subscription', { owner: true, trial: 'available', lang: 'ar' }, 375],
+  ['subscription-trial-available-fr-375', '/subscription', { owner: true, trial: 'available', lang: 'fr' }, 375],
+  ['subscription-trial-active-375', '/subscription', { owner: true, trial: 'active' }, 375],
+  ['subscription-trial-paid-after-375', '/subscription', { owner: true, trial: 'paidAfter' }, 375],
+  ['subscription-trial-paid-after-ar-375', '/subscription', { owner: true, trial: 'paidAfter', lang: 'ar' }, 375],
+  ['subscription-trial-expired-375', '/subscription', { owner: true, trial: 'expired' }, 375],
   // Stores and seats asked for during the trial (D176): paid, scheduled to its end — in every language, at both widths.
-  ['account-trial-addons', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end' }, 1280],
-  ['account-trial-addons-375', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end' }, 375],
-  ['account-trial-addons-fr', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'fr' }, 1280],
-  ['account-trial-addons-fr-375', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'fr' }, 375],
-  ['account-trial-addons-ar', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'ar' }, 1280],
-  ['account-trial-addons-ar-375', '/account', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'ar' }, 375],
+  ['subscription-trial-addons', '/subscription', { owner: true, trial: 'paidAfter', addons: 'trial_end' }, 1280],
+  ['subscription-trial-addons-375', '/subscription', { owner: true, trial: 'paidAfter', addons: 'trial_end' }, 375],
+  ['subscription-trial-addons-fr', '/subscription', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'fr' }, 1280],
+  ['subscription-trial-addons-fr-375', '/subscription', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'fr' }, 375],
+  ['subscription-trial-addons-ar', '/subscription', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'ar' }, 1280],
+  ['subscription-trial-addons-ar-375', '/subscription', { owner: true, trial: 'paidAfter', addons: 'trial_end', lang: 'ar' }, 375],
   // No paid access approved yet: they start with the first paid month.
-  ['account-trial-addons-waiting-375', '/account', { owner: true, trial: 'active', addons: 'paid_access' }, 375],
+  ['subscription-trial-addons-waiting-375', '/subscription', { owner: true, trial: 'active', addons: 'paid_access' }, 375],
   ['admin-business-trial-addons', `/admin/businesses/${BUSINESS.id}`, { admin: true, addons: 'trial_end' }, 1280],
   ['admin-business-trial-addons-ar-375', `/admin/businesses/${BUSINESS.id}`, { admin: true, addons: 'trial_end', lang: 'ar' }, 375],
   ['admin-sign-in', '/admin', {}, 1280],
@@ -365,72 +364,6 @@ for (const [name, path, signedIn, width] of PROTECTED) {
   });
 }
 
-test('a link preview: without a session the setup link consumes and starts nothing, and no request carries its token', async ({ page, request }) => {
-  const token = 'x'.repeat(43);
-  // A preview or a mail scanner fetching the address: the static shell, served with no referrer, holding no token.
-  const raw = await request.get(`/account/trial?t=${token}`);
-  expect(raw.status()).toBe(200);
-  expect(raw.headers()['referrer-policy']).toBe('no-referrer');
-  expect(await raw.text()).not.toContain(token);
-  // A browser with no session: asked to sign in, and the one question it asks the API is whether a session exists.
-  const errors = watchConsole(page);
-  const requests: { url: string; referer: string | null; body: string | null }[] = [];
-  page.on('request', (r) => requests.push({ url: r.url(), referer: r.headers()['referer'] ?? null, body: r.postData() }));
-  await mockApi(page);
-  const response = await page.goto(`/account/trial?t=${token}`);
-  expect(response?.headers()['referrer-policy']).toBe('no-referrer');
-  await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
-  await page.waitForLoadState('networkidle');
-  const after = requests.slice(1);
-  record({ test: 'link-preview', requests: after.map((r) => ({ url: r.url.replace(token, '<token>'), referer: r.referer?.replace(token, '<token>') ?? null })), consoleErrors: errors });
-  expect(after.filter((r) => r.url.includes(token) || (r.referer ?? '').includes(token) || (r.body ?? '').includes(token))).toEqual([]);
-  expect(after.filter((r) => r.url.startsWith(API)).map((r) => new URL(r.url).pathname)).toEqual(['/api/v1/platform/my-subscription']);
-  expect(new URL(page.url()).pathname + new URL(page.url()).search + new URL(page.url()).hash).toBe('/account/trial');
-  expect(errors).toEqual([]);
-});
-
-test('the setup link with a trailing slash: no later request carries its token, in its address or as referrer (R4-12)', async ({ page }) => {
-  const errors = watchConsole(page);
-  const token = 'z'.repeat(43);
-  const requests: { url: string; referer: string | null }[] = [];
-  page.on('request', (r) => requests.push({ url: r.url(), referer: r.headers()['referer'] ?? null }));
-  await mockApi(page);
-  const response = await page.goto(`/account/trial/?t=${token}`);
-  expect(response?.headers()['referrer-policy']).toBe('no-referrer');
-  await expect(page.getByRole('button', { name: 'Sign in' })).toBeVisible();
-  await page.waitForLoadState('networkidle');
-  const after = requests.slice(1);
-  record({ test: 'setup-link-trailing-slash', requests: after.map((r) => ({ url: r.url.replace(token, '<token>'), referer: r.referer?.replace(token, '<token>') ?? null })), consoleErrors: errors });
-  expect(after.length).toBeGreaterThan(0);
-  expect(after.filter((r) => r.url.includes(token) || (r.referer ?? '').includes(token))).toEqual([]);
-  expect(new URL(page.url()).search).toBe('');
-  expect(errors).toEqual([]);
-});
-
-test('the setup link: its token leaves the address at once, rides in no request’s address or referrer, and nothing is claimed by opening it', async ({ page }) => {
-  const errors = watchConsole(page);
-  const token = 'x'.repeat(43);
-  const requests: { url: string; method: string; referer: string | null; body: string | null }[] = [];
-  page.on('request', (r) => requests.push({ url: r.url(), method: r.method(), referer: r.headers()['referer'] ?? null, body: r.postData() }));
-  await mockApi(page, { owner: true, trial: 'available' });
-  await page.setViewportSize({ width: 375, height: 812 });
-  const response = await page.goto(SETUP_LINK);
-  expect(response?.headers()['referrer-policy']).toBe('no-referrer');
-  await expect(page.getByRole('button', { name: 'Start my 7-day free trial' })).toBeVisible();
-  await page.waitForLoadState('networkidle');
-  const kept = await page.evaluate(() => ({ href: location.href, local: JSON.stringify(Object.entries(localStorage)), session: JSON.stringify(Object.entries(sessionStorage)), cookie: document.cookie }));
-  record({ test: 'setup-link', kept, requests: requests.map((r) => ({ ...r, body: r.body?.includes(token) ? '(carries the token)' : r.body })), consoleErrors: errors });
-  expect(new URL(kept.href).pathname + new URL(kept.href).search + new URL(kept.href).hash).toBe('/account/trial');
-  for (const where of [kept.local, kept.session, kept.cookie]) expect(where).not.toContain(token);
-  // The document itself was asked for with the token (the WhatsApp button's query); nothing after it carries it.
-  const after = requests.slice(1);
-  expect(after.filter((r) => r.url.includes(token) || (r.referer ?? '').includes(token))).toEqual([]);
-  // The token went once, in the body of the link check — and no claim was sent by opening the page.
-  expect(after.filter((r) => r.body?.includes(token)).map((r) => [r.method, new URL(r.url).pathname])).toEqual([['POST', '/api/v1/platform/my-subscription/trial/link']]);
-  expect(after.filter((r) => r.url.includes('/trial/claim'))).toEqual([]);
-  expect(errors).toEqual([]);
-});
-
 /*
  * Stores and seats paid for during the trial (D176) in a real browser: the Owner's rows say "Paid · scheduled" and
  * when each starts, in the business's zone; the console lists them under their own filter. Every language at both
@@ -444,7 +377,7 @@ for (const lang of LANGS) {
       const errors = watchConsole(page);
       await mockApi(page, { owner: true, trial: 'paidAfter', addons: 'trial_end', lang });
       await page.setViewportSize({ width, height: 900 });
-      await page.goto('/account');
+      await page.goto('/subscription');
       await expect(page.getByText(SCHEDULED_WORDS[lang]).first()).toBeVisible();
       await page.waitForLoadState('networkidle');
       const rows = page.locator('section:has(form) table.data tbody tr');
@@ -555,7 +488,7 @@ for (const lang of LANGS) {
               created: true,
               publicStoreId: 'ST-7Q4K',
               activity: 'electronics',
-              verification: { destination: 'o•••@preview.invalid', channel: 'email' },
+              verification: { destination: '+222••••0001', channel: 'phone' },
               continuation: { token: 'continuation-for-browser-checks', expiresAt: '2026-10-15T10:00:00.000Z', expiresInSeconds: 900 },
               next: 'verify_contact',
             },
@@ -572,7 +505,7 @@ for (const lang of LANGS) {
       await page.getByLabel(cat['apply.owner'], { exact: true }).fill('Aminetou');
       await page.getByLabel(cat['apply.business'], { exact: true }).fill('Boutique Test');
       await page.getByLabel(cat['apply.branch'], { exact: true }).fill('Centre');
-      await page.getByLabel(cat['apply.email'], { exact: true }).fill('owner@preview.invalid');
+      await page.getByLabel(cat['apply.phone']).fill('+22236000001');
       await page.getByLabel(cat['apply.password']).fill('a-long-password');
       await page.getByRole('radio', { name: cat['activity.electronics'] }).check();
       await page.getByRole('button', { name: cat['apply.submit'] }).click();
@@ -599,7 +532,7 @@ for (const lang of LANGS) {
       expect(said).not.toContain(cat['apply.verify.wrong']);
       expect(said).not.toContain('did not match');
       expect(said).not.toContain(cat['error.network']);
-      expect(signIn).toBe('/account');
+      expect(signIn).toBe('/subscription');
       expect([l.lang, l.dir]).toEqual([lang, lang === 'ar' ? 'rtl' : 'ltr']);
       expect(l.overflow, 'no sideways scroll').toBeLessThanOrEqual(0);
       expect(at320.overflow, 'no sideways scroll at 320 px').toBeLessThanOrEqual(0);
@@ -703,7 +636,7 @@ for (const lang of LANGS) {
       await page.getByLabel(cat['apply.owner'], { exact: true }).fill('Aminetou');
       await page.getByLabel(cat['apply.business'], { exact: true }).fill('Boutique Test');
       await page.getByLabel(cat['apply.branch'], { exact: true }).fill('Centre');
-      await page.getByLabel(cat['apply.email'], { exact: true }).fill('owner@preview.invalid');
+      await page.getByLabel(cat['apply.phone']).fill('+22236000001');
       await page.getByLabel(cat['apply.password']).fill('a-long-password');
       await page.getByRole('radio', { name: cat['activity.electronics'] }).check();
       await page.getByRole('button', { name: cat['apply.submit'] }).click();

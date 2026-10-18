@@ -669,3 +669,21 @@ dialog.modal .body {
   display: grid;
   gap: 6px;
 }
+/* The free trial's confirmation (docs/101): set apart from the card, so the press that starts it is never the first. */
+.confirm {
+  padding: 16px;
+  border: 1px solid var(--border-raised);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+/* Detail shown on request (the portal instructions): the summary is a whole tap target, and says it opens. */
+.disclosure > summary {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--tap);
+  cursor: pointer;
+  font-weight: 600;
+}
+.disclosure[open] > summary {
+  margin-block-end: 8px;
+}

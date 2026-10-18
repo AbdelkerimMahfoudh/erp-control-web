@@ -1,13 +1,13 @@
 /**
  * The prerenderer's entry (docs/74 §5): built with `vite build --ssr` in the same mode as the page, so it reads the
  * same inputs. `scripts/prerender.mjs` calls `render` for every public page in every language and writes the files
- * the host serves, with the generated robots, sitemap, headers and rewrites.
+ * the host serves, with the generated robots, sitemap, headers and rewrites — for a portal build, the shell alone.
  */
 import { StrictMode } from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { App } from './app';
-import { BUILD_MODE, FILLED_INPUTS, IS_PREVIEW, SITE } from './config/site';
+import { BUILD_MODE, FILLED_INPUTS, IS_PREVIEW, SITE, SURFACE } from './config/site';
 import { I18nProvider } from './i18n';
 import type { Language } from './i18n/languages';
 import { ThemeProvider } from './theme/theme';
@@ -16,12 +16,11 @@ import { headFor, headHtml } from './site/head';
 import { metaFor } from './site/meta';
 import { publicRoutesFor, type PublicRouteId } from './site/routes';
 
-export { BUILD_MODE, IS_PREVIEW, SITE, FILLED_INPUTS };
+export { BUILD_MODE, IS_PREVIEW, SITE, FILLED_INPUTS, SURFACE };
 export { LANGUAGES, isRtl } from './i18n/languages';
 export { IN_APP_ROUTE_IDS, inAppPathOf, pathOf } from './site/routes';
 
-/** What this build publishes (`schema.ts` SURFACES, docs/95), and so the public pages it prerenders. */
-export const SURFACE = SITE.siteSurface === 'public' ? 'public' : 'full';
+/** The public pages this build prerenders (`schema.ts` SURFACES, docs/95, docs/101): none in a portal build. */
 export const ROUTES = publicRoutesFor(SURFACE);
 export { APP_SHELL, fileForPath, headersFile, redirectsFile, robotsTxt, securityTxt, sitemapXml, webManifest } from './site/generated';
 export { translate } from './i18n';

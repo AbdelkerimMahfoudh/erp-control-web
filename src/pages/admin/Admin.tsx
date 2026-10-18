@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { NavLink, Route, Routes } from 'react-router-dom';
+import { isUnauthorized } from '../../api/client';
 import type { AdminIdentity } from '../../api/types';
 import { adminEnrolConfirm, adminEnrolStart, adminMe, adminSignIn, adminSignOut, adminVerify, type AdminMfaState } from '../../auth/admin';
-import { isUnauthorized } from '../../auth/owner';
 import { ErrorNotice, Field, Loading, Notice } from '../../components/ui';
 import { useI18n } from '../../i18n';
 import { Dashboard } from './Dashboard';

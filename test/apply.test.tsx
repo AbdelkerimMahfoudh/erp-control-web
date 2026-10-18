@@ -9,10 +9,11 @@ import { PLAN_V3, SLOW_WAIT, THROTTLED, mount, serve, useActivityHarness, type H
 useActivityHarness();
 
 /*
- * The application's refusals and retries (2026-10-15): every contact given at registration must be verified, so the
- * server refuses before saving anything when any of them cannot receive its code now, and names those (C10); and one
- * attempt keeps one idempotency key — a retry is replayed — while a form changed since is a new attempt with a new key
- * (the twin of the app's R5-7). The server accepts keys of /^[A-Za-z0-9._:-]{1,80}$/ only (C11): the page's are UUIDs.
+ * The application's refusals and retries (2026-10-15; the WhatsApp number required since 2026-10-18, docs/101): every
+ * contact given at registration must be verified, so the server refuses before saving anything when any of them cannot
+ * receive its code now (C10); and one attempt keeps one idempotency key — a retry is replayed — while a form changed
+ * since is a new attempt with a new key (the twin of the app's R5-7). The server accepts keys of
+ * /^[A-Za-z0-9._:-]{1,80}$/ only (C11): the page's are UUIDs.
  */
 const SERVER_KEY = /^[A-Za-z0-9._:-]{1,80}$/;
 
@@ -47,47 +48,55 @@ function apply(register: Handler) {
   return registrations;
 }
 
-async function fill(contacts: { email?: string; phone?: string }) {
+/** The form filled in: the WhatsApp number always (it is required), an email address when one is given. */
+async function fill(contacts: { email?: string; phone?: string } = {}) {
   const user = userEvent.setup();
   await user.type(await screen.findByLabelText('Your name', {}, SLOW_WAIT), 'Aminetou');
   await user.type(screen.getByLabelText('Business name'), 'Boutique Test');
   await user.type(screen.getByLabelText('First store name'), 'Centre');
+  await user.type(screen.getByLabelText(/WhatsApp number/), contacts.phone ?? '+22212345678');
   if (contacts.email) await user.type(screen.getByLabelText(/Email address/), contacts.email);
-  if (contacts.phone) await user.type(screen.getByLabelText(/WhatsApp number/), contacts.phone);
   await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
   await user.click(screen.getByRole('radio', { name: /Electronics store/ }));
   return user;
 }
 
-describe('Apply: a contact whose code cannot be sent now (C10)', () => {
-  it('only the WhatsApp number, beside an email address: remove the number or try later — and without it, a new attempt goes through', async () => {
-    const registrations = apply((_url, body) => ((body as { phone?: string }).phone ? unavailable(['phone']) : verifying));
-    const user = await fill({ email: 'owner@example.test', phone: '+22212345678' });
+describe('Apply: the WhatsApp number is required, an email address optional (docs/101)', () => {
+  it('without the WhatsApp number nothing is sent, and the page says what is missing', async () => {
+    const registrations = apply(() => verifying);
+    const user = userEvent.setup();
+    await user.type(await screen.findByLabelText('Your name', {}, SLOW_WAIT), 'Aminetou');
+    await user.type(screen.getByLabelText('Business name'), 'Boutique Test');
+    await user.type(screen.getByLabelText('First store name'), 'Centre');
+    await user.type(screen.getByLabelText(/Email address/), 'owner@example.test');
+    await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
+    await user.click(screen.getByRole('radio', { name: /Electronics store/ }));
     await user.click(screen.getByRole('button', { name: 'Send my application' }));
-    expect(await screen.findByText(en['apply.unavailable.whatsapp'], {}, SLOW_WAIT)).toBeTruthy();
-    expect(screen.queryByText(en['apply.unavailable.title'])).toBeNull();
-    // Nothing moved on: the form is still there, to change.
-    await user.clear(screen.getByLabelText(/WhatsApp number/));
-    await user.click(screen.getByRole('button', { name: 'Send my application' }));
-    expect(await screen.findByLabelText('Verification code', {}, SLOW_WAIT)).toBeTruthy();
-    const [first, second] = registrations();
-    expect(first).toMatchObject({ email: 'owner@example.test', phone: '+22212345678' });
-    expect(second).not.toHaveProperty('phone');
-    for (const body of [first, second]) expect(body!.idempotencyKey).toMatch(SERVER_KEY);
+    expect(await screen.findByText(en['apply.error.contact'], {}, SLOW_WAIT)).toBeTruthy();
+    expect(registrations()).toEqual([]);
   }, FILLING);
 
+  it('the WhatsApp number alone is an application; an email address goes with it when given', async () => {
+    const registrations = apply(() => verifying);
+    const user = await fill({ email: 'owner@example.test' });
+    await user.click(screen.getByRole('button', { name: 'Send my application' }));
+    expect(await screen.findByLabelText('Verification code', {}, SLOW_WAIT)).toBeTruthy();
+    expect(registrations()[0]).toMatchObject({ phone: '+22212345678', email: 'owner@example.test' });
+  }, FILLING);
+});
+
+describe('Apply: a contact whose code cannot be sent now (C10)', () => {
   it.each([
-    ['a WhatsApp number alone', { phone: '+22212345678' }, ['phone']],
+    ['the WhatsApp number', {}, ['phone']],
     ['the email', { email: 'owner@example.test' }, ['email']],
-    ['both', { email: 'owner@example.test', phone: '+22212345678' }, ['email', 'phone']],
-    ['none named', { email: 'owner@example.test', phone: '+22212345678' }, undefined],
-  ] as const)('every other case keeps the general refusal: %s', async (_case, contacts, named) => {
+    ['both', { email: 'owner@example.test' }, ['email', 'phone']],
+    ['none named', {}, undefined],
+  ] as const)('the general refusal, nothing saved: %s', async (_case, contacts, named) => {
     apply(() => unavailable(named ? [...named] : undefined));
     const user = await fill(contacts);
     await user.click(screen.getByRole('button', { name: 'Send my application' }));
     expect(await screen.findByText(en['apply.unavailable.title'], {}, SLOW_WAIT)).toBeTruthy();
     expect(screen.getByText(en['apply.unavailable.body'])).toBeTruthy();
-    expect(screen.queryByText(en['apply.unavailable.whatsapp'])).toBeNull();
   }, FILLING);
 });
 
@@ -170,7 +179,7 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
     await user.type(await screen.findByLabelText(cat['apply.owner'], {}, SLOW_WAIT), 'Aminetou');
     await user.type(screen.getByLabelText(cat['apply.business']), 'Boutique Test');
     await user.type(screen.getByLabelText(cat['apply.branch']), 'Centre');
-    await user.type(screen.getByLabelText(literally(cat['apply.email'])), 'owner@example.test');
+    await user.type(screen.getByLabelText(literally(cat['apply.phone'])), '+22212345678');
     await user.type(screen.getByLabelText(new RegExp(`^${literally(cat['apply.password']).source}`)), 'a-long-password');
     await user.click(screen.getByRole('radio', { name: literally(cat['activity.electronics']) }));
     await user.click(screen.getByRole('button', { name: cat['apply.submit'] }));
@@ -217,10 +226,10 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
     });
     await confirmCode('123456');
     // Not "the server could not be reached": it may well have been, and made the account.
-    expect(said(form, en)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+    expect(said(form, en)).toEqual({ lost: true, signIn: '/subscription', wrong: false, serverEnglish: false });
     expect(form.textContent).not.toContain(en['error.network']);
     await confirmCode('123456');
-    expect(said(form, en)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+    expect(said(form, en)).toEqual({ lost: true, signIn: '/subscription', wrong: false, serverEnglish: false });
     expect(form.textContent).not.toContain('did not match');
     expect(confirmations()).toEqual(['123456', '123456']);
   }, FILLING);
@@ -234,16 +243,16 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
         return refused;
       });
       await confirmCode('123456');
-      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/subscription', wrong: false, serverEnglish: false });
       // The same code again: refused as a finished registration is — still not wrong.
       await confirmCode('123456');
-      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/subscription', wrong: false, serverEnglish: false });
       // Another code refused is wrong, in this language; the way to sign in stays.
       await confirmCode('654321');
-      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: true, serverEnglish: false });
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/subscription', wrong: true, serverEnglish: false });
       // And the first code once more: never wrong, whatever came between.
       await confirmCode('123456');
-      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/subscription', wrong: false, serverEnglish: false });
       expect(confirmations()).toEqual(['123456', '123456', '654321', '123456']);
     }, FILLING);
 
@@ -254,10 +263,10 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
         return calls === 1 ? cutOff(200, '{"accessToken":"new-owner-se') : refused;
       });
       await confirmCode('123456');
-      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/subscription', wrong: false, serverEnglish: false });
       expect(form.textContent).not.toContain(cat['error.generic']);
       await confirmCode('123456');
-      expect(said(form, cat)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+      expect(said(form, cat)).toEqual({ lost: true, signIn: '/subscription', wrong: false, serverEnglish: false });
       expect(form.textContent).not.toContain(cat['error.generic']);
       expect(confirmations()).toEqual(['123456', '123456']);
     }, FILLING);
@@ -280,9 +289,9 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
       return calls === 1 ? { status, body: { message: 'Gateway' } } : refused;
     });
     await confirmCode('123456');
-    expect(said(form, en)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+    expect(said(form, en)).toEqual({ lost: true, signIn: '/subscription', wrong: false, serverEnglish: false });
     await confirmCode('123456');
-    expect(said(form, en)).toEqual({ lost: true, signIn: '/account', wrong: false, serverEnglish: false });
+    expect(said(form, en)).toEqual({ lost: true, signIn: '/subscription', wrong: false, serverEnglish: false });
   }, FILLING);
 
   it('a 503 is an answer — the request was not taken: an error, no account promised', async () => {

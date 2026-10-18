@@ -36,8 +36,8 @@ describe('the public routes (docs/74 §2)', () => {
     expect(fileForPath('/fr/products/dukan-erp')).toBe('fr/products/dukan-erp.html');
   });
 
-  it('the protected areas are never public routes', () => {
-    for (const p of ['/account', '/account/x', '/admin', '/admin/businesses/1']) {
+  it('the protected areas — and the Owner page’s old address — are never public routes', () => {
+    for (const p of ['/subscription', '/subscription/x', '/account', '/account/trial', '/admin', '/admin/businesses/1']) {
       expect(isProtectedPath(p)).toBe(true);
       expect(publicRouteAt(p)).toBeNull();
     }
@@ -121,6 +121,7 @@ describe('the head (docs/74 §5)', () => {
 describe('the generated files (docs/74 §5–§6)', () => {
   it('robots: the protected areas are not crawled, a preview is not crawled at all', () => {
     const robots = robotsTxt(SITE, false);
+    expect(robots).toContain('Disallow: /subscription');
     expect(robots).toContain('Disallow: /account');
     expect(robots).toContain('Disallow: /admin');
     expect(robots).toContain(`Sitemap: ${ORIGIN}/sitemap.xml`);
@@ -149,29 +150,26 @@ describe('the generated files (docs/74 §5–§6)', () => {
     expect(file).toContain('Strict-Transport-Security: max-age=31536000');
     expect(file).not.toContain('includeSubDomains');
     expect(file).toMatch(/\/admin\/\*\n {2}X-Robots-Tag: noindex, nofollow/);
+    expect(file).toMatch(/\/subscription\/\*\n {2}X-Robots-Tag: noindex, nofollow/);
     expect(file).toMatch(/\/account\/\*\n {2}X-Robots-Tag: noindex, nofollow/);
     // A production site's own pages are indexable: the catch-all block carries no robots header.
     expect(headersFile(SITE, false).split('\n\n')[0]).not.toContain('X-Robots-Tag');
     expect(headersFile(SITE, true)).toMatch(/^\/\*\n[\s\S]*X-Robots-Tag: noindex, nofollow/);
   });
 
-  it('headers: the setup link’s landing sends no referrer, with or without a trailing slash — the site’s policy detached, never joined to it', () => {
+  it('headers: no address keeps a token any more, so none needs its own referrer policy — every address has the site’s', () => {
     for (const preview of [false, true]) {
-      const blocks = headersFile(SITE, preview).split('\n\n');
-      const landing = blocks.filter((b) => b.startsWith('/account/trial\n') || b.startsWith('/account/trial/*\n'));
-      expect(landing).toEqual([
-        '/account/trial\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer',
-        '/account/trial/*\n  ! Referrer-Policy\n  Referrer-Policy: no-referrer',
-      ]);
-      // After the catch-all and the account blocks, so the host applies them last; every other address keeps the site's.
-      for (const block of landing) expect(blocks.indexOf(block)).toBeGreaterThan(blocks.findIndex((b) => b.startsWith('/account/*\n')));
-      expect(blocks[0]).toContain('Referrer-Policy: strict-origin-when-cross-origin');
-      expect(blocks.filter((b) => b.includes('no-referrer'))).toEqual(landing);
+      const file = headersFile(SITE, preview);
+      expect(file).not.toContain('no-referrer');
+      expect(file).not.toContain('/account/trial');
+      expect(file.split('\n\n')[0]).toContain('Referrer-Policy: strict-origin-when-cross-origin');
     }
   });
 
-  it('rewrites: only the protected areas load the shell; other unknown addresses stay 404', () => {
-    expect(redirectsFile()).toBe('/account /app-shell.html 200\n/account/* /app-shell.html 200\n/admin /app-shell.html 200\n/admin/* /app-shell.html 200\n');
+  it('rewrites: the Owner page’s old address goes to /subscription for good, only the protected areas load the shell; other unknown addresses stay 404', () => {
+    expect(redirectsFile()).toBe(
+      '/account /subscription 301\n/account/* /subscription 301\n/subscription /app-shell.html 200\n/subscription/* /app-shell.html 200\n/admin /app-shell.html 200\n/admin/* /app-shell.html 200\n',
+    );
   });
 
   it('security.txt exists only when a security contact was supplied', () => {

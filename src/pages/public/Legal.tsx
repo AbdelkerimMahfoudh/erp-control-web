@@ -4,7 +4,7 @@ import { ComingSoon } from '../../components/ComingSoon';
 import { Icon, type IconName } from '../../components/public/icons';
 import { SITE, SURFACE } from '../../config/site';
 import { useI18n } from '../../i18n';
-import { pathOf } from '../../site/routes';
+import { pathOf, PORTAL_HOME } from '../../site/routes';
 import { ContactMethods, INDIVIDUAL_OPERATOR, LegalView, OrgDetails, PageIntro, ProductMark, RelatedPages, Sections, useLegalPath } from '../../components/public/blocks';
 import { textValues } from '../../components/public/RichText';
 import { RichText } from '../../components/public/RichText';
@@ -211,7 +211,7 @@ export function ApplicationStatus() {
     <article className="public-page doc">
       <PageIntro title={doc.title} summary={doc.summary}>
         <div className="row">
-          <Link className="btn btn-primary" to="/account">
+          <Link className="btn btn-primary" to={PORTAL_HOME}>
             {t('login.cta')}
           </Link>
         </div>
@@ -232,7 +232,7 @@ export function Login() {
         after={{
           owners: (
             <div className="row">
-              <Link className="btn btn-primary" to="/account">
+              <Link className="btn btn-primary" to={PORTAL_HOME}>
                 {t('login.cta')}
               </Link>
               <Link className="btn" to={pathOf('applicationStatus', lang)}>

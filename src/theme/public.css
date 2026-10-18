@@ -2243,6 +2243,28 @@ html[lang='ar'] .contact-group-title {
 .in-app-header :focus-visible {
   outline-color: var(--focus);
 }
+/* The portal's frame (docs/101): the same light bar, its languages switched in place (buttons) and its theme toggle. */
+.portal-header .languages .link-button {
+  color: var(--text-2);
+}
+.portal-header .languages .link-button:hover {
+  color: var(--text);
+}
+.portal-header .languages .link-button[aria-pressed='true'] {
+  color: var(--text);
+  background-color: var(--surface-2);
+}
+.portal-header .icon-button {
+  background: var(--surface);
+  border-color: var(--border);
+  color: var(--text);
+}
+.portal-header .icon-button:hover {
+  background: var(--surface-2);
+}
+.portal-header .icon-button:active {
+  background: var(--muted-bg);
+}
 .in-app .band-dark {
   background: none;
   color: var(--text);

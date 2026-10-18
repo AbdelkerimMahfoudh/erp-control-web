@@ -3,7 +3,7 @@
  * website calls no API, so no address, request or credential handling reaches its bundle. `ApiError` stays, because
  * shared components name it; `request` is never reached on a public page, and says why if it ever is.
  */
-export { ApiError } from './error';
+export { ApiError, isUnauthorized } from './error';
 export type { RequestOptions } from './error';
 
 export async function request<T>(path: string): Promise<T> {

@@ -1,48 +1,74 @@
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react';
-import { useLocation } from 'react-router-dom';
 import { ApiError } from '../../api/client';
-import type { Activity, ActivityOption, ActivityOptions, Entitlement, MySubscription, NewStoreOption, QuoteLine, RequestResult, SeatRequest, SubscriptionBranch, TrialView } from '../../api/types';
-import { isUnauthorized, ownerChooseAccount, ownerLogin, ownerLogout, ownerRequest, type AccountChoice } from '../../auth/owner';
+import type {
+  Activity,
+  ActivityOption,
+  ActivityOptions,
+  Entitlement,
+  GraceView,
+  MySubscription,
+  NewStoreOption,
+  NoticeKind,
+  NoticeTimeline,
+  PaymentInstructions,
+  PortalStatus,
+  QuoteLine,
+  RequestResult,
+  SeatRequest,
+  SubscriptionBranch,
+  TrialView,
+} from '../../api/types';
+import { isUnauthorized, ownerRequest, portalChooseAccount, portalSession, portalSignIn, portalSignOut, type AccountChoice, type PortalSession } from '../../auth/owner';
 import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
+import { FailureNote, FallbackNote, Where } from '../../components/notices';
+import { PublicLink } from '../../components/PortalChrome';
 import { RequestAmount, RequestStatus, RequestSummary } from '../../components/requests';
 import { Timeline, type TimelineTrial } from '../../components/timeline';
 import { Badge, DatedPhrase, Empty, ErrorNotice, Field, Loading, Money, Notice, Phrase, requestStatusKey, StateBadge, Table, type Tone } from '../../components/ui';
 import { useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, canWithdraw, isScheduledActivityChange, pricesAfter } from '../../lib/activity';
 import { formatDate, formatInstant, formatInt, formatMru } from '../../lib/format';
-import { isTrialLanding } from '../../lib/trial';
-import { paymentProvider } from '../../providers/payment';
 import { TrialCard } from './TrialCard';
-import { TrialLanding, useSetupToken } from './TrialLanding';
 
-type Session = { kind: 'checking' } | { kind: 'anonymous' } | { kind: 'signed'; data: MySubscription };
+type Session =
+  | { kind: 'checking' }
+  | { kind: 'anonymous' }
+  /** Signed in, but not as an Owner: the portal is the Owner's (403 `owner_only`). */
+  | { kind: 'not_owner' }
+  | { kind: 'signed'; session: PortalSession; data: MySubscription };
 
 /**
- * The Owner's business account (docs/68 §3). The page asks the API whether a
- * session exists — a bearer token from the form here, or the portal cookie set
- * by the app's handoff — and believes the answer; it never gates on what it
- * can see locally.
+ * The Owner's page on the Dukan ERP portal (0099; docs/101 §4): https://dukan.tsxmr.com/subscription. The Owner signs
+ * in here with the same identity as the app — the WhatsApp number or email address and the password — and the page
+ * asks the API whether a portal session exists and believes the answer; it never gates on what it can see locally.
  *
- * `/account/trial` is where the free trial's setup link lands (2026-10-13): the
- * same sign-in, then the trial alone. The link's token is taken from the
- * address before anything else happens and is never sent before the sign-in.
+ * Everything shown is the server's: the access the business has, the paid period, the grace and its allowance, the
+ * free trial and its claim, the stores and seats, the payments and the history, and where the subscription messages
+ * stand. Nothing here works out a date, a price, an eligibility or a remaining time.
  */
-export function Account() {
+export function Subscription() {
   const { t } = useI18n();
-  const landing = isTrialLanding(useLocation().pathname);
-  const linkToken = useSetupToken(landing);
   const [session, setSession] = useState<Session>({ kind: 'checking' });
   const [error, setError] = useState<unknown>(null);
 
   const load = useCallback(async () => {
     try {
+      const current = await portalSession();
+      if (!current) {
+        setSession({ kind: 'anonymous' });
+        return;
+      }
       const data = await ownerRequest<MySubscription>('platform/my-subscription');
-      setSession({ kind: 'signed', data });
+      setSession({ kind: 'signed', session: current, data });
       setError(null);
     } catch (e) {
       if (isUnauthorized(e)) setSession({ kind: 'anonymous' });
-      else setError(e);
+      else if (e instanceof ApiError && e.status === 403) setSession({ kind: 'not_owner' });
+      else {
+        setError(e);
+        setSession((s) => (s.kind === 'checking' ? { kind: 'anonymous' } : s));
+      }
     }
   }, []);
 
@@ -50,25 +76,41 @@ export function Account() {
     void load();
   }, [load]);
 
+  const signOut = async () => {
+    await portalSignOut();
+    setSession({ kind: 'anonymous' });
+  };
+
   if (session.kind === 'checking') return <Loading />;
+  if (session.kind === 'not_owner') {
+    return (
+      <div className="stack">
+        <section className="hero">
+          <h1>{t('portal.title')}</h1>
+        </section>
+        <Notice tone="warn">{t('portal.ownerOnly')}</Notice>
+        <div className="row">
+          <button type="button" className="btn" onClick={() => void signOut()}>
+            {t('action.signOut')}
+          </button>
+        </div>
+      </div>
+    );
+  }
   if (session.kind === 'anonymous') {
     return (
       <div className="stack">
         <section className="hero">
-          <h1>{t(landing ? 'trial.title' : 'account.title')}</h1>
-          <p className="lead">{t(landing ? 'trial.landing.lead' : 'account.signin.lead')}</p>
+          <h1>{t('portal.title')}</h1>
+          <p className="lead">{t('portal.signin.lead')}</p>
         </section>
         <ErrorNotice error={error} />
         <SignIn onSigned={load} />
+        <p className="muted small">{t('portal.signin.help')}</p>
       </div>
     );
   }
-  const signOut = async () => {
-    await ownerLogout();
-    setSession({ kind: 'anonymous' });
-  };
-  if (landing) return <TrialLanding token={linkToken} data={session.data} onChanged={load} onSignOut={signOut} />;
-  return <Subscription data={session.data} reload={load} onSignOut={signOut} />;
+  return <SubscriptionView session={session.session} data={session.data} reload={load} onSignOut={signOut} />;
 }
 
 function SignIn({ onSigned }: { onSigned: () => Promise<void> }) {
@@ -76,22 +118,27 @@ function SignIn({ onSigned }: { onSigned: () => Promise<void> }) {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
-  const [failed, setFailed] = useState(false);
+  const [failed, setFailed] = useState<'credentials' | 'owner_only' | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [choice, setChoice] = useState<{ continuationToken: string; accounts: AccountChoice[] } | null>(null);
+
+  const refusal = (err: unknown) => {
+    if (isUnauthorized(err)) setFailed('credentials');
+    else if (err instanceof ApiError && err.code === 'owner_only') setFailed('owner_only');
+    else setError(err);
+  };
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setBusy(true);
-    setFailed(false);
+    setFailed(null);
     setError(null);
     try {
-      const result = await ownerLogin(identifier.trim(), password);
+      const result = await portalSignIn(identifier.trim(), password);
       if (result.status === 'choose_account') setChoice({ continuationToken: result.continuationToken, accounts: result.accounts });
       else await onSigned();
     } catch (err) {
-      if (isUnauthorized(err)) setFailed(true);
-      else setError(err);
+      refusal(err);
     } finally {
       setBusy(false);
     }
@@ -100,11 +147,13 @@ function SignIn({ onSigned }: { onSigned: () => Promise<void> }) {
   const choose = async (accountRef: string) => {
     if (!choice) return;
     setBusy(true);
+    setFailed(null);
+    setError(null);
     try {
-      await ownerChooseAccount(choice.continuationToken, accountRef);
+      await portalChooseAccount(choice.continuationToken, accountRef);
       await onSigned();
     } catch (err) {
-      setError(err);
+      refusal(err);
     } finally {
       setBusy(false);
     }
@@ -119,6 +168,7 @@ function SignIn({ onSigned }: { onSigned: () => Promise<void> }) {
             {a.companyName} — {a.userName}
           </button>
         ))}
+        {failed === 'owner_only' ? <Notice tone="danger">{t('portal.ownerOnly')}</Notice> : null}
         <ErrorNotice error={error} />
       </div>
     );
@@ -132,7 +182,8 @@ function SignIn({ onSigned }: { onSigned: () => Promise<void> }) {
       <Field label={t('account.password')}>
         <input required type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
-      {failed ? <Notice tone="danger">{t('account.signin.failed')}</Notice> : null}
+      {failed === 'credentials' ? <Notice tone="danger">{t('account.signin.failed')}</Notice> : null}
+      {failed === 'owner_only' ? <Notice tone="danger">{t('portal.ownerOnly')}</Notice> : null}
       <ErrorNotice error={error} />
       <div className="row">
         <button type="submit" className="btn btn-primary" disabled={busy}>
@@ -172,7 +223,7 @@ function explanation(ent: Entitlement, t: (k: Key, p?: Record<string, string>) =
 }
 
 
-function Subscription({ data, reload, onSignOut }: { data: MySubscription; reload: () => Promise<void>; onSignOut: () => Promise<void> }) {
+function SubscriptionView({ session, data, reload, onSignOut }: { session: PortalSession; data: MySubscription; reload: () => Promise<void>; onSignOut: () => Promise<void> }) {
   const { t, lang } = useI18n();
   const ent = data.entitlement;
   const quote = data.pricing.quote;
@@ -209,6 +260,7 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
           <p className="lead">
             <StateBadge state={ent.state} /> {explanation(ent, t, lang)}
           </p>
+          <p className="muted small">{t('portal.signedInAs', { name: session.owner.name })}</p>
         </div>
         <div className="row">
           <button type="button" className="btn btn-sm" onClick={() => void reload()}>
@@ -220,6 +272,8 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         </div>
       </section>
 
+      <StatusPanel version={data} />
+
       <TrialCard version={data} onChanged={reload} />
 
       <section className="grid">
@@ -228,18 +282,19 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
           {data.owner ? (
             <div className="stack">
               <strong>{data.owner.name}</strong>
-              {data.owner.email ? (
-                <span className="row">
-                  <span className="ltr">{data.owner.email}</span>
-                  <Badge tone={data.owner.emailVerified ? 'ok' : 'warn'}>{data.owner.emailVerified ? t('admin.business.verified') : t('admin.business.unverified')}</Badge>
-                </span>
-              ) : null}
               {data.owner.phone ? (
                 <span className="row">
                   <span className="ltr">{data.owner.phone}</span>
                   <Badge tone={data.owner.phoneVerified ? 'ok' : 'warn'}>{data.owner.phoneVerified ? t('admin.business.verified') : t('admin.business.unverified')}</Badge>
                 </span>
               ) : null}
+              {data.owner.email ? (
+                <span className="row">
+                  <span className="ltr">{data.owner.email}</span>
+                  <Badge tone={data.owner.emailVerified ? 'ok' : 'warn'}>{data.owner.emailVerified ? t('admin.business.verified') : t('admin.business.unverified')}</Badge>
+                </span>
+              ) : null}
+              {data.owner.email && !data.owner.emailVerified ? <EmailVerification onVerified={reload} /> : null}
             </div>
           ) : (
             <Empty />
@@ -313,11 +368,7 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         onChanged={reload}
       />
 
-      <section className="card stack">
-        <h2>{t('account.payment.howto')}</h2>
-        {paymentProvider.available ? null : <Notice tone="info">{t('account.payment.none')}</Notice>}
-        <p className="muted small">{t('account.team.note')}</p>
-      </section>
+      <HowToPay version={data} />
 
       <section className="card stack">
         <h2>{t('account.payments')}</h2>
@@ -342,7 +393,321 @@ function Subscription({ data, reload, onSignOut }: { data: MySubscription; reloa
         <h2>{t('account.timeline')}</h2>
         <Timeline events={data.events} trial={historyTrial(data)} />
       </section>
+
+      <section className="card stack">
+        <h2>{t('portal.help.title')}</h2>
+        <p className="muted small">{t('portal.help.body')}</p>
+        <ul className="legal-links" role="list">
+          <li>
+            <PublicLink id="support">{t('footer.support')}</PublicLink>
+          </li>
+          <li>
+            <PublicLink id="privacy">{t('footer.privacy')}</PublicLink>
+          </li>
+          <li>
+            <PublicLink id="terms">{t('footer.terms')}</PublicLink>
+          </li>
+          <li>
+            <PublicLink id="accountDeletion">{t('footer.deletion')}</PublicLink>
+          </li>
+        </ul>
+      </section>
     </div>
+  );
+}
+
+/**
+ * What the business can do and what its Owner should know first (GET platform/my-subscription/status), every part the
+ * server's: the access — the app works, read-only or stopped — in colour and words; the paid period; the grace and the
+ * allowance of three in any 12 months; how a renewal made now counts; and where the subscription messages stand. Read
+ * again with the account. An API older than it, or a role it refuses, shows nothing here.
+ */
+function StatusPanel({ version }: { version: unknown }) {
+  const { t, lang } = useI18n();
+  const [status, setStatus] = useState<PortalStatus | null>(null);
+  useEffect(() => {
+    let live = true;
+    ownerRequest<PortalStatus>('platform/my-subscription/status')
+      .then((s) => {
+        if (live) setStatus(s);
+      })
+      .catch(() => {
+        // Nothing new to say: the lead sentence above already tells the state.
+      });
+    return () => {
+      live = false;
+    };
+  }, [version]);
+  if (!status) return null;
+  const at = (iso: string | null) => formatInstant(iso, status.timeZone, lang);
+  return (
+    <section className="card stack" aria-labelledby="status-h">
+      <h2 id="status-h">{t('portal.status.title')}</h2>
+      <p>
+        <Badge tone={ACCESS_TONE[status.access]}>{t(`portal.access.${status.access}`)}</Badge> {t(`portal.access.${status.access}.explain`)}
+      </p>
+      {status.period.end ? (
+        <p>
+          {status.period.start ? (
+            <Phrase text={t('portal.period.range')} values={{ start: at(status.period.start), end: at(status.period.end) }} />
+          ) : (
+            <Phrase text={t('portal.period.ends')} values={{ end: at(status.period.end) }} />
+          )}
+        </p>
+      ) : null}
+      <GraceLines grace={status.grace} at={at} />
+      <RenewalLine status={status} at={at} />
+      <NoticeLines notices={status.notices} at={at} />
+    </section>
+  );
+}
+
+const ACCESS_TONE: Record<PortalStatus['access'], Tone> = { operational: 'ok', read_only: 'warn', stopped: 'danger' };
+
+/**
+ * The grace as the server decided it, and the allowance it is counted against. Nothing here is a promise the server
+ * did not make: whether the next period end opens a grace is its own answer (`availableAtPeriodEnd`).
+ */
+function GraceLines({ grace, at }: { grace: GraceView; at: (iso: string | null) => string }) {
+  const { t, lang } = useI18n();
+  const hours = formatInt(grace.durationHours, lang);
+  let line: ReactNode = null;
+  if (grace.status === 'active') {
+    line = (
+      <Notice tone="warn">
+        <Phrase text={t('portal.grace.active')} values={{ end: at(grace.endsAt), left: formatInt(grace.hoursRemaining, lang) }} />
+      </Notice>
+    );
+  } else if (grace.status === 'ended') {
+    line = (
+      <Notice tone="warn">
+        <Phrase text={t('portal.grace.ended')} values={{ end: at(grace.endsAt) }} />
+      </Notice>
+    );
+  } else if (grace.status === 'unavailable') {
+    line = <Notice tone="warn">{t('portal.grace.unavailable', { allowance: formatInt(grace.allowance, lang), months: formatInt(grace.windowMonths, lang) })}</Notice>;
+  } else if (grace.availableAtPeriodEnd === true) {
+    line = <p className="muted">{t('portal.grace.ahead', { hours })}</p>;
+  } else if (grace.availableAtPeriodEnd === false) {
+    line = <p>{t('portal.grace.noneAhead', { allowance: formatInt(grace.allowance, lang), months: formatInt(grace.windowMonths, lang) })}</p>;
+  }
+  // The allowance means something once the business pays: a paid period running, or one that ended into a decision.
+  const counted = grace.usesRemaining !== null && (grace.status !== 'none' || grace.availableAtPeriodEnd !== null);
+  return (
+    <>
+      {line}
+      {counted ? (
+        <p className="muted small">
+          {t('portal.grace.allowance', { left: formatInt(grace.usesRemaining ?? 0, lang), allowance: formatInt(grace.allowance, lang), months: formatInt(grace.windowMonths, lang), hours })}
+          {grace.nextUseRestoredAt ? (
+            <>
+              {' '}
+              <Phrase text={t('portal.grace.restored')} values={{ date: at(grace.nextUseRestoredAt) }} />
+            </>
+          ) : null}
+        </p>
+      ) : null}
+    </>
+  );
+}
+
+/**
+ * How a renewal confirmed now would count (the owner's brief of 2026-10-18), decided on the server when it is
+ * confirmed: before the period ends, from its end; during the grace, from the original end; after it, from the day the
+ * payment is confirmed.
+ */
+function RenewalLine({ status, at }: { status: PortalStatus; at: (iso: string | null) => string }) {
+  const { t } = useI18n();
+  if (!status.period.end) return null;
+  const key = status.state === 'active' ? 'portal.renewal.before' : status.state === 'grace' ? 'portal.renewal.grace' : status.state === 'expired' ? 'portal.renewal.after' : null;
+  if (!key) return null;
+  return (
+    <p className="muted small">
+      <Phrase text={t(key)} values={{ end: at(status.period.end) }} />
+    </p>
+  );
+}
+
+const NOTICE_HOURS: Record<string, number> = { h72: 72, h48: 48, h24: 24 };
+
+const isReminder = (kind: NoticeKind): kind is 'trial_reminder' | 'paid_reminder' | 'grace_reminder' =>
+  kind === 'trial_reminder' || kind === 'paid_reminder' || kind === 'grace_reminder';
+
+/** A message of the timeline, in words: its kind, and the hours of a reminder. */
+function noticeName(kind: NoticeKind, threshold: string, t: ReturnType<typeof useI18n>['t'], lang: Language): string {
+  const hours = NOTICE_HOURS[threshold];
+  return hours !== undefined && isReminder(kind) ? t(`notice.kind.${kind}.hours`, { hours: formatInt(hours, lang) }) : t(`notice.kind.${kind}`);
+}
+
+const NOTICE_STATE_TONE: Record<NonNullable<NoticeTimeline['last']>['state'], Tone> = {
+  pending: 'info',
+  sending: 'info',
+  accepted: 'ok',
+  delivered: 'ok',
+  failed: 'danger',
+  cancelled: 'muted',
+  superseded: 'muted',
+};
+
+/** Where the subscription messages stand: the next one due as things are now, and the newest one, whatever became of it. */
+function NoticeLines({ notices, at }: { notices: NoticeTimeline; at: (iso: string | null) => string }) {
+  const { t, lang } = useI18n();
+  const { next, last } = notices;
+  if (!next && !last) return null;
+  return (
+    <div className="stack-tight">
+      <h3>{t('portal.messages.title')}</h3>
+      {next ? (
+        <p>
+          <Phrase text={t('portal.messages.next')} values={{ name: noticeName(next.kind, next.threshold, t, lang), date: at(next.dueAt) }} />
+        </p>
+      ) : null}
+      {last ? (
+        <div className="stack-tight">
+          <p>
+            <Phrase text={t('portal.messages.last')} values={{ name: noticeName(last.kind, last.threshold, t, lang), date: at(last.at) }} />{' '}
+            <Badge tone={NOTICE_STATE_TONE[last.state]}>{t(`notice.state.${last.state}`)}</Badge>
+          </p>
+          {last.channel && last.state !== 'cancelled' && last.state !== 'superseded' ? (
+            <p className="muted small">
+              <Where channel={last.channel} destination={last.destination} />
+            </p>
+          ) : null}
+          <FallbackNote reason={last.fallbackReason} />
+          <FailureNote reason={last.failureReason} />
+        </div>
+      ) : null}
+      <p className="muted small">{t('portal.messages.whatsappFirst')}</p>
+    </div>
+  );
+}
+
+/**
+ * Verifying the Owner's email address on the portal (0099): a code to the address already on the account — never one
+ * typed here — then the code back. A verified address is what may carry a message WhatsApp cannot.
+ */
+function EmailVerification({ onVerified }: { onVerified: () => Promise<void> }) {
+  const { t, lang } = useI18n();
+  const [sentTo, setSentTo] = useState<string | null>(null);
+  const [code, setCode] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<unknown>(null);
+  const [verified, setVerified] = useState(false);
+
+  const start = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const answer = await ownerRequest<{ destination: string }>('platform/my-subscription/contacts/email/verify/start', { method: 'POST', body: { language: lang } });
+      setSentTo(answer.destination);
+      setCode('');
+    } catch (e) {
+      setError(e);
+    } finally {
+      setBusy(false);
+    }
+  };
+  const confirm = async (e: FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    setError(null);
+    try {
+      await ownerRequest('platform/my-subscription/contacts/email/verify/confirm', { method: 'POST', body: { code: code.trim() } });
+      setVerified(true);
+      await onVerified();
+    } catch (err) {
+      setError(err);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (verified) return <Notice tone="ok">{t('portal.email.verified')}</Notice>;
+  const refusal =
+    error instanceof ApiError && error.code === 'invalid_code' ? (
+      <Notice tone="danger">{t('portal.email.invalidCode')}</Notice>
+    ) : error instanceof ApiError && error.status === 429 ? (
+      <Notice tone="danger">{t('trial.error.too_many_requests')}</Notice>
+    ) : (
+      <ErrorNotice error={error} />
+    );
+  if (!sentTo) {
+    return (
+      <div className="stack-tight">
+        <p className="muted small">{t('portal.email.why')}</p>
+        {refusal}
+        <div className="row">
+          <button type="button" className="btn btn-sm" disabled={busy} onClick={() => void start()}>
+            {t('portal.email.verify')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <form className="stack-tight" onSubmit={confirm}>
+      <p>
+        <Phrase text={t('portal.email.sent')} values={{ destination: <span className="ltr">{sentTo}</span> }} />
+      </p>
+      <Field label={t('portal.email.code')}>
+        <input required inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{4,8}" maxLength={8} value={code} onChange={(e) => setCode(e.target.value)} dir="ltr" />
+      </Field>
+      {refusal}
+      <div className="row">
+        <button type="submit" className="btn btn-sm btn-primary" disabled={busy || !code.trim()}>
+          {t('action.confirm')}
+        </button>
+        <button type="button" className="btn btn-sm" disabled={busy} onClick={() => void start()}>
+          {t('portal.email.resend')}
+        </button>
+      </div>
+    </form>
+  );
+}
+
+/**
+ * How to pay, as the server says it (GET platform/payment-instructions): the providers the platform offers with their
+ * real codes, once it offers any — and until then, honestly, that each payment is confirmed by hand. Never a code this
+ * page holds, never a stand-in.
+ */
+function HowToPay({ version }: { version: unknown }) {
+  const { t } = useI18n();
+  const [instructions, setInstructions] = useState<PaymentInstructions | null>(null);
+  useEffect(() => {
+    let live = true;
+    ownerRequest<PaymentInstructions>('platform/payment-instructions')
+      .then((p) => {
+        if (live) setInstructions(p);
+      })
+      .catch(() => {
+        if (live) setInstructions(null);
+      });
+    return () => {
+      live = false;
+    };
+  }, [version]);
+  const offered = instructions?.available ? instructions.providers.filter((p) => p.code) : [];
+  return (
+    <section className="card stack">
+      <h2>{t('account.payment.howto')}</h2>
+      {offered.length > 0 ? (
+        <>
+          <p>{t('portal.pay.with')}</p>
+          <ul className="stack-tight">
+            {offered.map((p) => (
+              <li key={p.key} className="row">
+                <strong>{p.label}</strong>
+                <span className="ltr">{p.code}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="muted small">{t('portal.pay.confirmed')}</p>
+        </>
+      ) : (
+        <Notice tone="info">{t('account.payment.none')}</Notice>
+      )}
+      <p className="muted small">{t('account.team.note')}</p>
+    </section>
   );
 }
 

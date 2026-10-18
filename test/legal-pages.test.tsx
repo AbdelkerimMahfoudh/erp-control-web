@@ -105,10 +105,10 @@ describe('the public legal and support pages', () => {
       for (const [id] of LEGAL) expect({ lang, id, linked: hrefs.has(pathOf(id, lang)) }).toEqual({ lang, id, linked: true });
       cleanup();
     }
-    mount('/account');
+    mount('/subscription');
     const footer = document.querySelector('footer.chrome-footer')!;
     const hrefs = new Set([...footer.querySelectorAll('a')].map((a) => a.getAttribute('href')));
-    for (const [id] of LEGAL) expect({ area: 'account', id, linked: hrefs.has(pathOf(id, 'en')) }).toEqual({ area: 'account', id, linked: true });
+    for (const [id] of LEGAL) expect({ area: 'subscription', id, linked: hrefs.has(pathOf(id, 'en')) }).toEqual({ area: 'subscription', id, linked: true });
   });
 
   it('names TSX-MR as the operator on the privacy policy, the terms and the legal notice', () => {

@@ -1,4 +1,4 @@
-import type { Activity, ActivityOption, ActivityOptions, SeatActivation, SeatRequest, SubscriptionBranch, TrialOffer, TrialSetup, TrialStatus, TrialView } from '../src/api/types';
+import type { Activity, ActivityOption, ActivityOptions, PortalStatus, SeatActivation, SeatRequest, SubscriptionBranch, TrialOffer, TrialSetup, TrialStatus, TrialView } from '../src/api/types';
 
 /*
  * The API answers the activity specs mock (D154, docs/73 §6), shaped as the backend serialises them — data only,
@@ -186,28 +186,68 @@ export function trialOffer(over: Partial<TrialOffer> = {}): TrialOffer {
   return {
     available: true,
     reason: null,
-    termsVersion: '2026-10-13',
+    termsVersion: '2026-10-18',
     durationHours: 168,
     wouldStartAt: TRIAL_START,
     wouldEndAt: TRIAL_END,
     timeZone: TRIAL_ZONE,
-    requiredContacts: ['email'],
+    requiredContacts: ['phone'],
     missingContacts: [],
     ...over,
   };
 }
 
-/** By default the instructions went out once, automatically, to the verified email — the history says so too. */
+/**
+ * By default the portal instructions went out once, automatically, by WhatsApp to the verified number — the history
+ * says so too.
+ */
 export function trialSetup(over: Partial<TrialSetup> = {}): TrialSetup {
   return {
     delivery: 'sent',
-    sentTo: ['email'],
-    destinations: [{ channel: 'email', masked: 'o•••@example.test' }],
+    channel: 'whatsapp',
+    destination: '+222••••1234',
+    fallbackReason: null,
+    failureReason: null,
     lastAttemptAt: '2026-10-13T08:00:00.000Z',
+    lastSentAt: '2026-10-13T08:00:00.000Z',
+    destinations: [{ channel: 'whatsapp', masked: '+222••••1234' }],
     canResendNow: true,
     resendBlockedBy: null,
     resendAvailableAt: null,
-    history: [{ at: '2026-10-13T08:00:00.000Z', trigger: 'automatic', email: 'accepted', whatsapp: 'not_applicable' }],
+    history: [{ at: '2026-10-13T08:00:00.000Z', trigger: 'automatic', delivery: 'sent', channel: 'whatsapp', fallbackReason: null, failureReason: null }],
+    ...over,
+  };
+}
+
+/** The portal session as the API answers its session route: who is signed in, and the session's CSRF token. */
+export const PORTAL_SESSION = { owner: { name: 'Aicha' }, business: { name: 'Boutique Test' }, csrfToken: 'csrf-for-tests' };
+
+/**
+ * GET platform/my-subscription/status for a paid business: the app works, a paid period runs, its end would open a
+ * grace — every part as the server decides it.
+ */
+export function portalStatus(over: Partial<PortalStatus> = {}): PortalStatus {
+  return {
+    access: 'operational',
+    state: 'active',
+    period: { start: '2026-10-01T09:30:00.000Z', end: '2026-11-01T09:30:00.000Z' },
+    grace: {
+      status: 'none',
+      startedAt: null,
+      endsAt: null,
+      hoursRemaining: 0,
+      availableAtPeriodEnd: true,
+      allowance: 3,
+      windowMonths: 12,
+      durationHours: 72,
+      usesInWindow: 1,
+      usesRemaining: 2,
+      nextUseRestoredAt: '2027-03-01T09:30:00.000Z',
+    },
+    notices: { next: { kind: 'paid_reminder', threshold: 'h72', dueAt: '2026-10-29T09:30:00.000Z' }, last: null },
+    actions: { claimTrial: false, resendInstructions: false, paymentInstructions: false },
+    timeZone: TRIAL_ZONE,
+    calculatedAt: '2026-10-18T09:00:00.000Z',
     ...over,
   };
 }

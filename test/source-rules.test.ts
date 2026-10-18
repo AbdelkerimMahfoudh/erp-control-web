@@ -50,7 +50,7 @@ describe('the website never computes a price', () => {
   it('explains no change by its own arithmetic: the server says what a change would do', () => {
     const marked = code.filter((f) => read(f).includes(EXPLANATION_ONLY)).map((f) => relative(SRC, f));
     expect(marked).toEqual([]);
-    expect(read(join(SRC, 'pages/account/Account.tsx'))).toMatch(/platform\/my-subscription\/activity-options/);
+    expect(read(join(SRC, 'pages/portal/Subscription.tsx'))).toMatch(/platform\/my-subscription\/activity-options/);
   });
 });
 
@@ -93,7 +93,7 @@ const executable = (src: string) => src.split('\n').filter((line) => !line.trim(
 describe('the free trial’s dates are the server’s', () => {
   it('finds the trial’s sources (the rules below would pass on nothing)', () => {
     expect(trialFiles.map((f) => relative(SRC, f)).sort()).toEqual(
-      [join('components', 'trial.tsx'), join('lib', 'trial.ts'), join('pages', 'account', 'TrialCard.tsx'), join('pages', 'account', 'TrialLanding.tsx'), join('pages', 'admin', 'BusinessTrial.tsx')].sort(),
+      [join('components', 'trial.tsx'), join('lib', 'trial.ts'), join('pages', 'portal', 'TrialCard.tsx'), join('pages', 'admin', 'BusinessTrial.tsx')].sort(),
     );
   });
 
@@ -200,7 +200,7 @@ describe('the history says every event in words, and the trial’s in the busine
   });
 
   it('both timelines are the one component: neither page prints an event’s kind, note or date itself', () => {
-    for (const page of [join('pages', 'account', 'Account.tsx'), join('pages', 'admin', 'Business.tsx')]) {
+    for (const page of [join('pages', 'portal', 'Subscription.tsx'), join('pages', 'admin', 'Business.tsx')]) {
       const src = read(join(SRC, page));
       expect({ page, timeline: /<Timeline\b/.test(src), own: /\be\.(kind|note|createdAt)\b/.test(src) }).toEqual({ page, timeline: true, own: false });
     }
@@ -215,15 +215,27 @@ describe('the history says every event in words, and the trial’s in the busine
   });
 });
 
-describe('the setup link’s token lives in memory only, and only the server decides', () => {
-  it('no source keeps anything in a cookie, IndexedDB or the cache, and no trial source logs or puts the token in an address', () => {
+/*
+ * The portal session (0099; docs/101 §4) is two HttpOnly cookies no script can read, and the session's CSRF token in a
+ * module variable for the visit. The setup link and its token are gone: the portal instructions name one address.
+ */
+describe('the portal session lives in its cookies and in memory only, and only the server decides', () => {
+  it('no source keeps anything in a cookie, IndexedDB or the cache, sends a bearer, or logs from a trial source', () => {
     for (const f of code) expect({ file: relative(SRC, f), stored: /document\.cookie|indexedDB|\bcaches\./.test(read(f)) }).toEqual({ file: relative(SRC, f), stored: false });
-    for (const f of trialFiles) {
-      const src = read(f);
-      expect({ file: relative(SRC, f), logged: /console\./.test(src), inAddress: /\$\{token\}|[?#&]t=\$\{/.test(src) }).toEqual({ file: relative(SRC, f), logged: false, inAddress: false });
+    for (const f of code) expect({ file: relative(SRC, f), bearer: /Authorization|Bearer /.test(executable(read(f)).join('\n')) }).toEqual({ file: relative(SRC, f), bearer: false });
+    for (const f of trialFiles) expect({ file: relative(SRC, f), logged: /console\./.test(read(f)) }).toEqual({ file: relative(SRC, f), logged: false });
+  });
+
+  it('the CSRF token is kept in a module variable, sent in its header on a POST only, and nothing reads a token from the address', () => {
+    const owner = read(join(SRC, 'auth/owner.ts'));
+    expect(owner).toMatch(/^let csrfToken: string \| null = null;$/m);
+    expect(owner).toMatch(/options\.method === 'POST' && csrfToken \? \{ 'x-csrf-token': csrfToken \} : undefined/);
+    const portal = code.filter((f) => /^(pages[\\/]portal[\\/]|auth[\\/]owner\.ts$|components[\\/]trial\.tsx$|lib[\\/]trial\.ts$)/.test(relative(SRC, f)));
+    expect(portal.length).toBeGreaterThanOrEqual(6);
+    for (const f of portal) {
+      const src = executable(read(f)).join('\n');
+      expect({ file: relative(SRC, f), fromAddress: /URLSearchParams|location\.(hash|search)|\bsearchParams\b|useLocation/.test(src) }).toEqual({ file: relative(SRC, f), fromAddress: false });
     }
-    // Sent in a POST body, and only there.
-    expect(read(join(SRC, 'pages/account/TrialLanding.tsx'))).toMatch(/trial\/link', \{ method: 'POST', body: \{ token \} \}/);
   });
 
   it('no page reads where a request came from, or sends where it came from (a client can forge both; correction 6)', () => {
@@ -319,6 +331,9 @@ describe('a public build carries no API and no preview value', () => {
     expect(site).toMatch(/__SITE_INPUTS__/);
     expect(site).not.toMatch(/import\s*\{[^}]*\breadInputs\b/);
     expect(site).toMatch(/import type \{[^}]*\} from '\.\/schema'/);
+    // The surface is named from its own module, which holds no table of inputs.
+    expect(site).not.toMatch(/^import \{[^}]*\} from '\.\/schema'/m);
+    expect(read(join(SRC, 'config/surface.ts'))).not.toMatch(/^import /m);
   });
 
   it('the stubs a public build takes hold no request, address or credential', () => {

@@ -7,6 +7,7 @@
  * visibly marked test value and says so on every page. Pure — no `import.meta`, no DOM — so the build, the
  * prerenderer and the tests read the same rules.
  */
+import { SURFACES, type Surface } from './surface';
 
 export type BuildMode = 'production' | 'preview' | 'development' | 'test';
 
@@ -35,15 +36,8 @@ export interface InputSpec {
 /** The only verification channel the backend implements for account deletion (docs/64; account-deletion.service.ts). */
 export const DELETION_CHANNELS = ['whatsapp'] as const;
 
-/**
- * What one build publishes (the owner's brief of 2026-10-17, docs/95):
- * - `full` — the public pages, the pages that need the API (apply, sign-in, application status) and the protected
- *   areas (`/account`, `/admin`) on one origin; the default, and what the tests run.
- * - `public` — the public pages only, for an origin of their own (`https://tsxmr.com`) while the business account and
- *   the API live elsewhere: no page, link, rewrite or line of code that needs the API or a sign-in, so `VITE_API_BASE`
- *   is not asked for. "Sign in" and "Apply" point at `VITE_PORTAL_ORIGIN` once one is given, and are absent before.
- */
-export const SURFACES = ['full', 'public'] as const;
+/** What one build publishes: `surface.ts`, kept apart so the page can name its surface without this table. */
+export { SURFACES, surfaceOf, type Surface } from './surface';
 
 /**
  * Who operates the website (the owner's brief of 2026-10-17, third): `individual` — a natural person operating under a
@@ -77,12 +71,19 @@ const OPERATOR_ADDRESS_AR = 'تفرغ زينة، نواكشوط الغربية';
 /** The only origin the pre-launch public website may be published at (the owner's brief of 2026-10-17). */
 export const PUBLIC_WEBSITE_ORIGIN = 'https://tsxmr.com';
 
+/** The only origin the Dukan ERP portal may be published at (the owner's brief of 2026-10-18) — never portal.tsxmr.com. */
+export const PORTAL_WEBSITE_ORIGIN = 'https://dukan.tsxmr.com';
+
+/** The only API origin a portal build may call (the owner's brief of 2026-10-18). */
+export const PORTAL_API_ORIGIN = 'https://api.tsxmr.com';
+
 /**
  * The release gates (docs/96), each with its own verdict:
  * - `PUBLIC_WEBSITE` — a public build: the pre-launch corporate website. Needs the real TSX-MR identity and contacts,
  *   the approved pre-launch texts and the exact origin; refuses any portal, API, console or app-store address.
- * - `PORTAL` — a full build: the business account and the console. Needs everything, the API and the service's approved
- *   texts with no legal blocker left; and, outside this repository, a running backend with its channels.
+ * - `PORTAL` — a full or a portal build: the business account and the console. Needs everything, the API and the
+ *   service's approved texts with no legal blocker left — a portal build its exact origin besides; and, outside this
+ *   repository, a running backend with its channels.
  * - `APP_STORE` — not a website build: the service texts approved, WhatsApp deletion working end to end, and every
  *   App Store gate (`gates.ts`, docs/94).
  */
@@ -91,13 +92,12 @@ export type Gate = 'PUBLIC_WEBSITE' | 'PORTAL' | 'APP_STORE';
 export function gateOfSurface(surface: string): 'PUBLIC_WEBSITE' | 'PORTAL' {
   return surface === 'public' ? 'PUBLIC_WEBSITE' : 'PORTAL';
 }
-export type Surface = (typeof SURFACES)[number];
 export type DeletionChannel = (typeof DELETION_CHANNELS)[number];
 
 export const INPUTS = {
   publicSiteOrigin: { env: 'VITE_PUBLIC_SITE_ORIGIN', kind: 'https-origin', required: true, publicSite: 'required', preview: 'https://preview.invalid', label: 'Public website origin, e.g. https://<domain>' },
   adminSiteOrigin: { env: 'VITE_ADMIN_SITE_ORIGIN', kind: 'https-origin', required: false, publicSite: 'forbidden', preview: '', label: 'Separate Super Admin origin, if one is chosen' },
-  siteSurface: { env: 'VITE_SITE_SURFACE', kind: 'surface', required: true, fallback: 'full', preview: 'full', label: 'What this build publishes: full (one origin) or public (the public pages only)' },
+  siteSurface: { env: 'VITE_SITE_SURFACE', kind: 'surface', required: true, fallback: 'full', preview: 'full', label: 'What this build publishes: full (one origin), public (the public pages only) or portal (the Dukan ERP portal only)' },
   apiBase: { env: 'VITE_API_BASE', kind: 'https-url', required: true, publicSite: 'forbidden', preview: '', label: 'API base URL including /api/v1, e.g. https://api.<domain>/api/v1 (not used by a public build)' },
   portalOrigin: { env: 'VITE_PORTAL_ORIGIN', kind: 'https-origin', required: false, publicSite: 'forbidden', preview: '', label: 'The business account origin when it is separate, e.g. https://dukan.<domain> (a public build links to it)' },
   displayName: { env: 'VITE_ORGANIZATION_DISPLAY_NAME', kind: 'text', required: true, publicSite: 'required', fallback: 'TSX-MR', preview: 'TSX-MR', label: 'Public trading or project name' },
@@ -305,6 +305,21 @@ export function releaseProblems(
     if (gate === 'PUBLIC_WEBSITE' && name === 'publicSiteOrigin' && value !== PUBLIC_WEBSITE_ORIGIN) {
       problems.push({ input: name, env: spec.env, problem: 'wrong_origin', detail: `the pre-launch website is published at ${PUBLIC_WEBSITE_ORIGIN} only` });
     }
+    // A portal build names its own origin, the company site's for its legal and support links, and the API's — each
+    // the one the owner's brief of 2026-10-18 gives, and no other.
+    if (inputs.siteSurface === 'portal' && name === 'portalOrigin' && value !== PORTAL_WEBSITE_ORIGIN) {
+      problems.push({ input: name, env: spec.env, problem: 'wrong_origin', detail: `the Dukan ERP portal is published at ${PORTAL_WEBSITE_ORIGIN} only` });
+    }
+    if (inputs.siteSurface === 'portal' && name === 'publicSiteOrigin' && value !== PUBLIC_WEBSITE_ORIGIN) {
+      problems.push({ input: name, env: spec.env, problem: 'wrong_origin', detail: `the portal's legal and support pages are the company site's, at ${PUBLIC_WEBSITE_ORIGIN}` });
+    }
+    if (inputs.siteSurface === 'portal' && name === 'apiBase' && new URL(value).origin !== PORTAL_API_ORIGIN) {
+      problems.push({ input: name, env: spec.env, problem: 'wrong_origin', detail: `the portal calls the API at ${PORTAL_API_ORIGIN} only` });
+    }
+  }
+  // A portal build is its own origin: the portal instructions and every subscription message name it.
+  if (inputs.siteSurface === 'portal' && !inputs.portalOrigin) {
+    problems.push({ input: 'portalOrigin', env: INPUTS.portalOrigin.env, problem: 'missing', detail: `${INPUTS.portalOrigin.label} — a portal build is published at ${PORTAL_WEBSITE_ORIGIN}` });
   }
   if (gate === 'PORTAL' && inputs.operatorType === 'individual') problems.push({ problem: 'legal_blocker', detail: `${OPERATOR_REGISTRATION.id}: ${OPERATOR_REGISTRATION.summary}` });
   for (const b of legalBlockers) problems.push({ problem: 'legal_blocker', detail: `${b.id}: ${b.summary}` });

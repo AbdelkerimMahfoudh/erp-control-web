@@ -7,19 +7,27 @@
 // or the business account's code or routes, nor the protected areas' shell — the areas are not on that origin at all —
 // nor any API route or address, even in a preview: the pre-launch website calls no API (docs/96).
 //
-//   node scripts/audit-bundle.mjs [dist] [--preview] [--public]
+// A portal build (`VITE_SITE_SURFACE=portal`, docs/101) is audited with `--portal`: no page of the company site, no
+// sitemap, nothing a crawler may index — robots refuses everything and every response says noindex.
+//
+// Every build: the portal is https://dukan.tsxmr.com, and the old setup link's landing (`/account/trial`, with a token
+// in its address) is gone — neither "portal.tsxmr.com" nor that landing may appear in any file.
+//
+//   node scripts/audit-bundle.mjs [dist] [--preview] [--public | --portal]
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 
 const dist = resolve(process.argv[2] ?? 'dist');
 const preview = process.argv.includes('--preview');
 const publicSurface = process.argv.includes('--public');
+const portalSurface = process.argv.includes('--portal');
+// The only HTML files a portal build has: the shell, its root's copy of it, and its not-found page.
+const PORTAL_HTML = new Set(['app-shell.html', 'index.html', '404.html']);
 // What only the console or the business account contains: their API routes and the shell they load in.
 const PROTECTED_ONLY = [
   ['console sign-in route', /platform\/admin\/(sign-in|mfa|step-up)/],
   ['console data route', /platform\/(dashboard|businesses|pending|audit)/],
   ['account data route', /platform\/my-subscription/],
-  ['account trial route', /account\/trial/],
   // The pre-launch website calls no API at all: no price, quote, application or sign-in request.
   ['API route', /platform\/(plan|quote|register|portal-sign-out|seat-requests)\b/],
 ];
@@ -55,6 +63,14 @@ for (const f of files) {
     if (rel === 'app-shell.html') findings.push({ file: rel, what: 'protected-area shell in a public build' });
     for (const [what, re] of PROTECTED_ONLY) if (re.test(text)) findings.push({ file: rel, what: `${what} in a public build` });
   }
+  if (portalSurface) {
+    if (rel.endsWith('.html') && !PORTAL_HTML.has(rel)) findings.push({ file: rel, what: 'a company-site page in a portal build' });
+    if (rel === 'sitemap.xml') findings.push({ file: rel, what: 'a sitemap in a portal build' });
+    if (rel === 'robots.txt' && text !== 'User-agent: *\nDisallow: /\n') findings.push({ file: rel, what: 'robots.txt lets a crawler in' });
+    if (rel === '_headers' && !/^\/\*\n(?:  .*\n)*  X-Robots-Tag: noindex, nofollow/.test(text)) findings.push({ file: rel, what: 'the portal is not noindex on every address' });
+  }
+  if (/\bportal\.tsxmr\.com\b/.test(text)) findings.push({ file: rel, what: 'the portal named portal.tsxmr.com (it is dukan.tsxmr.com)' });
+  if (/account\/trial/.test(text)) findings.push({ file: rel, what: 'the retired setup-link landing' });
   for (const [what, re] of SECRETS) if (re.test(text)) findings.push({ file: rel, what });
   for (const m of text.matchAll(PRIVATE)) {
     if (ALLOWED_PRIVATE.has(m[0])) continue;
@@ -72,7 +88,8 @@ for (const f of files) {
       if (re.test(text)) findings.push({ file: rel, what });
   }
 }
-console.log(`files ${files.length}, bytes ${bytes}, mode ${preview ? 'preview' : 'production'}, surface ${publicSurface ? 'public' : 'full'}`);
+if (portalSurface && !files.some((f) => relative(dist, f) === 'robots.txt')) findings.push({ file: 'robots.txt', what: 'missing from a portal build' });
+console.log(`files ${files.length}, bytes ${bytes}, mode ${preview ? 'preview' : 'production'}, surface ${publicSurface ? 'public' : portalSurface ? 'portal' : 'full'}`);
 console.log(`marked test values found: ${testValues}${preview ? ' (expected in a preview build)' : ''}`);
 if (!preview && testValues > 0) findings.push({ file: '*', what: `${testValues} test values in a production build` });
 for (const x of findings) console.log(`FINDING ${x.file}: ${x.what}`);

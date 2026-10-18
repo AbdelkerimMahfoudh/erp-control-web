@@ -4,11 +4,11 @@
  * page cannot exist in one and be forgotten in another.
  *
  * Languages are in the path — English unprefixed, French under `/fr`, Arabic under `/ar` — so each language is a
- * real page with its own `lang`, `dir` and alternates. The protected areas (`/account`, `/admin`) are not here: they
- * are never prerendered, never in the sitemap, and every response for them says `noindex`.
+ * real page with its own `lang`, `dir` and alternates. The protected areas (`/subscription`, `/admin`) are not here:
+ * they are never prerendered, never in the sitemap, and every response for them says `noindex`.
  */
 import type { Language } from '../i18n/languages';
-import type { Surface } from '../config/schema';
+import type { Surface } from '../config/surface';
 
 export type PublicRouteId =
   | 'home'
@@ -55,14 +55,31 @@ export const PUBLIC_ROUTES: readonly PublicRoute[] = [
   { id: 'login', path: '/login', indexable: false },
 ];
 
+/**
+ * The Owner's page on the Dukan ERP portal (the owner's brief of 2026-10-18, docs/101): the subscription, the free
+ * trial's claim and the Owner's own sign-in, at one address with no language prefix — the portal instructions and every
+ * subscription message name https://dukan.tsxmr.com/subscription, the same in every language.
+ */
+export const PORTAL_HOME = '/subscription';
+
 /** The areas behind a sign-in: never prerendered, never indexed. */
-export const PROTECTED_PREFIXES = ['/account', '/admin'] as const;
+export const PROTECTED_PREFIXES = [PORTAL_HOME, '/admin'] as const;
+
+/**
+ * Where the Owner's page was before the portal (`/account`, `/account/trial`): sent on to {@link PORTAL_HOME}, never
+ * served, never indexed.
+ */
+export const RETIRED_PREFIXES = ['/account'] as const;
 
 /** The public pages that work only with the API behind them: an application, a sign-in, an application's status. */
 export const API_ROUTE_IDS: readonly PublicRouteId[] = ['apply', 'applicationStatus', 'login'];
 
-/** The public pages a build of this surface publishes (`schema.ts` SURFACES): a public build has none that needs the API. */
+/**
+ * The public pages a build of this surface publishes (`schema.ts` SURFACES): a public build has none that needs the
+ * API; a portal build has none at all — the company site's pages live on the company site.
+ */
 export function publicRoutesFor(surface: Surface): readonly PublicRoute[] {
+  if (surface === 'portal') return [];
   return surface === 'public' ? PUBLIC_ROUTES.filter((r) => !API_ROUTE_IDS.includes(r.id)) : PUBLIC_ROUTES;
 }
 
@@ -70,12 +87,6 @@ export function publicRoutesFor(surface: Surface): readonly PublicRoute[] {
 export function protectedPrefixesFor(surface: Surface): readonly string[] {
   return surface === 'public' ? [] : PROTECTED_PREFIXES;
 }
-
-/**
- * Where the free trial's setup link lands (2026-10-13): inside the account area, so with no language prefix — the
- * setup message names this one address in every language.
- */
-export const TRIAL_LANDING = '/account/trial';
 
 export const LANGUAGE_PREFIX: Record<Language, string> = { en: '', fr: '/fr', ar: '/ar' };
 
@@ -105,9 +116,18 @@ export function splitLanguage(pathname: string): { lang: Language; path: string 
   return { lang: 'en', path: clean };
 }
 
-export function isProtectedPath(pathname: string): boolean {
+const under = (pathname: string, prefixes: readonly string[]) => {
   const clean = pathname.replace(/\/+$/, '') || '/';
-  return PROTECTED_PREFIXES.some((p) => clean === p || clean.startsWith(`${p}/`));
+  return prefixes.some((p) => clean === p || clean.startsWith(`${p}/`));
+};
+
+/** An address of a protected area — or a retired one, which the protected area sends on to {@link PORTAL_HOME}. */
+export function isProtectedPath(pathname: string): boolean {
+  return under(pathname, PROTECTED_PREFIXES) || under(pathname, RETIRED_PREFIXES);
+}
+
+export function isRetiredPath(pathname: string): boolean {
+  return under(pathname, RETIRED_PREFIXES);
 }
 
 /** The public route a pathname shows, or null (protected or unknown). */

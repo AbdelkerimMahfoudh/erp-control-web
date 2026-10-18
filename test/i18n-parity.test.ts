@@ -12,6 +12,8 @@ const SAME_EVERYWHERE = new Set([
   'WhatsApp', 'E-mail', 'Email', 'MRU', 'Mobile money', 'Action', 'Version {n}', '{from} → {to}',
   // The public site (docs/74): names (the product, the stores) and words French writes as English does.
   'Dukan ERP', 'App Store', 'Google Play', 'Menu', 'Contact', 'Services', 'Version {version}', '© {year} {name}', 'Administration — {name}',
+  // The portal's messages heading (docs/101): the same word in French.
+  'Messages',
 ]);
 
 /**
@@ -28,9 +30,10 @@ const NAMES_THE_AGENT_TRADE = new Set(['activity.money_agent.body']);
  * on this website by its Owner, nothing paid. Its words may appear in the trial's own keys and in the few public
  * sentences that say what it is — anywhere else a trial would be promised by accident, so a new mention elsewhere
  * fails here until it is added on purpose. No trial sentence names an amount: the trial is free, and paid access is
- * arranged apart from it. The history tells the trial's own events (`event.trial_*`) in words of their own.
+ * arranged apart from it. The history tells the trial's own events (`event.trial_*`) in words of their own, and the
+ * portal names the trial's messages (`notice.kind.trial_*`, `notice.kind.portal_instructions`, docs/101).
  */
-const TRIAL_KEY = /^(trial\.|status\.trial_|status\.explain\.trial_|admin\.trial\.|event\.trial_)/;
+const TRIAL_KEY = /^(trial\.|status\.trial_|status\.explain\.trial_|admin\.trial\.|event\.trial_|notice\.kind\.(trial_|portal_instructions))/;
 const DESCRIBES_THE_TRIAL = new Set(['home.pricing.rules', 'apply.lead', 'apply.done.trial', 'page.apply.description']);
 const TRIAL_WORD = /\btrial|essai|تجريب/;
 

@@ -32,7 +32,7 @@ describe('Apply: the first store’s activity', () => {
     await user.type(screen.getByLabelText('Your name'), 'Aminetou');
     await user.type(screen.getByLabelText('Business name'), 'Agence Aminetou');
     await user.type(screen.getByLabelText('First store name'), 'Agence Centre');
-    await user.type(screen.getByLabelText(/Email address/), 'owner@example.test');
+    await user.type(screen.getByLabelText(/WhatsApp number/), '+22236000001');
     await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
 
     // Required: nothing is sent without a choice.
@@ -44,7 +44,7 @@ describe('Apply: the first store’s activity', () => {
     await user.click(screen.getByRole('button', { name: 'Send my application' }));
     expect(await screen.findByText('Your application is in')).toBeTruthy();
     const register = sent.find((r) => r.url.endsWith('/platform/register'))!;
-    expect(register.body).toMatchObject({ ownerName: 'Aminetou', businessName: 'Agence Aminetou', branchName: 'Agence Centre', activity: 'money_agent', email: 'owner@example.test' });
+    expect(register.body).toMatchObject({ ownerName: 'Aminetou', businessName: 'Agence Aminetou', branchName: 'Agence Centre', activity: 'money_agent', phone: '+22236000001' });
     // What the server recorded is what the page repeats.
     expect(screen.getByText('First store: Money services agent.')).toBeTruthy();
   });

@@ -59,21 +59,37 @@ export interface TrialOffer {
 }
 
 /**
- * The setup instructions sent automatically once the Owner's contacts are verified, and their resend from this
- * website only. `destinations` are the Owner's verified contacts, masked by the server; the site never sees one whole.
- * `history` is the business's last attempts, newest first — an honest record, never a condition for claiming.
+ * The portal instructions (0099; docs/101 §5): one message, sent automatically once the Owner's WhatsApp number is
+ * verified, naming the portal's one address — no link of its own, no token — and sent again only from this portal, by
+ * the Owner signed in. WhatsApp first; email only for a reason the server records. `destinations` are the Owner's
+ * verified contacts, masked by the server; the site never sees one whole. `history` is the business's latest requests,
+ * newest first — an honest record, never a condition for claiming.
  */
 export interface TrialSetup {
-  /** `sending`: a link went out less than a minute ago and its providers have not all answered yet (C1). */
-  delivery: 'waiting_for_contact' | 'sending' | 'not_sent' | 'sent' | 'failed' | 'unavailable';
-  sentTo: TrialChannel[];
-  destinations: { channel: TrialChannel; masked: string }[];
+  /**
+   * `waiting_for_contact` — the WhatsApp number is not verified yet; `sending` — asked for, not yet handed to a
+   * provider; `sent` — a provider accepted it; `failed` — nothing could carry it (`failureReason`); `not_sent` — never
+   * asked for.
+   */
+  delivery: 'waiting_for_contact' | 'sending' | 'not_sent' | 'sent' | 'failed';
+  /** The channel the newest instructions went, or were to go, by. */
+  channel: TrialChannel | null;
+  /** That channel's destination, masked by the server; null when none was chosen. */
+  destination: string | null;
+  /** Why they went by email: WhatsApp could not carry them. */
+  fallbackReason: FallbackReason | null;
+  /** Why nothing carried them. */
+  failureReason: FailureReason | null;
+  /** UTC: when the newest instructions were asked for. */
   lastAttemptAt: string | null;
+  /** UTC: when instructions were last accepted by a provider, whatever happened since. */
+  lastSentAt: string | null;
+  destinations: { channel: TrialChannel; masked: string }[];
   canResendNow: boolean;
   /**
    * Why a send again is not possible now — null exactly when `canResendNow`: `throttle` (only the limit stands in the
-   * way, until `resendAvailableAt`), `unavailable` (no verified contact's channel can carry it now: nothing to count
-   * down to), `contact_unverified` (a required contact is not verified; it outranks the others).
+   * way, until `resendAvailableAt`), `unavailable` (nothing can carry them now: nothing to count down to),
+   * `contact_unverified` (the WhatsApp number is not verified; it outranks the others).
    */
   resendBlockedBy: 'throttle' | 'unavailable' | 'contact_unverified' | null;
   /** The earliest instant the limit allows, or null when it allows now — whatever else may stand in the way. */
@@ -84,18 +100,33 @@ export interface TrialSetup {
 export type TrialChannel = 'email' | 'whatsapp';
 
 /**
- * What one channel did with one attempt: `accepted` — its provider took the message; `failed` — the provider refused
- * or erred; `unavailable` — a verified contact whose channel could not carry it; `not_applicable` — not a verified
- * contact of the Owner, so nothing was tried there.
+ * Why a message went by email instead of WhatsApp — the only reasons there are (the owner's brief of 2026-10-18):
+ * WhatsApp switched off, its approved template unavailable, the number not verified or undeliverable, the provider's
+ * refusal, the retries used up, or a failure WhatsApp reported later.
  */
-export type TrialSetupOutcome = 'accepted' | 'failed' | 'unavailable' | 'not_applicable';
+export type FallbackReason =
+  | 'whatsapp_disabled'
+  | 'template_unavailable'
+  | 'number_unverified'
+  | 'number_undeliverable'
+  | 'provider_refused'
+  | 'retries_exhausted'
+  | 'async_failed';
 
-/** One attempt: the server's instant, what started it (the send after verification, or the Owner's), each channel's outcome. */
+/**
+ * Why nothing carried a message: the Owner stopped WhatsApp messages (`opted_out`) or gave no consent (`no_consent`) —
+ * never carried another way — or WhatsApp could not and email could not either.
+ */
+export type FailureReason = 'opted_out' | 'no_consent' | 'no_email' | 'email_unavailable' | 'email_failed' | 'no_recipient';
+
+/** One request for the instructions: the server's instant, what started it, and what became of it. */
 export interface TrialSetupAttempt {
   at: string;
   trigger: 'automatic' | 'resend';
-  email: TrialSetupOutcome;
-  whatsapp: TrialSetupOutcome;
+  delivery: 'sending' | 'not_sent' | 'sent' | 'failed';
+  channel: TrialChannel | null;
+  fallbackReason: FallbackReason | null;
+  failureReason: FailureReason | null;
 }
 
 /** GET platform/my-subscription/trial — the Owner's only (anyone else is refused 403 `owner_only`). */
@@ -106,16 +137,6 @@ export interface TrialStatus {
   /** Present only while the state is `trial_available`. */
   setup: TrialSetup | null;
   calculatedAt: string;
-}
-
-/** POST platform/my-subscription/trial/link — what the setup link is worth for the signed-in Owner. Never consumes it. */
-export type TrialLinkOutcome = 'valid' | 'expired' | 'used' | 'revoked' | 'invalid' | 'other_account';
-
-export interface TrialLinkCheck {
-  link: TrialLinkOutcome;
-  offer: TrialOffer | null;
-  trial: TrialView | null;
-  state: EntitlementState;
 }
 
 /** POST platform/my-subscription/trial/claim — 201 the first time, 200 when the same attempt is replayed. */
@@ -137,12 +158,71 @@ export type TrialRefusalCode =
   | 'business_refused'
   | 'trial_not_available'
   | 'terms_changed'
-  | 'contact_unverified'
-  | 'link_invalid'
-  | 'link_expired'
-  | 'link_used'
-  | 'link_revoked'
-  | 'link_other_account';
+  | 'contact_unverified';
+
+/**
+ * The company's grace after a paid period (0099; docs/101 §3) — three activations of 72 hours in any rolling 12
+ * months, each decided once by the server and recorded. `none` — no paid period has ended into a decision; `active` —
+ * the 72 hours are running; `ended` — they ran out; `unavailable` — the period ended with the three already used.
+ */
+export interface GraceView {
+  status: 'none' | 'active' | 'ended' | 'unavailable';
+  startedAt: string | null;
+  endsAt: string | null;
+  hoursRemaining: number;
+  /** While a paid period runs: whether its end, passing unrenewed, would start 72 hours of grace. Null otherwise. */
+  availableAtPeriodEnd: boolean | null;
+  allowance: number;
+  windowMonths: number;
+  durationHours: number;
+  usesInWindow: number | null;
+  usesRemaining: number | null;
+  /** When the oldest activation in the window stops counting. */
+  nextUseRestoredAt: string | null;
+}
+
+export type NoticeKind = 'portal_instructions' | 'trial_reminder' | 'trial_expired' | 'paid_reminder' | 'paid_expired' | 'grace_reminder' | 'grace_ended';
+
+/** The subscription messages' timeline, as the server keeps it: the next one due, and the newest one, whatever became of it. */
+export interface NoticeTimeline {
+  next: { kind: NoticeKind; threshold: string; dueAt: string } | null;
+  last: {
+    kind: NoticeKind;
+    threshold: string;
+    state: 'pending' | 'sending' | 'accepted' | 'delivered' | 'failed' | 'cancelled' | 'superseded';
+    channel: TrialChannel | null;
+    destination: string | null;
+    fallbackReason: FallbackReason | null;
+    failureReason: FailureReason | null;
+    at: string;
+  } | null;
+}
+
+/**
+ * GET platform/my-subscription/status — what the portal shows above everything, each part decided by the server:
+ * `operational` (the app works), `read_only` (records stay readable, nothing new is written) or `stopped`
+ * (suspended, cancelled or refused); the paid period; the grace; the messages; and what the Owner may do now.
+ */
+export interface PortalStatus {
+  access: 'operational' | 'read_only' | 'stopped';
+  state: EntitlementState;
+  period: { start: string | null; end: string | null };
+  grace: GraceView;
+  notices: NoticeTimeline;
+  actions: { claimTrial: boolean; resendInstructions: boolean; paymentInstructions: boolean };
+  timeZone: string;
+  calculatedAt: string;
+}
+
+/**
+ * GET platform/payment-instructions — how to pay, once the platform offers a provider with its real code; until then
+ * `available: false` with no provider and no code (never a stand-in).
+ */
+export interface PaymentInstructions {
+  available: boolean;
+  providers: { key: string; label: string; code: string }[];
+  defaultProvider: string | null;
+}
 
 /**
  * What a branch is subscribed to do (D154, docs/73 §3): the electronics store,
@@ -188,6 +268,10 @@ export interface Entitlement {
   complimentary?: ComplimentaryGrant;
   /** The free trial, when the business has or may claim one. Absent from an API older than the trial. */
   trial?: TrialView | null;
+  /** The grace after the paid period, and the allowance (0099). Absent from an API older than it. */
+  grace?: GraceView;
+  /** The business's configured zone: every date of the entitlement is shown in it. Absent from an API older than it. */
+  timeZone?: string;
   status: string;
   calculatedAt: string;
 }

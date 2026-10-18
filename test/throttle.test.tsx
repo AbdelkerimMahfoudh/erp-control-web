@@ -26,11 +26,11 @@ describe('a request the API’s rate limit refused', () => {
     it(`in ${name}: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s`, async () => {
       localStorage.setItem('erp.web.language', lang);
       const sent = serve((url) => {
-        if (url.endsWith('/platform/my-subscription')) return { status: 401, body: { statusCode: 401, message: 'Unauthorized' } };
-        if (url.endsWith('/auth/login')) return THROTTLED;
+        if (url.endsWith('/platform/portal/session')) return { status: 401, body: { statusCode: 401, message: 'Unauthorized' } };
+        if (url.endsWith('/platform/portal/sign-in')) return THROTTLED;
         return undefined;
       });
-      mount('/account');
+      mount('/subscription');
       const user = userEvent.setup();
       await user.type(await screen.findByLabelText(cat['account.identifier'], {}, SLOW_WAIT), 'owner@example.test');
       await user.type(screen.getByLabelText(cat['account.password']), 'a-long-password');
@@ -39,7 +39,7 @@ describe('a request the API’s rate limit refused', () => {
       expect(document.body.textContent).not.toMatch(LIMITER);
       expect(screen.queryByText(cat['error.generic'])).toBeNull();
       expect(screen.queryByText(cat['account.signin.failed'])).toBeNull();
-      expect(sent.filter((r) => r.url.endsWith('/auth/login'))).toHaveLength(1);
+      expect(sent.filter((r) => r.url.endsWith('/platform/portal/sign-in'))).toHaveLength(1);
     });
   }
 

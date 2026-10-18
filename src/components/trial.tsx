@@ -8,10 +8,10 @@ import { detailOf, refusalOf, TRIAL_TERMS_SHOWN } from '../lib/trial';
 import { ErrorNotice, Notice, Phrase } from './ui';
 
 /*
- * The free trial as the Owner meets it on this website, the only place it can be claimed (2026-10-13): its terms, the
- * one explicit button, and what the server answered. Shared by the account card and the setup link's landing. Every
- * date is a UTC instant the server sent, shown in the business's own zone with the zone's name (formatInstant) — never
- * this browser's zone, never a zone written here, and never a date this page worked out.
+ * The free trial as the Owner meets it on the Dukan ERP portal, the only place it can be claimed (the owner's brief of
+ * 2026-10-18): its terms, the button, the explicit confirmation, and what the server answered. Every date is a UTC
+ * instant the server sent, shown in the business's own zone with the zone's name (formatInstant) — never this
+ * browser's zone, never a zone written here, and never a date this page worked out.
  */
 
 /** The terms, word for word what the claim's terms version stands for, with the end the server would set now. */
@@ -26,6 +26,7 @@ export function TrialTerms({ offer }: { offer: TrialOffer }) {
           <Phrase text={t('trial.terms.endsIf')} values={{ date: formatInstant(offer.wouldEndAt, offer.timeZone, lang) }} />
         </strong>
       </li>
+      <li>{t('trial.terms.noPause')}</li>
       <li>{t('trial.terms.once')}</li>
       <li>{t('trial.terms.after')}</li>
       <li>{t('trial.terms.paid')}</li>
@@ -34,38 +35,28 @@ export function TrialTerms({ offer }: { offer: TrialOffer }) {
 }
 
 /**
- * The claim (POST platform/my-subscription/trial/claim) — sent from this button only, never from a page load. One
- * attempt keeps one idempotency key: a retry after a lost answer sends the same key with the same body, so the server
- * replays its first answer rather than refuse a second claim; a different body (the link dropped after it was
- * refused) is a new attempt with a new key. A refusal is the server's decision and goes up to the page, which says it
- * and reads the trial again; a failure worth retrying (no network, a server error, too many attempts) stays here.
+ * The claim (POST platform/my-subscription/trial/claim) — two presses, never a page load: the button, then the
+ * explicit confirmation that the trial starts at once, lasts exactly 7 days (168 hours) and cannot be paused or
+ * restarted. One attempt keeps one idempotency key: a retry after a lost answer sends the same key with the same body,
+ * so the server replays its first answer rather than refuse a second claim. A refusal is the server's decision and
+ * goes up to the page, which says it and reads the trial again; a failure worth retrying (no network, a server error,
+ * too many attempts) stays here.
  */
-export function ClaimTrial({
-  offer,
-  token,
-  onClaimed,
-  onRefused,
-}: {
-  offer: TrialOffer;
-  /** The setup link's token, while the server says the link is valid; null for the ordinary claim. */
-  token: string | null;
-  onClaimed: (result: TrialClaimResult) => void;
-  onRefused: (error: unknown) => void;
-}) {
-  const { t } = useI18n();
-  const attempt = useRef<{ key: string; token: string | null } | null>(null);
+export function ClaimTrial({ offer, onClaimed, onRefused }: { offer: TrialOffer; onClaimed: (result: TrialClaimResult) => void; onRefused: (error: unknown) => void }) {
+  const { t, lang } = useI18n();
+  const attempt = useRef<string | null>(null);
+  const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
 
   if (offer.termsVersion !== TRIAL_TERMS_SHOWN) return <Notice tone="warn">{t('trial.terms.changed')}</Notice>;
 
   const claim = async () => {
-    if (!attempt.current || attempt.current.token !== token) attempt.current = { key: crypto.randomUUID(), token };
-    const body = { idempotencyKey: attempt.current.key, termsVersion: TRIAL_TERMS_SHOWN, ...(token ? { token } : {}) };
+    attempt.current ??= crypto.randomUUID();
     setBusy(true);
     setError(null);
     try {
-      onClaimed(await ownerRequest<TrialClaimResult>('platform/my-subscription/trial/claim', { method: 'POST', body }));
+      onClaimed(await ownerRequest<TrialClaimResult>('platform/my-subscription/trial/claim', { method: 'POST', body: { idempotencyKey: attempt.current, termsVersion: TRIAL_TERMS_SHOWN } }));
     } catch (e) {
       if (refusalOf(e)) onRefused(e);
       else setError(e);
@@ -74,19 +65,38 @@ export function ClaimTrial({
     }
   };
 
+  if (!confirming) {
+    return (
+      <div className="row">
+        <button type="button" className="btn btn-primary" onClick={() => setConfirming(true)}>
+          {t('trial.claim')}
+        </button>
+      </div>
+    );
+  }
   return (
-    <div className="stack">
+    <div className="confirm stack" role="group" aria-labelledby="trial-confirm-title">
+      <h3 id="trial-confirm-title">{t('trial.confirm.title')}</h3>
+      <p>
+        <strong>{t('trial.confirm.body')}</strong>
+      </p>
+      <p>
+        <Phrase text={t('trial.terms.endsIf')} values={{ date: formatInstant(offer.wouldEndAt, offer.timeZone, lang) }} />
+      </p>
       <TrialRefusal error={error} />
       <div className="row">
         <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void claim()}>
-          {busy ? t('trial.claiming') : t('trial.claim')}
+          {busy ? t('trial.claiming') : t('trial.confirm.yes')}
+        </button>
+        <button type="button" className="btn" disabled={busy} onClick={() => setConfirming(false)}>
+          {t('trial.confirm.no')}
         </button>
       </div>
     </div>
   );
 }
 
-/** Which contact the claim still waits for, and where it is verified: the WhatsApp number in the app, an email by support. */
+/** Which contact the claim still waits for, and where it is verified: the WhatsApp number in the app; an email here, below. */
 export function VerifyContacts({ missing }: { missing: TrialContact[] }) {
   const { t } = useI18n();
   if (missing.length === 0) return <Notice tone="warn">{t('trial.error.contact_unverified')}</Notice>;
@@ -172,21 +182,19 @@ export function TrialFacts({ trial, state }: { trial: TrialView; state: Entitlem
 }
 
 /**
- * What the server says of the trial, one way for the account card and the link's landing: a recorded trial with its
- * dates; or the offer — its terms and the one button — or why it cannot be claimed yet; or nothing at all.
+ * What the server says of the trial: a recorded trial with its dates; or the offer — its terms, the button and its
+ * confirmation — or why it cannot be claimed yet; or nothing at all.
  */
 export function TrialPanel({
   state,
   trial,
   offer,
-  token,
   onClaimed,
   onRefused,
 }: {
   state: EntitlementState;
   trial: TrialView | null;
   offer: TrialOffer | null;
-  token: string | null;
   onClaimed: (result: TrialClaimResult) => void;
   onRefused: (error: unknown) => void;
 }) {
@@ -210,7 +218,7 @@ export function TrialPanel({
   return (
     <>
       <TrialTerms offer={offer} />
-      <ClaimTrial offer={offer} token={token} onClaimed={onClaimed} onRefused={onRefused} />
+      <ClaimTrial offer={offer} onClaimed={onClaimed} onRefused={onRefused} />
     </>
   );
 }

@@ -1,9 +1,10 @@
 /**
- * One HTTP client for both realms (docs/38, docs/68).
+ * One HTTP client for both realms (docs/38, docs/68, docs/101).
  *
- *  - **Owner (tenant)**: a bearer token held in a module variable for the visit —
- *    never in storage. The API also accepts the portal session cookie set by the
- *    app's handoff, so requests are sent with credentials too and the API decides.
+ *  - **Owner (the Dukan ERP portal)**: HttpOnly, SameSite=Strict cookies the
+ *    portal's own sign-in sets; no script can read them and none is ever sent as
+ *    a bearer. Every unsafe request carries the session's CSRF token, kept in
+ *    memory for the visit (`auth/owner.ts`).
  *  - **Administrator**: an HttpOnly cookie the browser attaches itself; no script
  *    can read it. Mutations carry `x-requested-with`, which a browser will not
  *    attach cross-origin without a CORS grant the API does not give.
@@ -12,9 +13,9 @@
  * server response.
  */
 
-import { ApiError, type RequestOptions } from './error';
+import { ApiError, isUnauthorized, type RequestOptions } from './error';
 
-export { ApiError, type RequestOptions };
+export { ApiError, isUnauthorized, type RequestOptions };
 
 const configured = (import.meta.env.VITE_API_BASE as string | undefined)?.trim().replace(/\/+$/, '');
 
@@ -28,8 +29,8 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   const method = options.method ?? 'GET';
   const headers: Record<string, string> = { Accept: 'application/json' };
   if (options.body !== undefined) headers['Content-Type'] = 'application/json';
-  if (options.token) headers.Authorization = `Bearer ${options.token}`;
   if (options.admin && method !== 'GET') headers['x-requested-with'] = 'erp-control-web';
+  Object.assign(headers, options.headers);
 
   let res: Response;
   try {
