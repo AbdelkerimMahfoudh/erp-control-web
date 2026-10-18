@@ -22,6 +22,18 @@ const showcase = (page: Page) => page.locator('.showcase').first();
 const panel = (page: Page) => showcase(page).locator('.sc-panel[data-on="true"]');
 const step = (page: Page) => panel(page).locator('.sc-step button').evaluateAll((b) => b.findIndex((x) => x.getAttribute('aria-current') === 'step'));
 const scrollTo = (page: Page, y: number) => page.evaluate((top) => window.scrollTo(0, top), y);
+// Two drawn frames, then a moment; resolves to the milliseconds that took. An IntersectionObserver is evaluated when a
+// frame is drawn, and its callback runs just after. On a CPU-only runner at 2–3× density WebKit can take longer than a
+// fixed pause to draw the first frame after a jump, so a fixed pause can skip a scroll position entirely.
+const rendered = (page: Page) =>
+  page.evaluate(() => {
+    const t0 = performance.now();
+    return new Promise<number>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(() => resolve(Math.round(performance.now() - t0 - 50)), 50))));
+  });
+const annotateFrames = (ms: number[]) => {
+  const sorted = [...ms].sort((a, b) => a - b);
+  test.info().annotations.push({ type: 'two frames after a jump (ms): median, max, jumps', description: `${sorted[Math.floor(sorted.length / 2)]}, ${sorted.at(-1)}, ${ms.length}` });
+};
 async function bringIntoView(page: Page) {
   await showcase(page).evaluate((el) => window.scrollTo(0, el.getBoundingClientRect().top + window.scrollY - 70));
   await page.waitForTimeout(300);
@@ -64,7 +76,7 @@ for (const lang of ['en', 'fr', 'ar'] as const) {
   });
 }
 
-test('scrolling: cards appear as they are reached, once; nothing stays hidden', async ({ page }) => {
+test('scrolling: a card on screen is never left hidden; cards appear as they are reached, once; nothing stays hidden', async ({ page }) => {
   await page.goto(pathOf('dukanErp', 'en'));
   await page.waitForTimeout(300);
   const state = () =>
@@ -80,10 +92,24 @@ test('scrolling: cards appear as they are reached, once; nothing stays hidden', 
   expect(atLoad.filter((c) => c.top >= vh).every((c) => !c.in && c.opacity === '0'), 'below the fold, waiting').toBe(true);
   expect(atLoad.filter((c) => c.top < vh).every((c) => c.in && c.opacity === '1'), 'on screen at load, shown at once').toBe(true);
   const height = await page.evaluate(() => document.documentElement.scrollHeight);
+  // Steps of 0.6 of a screen, each held until it has been drawn: every card passes through the observer's band (the
+  // screen less its bottom 8 %, lib/reveal.ts) at least once, as it does in a continuous scroll on a phone.
+  const frames: number[] = [];
+  const hiddenOnScreen: { y: number; tops: number[] }[] = [];
   for (let y = 0; y <= height; y += Math.round(vh * 0.6)) {
     await scrollTo(page, y);
-    await page.waitForTimeout(150);
+    frames.push(await rendered(page));
+    const tops = await page.evaluate(
+      (band) =>
+        [...document.querySelectorAll<HTMLElement>('[data-reveal]:not(.in)')]
+          .filter((e) => e.getBoundingClientRect().top < band - 1 && e.getBoundingClientRect().bottom > 1)
+          .map((e) => Math.round(e.getBoundingClientRect().top + window.scrollY)),
+      vh * 0.92,
+    );
+    if (tops.length) hiddenOnScreen.push({ y: await page.evaluate(() => window.scrollY), tops });
   }
+  annotateFrames(frames);
+  expect(hiddenOnScreen, 'a card on screen is shown once a frame has been drawn there').toEqual([]);
   await page.waitForTimeout(1200);
   const after = await state();
   expect(after.filter((c) => !c.in || c.opacity !== '1'), 'every card shown after scrolling through').toEqual([]);
@@ -111,21 +137,26 @@ test('playback: only when asked, about 2.8 s a step, stops on the result; Pause 
   await expect(play).toHaveText(d.replay);
   await page.waitForTimeout(3200);
   expect(await step(page), 'stops on the result').toBe(2);
-  // Replay, then Pause holds it.
+  // Replay, then Pause holds it where it is. A click waits for two drawn frames in which its button is still, so on a
+  // slow runner it can land after the next step: the step held is the one Pause caught.
   await play.click();
   expect(await step(page)).toBe(0);
   await page.waitForTimeout(1000);
+  const pausing = Date.now();
   await play.click();
   await expect(play).toHaveText(d.play);
+  test.info().annotations.push({ type: 'Pause click (ms)', description: String(Date.now() - pausing) });
+  const held = await step(page);
+  expect(held, 'paused before the result').toBeLessThan(2);
   await page.waitForTimeout(3500);
-  expect(await step(page), 'Pause holds').toBe(0);
+  expect(await step(page), 'Pause holds').toBe(held);
   // Playing, then scrolled out of sight: it pauses and does not start again on return.
   await play.click();
   await scrollTo(page, 0);
   await page.waitForTimeout(3600);
   await bringIntoView(page);
   await expect(play).toHaveText(d.play);
-  expect(await step(page), 'paused off screen').toBe(0);
+  expect(await step(page), 'paused off screen').toBe(held);
   // Switching activity stops it and starts the walkthrough again.
   await play.click();
   await showcase(page).locator('[role="tab"]').nth(1).click();
@@ -145,7 +176,8 @@ test('reduced motion: at load every card at rest and no Play; switched on live, 
       play: getComputedStyle(document.querySelector('.sc-play')!).display,
     }));
   expect(await motion()).toEqual({ hidden: 0, play: 'none' });
-  await page.screenshot({ path: join(shots, `${info.project.name}-reduced-motion-at-load.png`), fullPage: true });
+  // In CSS pixels: the whole page at 3× density is taller than a screenshot may be (32 767 px).
+  await page.screenshot({ path: join(shots, `${info.project.name}-reduced-motion-at-load.png`), fullPage: true, scale: 'css' });
   await panel(page).locator('.sc-step button').nth(2).click();
   await expect(panel(page).locator('.sc-frame[data-on="true"]')).toContainText(dukanDemo.en.electronics.recorded);
   await reduced.close();

@@ -103,11 +103,18 @@ jobs:
           RESULT: ${{ job.status }}
         run: |
           printf 'run %s\nresult %s\n' "$GITHUB_RUN_ID" "$RESULT" >> "$EV/target.txt"
-          # Recordings and screenshots are kept; traces and per-test scratch are not.
+          # Recordings and screenshots are kept; traces and per-test scratch are not. WebKit records VP9 WebM, which an
+          # iPhone may not play: each recording is also kept as H.264 MP4.
           if [ -d "$EV/webkit-output" ]; then
             mkdir -p "$EV/recordings"
             find "$EV/webkit-output" -name '*.webm' | while read -r f; do cp "$f" "$EV/recordings/$(basename "$(dirname "$f")").webm"; done
             rm -rf "$EV/webkit-output"
+            if ls "$EV/recordings/"*.webm > /dev/null 2>&1; then
+              { sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; } > "$EV/ffmpeg-install.log" 2>&1 || true
+              for f in "$EV/recordings/"*.webm; do
+                ffmpeg -loglevel error -y -i "$f" -c:v libx264 -profile:v main -pix_fmt yuv420p -vf 'scale=trunc(iw/2)*2:trunc(ih/2)*2' -movflags +faststart -an "${f%.webm}.mp4" >> "$EV/ffmpeg-install.log" 2>&1 || echo "not converted: $f" >> "$EV/ffmpeg-install.log"
+              done
+            fi
           fi
           rm -rf "$EV/public/playwright-output"
           cd tools
