@@ -1,0 +1,43 @@
+{
+  "robots": "User-agent: *\nDisallow: /\n",
+  "csp": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' http://127.0.0.1:3999; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+  "homeHeaders": {
+    "content-type": "text/html; charset=utf-8",
+    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' http://127.0.0.1:3999; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()",
+    "cross-origin-opener-policy": "same-origin",
+    "x-robots-tag": "noindex, nofollow",
+    "date": "Sun, 18 Oct 2026 11:56:43 GMT",
+    "connection": "keep-alive",
+    "keep-alive": "timeout=5",
+    "transfer-encoding": "chunked"
+  },
+  "subscriptionHeaders": {
+    "content-type": "text/html; charset=utf-8",
+    "content-security-policy": "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' http://127.0.0.1:3999; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'",
+    "x-content-type-options": "nosniff",
+    "x-frame-options": "DENY",
+    "referrer-policy": "strict-origin-when-cross-origin",
+    "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()",
+    "cross-origin-opener-policy": "same-origin",
+    "x-robots-tag": "noindex, nofollow",
+    "cache-control": "no-store",
+    "date": "Sun, 18 Oct 2026 11:56:43 GMT",
+    "connection": "keep-alive",
+    "keep-alive": "timeout=5",
+    "transfer-encoding": "chunked"
+  },
+  "retired": [
+    301,
+    "/subscription"
+  ],
+  "retiredLanding": [
+    301,
+    "/subscription"
+  ],
+  "adminRobots": "noindex, nofollow",
+  "missingStatus": 404
+}
