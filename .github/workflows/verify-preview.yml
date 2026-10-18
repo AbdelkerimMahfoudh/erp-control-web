@@ -1,0 +1,120 @@
+# A website commit before its promotion, checked from GitHub's network (docs/95, last section; D201). This branch holds
+# tooling only — never site code — and the commit under review is checked out exactly as pushed, at the SHA in
+# verify/target.env.
+#
+# - Always: the commit's production build (the production variables, as Cloudflare Pages builds it), then
+#   verify/e2e-preview in WebKit under two iPhone profiles and desktop Safari. That is browser automation on Linux, not
+#   a physical iPhone.
+# - When ORIGIN is the deployed Cloudflare Pages preview: verify/preview-check.mjs (every file served as built — so the
+#   preview is that commit —, X-Robots-Tag: noindex on every page, canonicals on tsxmr.com, the security headers, and
+#   production left unindexed-as-before and unpromoted), the same WebKit checks against the preview, and the site's own
+#   public browser suite (Chromium) against it.
+#
+# Push this branch to run it. It deploys nothing and changes nothing but the `ci-evidence` branch, where its evidence
+# is committed under evidence/preview/ (job logs need admin rights to read).
+name: verify-preview
+
+on:
+  push:
+    branches: [ops/verify-preview]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-preview
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    permissions:
+      contents: write # only to commit the evidence branch
+    env:
+      # The production variables (docs/96 §6), as ops/verify-production builds them.
+      VITE_SITE_SURFACE: public
+      VITE_PUBLIC_SITE_ORIGIN: https://tsxmr.com
+      VITE_ORGANIZATION_PHONE: '+222 36 96 38 39, +222 37 67 68 27'
+      VITE_LEGAL_EFFECTIVE_DATE: '2026-10-17'
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: tools
+      - name: The target
+        run: |
+          set -a; source tools/verify/target.env; set +a
+          [[ "$COMMIT" =~ ^[0-9a-f]{40}$ ]] || { echo "COMMIT must be a full SHA"; exit 1; }
+          [[ "$ORIGIN" == local || "$ORIGIN" =~ ^https://[a-z0-9.-]+$ ]] || { echo "ORIGIN must be local or https://host"; exit 1; }
+          { echo "COMMIT=$COMMIT"; echo "ORIGIN=$ORIGIN"; echo "EV=$GITHUB_WORKSPACE/evidence/preview/${COMMIT:0:7}-$GITHUB_RUN_ID"; } >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.COMMIT }}
+          path: site
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: The commit, exactly
+        working-directory: site
+        run: |
+          mkdir -p "$EV"
+          test "$(git rev-parse HEAD)" = "$COMMIT"
+          printf 'commit %s\norigin %s\ntools %s\n' "$COMMIT" "$ORIGIN" "$(git -C ../tools rev-parse HEAD)" | tee "$EV/target.txt"
+      - name: Install
+        working-directory: site
+        run: set -o pipefail; npm ci --no-audit --no-fund 2>&1 | tee "$EV/install.log"
+      - name: Build the production site as Cloudflare Pages does
+        working-directory: site
+        run: set -o pipefail; npm run build:public-release 2>&1 | tee "$EV/build.log"
+      - name: The deployed preview against that build; production unchanged
+        if: ${{ !cancelled() && env.ORIGIN != 'local' }}
+        run: set -o pipefail; node tools/verify/preview-check.mjs "$ORIGIN" site/dist "$EV/preview.json" https://tsxmr.com 2>&1 | tee "$EV/preview.txt"
+      - name: Browsers (WebKit, Chromium)
+        if: ${{ !cancelled() }}
+        working-directory: site
+        run: npx playwright install --with-deps webkit chromium ffmpeg > "$EV/playwright-install.log" 2>&1
+      - name: WebKit — iPhone 17, iPhone SE (3rd gen) and desktop Safari profiles
+        if: ${{ !cancelled() }}
+        working-directory: site
+        run: |
+          cp -r ../tools/verify/e2e-preview e2e-preview
+          cp ../tools/verify/playwright.preview.config.ts .
+          set -o pipefail
+          PREVIEW_ORIGIN="$ORIGIN" npx playwright test -c playwright.preview.config.ts 2>&1 | tee "$EV/webkit.log"
+      - name: The site's public browser suite (Chromium) against the deployed preview
+        if: ${{ !cancelled() && env.ORIGIN != 'local' }}
+        working-directory: site
+        env:
+          E2E_SURFACE: public
+        run: |
+          cp ../tools/verify/playwright.remote.config.ts .
+          mkdir -p "$EV/public"
+          set -o pipefail
+          E2E_BASE_URL="$ORIGIN" EV="$EV/public" npx playwright test -c playwright.remote.config.ts 2>&1 | tee "$EV/public/playwright.log"
+      - name: Keep the evidence
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          printf 'run %s\nresult %s\n' "$GITHUB_RUN_ID" "$RESULT" >> "$EV/target.txt"
+          # Recordings and screenshots are kept; traces and per-test scratch are not.
+          if [ -d "$EV/webkit-output" ]; then
+            mkdir -p "$EV/recordings"
+            find "$EV/webkit-output" -name '*.webm' | while read -r f; do cp "$f" "$EV/recordings/$(basename "$(dirname "$f")").webm"; done
+            rm -rf "$EV/webkit-output"
+          fi
+          rm -rf "$EV/public/playwright-output"
+          cd tools
+          git config user.name "ci-evidence"
+          git config user.email "ci-evidence@users.noreply.github.com"
+          git fetch -q origin ci-evidence && git checkout -q -B ci-evidence origin/ci-evidence
+          mkdir -p evidence/preview; cp -r "$GITHUB_WORKSPACE/evidence/preview/." evidence/preview/
+          git add evidence/preview
+          git commit -qm "evidence: preview check of ${COMMIT:0:7} at $ORIGIN ($RESULT)"
+          for i in 1 2 3 4 5; do git push -q origin ci-evidence && break; git fetch -q origin ci-evidence && git rebase -q origin/ci-evidence; done
