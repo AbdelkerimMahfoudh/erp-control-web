@@ -1,0 +1,1398 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/site/node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "playwright.preview.config.ts"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/site/playwright.preview.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/e138399d4035e1881fad118c87bbe90b83b2ac43",
+        "commitHash": "e138399d4035e1881fad118c87bbe90b83b2ac43",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39187728547"
+      },
+      "gitCommit": {
+        "shortHash": "1b9c448",
+        "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+        "subject": "Notes: the shared handoff as it stood at the end of this work",
+        "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+        "author": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1792313335000
+        },
+        "committer": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1792313335000
+        },
+        "branch": "HEAD"
+      },
+      "actualWorkers": 3
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "commitHash": "e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39187728547"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "id": "webkit-iphone-17",
+        "name": "webkit-iphone-17",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "commitHash": "e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39187728547"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "id": "webkit-iphone-se-3",
+        "name": "webkit-iphone-se-3",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "commitHash": "e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39187728547"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "id": "webkit-desktop-safari",
+        "name": "webkit-desktop-safari",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "commitHash": "e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39187728547"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "name": "webkit-iphone-17",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "https://website-balanced-motion.tsxmr-public.pages.dev",
+          "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Mobile/15E148 Safari/604.1",
+          "viewport": {
+            "width": 402,
+            "height": 681
+          },
+          "screen": {
+            "width": 402,
+            "height": 874
+          },
+          "deviceScaleFactor": 3,
+          "isMobile": true,
+          "hasTouch": true,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-iphone-17"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "commitHash": "e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39187728547"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "name": "webkit-iphone-se-3",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "https://website-balanced-motion.tsxmr-public.pages.dev",
+          "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/27.2 Mobile/19E241 Safari/602.1",
+          "viewport": {
+            "width": 375,
+            "height": 667
+          },
+          "deviceScaleFactor": 2,
+          "isMobile": true,
+          "hasTouch": true,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-iphone-se-3"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "commitHash": "e138399d4035e1881fad118c87bbe90b83b2ac43",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39187728547"
+          },
+          "gitCommit": {
+            "shortHash": "1b9c448",
+            "hash": "1b9c4481c16997a0e8348c8b724c6635fb445e6e",
+            "subject": "Notes: the shared handoff as it stood at the end of this work",
+            "body": "Notes: the shared handoff as it stood at the end of this work\n\nThe local backend session finished while this branch was in progress (erp-docs 5ed2849,\nREADY_FOR_HANDOFF, owner NONE). Recorded here; erp-docs stays untouched, as the brief requires.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792313335000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "name": "webkit-desktop-safari",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "https://website-balanced-motion.tsxmr-public.pages.dev",
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15",
+          "viewport": {
+            "width": 1280,
+            "height": 900
+          },
+          "screen": {
+            "width": 1792,
+            "height": 1120
+          },
+          "deviceScaleFactor": 2,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-desktop-safari"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 3,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "recordings.spec.ts",
+      "file": "recordings.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "electronics then agent walkthrough, played",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 26300,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T01:59:14.670Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output/recordings-electronics-then-agent-walkthrough-played-webkit-iphone-17/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-0b5dfb0b4d81ec187666",
+          "file": "recordings.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "cards entering while scrolling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 12416,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T01:59:14.472Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output/recordings-cards-entering-while-scrolling-webkit-iphone-17/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-460579465352a0fa198c",
+          "file": "recordings.spec.ts",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "electronics then agent walkthrough, played",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 18242,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:00:47.728Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output/recordings-electronics-then-agent-walkthrough-played-webkit-iphone-se-3/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-ca2ed064b366ef10bb42",
+          "file": "recordings.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "cards entering while scrolling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 6807,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:00:55.026Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output/recordings-cards-entering-while-scrolling-webkit-iphone-se-3/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-4e64881f493689962b24",
+          "file": "recordings.spec.ts",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "electronics then agent walkthrough, played",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 18822,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:35.434Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output/recordings-electronics-then-agent-walkthrough-played-webkit-desktop-safari/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-3a0ea3a5fdff8ec804f3",
+          "file": "recordings.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "cards entering while scrolling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7136,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:46.518Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/1b9c448-39187728547/webkit-output/recordings-cards-entering-while-scrolling-webkit-desktop-safari/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-de1016782b2635b63e65",
+          "file": "recordings.spec.ts",
+          "line": 30,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "webkit.spec.ts",
+      "file": "webkit.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "tabs and steps keep one height, nothing overflows (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 67361,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T01:59:14.657Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-04a4e9d2aa781a5ceae9",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (fr)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 57115,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T01:59:29.200Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-c9a0e6ba916645b275b8",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 48491,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T01:59:43.109Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-ed32dcdd58600524b454",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "scrolling: a card on screen is never left hidden; cards appear as they are reached, once; nothing stays hidden",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "two frames after a jump (ms): median, max, jumps",
+                  "description": "363, 2689, 33"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 24159,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:00:22.865Z",
+                  "annotations": [
+                    {
+                      "type": "two frames after a jump (ms): median, max, jumps",
+                      "description": "363, 2689, 33"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-e991d0ff38c362e24b12",
+          "file": "webkit.spec.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "Pause click (ms)",
+                  "description": "1303"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 27722,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:00:26.556Z",
+                  "annotations": [
+                    {
+                      "type": "Pause click (ms)",
+                      "description": "1303"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-4f1bfad4ac7eb97d11f9",
+          "file": "webkit.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: at load every card at rest and no Play; switched on live, playback stops",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11262,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:00:31.811Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-9010d4b395bffc8b489e",
+          "file": "webkit.spec.ts",
+          "line": 167,
+          "column": 1
+        },
+        {
+          "title": "screens for review: French on a phone, Arabic RTL, dark mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 17143,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:00:43.093Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-9ad600153dcb213f228b",
+          "file": "webkit.spec.ts",
+          "line": 201,
+          "column": 1
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 25357,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:00.913Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-3724a92334144f7defec",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (fr)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 23215,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:02.709Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-12cc6879a59b66e70dc4",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 18663,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:07.103Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-8ae99e3ff1f6836ed327",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "scrolling: a card on screen is never left hidden; cards appear as they are reached, once; nothing stays hidden",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "two frames after a jump (ms): median, max, jumps",
+                  "description": "61, 381, 35"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 8832,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:25.966Z",
+                  "annotations": [
+                    {
+                      "type": "two frames after a jump (ms): median, max, jumps",
+                      "description": "61, 381, 35"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-7ac648bfb4039847922d",
+          "file": "webkit.spec.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "Pause click (ms)",
+                  "description": "310"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 24658,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:26.137Z",
+                  "annotations": [
+                    {
+                      "type": "Pause click (ms)",
+                      "description": "310"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-6baeeeed669f53e9d3f0",
+          "file": "webkit.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: at load every card at rest and no Play; switched on live, playback stops",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 7764,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:26.441Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-b4915dcb719fe0a250b8",
+          "file": "webkit.spec.ts",
+          "line": 167,
+          "column": 1
+        },
+        {
+          "title": "screens for review: French on a phone, Arabic RTL, dark mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 11606,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:34.224Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-0f06d9ec91b57b202c45",
+          "file": "webkit.spec.ts",
+          "line": 201,
+          "column": 1
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 45163,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:51.692Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-bac0cfa818487351bc65",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (fr)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 41978,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:54.656Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-40d5890a757c922f0ce0",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 32709,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:01:55.253Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-3aa2ad8656baf7badf77",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "scrolling: a card on screen is never left hidden; cards appear as they are reached, once; nothing stays hidden",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "two frames after a jump (ms): median, max, jumps",
+                  "description": "295, 1471, 15"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 12234,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:02:28.141Z",
+                  "annotations": [
+                    {
+                      "type": "two frames after a jump (ms): median, max, jumps",
+                      "description": "295, 1471, 15"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-f13f469c66e980a1218c",
+          "file": "webkit.spec.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "Pause click (ms)",
+                  "description": "590"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 24415,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:02:36.881Z",
+                  "annotations": [
+                    {
+                      "type": "Pause click (ms)",
+                      "description": "590"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-6251591e234ba64a614c",
+          "file": "webkit.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: at load every card at rest and no Play; switched on live, playback stops",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 10745,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:02:37.083Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-fb124d0d1141a9cb0d2e",
+          "file": "webkit.spec.ts",
+          "line": 167,
+          "column": 1
+        },
+        {
+          "title": "screens for review: French on a phone, Arabic RTL, dark mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 14649,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T02:02:40.418Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-ceef5fe5cdc8aa1f5405",
+          "file": "webkit.spec.ts",
+          "line": 201,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-19T01:59:13.833Z",
+    "duration": 227941.111,
+    "expected": 27,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

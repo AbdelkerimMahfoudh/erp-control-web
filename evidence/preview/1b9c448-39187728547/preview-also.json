@@ -1,0 +1,67 @@
+{
+  "origin": "https://8e3b3803.tsxmr-public.pages.dev",
+  "production": "https://tsxmr.com",
+  "checkedAt": "2026-10-19T01:58:31.560Z",
+  "results": [
+    {
+      "name": "every built file (80) is served byte-for-byte as built (security.txt's Expires line aside)",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "every page (60) carries X-Robots-Tag: noindex",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "every canonical names https://tsxmr.com, never the preview",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "robots.txt is reachable (so crawlers can read the noindex header on every page)",
+      "ok": true,
+      "detail": {
+        "status": 200,
+        "xRobotsTag": "noindex"
+      }
+    },
+    {
+      "name": "security headers on the preview equal dist/_headers",
+      "ok": true,
+      "detail": [
+        "content-security-policy",
+        "strict-transport-security",
+        "x-content-type-options",
+        "x-frame-options",
+        "referrer-policy",
+        "permissions-policy",
+        "cross-origin-opener-policy"
+      ]
+    },
+    {
+      "name": "https://tsxmr.com/ answers 200 with no X-Robots-Tag (indexing unchanged)",
+      "ok": true,
+      "detail": {
+        "status": 200,
+        "xRobotsTag": null
+      }
+    },
+    {
+      "name": "https://tsxmr.com/ is not this build (not promoted: no illustration)",
+      "ok": true,
+      "detail": {
+        "showcase": false
+      }
+    },
+    {
+      "name": "https://tsxmr.com/robots.txt is the production robots.txt (unchanged)",
+      "ok": true,
+      "detail": {
+        "status": 200,
+        "same": true
+      }
+    }
+  ],
+  "rewritten": []
+}

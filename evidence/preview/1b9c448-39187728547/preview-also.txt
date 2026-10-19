@@ -1,0 +1,9 @@
+PASS  every built file (80) is served byte-for-byte as built (security.txt's Expires line aside) — []
+PASS  every page (60) carries X-Robots-Tag: noindex — []
+PASS  every canonical names https://tsxmr.com, never the preview — []
+PASS  robots.txt is reachable (so crawlers can read the noindex header on every page) — {"status":200,"xRobotsTag":"noindex"}
+PASS  security headers on the preview equal dist/_headers — ["content-security-policy","strict-transport-security","x-content-type-options","x-frame-options","referrer-policy","permissions-policy","cross-origin-opener-policy"]
+PASS  https://tsxmr.com/ answers 200 with no X-Robots-Tag (indexing unchanged) — {"status":200,"xRobotsTag":null}
+PASS  https://tsxmr.com/ is not this build (not promoted: no illustration) — {"showcase":false}
+PASS  https://tsxmr.com/robots.txt is the production robots.txt (unchanged) — {"status":200,"same":true}
+8/8 checks passed
