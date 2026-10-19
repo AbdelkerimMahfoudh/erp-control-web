@@ -50,7 +50,8 @@ jobs:
           set -a; source tools/verify/target.env; set +a
           [[ "$COMMIT" =~ ^[0-9a-f]{40}$ ]] || { echo "COMMIT must be a full SHA"; exit 1; }
           [[ "$ORIGIN" == local || "$ORIGIN" =~ ^https://[a-z0-9.-]+$ ]] || { echo "ORIGIN must be local or https://host"; exit 1; }
-          { echo "COMMIT=$COMMIT"; echo "ORIGIN=$ORIGIN"; echo "EV=$GITHUB_WORKSPACE/evidence/preview/${COMMIT:0:7}-$GITHUB_RUN_ID"; } >> "$GITHUB_ENV"
+          [[ -z "${ALSO:-}" || "$ALSO" =~ ^https://[a-z0-9.-]+$ ]] || { echo "ALSO must be empty or https://host"; exit 1; }
+          { echo "COMMIT=$COMMIT"; echo "ORIGIN=$ORIGIN"; echo "ALSO=${ALSO:-}"; echo "EV=$GITHUB_WORKSPACE/evidence/preview/${COMMIT:0:7}-$GITHUB_RUN_ID"; } >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
         with:
           ref: ${{ env.COMMIT }}
@@ -74,7 +75,12 @@ jobs:
         run: set -o pipefail; npm run build:public-release 2>&1 | tee "$EV/build.log"
       - name: The deployed preview against that build; production unchanged
         if: ${{ !cancelled() && env.ORIGIN != 'local' }}
-        run: set -o pipefail; node tools/verify/preview-check.mjs "$ORIGIN" site/dist "$EV/preview.json" https://tsxmr.com 2>&1 | tee "$EV/preview.txt"
+        run: |
+          set -o pipefail
+          rc=0
+          node tools/verify/preview-check.mjs "$ORIGIN" site/dist "$EV/preview.json" https://tsxmr.com 2>&1 | tee "$EV/preview.txt" || rc=1
+          if [ -n "$ALSO" ]; then node tools/verify/preview-check.mjs "$ALSO" site/dist "$EV/preview-also.json" https://tsxmr.com 2>&1 | tee "$EV/preview-also.txt" || rc=1; fi
+          exit $rc
       - name: Browsers (WebKit, Chromium)
         if: ${{ !cancelled() }}
         working-directory: site
