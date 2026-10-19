@@ -1,0 +1,83 @@
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:5:92). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:6:75). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./legal-choices" without a file extension (src/content/index.ts:10:32). Add the file extension
+  - import "./legal-notice" without a file extension (src/content/index.ts:11:29). Add the file extension
+  - import "./legal-security" without a file extension (src/content/index.ts:12:26). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/index.ts:13:31). Add the file extension
+  - import "./brand" without a file extension (src/content/index.ts:14:42). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:15:26). Add the file extension
+  - import "./dukan-demo" without a file extension (src/content/index.ts:16:27). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:17:40). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:18:38). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:19:72). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:20:30). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/index.ts:21:36). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:22:38). Add the file extension
+  - import "./prelaunch" without a file extension (src/content/index.ts:23:158). Add the file extension
+  - import "./legal-prelaunch" without a file extension (src/content/index.ts:24:142). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-overview.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/brand.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-demo.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/brand.ts:2:27). Add the file extension
+  - import "./types" without a file extension (src/content/legal-prelaunch.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/prelaunch.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/prelaunch.ts:3:36). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/prelaunch.ts:4:38). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+[31merror during build:
+Error: This website cannot be built for production yet (gate PORTAL). Nothing was published.
+  - VITE_PUBLIC_SITE_ORIGIN [missing] Public website origin, e.g. https://<domain>
+  - VITE_API_BASE [missing] API base URL including /api/v1, e.g. https://api.<domain>/api/v1 (not used by a public build)
+  - VITE_SUPPORT_HOURS [missing] When support answers, in words (days, hours and time zone), as TSX-MR commits to them
+  - VITE_SUPPORT_LANGUAGES [missing] The languages support answers in, in words, as TSX-MR commits to them
+  - VITE_SUPPORT_RESPONSE_TIME [missing] How soon support replies, in words, as TSX-MR commits to it
+  - VITE_ACCOUNT_DELETION_CHANNEL [missing] The deletion verification channel configured AND tested in production (whatsapp)
+  - VITE_LEGAL_EFFECTIVE_DATE [missing] Effective date of the published privacy policy and terms (YYYY-MM-DD)
+  - [legal_blocker] operator_registration: TSX-MR is operated by an individual with no trade registration. Mauritanian counsel must confirm whether the paid Dukan ERP service may be sold before the operator registers (for example as an individual trader at the RCCM, with a tax identification number), and what invoices and receipts must then show. The portal stays closed until then.
+  - [legal_blocker] backup_retention: How long backups are kept is not supplied by TSX-MR: deletion removes data from active storage at once, and backups expire on that schedule. Production stays blocked until TSX-MR fixes it.
+  - [legal_blocker] governing_law: Governing law, jurisdiction and dispute resolution for the terms of service are not decided.
+  - [legal_blocker] indemnity: Whether a business indemnifies TSX-MR, and for what, is a legal clause TSX-MR and its adviser must write or remove.
+  - [legal_blocker] international_transfer: Whether personal data is processed outside Mauritania depends on the hosting choice; the policy must say where.
+  - [legal_blocker] legal_review: The privacy policy, terms and deletion page are drafts written from the code; a legal adviser must review and approve them.
+  - [legal_blocker] liability: Limitation of liability and service-level wording for the terms of service are not decided.
+  - [legal_blocker] privacy_law: Which data-protection law applies, the legal bases it requires, the rights it grants and the authority a person may complain to are not confirmed by Mauritanian counsel.
+  - [legal_blocker] processors: Hosting, database, backup and email providers are not selected (docs/45 D4–D7); the policy must name them once contracted.
+  - [legal_blocker] refund_policy: The refund policy for business access paid outside the app is not decided by TSX-MR (today nothing is refunded by the system).
+  - [legal_blocker] retention_period: The legal retention period for business and accounting records (Mauritanian commercial and tax law) is not decided (docs/64 §6).
+  - [legal_blocker] sealed_history: Deletion cannot edit the hash-chained audit trail, subscription and platform audit events, or append-only money-agent records, which may hold names or contacts written before 2026-10-12 (docs/24); a legal adviser must approve this disclosure.
+  - [legal_draft] accountDeletion: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] legalNotice: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] privacy: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] privacyChoices: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] security: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] terms: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+Set the values in the hosting provider’s environment (docs/74 §3) or resolve the legal blockers (docs/74 §7); use `npm run build:preview` for a test build.
+    at BasicMinimalPluginContext.configResolved (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/.vite-temp/vite.config.ts.timestamp-1792413412921-35ca17c5b446a.mjs:6317:35)
+    at file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/chunks/node.js:37632:87
+    at Array.map (<anonymous>)
+    at resolveConfig (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/chunks/node.js:37632:68)
+    at async createBuilder (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/chunks/node.js:34886:17)
+    at async CAC.<anonymous> (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/cli.js:769:19)[39m
