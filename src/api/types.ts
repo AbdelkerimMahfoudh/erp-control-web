@@ -105,6 +105,10 @@ export type TrialChannel = 'email' | 'whatsapp';
  * refusal, the retries used up, or a failure WhatsApp reported later.
  */
 export type FallbackReason =
+  /** D213: no operational WhatsApp consent in force for the number. */
+  | 'consent_missing'
+  /** D213: the Owner withdrew WhatsApp — email is a separate channel. */
+  | 'consent_withdrawn'
   | 'whatsapp_disabled'
   | 'template_unavailable'
   | 'number_unverified'
@@ -114,8 +118,8 @@ export type FallbackReason =
   | 'async_failed';
 
 /**
- * Why nothing carried a message: the Owner stopped WhatsApp messages (`opted_out`) or gave no consent (`no_consent`) —
- * never carried another way — or WhatsApp could not and email could not either.
+ * Why nothing carried a message: WhatsApp could not and email could not either. `opted_out` and `no_consent` are kept
+ * for messages decided before D213's correction, when a missing or withdrawn consent was never carried by email.
  */
 export type FailureReason = 'opted_out' | 'no_consent' | 'no_email' | 'email_unavailable' | 'email_failed' | 'no_recipient';
 

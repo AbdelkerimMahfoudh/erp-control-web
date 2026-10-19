@@ -92,6 +92,26 @@ describe('the console: every subscription message', () => {
     expect(document.body.textContent).not.toMatch(/\+22236|owner@example/);
   });
 
+  it('names the two email fallbacks of a WhatsApp consent (D213): none in force, or withdrawn — by email, never unsent for it', async () => {
+    admin('/admin/messages', (url) =>
+      url.includes('/platform/notices')
+        ? {
+            body: log([
+              row({ kind: 'paid_reminder', channel: 'email', destination: 'o•••@example.test', fallbackReason: 'consent_missing' }),
+              row({ kind: 'trial_reminder', threshold: 'h48', channel: 'email', destination: 'o•••@example.test', fallbackReason: 'consent_withdrawn' }),
+            ]),
+          }
+        : undefined,
+    );
+    const table = (await screen.findByRole('table', {}, SLOW_WAIT)) as HTMLTableElement;
+    const rows = [...table.querySelectorAll('tbody tr')].map((r) => r.textContent);
+    expect(rows[0]).toContain(en['admin.messages.reason.fallback.consent_missing']);
+    expect(rows[1]).toContain(en['admin.messages.reason.fallback.consent_withdrawn']);
+    for (const key of ['notice.fallback.consent_missing', 'notice.fallback.consent_withdrawn', 'admin.messages.reason.fallback.consent_missing', 'admin.messages.reason.fallback.consent_withdrawn'] as const) {
+      expect(ar[key]).toMatch(/[\u0600-\u06FF]/);
+    }
+  });
+
   it('narrows by state and by message, from the first page', async () => {
     const sent = admin('/admin/messages', (url) => (url.includes('/platform/notices') ? { body: log([row()]) } : undefined));
     await screen.findByRole('table', {}, SLOW_WAIT);
