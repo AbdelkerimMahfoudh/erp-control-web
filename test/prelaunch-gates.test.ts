@@ -67,11 +67,12 @@ describe('the pre-launch texts', () => {
   });
 
   it('are approved by TSX-MR (2026-10-17, docs/97 §1; the name references of 1.1, the brief of 2026-10-17, fourth), and none is a placeholder', () => {
-    // Version 1.1: privacy, terms and the legal notice name the operator once and then say "the operator".
-    const VERSION: Record<string, string> = { privacy: '1.1', terms: '1.1', legalNotice: '1.1', accountDeletion: '1.0', privacyChoices: '1.0', security: '1.0' };
+    // Version 1.1: privacy, terms and the legal notice name the operator once and then say "the operator"; account
+    // deletion is retitled "Delete a Dukan ERP account" with its scope stated (the owner's approval of 2026-10-19).
+    const VERSION: Record<string, string> = { privacy: '1.1', terms: '1.1', legalNotice: '1.1', accountDeletion: '1.1', privacyChoices: '1.0', security: '1.0' };
     for (const [name, doc] of Object.entries(PRELAUNCH_LEGAL_DOCUMENTS)) for (const lang of LANGS) expect({ name, lang, status: doc[lang].status, version: doc[lang].version }).toEqual({ name, lang, status: 'approved', version: VERSION[name] });
     // A revised version takes effect on its own publication day; the unchanged texts keep the site's date (D199).
-    const EFFECTIVE: Record<string, string | undefined> = { privacy: '2026-10-18', terms: '2026-10-18', legalNotice: '2026-10-18' };
+    const EFFECTIVE: Record<string, string | undefined> = { privacy: '2026-10-18', terms: '2026-10-18', legalNotice: '2026-10-18', accountDeletion: '2026-10-19' };
     for (const [name, doc] of Object.entries(PRELAUNCH_LEGAL_DOCUMENTS)) for (const lang of LANGS) expect({ name, lang, effective: doc[lang].effective }).toEqual({ name, lang, effective: EFFECTIVE[name] });
     expect(publishedDrafts('public')).toEqual([]);
     expect(publishedPlaceholders('public')).toEqual([]);
