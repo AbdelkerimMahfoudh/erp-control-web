@@ -23,10 +23,18 @@ const WIDTHS = [
   { name: 'desktop', width: 1280, height: 800 },
 ] as const;
 
+/**
+ * The evidence is committed to `ci-evidence`, and the CI's full-history secret scan reads every branch: a generated
+ * idempotency key looks like a credential to it (`.gitleaksignore`). The record keeps that a key was sent and its
+ * length, never its value.
+ */
+const MASKED_KEY = /^idempotency[-_]?key$/i;
+const masked = (key: string, value: unknown) => (MASKED_KEY.test(key) && typeof value === 'string' ? `[masked: ${value.length} characters]` : value);
+
 function record(name: string, f: Record<string, unknown>) {
   const file = join(EV, 'browser', `${name.replace(/[^\w.-]+/g, '_')}.json`);
   mkdirSync(dirname(file), { recursive: true });
-  writeFileSync(file, JSON.stringify(f, null, 2));
+  writeFileSync(file, JSON.stringify(f, masked, 2));
 }
 
 interface State {
