@@ -9,6 +9,9 @@
 #   preview is that commit —, X-Robots-Tag: noindex on every page, canonicals on tsxmr.com, the security headers, and
 #   production left unindexed-as-before and unpromoted), the same WebKit checks against the preview, and the site's own
 #   public browser suite (Chromium) against it.
+# - When ORIGIN is https://tsxmr.com, after a promotion: ops/verify-production's scripts/verify-production.mjs against
+#   this commit's build (TLS, redirects, headers, every file as built, canonicals, no tracker, 404s, sitemap, email DNS),
+#   then the same WebKit checks and the public suite against the live domain.
 #
 # Push this branch to run it. It deploys nothing and changes nothing but the `ci-evidence` branch, where its evidence
 # is committed under evidence/preview/ (job logs need admin rights to read).
@@ -73,8 +76,17 @@ jobs:
       - name: Build the production site as Cloudflare Pages does
         working-directory: site
         run: set -o pipefail; npm run build:public-release 2>&1 | tee "$EV/build.log"
+      - name: The production checks (ops/verify-production)
+        if: ${{ env.ORIGIN == 'https://tsxmr.com' }}
+        uses: actions/checkout@v4
+        with:
+          ref: ops/verify-production
+          path: prod
+      - name: Production against that build, once promoted (scripts/verify-production.mjs)
+        if: ${{ !cancelled() && env.ORIGIN == 'https://tsxmr.com' }}
+        run: set -o pipefail; node prod/scripts/verify-production.mjs "$ORIGIN" site/dist "$EV/live.json" 2>&1 | tee "$EV/live.txt"
       - name: The deployed preview against that build; production unchanged
-        if: ${{ !cancelled() && env.ORIGIN != 'local' }}
+        if: ${{ !cancelled() && env.ORIGIN != 'local' && env.ORIGIN != 'https://tsxmr.com' }}
         run: |
           set -o pipefail
           rc=0
