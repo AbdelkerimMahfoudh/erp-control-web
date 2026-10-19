@@ -6,6 +6,8 @@ import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
 import { ar } from '../src/i18n/ar';
 import { IN_APP_ROUTE_IDS, inAppPathOf, pathOf, publicRoutesFor } from '../src/site/routes';
+import { DEMO_FIGURES, dukanDemo } from '../src/content/dukan-demo';
+import { formatMru } from '../src/lib/format';
 
 /**
  * The pre-launch public website (`VITE_SITE_SURFACE=public`, docs/96) in a real browser, served as Cloudflare Pages
@@ -46,6 +48,43 @@ function watch(page: Page, origin: string) {
   return { foreign, errors };
 }
 
+/**
+ * Scrolls through the page once, as a reader would, so every card has been reached and has appeared (lib/reveal.ts) —
+ * a full-page screenshot does not scroll, and would show the cards not yet reached as the empty space they wait in.
+ */
+async function reachAll(page: Page) {
+  await page.evaluate(async () => {
+    const frame = () => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    for (let y = 0; y < document.documentElement.scrollHeight; y += Math.round(window.innerHeight * 0.8)) {
+      window.scrollTo(0, y);
+      await frame();
+    }
+    window.scrollTo(0, 0);
+    await frame();
+  });
+  await page.waitForTimeout(1000);
+}
+
+/**
+ * Nothing is on sale before launch (docs/96 §2): the page's words outside the Dukan ERP showcase name no amount, and the
+ * showcase's own amounts are its walkthrough's three fictional figures, under the words that say so.
+ */
+async function priceFacts(page: Page) {
+  return page.evaluate(() => {
+    const rest = document.body.cloneNode(true) as HTMLElement;
+    rest.querySelectorAll('.showcase').forEach((el) => el.remove());
+    const showcase = document.querySelector('.showcase');
+    const amounts = showcase ? [...showcase.querySelectorAll('.sc-frames bdi')].map((b) => b.textContent ?? '').filter((t) => t.includes('MRU')) : [];
+    return {
+      rest: rest.textContent ?? '',
+      amounts: [...new Set(amounts)].sort(),
+      isolated: amounts.length === (showcase?.textContent ?? '').split('MRU').length - 1,
+      note: showcase?.querySelector('.sc-note')?.textContent ?? null,
+    };
+  });
+}
+const demoAmounts = (lang: (typeof LANGS)[number]) => [DEMO_FIGURES.salePrice, DEMO_FIGURES.exchangeAmount, DEMO_FIGURES.commission].map((n) => formatMru(n, lang)).sort();
+
 async function facts(page: Page) {
   return page.evaluate(() => ({
     lang: document.documentElement.lang,
@@ -74,6 +113,7 @@ for (const lang of LANGS) {
         const f = await facts(page);
         const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
         const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+        await reachAll(page);
         await page.screenshot({ path: shot(`${lang}-${w.name}`, lang, path), fullPage: true, type: 'jpeg', quality: 70 });
         let overflow320 = 0;
         if (w.width === 375) {
@@ -102,7 +142,11 @@ for (const lang of LANGS) {
       const f = await facts(page);
       expect(f.text).toContain(CATALOGUE[lang]['prelaunch.badge']);
       expect(f.text).not.toContain(CATALOGUE[lang]['home.pricing.loading']);
-      expect(f.text).not.toMatch(/MRU|\b7-day\b|essai gratuit|تجربة مجانية/);
+      expect(f.text).not.toMatch(/\b7-day\b|essai gratuit|تجربة مجانية/);
+      const p = await priceFacts(page);
+      // A whole word: the footer's "TSX-MR" runs into the next line's first letter in `textContent`.
+      expect(p.rest).not.toMatch(/\bMRU\b/);
+      expect({ id, amounts: p.amounts, isolated: p.isolated, note: p.note }).toEqual({ id, amounts: demoAmounts(lang), isolated: true, note: dukanDemo[lang].note });
     }
   });
 
@@ -233,14 +277,18 @@ for (const lang of LANGS) {
       await card.scrollIntoViewIfNeeded();
       await page.waitForTimeout(900);
       expect(await card.getAttribute('class')).toContain('elevated');
-      const rest = await card.evaluate((e) => ({ shadow: getComputedStyle(e).boxShadow, translate: getComputedStyle(e).translate }));
+      const style = (e: Element) => ({ shadow: getComputedStyle(e).boxShadow, translate: getComputedStyle(e).translate, edge: getComputedStyle(e).borderTopColor, cursor: getComputedStyle(e).cursor, tab: e.getAttribute('tabindex') });
+      const rest = await card.evaluate(style);
       expect(rest.shadow).not.toBe('none');
+      // An informational card: no pointer and no tab stop of its own.
+      expect({ cursor: rest.cursor, tab: rest.tab }).toEqual({ cursor: 'auto', tab: null });
       await card.hover();
       await page.waitForTimeout(400);
-      const hover = await card.evaluate((e) => ({ shadow: getComputedStyle(e).boxShadow, translate: getComputedStyle(e).translate }));
+      const hover = await card.evaluate(style);
       expect(hover.shadow).not.toBe(rest.shadow);
+      expect(hover.edge).not.toBe(rest.edge);
       if (reducedMotion === 'reduce') expect(hover.translate === 'none' || hover.translate === '0px').toBe(true);
-      else expect(hover.translate).toBe('0px -3px');
+      else expect(hover.translate).toBe('0px -4px');
       await context.close();
     }
   });
@@ -557,6 +605,87 @@ for (const lang of LANGS) {
     }
   });
 
+  // The Dukan ERP showcase (the owner's approval of 2026-10-18).
+  test(`public site: the Dukan showcase in ${lang} — two equal tabs, six steps, one height, whole from 320 px, nothing sent or kept`, async ({ page, baseURL }) => {
+    test.setTimeout(180_000);
+    const d = dukanDemo[lang];
+    const seen = watch(page, baseURL!);
+    for (const width of [320, 375, 393, 768, 1280]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const id of ['home', 'dukanErp'] as const) {
+        await page.goto(pathOf(id, lang));
+        const kept = () => page.evaluate(() => JSON.stringify([{ ...localStorage }, { ...sessionStorage }, document.cookie]));
+        const before = await kept();
+        const showcase = page.locator('.showcase');
+        await showcase.scrollIntoViewIfNeeded();
+        const tabs = showcase.locator('[role="tab"]');
+        await expect(tabs).toHaveText([d.electronics.tab, d.agent.tab]);
+        const sizes = await tabs.evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).map((r) => ({ w: Math.round(r.width), h: Math.round(r.height) })));
+        expect({ width, id, same: sizes[0]!.w === sizes[1]!.w && sizes[0]!.h === sizes[1]!.h, tall: sizes.every((b) => b.h >= 44) }).toEqual({ width, id, same: true, tall: true });
+        const heights = new Set<number>();
+        for (const i of [0, 1]) {
+          await tabs.nth(i).click();
+          const panel = showcase.locator('.sc-panel[data-on="true"]');
+          const steps = panel.locator('.sc-step button');
+          const states = i === 1 ? [0, 1, 2, 'giveCash', 0, 1, 2, 'receiveCash'] : [0, 1, 2];
+          for (const state of states) {
+            if (typeof state === 'number') {
+              await steps.nth(state).click();
+              await expect(steps.nth(state)).toHaveAttribute('aria-current', 'step');
+            } else await panel.locator('.sc-direction-choice').nth(state === 'giveCash' ? 1 : 0).click();
+            heights.add(Math.round((await showcase.boundingBox())!.height));
+            const geo = await showcase.evaluate((el) => {
+              const box = el.getBoundingClientRect();
+              const outside = [...el.querySelectorAll('.sc-panel[data-on="true"] *, .sc-tabs *')].filter((n) => {
+                const r = n.getBoundingClientRect();
+                return r.width > 0 && (r.left < box.left - 1 || r.right > box.right + 1);
+              });
+              // Every control is at least a comfortable touch target.
+              const small = [...el.querySelectorAll('.sc-panel[data-on="true"] :is(.sc-step, .sc-direction-choice), .sc-tab')]
+                .map((n) => n.getBoundingClientRect())
+                .filter((r) => r.height < 44 || r.width < 44);
+              return { overflow: document.documentElement.scrollWidth - window.innerWidth, outside: outside.length, small: small.length };
+            });
+            expect({ width, id, state, ...geo }).toEqual({ width, id, state, overflow: 0, outside: 0, small: 0 });
+          }
+        }
+        expect({ width, id, heights: heights.size }, 'the showcase keeps one height whatever it shows').toEqual({ width, id, heights: 1 });
+        expect(await kept()).toBe(before);
+      }
+    }
+    expect(seen.foreign, 'no request to any other origin').toEqual([]);
+    expect(seen.errors).toEqual([]);
+  });
+
+  test(`public site: the showcase by keyboard in ${lang} — arrows in the page's direction, focus always visible, never in the hidden panel`, async ({ page }) => {
+    const d = dukanDemo[lang];
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(pathOf('dukanErp', lang));
+    const showcase = page.locator('.showcase');
+    await showcase.scrollIntoViewIfNeeded();
+    await showcase.locator('[role="tab"][aria-selected="true"]').focus();
+    await page.keyboard.press(lang === 'ar' ? 'ArrowLeft' : 'ArrowRight');
+    await expect(page.locator(':focus')).toHaveText(d.agent.tab);
+    await expect(page.locator(':focus')).toHaveAttribute('aria-selected', 'true');
+    // Tab walks the open panel only: play, the two directions, the three steps, then out of the showcase.
+    const walked: { panel: string | null; on: string | null; ring: string }[] = [];
+    for (let i = 0; i < 6; i++) {
+      await page.keyboard.press('Tab');
+      walked.push(
+        await page.evaluate(() => {
+          const el = document.activeElement as HTMLElement;
+          const card = el.closest('.sc-step') ?? el;
+          return { panel: el.closest('[role="tabpanel"]')?.id ?? null, on: el.closest('[role="tabpanel"]')?.getAttribute('data-on') ?? null, ring: getComputedStyle(card).outlineStyle };
+        }),
+      );
+    }
+    expect(walked.every((w) => w.on === 'true')).toBe(true);
+    expect(walked.every((w) => w.ring !== 'none')).toBe(true);
+    await page.keyboard.press('Enter');
+    await expect(showcase.locator('.sc-panel[data-on="true"] .sc-step button').nth(2)).toHaveAttribute('aria-current', 'step');
+    await expect(showcase.locator('.sc-panel[data-on="true"] .sc-frame[data-on="true"]')).toContainText(d.agent.recorded);
+  });
+
   test(`public site: the pages the app opens answer in ${lang}, without the site's navigation`, async ({ page }) => {
     for (const id of IN_APP_ROUTE_IDS) {
       const response = await page.goto(inAppPathOf(id, lang));
@@ -715,5 +844,235 @@ test('public site: the host files and the security headers; no account, console 
   }
   for (const path of ['/robots.txt', '/site.webmanifest', '/fr/privacy', '/ar/terms', '/ar/in-app/privacy']) {
     expect({ path, status: (await request.get(path)).status() }).toEqual({ path, status: 200 });
+  }
+});
+
+const EN = dukanDemo.en;
+const showcaseStep = (page: Page) =>
+  page.locator('.showcase .sc-panel[data-on="true"] .sc-step button').evaluateAll((buttons) => buttons.findIndex((b) => b.getAttribute('aria-current') === 'step'));
+
+test('public site: the walkthrough plays once when asked, about 2.8 s a step, and pauses off screen or in a hidden tab', async ({ page }) => {
+  test.setTimeout(90_000);
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(pathOf('dukanErp', 'en'));
+  const showcase = page.locator('.showcase');
+  await showcase.scrollIntoViewIfNeeded();
+  const play = showcase.locator('.sc-panel[data-on="true"] .sc-play');
+  // Nothing moves by itself.
+  await page.waitForTimeout(3200);
+  expect(await showcase.evaluate((el) => el.querySelector('.sc-step[data-playing]'))).toBeNull();
+  expect(await showcaseStep(page)).toBe(0);
+  // Play: once through, about 2.8 s a step, stopping on the result.
+  const started = Date.now();
+  await play.click();
+  await expect(play).toHaveText(EN.pause);
+  await expect.poll(() => showcaseStep(page), { timeout: 4000, intervals: [50] }).toBe(1);
+  const first = Date.now() - started;
+  await expect.poll(() => showcaseStep(page), { timeout: 4000, intervals: [50] }).toBe(2);
+  const second = Date.now() - started - first;
+  for (const ms of [first, second]) expect(ms > 2500 && ms < 3300, `a step lasted ${ms} ms`).toBe(true);
+  await expect(play).toHaveText(EN.replay);
+  await page.waitForTimeout(3200);
+  expect(await showcaseStep(page)).toBe(2);
+  // However often it is started and stopped, one timer: the next step still takes a whole step.
+  await play.click();
+  for (let i = 0; i < 4; i++) await play.click();
+  await expect(play).toHaveText(EN.pause);
+  const restarted = Date.now();
+  await expect.poll(() => showcaseStep(page), { timeout: 4000, intervals: [50] }).toBe(1);
+  expect(Date.now() - restarted).toBeGreaterThan(2500);
+  // Scrolled out of sight, it pauses, and does not start again when it comes back.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(3500);
+  await showcase.scrollIntoViewIfNeeded();
+  await expect(play).toHaveText(EN.play);
+  expect(await showcaseStep(page)).toBe(1);
+  await page.waitForTimeout(3200);
+  expect(await showcaseStep(page)).toBe(1);
+  // A hidden tab pauses it the same way.
+  await play.click();
+  await expect(play).toHaveText(EN.pause);
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'visibilityState', { configurable: true, get: () => 'hidden' });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await expect(play).toHaveText(EN.play);
+  await page.waitForTimeout(3200);
+  expect(await showcaseStep(page)).toBe(1);
+  // Switching activity or direction stops it and starts the walkthrough again.
+  await play.click();
+  await showcase.locator('[role="tab"]').nth(1).click();
+  expect(await showcaseStep(page)).toBe(0);
+  await expect(showcase.locator('.sc-panel[data-on="true"] .sc-play')).toHaveText(EN.play);
+});
+
+/** The colour a stylesheet token resolves to, as the browser computes a colour. */
+const tokenColour = (page: Page, token: string) =>
+  page.evaluate((name) => {
+    const probe = document.createElement('i');
+    probe.style.color = `var(${name})`;
+    document.body.append(probe);
+    const colour = getComputedStyle(probe).color;
+    probe.remove();
+    return colour;
+  }, token);
+
+test('public site: cards appear once as they are reached, in the Balanced values; they rise on hover and focus', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(pathOf('dukanErp', 'en'));
+  await page.waitForTimeout(300);
+  const cards = () =>
+    page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>('[data-reveal]')].map((e) => ({
+        top: Math.round(e.getBoundingClientRect().top + window.scrollY),
+        in: e.classList.contains('in'),
+        opacity: getComputedStyle(e).opacity,
+        transform: getComputedStyle(e).transform,
+        order: e.getAttribute('data-reveal-order'),
+      })),
+    );
+  const atLoad = await cards();
+  expect(await page.evaluate(() => document.documentElement.classList.contains('reveal-ready'))).toBe(true);
+  // What the screen showed at first paint was never hidden; what is further down waits, lowered and transparent.
+  for (const c of atLoad.filter((c) => c.top < 900)) expect(c).toMatchObject({ in: true, opacity: '1' });
+  const waiting = atLoad.filter((c) => c.top >= 900);
+  expect(waiting.length).toBeGreaterThan(5);
+  for (const c of waiting) expect(c).toMatchObject({ in: false, opacity: '0', transform: 'matrix(1, 0, 0, 1, 0, 18)' });
+  const card = page.locator('.problem-grid > li').first();
+  const transition = await card.evaluate((e) => getComputedStyle(e).transition);
+  await card.scrollIntoViewIfNeeded();
+  await expect.poll(() => card.evaluate((e) => getComputedStyle(e).opacity), { timeout: 2000 }).toBe('1');
+  await expect.poll(() => card.evaluate((e) => getComputedStyle(e).transform), { timeout: 2000 }).toBe('none');
+  // The entrance in the Balanced values, the stagger capped at four steps.
+  const entered = await card.evaluate((e) => getComputedStyle(e).transition);
+  expect(entered).toContain('opacity 0.65s cubic-bezier(0.2, 0.75, 0.25, 1)');
+  expect(entered).toContain('transform 0.65s cubic-bezier(0.2, 0.75, 0.25, 1)');
+  expect(entered).toContain('translate 0.21s');
+  expect(transition).not.toContain('opacity 0.65s');
+  const group = await page.evaluate(() => [...document.querySelectorAll('.problem-grid > li')].map((e) => [e.getAttribute('data-reveal-order'), getComputedStyle(e).transitionDelay.split(',')[0]]));
+  expect(group).toEqual([
+    ['0', '0s'],
+    ['1', '0.075s'],
+    ['2', '0.15s'],
+    ['3', '0.225s'],
+    ['4', '0.3s'],
+  ]);
+  // Once: back up and down again, it stays.
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(200);
+  await card.scrollIntoViewIfNeeded();
+  expect(await card.evaluate((e) => [e.classList.contains('in'), getComputedStyle(e).opacity])).toEqual([true, '1']);
+  // Hover: 4 px higher, a stronger shadow and the brand edge; an informational card gets no pointer and no tab stop.
+  await page.waitForTimeout(800);
+  const rest = await card.evaluate((e) => ({ shadow: getComputedStyle(e).boxShadow, edge: getComputedStyle(e).borderTopColor, cursor: getComputedStyle(e).cursor, tab: e.getAttribute('tabindex') }));
+  await card.hover();
+  await page.waitForTimeout(400);
+  const hover = await card.evaluate((e) => ({ translate: getComputedStyle(e).translate, shadow: getComputedStyle(e).boxShadow, edge: getComputedStyle(e).borderTopColor }));
+  expect(hover.translate).toBe('0px -4px');
+  expect(hover.shadow).not.toBe(rest.shadow);
+  expect(hover.edge).toBe(await tokenColour(page, '--border-brand'));
+  expect({ cursor: rest.cursor, tab: rest.tab }).toEqual({ cursor: 'auto', tab: null });
+  // Focus: a card holding the keyboard focus rises the same way.
+  await page.mouse.move(0, 0);
+  await page.goto(pathOf('home', 'en'));
+  const featured = page.locator('.featured-product');
+  await featured.locator('a.btn').focus();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  await page.waitForTimeout(400);
+  expect(await featured.evaluate((e) => getComputedStyle(e).translate)).toBe('0px -4px');
+});
+
+test('public site: reduced motion, read from the built stylesheet — at load, and switched on while the page is open', async ({ browser, baseURL }) => {
+  test.setTimeout(90_000);
+  const motion = (page: Page) =>
+    page.evaluate(() => {
+      const cards = [...document.querySelectorAll<HTMLElement>('[data-reveal]')];
+      const root = getComputedStyle(document.documentElement);
+      return {
+        hidden: cards.filter((c) => getComputedStyle(c).opacity !== '1' || getComputedStyle(c).transform !== 'none').length,
+        play: getComputedStyle(document.querySelector('.sc-play')!).display,
+        frames: getComputedStyle(document.querySelector('.sc-frame')!).transitionDuration,
+        tokens: ['--rise', '--lift', '--stagger'].map((t) => root.getPropertyValue(t).trim()),
+      };
+    });
+  const reduced = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1280, height: 900 }, baseURL });
+  const page = await reduced.newPage();
+  await page.goto(pathOf('dukanErp', 'en'));
+  await page.waitForTimeout(300);
+  expect(await motion(page)).toEqual({ hidden: 0, play: 'none', frames: '0s', tokens: ['0px', '0px', '0s'] });
+  // The steps are there, chosen one by one.
+  const showcase = page.locator('.showcase');
+  await showcase.scrollIntoViewIfNeeded();
+  await showcase.locator('.sc-panel[data-on="true"] .sc-step button').nth(2).click();
+  await expect(showcase.locator('.sc-panel[data-on="true"] .sc-frame[data-on="true"]')).toContainText(EN.electronics.recorded);
+  await reduced.close();
+
+  const open = await browser.newContext({ viewport: { width: 1280, height: 900 }, baseURL });
+  const live = await open.newPage();
+  await live.goto(pathOf('dukanErp', 'en'));
+  await live.waitForTimeout(300);
+  const before = await motion(live);
+  expect(before.hidden).toBeGreaterThan(0);
+  expect(before.play).not.toBe('none');
+  const showcaseLive = live.locator('.showcase');
+  await showcaseLive.scrollIntoViewIfNeeded();
+  await showcaseLive.locator('.sc-panel[data-on="true"] .sc-play').click();
+  await live.emulateMedia({ reducedMotion: 'reduce' });
+  await live.evaluate(() => window.scrollTo(0, 0));
+  expect(await motion(live)).toEqual({ hidden: 0, play: 'none', frames: '0s', tokens: ['0px', '0px', '0s'] });
+  await live.waitForTimeout(3500);
+  await showcaseLive.scrollIntoViewIfNeeded();
+  expect(await showcaseStep(live)).toBe(0);
+  await open.close();
+});
+
+test('public site: without a script, every card and the first walkthrough are there, at rest', async ({ browser, baseURL }) => {
+  const plain = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 1280, height: 900 }, baseURL });
+  const page = await plain.newPage();
+  for (const lang of LANGS) {
+    for (const id of ['home', 'dukanErp'] as const) {
+      await page.goto(pathOf(id, lang));
+      const f = await page.evaluate(() => ({
+        ready: document.documentElement.classList.contains('reveal-ready'),
+        hidden: [...document.querySelectorAll('[data-reveal]')].filter((c) => getComputedStyle(c).opacity !== '1' || getComputedStyle(c).transform !== 'none').length,
+      }));
+      expect({ lang, id, ...f }).toEqual({ lang, id, ready: false, hidden: 0 });
+      const frame = page.locator('.showcase .sc-panel[data-on="true"] .sc-frame[data-on="true"]');
+      await expect(frame).toBeVisible();
+      await expect(frame).toContainText(dukanDemo[lang].electronics.product);
+      await expect(page.locator('.showcase .sc-note')).toHaveText(dukanDemo[lang].note);
+    }
+  }
+  await plain.close();
+});
+
+test('public site: at 200 % zoom the showcase and its pages still fit', async ({ browser, baseURL }) => {
+  // A 1280 × 900 window at 200 % is laid out at 640 × 450 CSS pixels.
+  const zoomed = await browser.newContext({ viewport: { width: 640, height: 450 }, deviceScaleFactor: 2, baseURL });
+  const page = await zoomed.newPage();
+  for (const lang of LANGS) {
+    for (const id of ['home', 'dukanErp'] as const) {
+      await page.goto(pathOf(id, lang));
+      const showcase = page.locator('.showcase');
+      await showcase.scrollIntoViewIfNeeded();
+      await showcase.locator('[role="tab"]').nth(1).click();
+      const f = await page.evaluate(() => ({ overflow: document.documentElement.scrollWidth - window.innerWidth, right: Math.round(document.querySelector('.showcase')!.getBoundingClientRect().right) }));
+      expect({ lang, id, overflow: f.overflow, inside: f.right <= 640 }).toEqual({ lang, id, overflow: 0, inside: true });
+    }
+  }
+  await zoomed.close();
+});
+
+test('public site: legal pages, the pages the app opens and the 404 have no entrance and no showcase', async ({ page }) => {
+  const paths = [
+    ...(['privacy', 'terms', 'accountDeletion', 'privacyChoices', 'legalNotice', 'security', 'support'] as const).map((id) => pathOf(id, 'en')),
+    ...IN_APP_ROUTE_IDS.map((id) => inAppPathOf(id, 'ar')),
+    '/qx7-missing',
+  ];
+  for (const path of paths) {
+    await page.goto(path);
+    const f = await page.evaluate(() => ({ reveal: document.querySelectorAll('[data-reveal]').length, showcase: document.querySelectorAll('.showcase').length }));
+    expect({ path, ...f }).toEqual({ path, reveal: 0, showcase: 0 });
   }
 });

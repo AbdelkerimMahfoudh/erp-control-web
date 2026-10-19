@@ -4,10 +4,10 @@
  * their content constrained inside, one card, one radius scale, one shadow scale. Logical properties only
  * (inline-start/end), so Arabic mirrors without a second stylesheet. Every colour is a token (tokens.css).
  *
- * Motion is small and finite: the hero rises once, sections rise as they are reached (lib/reveal.ts), the product's
- * bars grow once and its scan line passes twice. Movement is by position only — no text ever fades, so its contrast
- * holds at every instant, for a reader and for an accessibility checker. Nothing loops, and everything stops for
- * anyone who asks the system for reduced motion.
+ * Motion is small and finite (the Balanced treatment, 2026-10-18): the hero rises once, cards fade in and rise once as
+ * they are reached (lib/reveal.ts) — never what was already on screen, so nothing blinks — the product's bars grow
+ * once and its scan line passes twice. Nothing loops, and everything stops for anyone who asks the system for reduced
+ * motion, at load or while the page is open.
  */
 html {
   scroll-padding-top: 88px;
@@ -438,12 +438,13 @@ main:focus {
   color: var(--text-2);
 }
 /*
- * Elevation and motion: one system for every card family of the redesign (2026-10-17 refinement). A card at rest
- * sits on `--shadow`. Pointed at with a mouse, or holding the keyboard focus, it rises `--lift` (3 px) with a stronger
- * shadow and border, in `--dur-lift`. The rise uses the independent `translate` property, so it composes with the
- * reveal (`transform`, below) instead of fighting it. No scale, rotation, glow or bounce. Touch screens get the
- * complete resting look and no hover (so nothing sticks after a tap); reduced motion keeps the shadow and drops the
- * movement.
+ * Elevation and motion: one system for every card family (2026-10-17; the Balanced values of 2026-10-18). A card at
+ * rest sits on `--shadow`. Pointed at with a mouse, or holding the keyboard focus, it rises `--lift` (4 px) with a
+ * stronger shadow and a subtle brand-coloured edge, in `--dur-lift`. The rise uses the independent `translate`
+ * property, so it composes with the entrance (`transform` and `opacity`, below) instead of fighting it. No scale,
+ * rotation, glow or bounce, and no pointer cursor or tab stop on a card that does nothing when pressed. Touch screens
+ * get the complete resting look and no hover (so nothing sticks after a tap); reduced motion keeps the shadow and the
+ * edge and drops the movement.
  */
 .elevated {
   box-shadow: var(--shadow);
@@ -456,13 +457,13 @@ main:focus {
   .elevated:hover {
     translate: 0 var(--lift);
     box-shadow: var(--shadow-raised);
-    border-color: var(--border-raised);
+    border-color: var(--border-brand);
   }
 }
 .elevated:has(:focus-visible) {
   translate: 0 var(--lift);
   box-shadow: var(--shadow-raised);
-  border-color: var(--border-raised);
+  border-color: var(--border-brand);
 }
 /* On the navy bands: glass cards whose edge brightens as they rise. */
 .band-dark .elevated {
@@ -881,6 +882,459 @@ html[lang='fr'] .hero-copy h1 {
   .pv-demo {
     position: static;
   }
+}
+
+/*
+ * ── The Dukan ERP showcase (components/public/DukanShowcase.tsx) ──────────────────────────────────────────────────
+ * Two tabs, then the phone and its three steps: side by side when the showcase itself is wide enough, stacked
+ * otherwise — a container query, so one component fits the home page's card and the product page. Every frame of a
+ * walkthrough, and both walkthroughs, share one grid cell: the showcase keeps the height of its tallest screen, and
+ * nothing around it moves when a step, an activity or a direction changes. Only opacity and transform move, briefly,
+ * on the frame that arrives; the one that leaves is hidden at once. The phone's frame is the product visual's.
+ */
+.showcase {
+  --sc-step: 2800ms;
+  container-type: inline-size;
+  display: grid;
+  gap: 18px;
+  min-inline-size: 0;
+}
+.sc-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Equal tabs, side by side or stacked, whichever name wraps. */
+  grid-auto-rows: 1fr;
+  gap: 4px;
+  inline-size: min(100%, 560px);
+  padding: 4px;
+  border-radius: 16px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+.sc-tab {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-block-size: 44px;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--text-2);
+  font: inherit;
+  font-weight: 650;
+  line-height: 1.25;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.sc-tab .icon {
+  flex: none;
+}
+.sc-tab:hover {
+  color: var(--text);
+}
+.sc-tab[aria-selected='true'] {
+  background: var(--surface);
+  border-color: var(--border-brand);
+  color: var(--text);
+  box-shadow: var(--shadow);
+}
+.sc-tab[aria-selected='true'] .icon {
+  color: var(--brand);
+}
+/* Too narrow for two long names side by side (FR "Magasins d’électronique"): the two tabs, one above the other. */
+@container (max-width: 419px) {
+  .sc-tabs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.sc-panels,
+.sc-frames {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+.sc-panel,
+.sc-frame {
+  grid-area: 1 / 1;
+  min-inline-size: 0;
+  transition:
+    opacity 280ms var(--ease-enter),
+    transform 280ms var(--ease-enter);
+}
+.sc-panel {
+  display: grid;
+  gap: 20px;
+  align-items: start;
+}
+.sc-panel[data-on='false'],
+.sc-frame[data-on='false'] {
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: none;
+}
+/* The phone's column is the phone's own width, never its words', so changing a label never moves the steps. */
+@container (min-width: 560px) {
+  .sc-panel {
+    grid-template-columns: 272px minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+.sc-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: center;
+  gap: 12px;
+}
+.sc-phone.pv-phone {
+  inline-size: min(272px, 100%);
+}
+.sc-screen.pv-screen {
+  gap: 10px;
+  padding: 12px 12px 14px;
+  font-size: 0.8rem;
+}
+.sc-frame {
+  display: grid;
+  align-content: start;
+  gap: 9px;
+}
+/* The phone's words keep the phone's colours inside any card (`.card p` is the page's). */
+.sc-screen p {
+  margin: 0;
+  color: var(--on-ink);
+}
+.sc-screen .sc-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+.sc-screen .sc-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px dashed var(--ink-line-strong);
+  color: var(--on-ink-3);
+}
+.sc-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  background: var(--ink-glass);
+  border: 1px solid var(--brand-on-ink);
+}
+.sc-item b,
+.sc-item small {
+  display: block;
+}
+.sc-item b {
+  font-weight: 650;
+}
+.sc-item small {
+  color: var(--on-ink-3);
+}
+.sc-item-ic {
+  display: grid;
+  place-items: center;
+  inline-size: 32px;
+  block-size: 32px;
+  border-radius: 10px;
+  background: var(--ink-line);
+  color: var(--brand-on-ink);
+}
+.sc-rows {
+  margin: 0;
+  display: grid;
+  gap: 6px;
+}
+.sc-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--ink-glass);
+}
+.sc-row dt {
+  min-inline-size: 0;
+  color: var(--on-ink-2);
+}
+.sc-row dt small {
+  display: block;
+  color: var(--on-ink-3);
+  font-size: 0.72rem;
+}
+.sc-row dd {
+  max-inline-size: 9.5em;
+  margin: 0;
+  font-weight: 650;
+  text-align: end;
+}
+/* An amount or an identifier never breaks; a word value (the demo operator) may. */
+.sc-row bdi {
+  white-space: nowrap;
+}
+.sc-chip {
+  justify-self: start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--ink-line);
+  color: var(--on-ink-2);
+  font-size: 0.75rem;
+  font-weight: 650;
+  white-space: nowrap;
+}
+.sc-chip-ok {
+  background: var(--mint-wash-on-ink);
+  color: var(--mint-on-ink);
+}
+.sc-field {
+  display: grid;
+  gap: 6px;
+}
+.sc-field > small,
+.sc-screen .sc-context {
+  color: var(--on-ink-3);
+}
+.sc-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.sc-options-stack {
+  display: grid;
+}
+.sc-option {
+  padding: 7px 11px;
+  border-radius: 10px;
+  border: 1px solid var(--ink-line);
+  background: var(--ink-glass);
+  color: var(--on-ink-2);
+}
+/* Chosen by its edge and its colour, never its weight: a bolder word could wrap and change the phone's height. */
+.sc-option[data-on='true'] {
+  border-color: var(--brand-on-ink);
+  background: var(--ink-line);
+  color: var(--on-ink);
+}
+.sc-screen .sc-done {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--mint-wash-on-ink);
+  color: var(--mint-on-ink);
+}
+.sc-done strong {
+  color: var(--on-ink);
+}
+.sc-commission .sc-row {
+  border: 1px solid var(--brand-on-ink);
+}
+.sc-summary {
+  display: grid;
+  gap: 4px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1px solid var(--ink-line);
+}
+.sc-summary > small {
+  color: var(--on-ink-3);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sc-summary .sc-row {
+  padding: 2px 0;
+  background: none;
+}
+/* The operator's lock reads with its name, however the name wraps. */
+.sc-locked .icon {
+  margin-inline-end: 4px;
+  vertical-align: -2px;
+}
+.sc-screen .sc-fine {
+  color: var(--on-ink-3);
+  font-size: 0.76rem;
+}
+/* Play, Pause and Replay keep one width, so the button never shifts as its word changes. */
+.sc-play {
+  min-inline-size: 11rem;
+}
+.sc-side {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  min-inline-size: 0;
+}
+.sc-direction {
+  display: grid;
+  gap: 8px;
+}
+.sc-direction-label {
+  color: var(--text-2);
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+.sc-direction-choice {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-block-size: 44px;
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text-2);
+  font: inherit;
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+}
+.sc-direction-choice .icon {
+  flex: none;
+  color: var(--brand);
+}
+.sc-direction-choice[aria-pressed='true'] {
+  border-color: var(--brand);
+  background: var(--brand-wash);
+  color: var(--text);
+}
+.sc-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+/* A step is one control as large as its card: the button's area covers the card, its ring is drawn around it. */
+.sc-step {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: var(--surface);
+  overflow: hidden;
+  transition:
+    background var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.sc-step:hover {
+  border-color: var(--border-raised);
+}
+.sc-step[data-on='true'] {
+  border-color: var(--border-brand);
+  background: var(--brand-wash);
+  box-shadow: var(--shadow);
+}
+.sc-step:has(button:focus-visible) {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.sc-step button {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.sc-step button:focus-visible {
+  outline: none;
+}
+.sc-step button::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.sc-step-num {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: 28px;
+  block-size: 28px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--text-2);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.sc-step[data-on='true'] .sc-step-num {
+  background: var(--brand);
+  color: var(--on-brand);
+}
+.sc-step-title {
+  font-weight: 650;
+}
+.sc-step p {
+  margin: 0;
+  padding-inline-start: 38px;
+  color: var(--text-2);
+  font-size: 0.92rem;
+}
+/* While the walkthrough plays, the step on screen fills a thin line once, in the step's time. */
+.sc-progress {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  block-size: 3px;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+html[dir='rtl'] .sc-progress {
+  transform-origin: right;
+}
+.sc-step[data-playing] .sc-progress {
+  animation: sc-progress var(--sc-step) linear forwards;
+}
+@keyframes sc-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+.showcase .sc-note {
+  margin: 0;
+  color: var(--text-3);
+  font-size: 0.85rem;
+}
+/* On the product page: the showcase in its own card, under the two activities. */
+.product-showcase {
+  display: grid;
+  gap: 18px;
+  margin-block-start: 36px;
+  padding: clamp(18px, 1rem + 2vw, 36px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.product-showcase h3,
+.product-showcase .lead {
+  margin: 0;
 }
 
 /* ── Home sections ──────────────────────────────────────────────────────────────────────────────────────────────── */
@@ -1919,11 +2373,11 @@ html[lang='ar'] .contact-group-title {
   border: 1px solid var(--border);
   background: var(--surface);
 }
-@media (min-width: 960px) {
+@media (min-width: 1100px) {
   .featured-product {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
     align-items: center;
-    gap: 48px;
+    gap: 40px;
   }
 }
 .featured-copy {
@@ -1942,11 +2396,6 @@ html[lang='ar'] .contact-group-title {
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-}
-@media (min-width: 640px) {
-  .featured-parts {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
 }
 .services-split h2 {
   margin-block-start: 0;
@@ -2292,33 +2741,48 @@ html[lang='ar'] .contact-group-title {
   gap: 8px;
 }
 
-/* ── Sections rising into view (lib/reveal.ts): only once a script runs, by position only, never faded ────────── */
-html.js [data-reveal] {
-  transition: transform 0.55s var(--ease) var(--reveal-delay, 0s);
+/*
+ * ── Cards appearing as the reader reaches them (lib/reveal.ts): the Balanced entrance ─────────────────────────────
+ * Only once the script has set up its observer (`reveal-ready`): a card not yet reached waits transparent, `--rise`
+ * lower, and appears once in `--dur-enter`, after its place in the group (`data-reveal-order` × `--stagger`). The wait
+ * has no transition, so a card is hidden instantly, never animated away. The entrance uses `opacity` and `transform`;
+ * the hover rise uses `translate`, so neither overrides the other.
+ */
+html.reveal-ready [data-reveal]:not(.in) {
+  opacity: 0;
+  transform: translateY(var(--rise));
 }
-/* A card that also rises on hover keeps both: the reveal with its stagger, the lift without any delay. */
-html.js .elevated[data-reveal] {
+html.reveal-ready [data-reveal].in {
   transition:
-    transform 0.55s var(--ease) var(--reveal-delay, 0s),
+    opacity var(--dur-enter) var(--ease-enter) var(--reveal-delay, 0s),
+    transform var(--dur-enter) var(--ease-enter) var(--reveal-delay, 0s);
+}
+/* A card that also rises on hover keeps both: the entrance with its stagger, the lift without any delay. */
+html.reveal-ready .elevated[data-reveal].in {
+  transition:
+    opacity var(--dur-enter) var(--ease-enter) var(--reveal-delay, 0s),
+    transform var(--dur-enter) var(--ease-enter) var(--reveal-delay, 0s),
     translate var(--dur-lift) var(--ease),
     box-shadow var(--dur-lift) var(--ease),
     border-color var(--dur-lift) var(--ease);
 }
-html.js [data-reveal]:not(.in) {
-  transform: translateY(18px);
+[data-reveal-order='1'] {
+  --reveal-delay: var(--stagger);
 }
-.stagger > :nth-child(2) {
-  --reveal-delay: 60ms;
+[data-reveal-order='2'] {
+  --reveal-delay: calc(2 * var(--stagger));
 }
-.stagger > :nth-child(3) {
-  --reveal-delay: 120ms;
+[data-reveal-order='3'] {
+  --reveal-delay: calc(3 * var(--stagger));
 }
-.stagger > :nth-child(4) {
-  --reveal-delay: 180ms;
+[data-reveal-order='4'] {
+  --reveal-delay: calc(4 * var(--stagger));
 }
-.stagger > :nth-child(5),
-.stagger > :nth-child(6) {
-  --reveal-delay: 240ms;
+@media print {
+  html.reveal-ready [data-reveal]:not(.in) {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 /* ── Page not found (pages/public/NotFound.tsx): the navy band, a typographic 404, two ways back ─────────────────── */
@@ -2485,16 +2949,25 @@ html.js [data-reveal]:not(.in) {
     animation: none !important;
     scroll-behavior: auto !important;
   }
-  html.js [data-reveal]:not(.in) {
+  /* Every card at rest, at once, whatever the observer has reached — switched on at load or while the page is open. */
+  html.reveal-ready [data-reveal]:not(.in) {
+    opacity: 1;
     transform: none;
   }
-  /* Cards keep their raised shadow and lose the rise: the lift itself is zero (one token, so no rule can miss it). */
+  /* Cards keep their raised shadow and edge and lose the rise: the lift itself is zero (one token, so no rule can miss
+     it), and so are the entrance's rise and stagger. */
   :root {
     --lift: 0px;
     --nudge: 0px;
+    --rise: 0px;
+    --stagger: 0ms;
   }
   .btn:hover {
     transform: none;
+  }
+  /* The showcase's walkthrough is chosen step by step: there is nothing to play. */
+  .sc-play {
+    display: none;
   }
 }
 
