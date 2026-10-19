@@ -1,0 +1,15 @@
+# Known false positives of the full-history secret scan (.github/workflows/ci.yml). One finding per line, as gitleaks
+# prints its fingerprint: commit:file:rule:line.
+#
+# The `idempotencyKey` of a test request in the dukan-portal browser evidence (portal-claim-{en,fr,ar}.json), which
+# that branch's CI committed to `ci-evidence` on 2026-10-18. A key the test generates against a stub API, beside
+# `"csrf": "csrf-for-tests"`: no credential. The scan reads every branch, so these failed every branch's CI.
+2f0f979668d352b6a336439fb42a8d7e29943cc5:evidence/e0202153911aabc21762cbceadd6067acdab3e29/portal/browser/portal-claim-ar.json:generic-api-key:6
+2f0f979668d352b6a336439fb42a8d7e29943cc5:evidence/e0202153911aabc21762cbceadd6067acdab3e29/portal/browser/portal-claim-en.json:generic-api-key:6
+2f0f979668d352b6a336439fb42a8d7e29943cc5:evidence/e0202153911aabc21762cbceadd6067acdab3e29/portal/browser/portal-claim-fr.json:generic-api-key:6
+7893a564b16d047d7eeda91e44a95d80d5d67d6a:evidence/99f612dfd751246d81a726d8d1d007a06054cf71/portal/browser/portal-claim-ar.json:generic-api-key:6
+7893a564b16d047d7eeda91e44a95d80d5d67d6a:evidence/99f612dfd751246d81a726d8d1d007a06054cf71/portal/browser/portal-claim-en.json:generic-api-key:6
+7893a564b16d047d7eeda91e44a95d80d5d67d6a:evidence/99f612dfd751246d81a726d8d1d007a06054cf71/portal/browser/portal-claim-fr.json:generic-api-key:6
+faaae673e7eaa3e77b7e10c6cf455b42732ea5d0:evidence/feca99aabeee99ee71b76e9cb094a3b402ad0d35/portal/browser/portal-claim-ar.json:generic-api-key:6
+faaae673e7eaa3e77b7e10c6cf455b42732ea5d0:evidence/feca99aabeee99ee71b76e9cb094a3b402ad0d35/portal/browser/portal-claim-en.json:generic-api-key:6
+faaae673e7eaa3e77b7e10c6cf455b42732ea5d0:evidence/feca99aabeee99ee71b76e9cb094a3b402ad0d35/portal/browser/portal-claim-fr.json:generic-api-key:6
