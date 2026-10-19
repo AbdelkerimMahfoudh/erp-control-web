@@ -1,0 +1,1398 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/site/node_modules/.bin/playwright",
+      "test",
+      "-c",
+      "playwright.preview.config.ts"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/site/playwright.preview.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/451218be11b721599bfc58292cd568a1bcbdcedd",
+        "commitHash": "451218be11b721599bfc58292cd568a1bcbdcedd",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39193861703"
+      },
+      "gitCommit": {
+        "shortHash": "bf62a72",
+        "hash": "bf62a72c8ed33a198c30916d5533408bf59e6048",
+        "subject": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence",
+        "body": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence\n\nThe full-history scan reads every branch. The dukan-portal CI committed browser evidence (portal-claim-{en,fr,ar}.json)\ncarrying the test's generated idempotencyKey, which gitleaks' generic-api-key rule matches, so every branch's CI has\nfailed since 2026-10-18 11:52Z. Reproduced with CI's image (sha256:c00b6bd0…) on a full clone: 9 leaks without this\nfile, none with it. No file of the site changes.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+        "author": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1792379690000
+        },
+        "committer": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1792379690000
+        },
+        "branch": "HEAD"
+      },
+      "actualWorkers": 3
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/451218be11b721599bfc58292cd568a1bcbdcedd",
+            "commitHash": "451218be11b721599bfc58292cd568a1bcbdcedd",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39193861703"
+          },
+          "gitCommit": {
+            "shortHash": "bf62a72",
+            "hash": "bf62a72c8ed33a198c30916d5533408bf59e6048",
+            "subject": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence",
+            "body": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence\n\nThe full-history scan reads every branch. The dukan-portal CI committed browser evidence (portal-claim-{en,fr,ar}.json)\ncarrying the test's generated idempotencyKey, which gitleaks' generic-api-key rule matches, so every branch's CI has\nfailed since 2026-10-18 11:52Z. Reproduced with CI's image (sha256:c00b6bd0…) on a full clone: 9 leaks without this\nfile, none with it. No file of the site changes.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "id": "webkit-iphone-17",
+        "name": "webkit-iphone-17",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/451218be11b721599bfc58292cd568a1bcbdcedd",
+            "commitHash": "451218be11b721599bfc58292cd568a1bcbdcedd",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39193861703"
+          },
+          "gitCommit": {
+            "shortHash": "bf62a72",
+            "hash": "bf62a72c8ed33a198c30916d5533408bf59e6048",
+            "subject": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence",
+            "body": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence\n\nThe full-history scan reads every branch. The dukan-portal CI committed browser evidence (portal-claim-{en,fr,ar}.json)\ncarrying the test's generated idempotencyKey, which gitleaks' generic-api-key rule matches, so every branch's CI has\nfailed since 2026-10-18 11:52Z. Reproduced with CI's image (sha256:c00b6bd0…) on a full clone: 9 leaks without this\nfile, none with it. No file of the site changes.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "id": "webkit-iphone-se-3",
+        "name": "webkit-iphone-se-3",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      },
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/451218be11b721599bfc58292cd568a1bcbdcedd",
+            "commitHash": "451218be11b721599bfc58292cd568a1bcbdcedd",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39193861703"
+          },
+          "gitCommit": {
+            "shortHash": "bf62a72",
+            "hash": "bf62a72c8ed33a198c30916d5533408bf59e6048",
+            "subject": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence",
+            "body": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence\n\nThe full-history scan reads every branch. The dukan-portal CI committed browser evidence (portal-claim-{en,fr,ar}.json)\ncarrying the test's generated idempotencyKey, which gitleaks' generic-api-key rule matches, so every branch's CI has\nfailed since 2026-10-18 11:52Z. Reproduced with CI's image (sha256:c00b6bd0…) on a full clone: 9 leaks without this\nfile, none with it. No file of the site changes.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "id": "webkit-desktop-safari",
+        "name": "webkit-desktop-safari",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/451218be11b721599bfc58292cd568a1bcbdcedd",
+            "commitHash": "451218be11b721599bfc58292cd568a1bcbdcedd",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39193861703"
+          },
+          "gitCommit": {
+            "shortHash": "bf62a72",
+            "hash": "bf62a72c8ed33a198c30916d5533408bf59e6048",
+            "subject": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence",
+            "body": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence\n\nThe full-history scan reads every branch. The dukan-portal CI committed browser evidence (portal-claim-{en,fr,ar}.json)\ncarrying the test's generated idempotencyKey, which gitleaks' generic-api-key rule matches, so every branch's CI has\nfailed since 2026-10-18 11:52Z. Reproduced with CI's image (sha256:c00b6bd0…) on a full clone: 9 leaks without this\nfile, none with it. No file of the site changes.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "name": "webkit-iphone-17",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "https://tsxmr.com",
+          "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Mobile/15E148 Safari/604.1",
+          "viewport": {
+            "width": 402,
+            "height": 681
+          },
+          "screen": {
+            "width": 402,
+            "height": 874
+          },
+          "deviceScaleFactor": 3,
+          "isMobile": true,
+          "hasTouch": true,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-iphone-17"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/451218be11b721599bfc58292cd568a1bcbdcedd",
+            "commitHash": "451218be11b721599bfc58292cd568a1bcbdcedd",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39193861703"
+          },
+          "gitCommit": {
+            "shortHash": "bf62a72",
+            "hash": "bf62a72c8ed33a198c30916d5533408bf59e6048",
+            "subject": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence",
+            "body": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence\n\nThe full-history scan reads every branch. The dukan-portal CI committed browser evidence (portal-claim-{en,fr,ar}.json)\ncarrying the test's generated idempotencyKey, which gitleaks' generic-api-key rule matches, so every branch's CI has\nfailed since 2026-10-18 11:52Z. Reproduced with CI's image (sha256:c00b6bd0…) on a full clone: 9 leaks without this\nfile, none with it. No file of the site changes.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "name": "webkit-iphone-se-3",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "https://tsxmr.com",
+          "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 18_5 like Mac OS X) AppleWebKit/603.1.30 (KHTML, like Gecko) Version/27.2 Mobile/19E241 Safari/602.1",
+          "viewport": {
+            "width": 375,
+            "height": 667
+          },
+          "deviceScaleFactor": 2,
+          "isMobile": true,
+          "hasTouch": true,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-iphone-se-3"
+      },
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output",
+        "repeatEach": 1,
+        "retries": 1,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/451218be11b721599bfc58292cd568a1bcbdcedd",
+            "commitHash": "451218be11b721599bfc58292cd568a1bcbdcedd",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39193861703"
+          },
+          "gitCommit": {
+            "shortHash": "bf62a72",
+            "hash": "bf62a72c8ed33a198c30916d5533408bf59e6048",
+            "subject": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence",
+            "body": "CI: the secret scan's known false positives — 9 test idempotency keys in the dukan-portal evidence on ci-evidence\n\nThe full-history scan reads every branch. The dukan-portal CI committed browser evidence (portal-claim-{en,fr,ar}.json)\ncarrying the test's generated idempotencyKey, which gitleaks' generic-api-key rule matches, so every branch's CI has\nfailed since 2026-10-18 11:52Z. Reproduced with CI's image (sha256:c00b6bd0…) on a full clone: 9 leaks without this\nfile, none with it. No file of the site changes.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1792379690000
+            },
+            "branch": "HEAD"
+          },
+          "actualWorkers": 3
+        },
+        "name": "webkit-desktop-safari",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/site/e2e-preview",
+        "testIgnore": [],
+        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
+        "timeout": 120000,
+        "use": {
+          "baseURL": "https://tsxmr.com",
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15",
+          "viewport": {
+            "width": 1280,
+            "height": 900
+          },
+          "screen": {
+            "width": 1792,
+            "height": 1120
+          },
+          "deviceScaleFactor": 2,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "webkit"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": "webkit-desktop-safari"
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 3,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "recordings.spec.ts",
+      "file": "recordings.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "electronics then agent walkthrough, played",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 22006,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:16:58.749Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output/recordings-electronics-then-agent-walkthrough-played-webkit-iphone-17/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-0b5dfb0b4d81ec187666",
+          "file": "recordings.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "cards entering while scrolling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 7099,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:16:58.899Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output/recordings-cards-entering-while-scrolling-webkit-iphone-17/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-460579465352a0fa198c",
+          "file": "recordings.spec.ts",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "electronics then agent walkthrough, played",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 5,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 17185,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:13.569Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output/recordings-electronics-then-agent-walkthrough-played-webkit-iphone-se-3/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-ca2ed064b366ef10bb42",
+          "file": "recordings.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "cards entering while scrolling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 6,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 6544,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:20.288Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output/recordings-cards-entering-while-scrolling-webkit-iphone-se-3/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-4e64881f493689962b24",
+          "file": "recordings.spec.ts",
+          "line": 30,
+          "column": 1
+        },
+        {
+          "title": "electronics then agent walkthrough, played",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 10,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 18228,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:57.791Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output/recordings-electronics-then-agent-walkthrough-played-webkit-desktop-safari/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-3a0ea3a5fdff8ec804f3",
+          "file": "recordings.spec.ts",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "cards entering while scrolling",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 11,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 6727,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:19:01.991Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "video",
+                      "contentType": "video/webm",
+                      "path": "/home/runner/work/erp-control-web/erp-control-web/evidence/preview/bf62a72-39193861703/webkit-output/recordings-cards-entering-while-scrolling-webkit-desktop-safari/video.webm"
+                    }
+                  ]
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "bf18bf27030b9768c6da-de1016782b2635b63e65",
+          "file": "recordings.spec.ts",
+          "line": 30,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "webkit.spec.ts",
+      "file": "webkit.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "tabs and steps keep one height, nothing overflows (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 53325,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:16:58.869Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-04a4e9d2aa781a5ceae9",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (fr)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 43953,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:17:07.648Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-c9a0e6ba916645b275b8",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 39448,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:17:22.938Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-ed32dcdd58600524b454",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "scrolling: a card on screen is never left hidden; cards appear as they are reached, once; nothing stays hidden",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "two frames after a jump (ms): median, max, jumps",
+                  "description": "301, 1591, 33"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 21109,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:17:51.786Z",
+                  "annotations": [
+                    {
+                      "type": "two frames after a jump (ms): median, max, jumps",
+                      "description": "301, 1591, 33"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-e991d0ff38c362e24b12",
+          "file": "webkit.spec.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "Pause click (ms)",
+                  "description": "1614"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 26839,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:17:52.784Z",
+                  "annotations": [
+                    {
+                      "type": "Pause click (ms)",
+                      "description": "1614"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-4f1bfad4ac7eb97d11f9",
+          "file": "webkit.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: at load every card at rest and no Play; switched on live, playback stops",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 9627,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:02.573Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-9010d4b395bffc8b489e",
+          "file": "webkit.spec.ts",
+          "line": 167,
+          "column": 1
+        },
+        {
+          "title": "screens for review: French on a phone, Arabic RTL, dark mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-17",
+              "projectName": "webkit-iphone-17",
+              "results": [
+                {
+                  "workerIndex": 4,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 13999,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:12.216Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-9ad600153dcb213f228b",
+          "file": "webkit.spec.ts",
+          "line": 201,
+          "column": 1
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 22329,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:26.673Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-3724a92334144f7defec",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (fr)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 17806,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:27.632Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-12cc6879a59b66e70dc4",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 17506,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:31.529Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-8ae99e3ff1f6836ed327",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "scrolling: a card on screen is never left hidden; cards appear as they are reached, once; nothing stays hidden",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "two frames after a jump (ms): median, max, jumps",
+                  "description": "51, 213, 35"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 7567,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:45.605Z",
+                  "annotations": [
+                    {
+                      "type": "two frames after a jump (ms): median, max, jumps",
+                      "description": "51, 213, 35"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-7ac648bfb4039847922d",
+          "file": "webkit.spec.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "Pause click (ms)",
+                  "description": "254"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 7,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 23894,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:49.115Z",
+                  "annotations": [
+                    {
+                      "type": "Pause click (ms)",
+                      "description": "254"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-6baeeeed669f53e9d3f0",
+          "file": "webkit.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: at load every card at rest and no Play; switched on live, playback stops",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 9,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 8001,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:49.206Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-b4915dcb719fe0a250b8",
+          "file": "webkit.spec.ts",
+          "line": 167,
+          "column": 1
+        },
+        {
+          "title": "screens for review: French on a phone, Arabic RTL, dark mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-iphone-se-3",
+              "projectName": "webkit-iphone-se-3",
+              "results": [
+                {
+                  "workerIndex": 8,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 8390,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:18:53.185Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-0f06d9ec91b57b202c45",
+          "file": "webkit.spec.ts",
+          "line": 201,
+          "column": 1
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (en)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 37817,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:19:09.556Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-bac0cfa818487351bc65",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (fr)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 35392,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:19:13.958Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-40d5890a757c922f0ce0",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "tabs and steps keep one height, nothing overflows (ar)",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 32524,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:19:16.838Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-3aa2ad8656baf7badf77",
+          "file": "webkit.spec.ts",
+          "line": 47,
+          "column": 3
+        },
+        {
+          "title": "scrolling: a card on screen is never left hidden; cards appear as they are reached, once; nothing stays hidden",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "two frames after a jump (ms): median, max, jumps",
+                  "description": "254, 1416, 15"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 10480,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:19:47.547Z",
+                  "annotations": [
+                    {
+                      "type": "two frames after a jump (ms): median, max, jumps",
+                      "description": "254, 1416, 15"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-f13f469c66e980a1218c",
+          "file": "webkit.spec.ts",
+          "line": 79,
+          "column": 1
+        },
+        {
+          "title": "playback: only when asked, about 2.8 s a step, stops on the result; Pause holds; off screen pauses",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [
+                {
+                  "type": "Pause click (ms)",
+                  "description": "118"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 14,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 23272,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:19:49.535Z",
+                  "annotations": [
+                    {
+                      "type": "Pause click (ms)",
+                      "description": "118"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-6251591e234ba64a614c",
+          "file": "webkit.spec.ts",
+          "line": 122,
+          "column": 1
+        },
+        {
+          "title": "reduced motion: at load every card at rest and no Play; switched on live, playback stops",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 13,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 8602,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:19:49.586Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-fb124d0d1141a9cb0d2e",
+          "file": "webkit.spec.ts",
+          "line": 167,
+          "column": 1
+        },
+        {
+          "title": "screens for review: French on a phone, Arabic RTL, dark mode",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 120000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "webkit-desktop-safari",
+              "projectName": "webkit-desktop-safari",
+              "results": [
+                {
+                  "workerIndex": 12,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 10016,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-19T03:19:58.042Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9662fb22efd3ebdaca5b-ceef5fe5cdc8aa1f5405",
+          "file": "webkit.spec.ts",
+          "line": 201,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-19T03:16:58.043Z",
+    "duration": 194824.37699999998,
+    "expected": 27,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
