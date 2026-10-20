@@ -2635,6 +2635,35 @@ html[lang='ar'] .contact-group-title {
 .related-link:active {
   background: var(--surface-2);
 }
+/* The product page's documentation (2026-10-19): a short reference list at the end, quieter than a section. */
+.band-compact {
+  padding-block: clamp(36px, 2rem + 2vw, 64px);
+}
+.product-docs {
+  max-inline-size: 62ch;
+}
+.product-docs h2 {
+  font-size: 1.25rem;
+  margin: 0 0 6px;
+}
+.product-docs > p {
+  color: var(--text-2);
+  margin: 0 0 12px;
+}
+.product-docs ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-block-start: 1px solid var(--border);
+}
+.product-docs li {
+  padding-block: 8px 12px;
+  border-block-end: 1px solid var(--border);
+}
+.product-docs li .small {
+  margin: 0;
+  color: var(--text-2);
+}
 /* A link that stands alone under a section and leads to another page: a text action with its arrow. */
 .text-action {
   display: inline-flex;

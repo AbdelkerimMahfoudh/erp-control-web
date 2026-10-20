@@ -579,8 +579,9 @@ for (const lang of LANGS) {
           repeatedHeading: headings.some((h, i) => i > 0 && h === headings[i - 1]),
         };
       }, pathOf(id, lang));
-      const policy = id !== 'contact';
-      expect({ id, ...f }).toEqual({ id, groups: 1, last: true, current: policy ? 'SPAN' : null, selfLink: false, links: policy ? 6 : 7, repeatedHeading: false });
+      // Six pages in the list; account deletion is not one of them on the company site (a Dukan ERP document, 2026-10-19).
+      const listed = id !== 'contact' && id !== 'accountDeletion';
+      expect({ id, ...f }).toEqual({ id, groups: 1, last: true, current: listed ? 'SPAN' : null, selfLink: false, links: listed ? 5 : 6, repeatedHeading: false });
     }
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.goto(pathOf('legalNotice', lang));
@@ -601,6 +602,36 @@ for (const lang of LANGS) {
           await page.goto(pathOf(id, lang));
           expect({ id, width, theme, overflow: (await facts(page)).overflow }).toEqual({ id, width, theme, overflow: 0 });
         }
+      }
+    }
+  });
+
+  // Account deletion as a Dukan ERP document (the owner's approval of 2026-10-19).
+  test(`public site: the Dukan ERP documentation opens the deletion page at its top, which fits 320 and 375 px (${lang})`, async ({ page }) => {
+    const deletion = pathOf('accountDeletion', lang);
+    for (const theme of ['light', 'dark'] as const) {
+      await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
+      for (const width of [320, 375]) {
+        await page.setViewportSize({ width, height: 800 });
+        await page.goto(pathOf('dukanErp', lang));
+        // Not in the header or the footer; one entry, in the Documentation section.
+        expect(await page.locator(`header a[href="${deletion}"], footer a[href="${deletion}"]`).count()).toBe(0);
+        const entry = page.locator(`section[aria-labelledby="docs-h"] a[href="${deletion}"]`);
+        await expect(entry).toHaveCount(1);
+        await entry.scrollIntoViewIfNeeded();
+        if (width === 375) await page.locator('section[aria-labelledby="docs-h"]').screenshot({ path: shot(`docs-${theme}`, lang, pathOf('dukanErp', lang)) });
+        await entry.click();
+        await expect(page).toHaveURL(new RegExp(`${deletion}$`));
+        // The address changes a moment before the new page is drawn: wait for its heading, then for the page's top.
+        await expect(page.locator('main h1')).toHaveText({ en: 'Delete a Dukan ERP account', fr: 'Supprimer un compte Dukan ERP', ar: 'حذف حساب Dukan ERP' }[lang]);
+        await expect.poll(() => page.evaluate(() => window.scrollY), { message: `${theme} ${width} px: the deletion page opens at its top` }).toBe(0);
+        const f = await page.evaluate(() => {
+          const h1 = document.querySelector('main h1')!;
+          const r = h1.getBoundingClientRect();
+          return { overflow: document.documentElement.scrollWidth - window.innerWidth, inside: r.left >= 0 && r.right <= window.innerWidth + 0.5, wraps: h1.scrollWidth <= h1.clientWidth + 1 };
+        });
+        expect({ theme, width, ...f }).toEqual({ theme, width, overflow: 0, inside: true, wraps: true });
+        if (width === 320) await page.screenshot({ path: shot(`deletion-320-${theme}`, lang, deletion) });
       }
     }
   });

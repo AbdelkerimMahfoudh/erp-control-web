@@ -97,7 +97,9 @@ describe('a public build, page by page', () => {
       await screen.findAllByRole('heading', { level: 1 });
       const links = hrefs();
       for (const id of ['apply', 'login', 'applicationStatus'] as const) expect(links).not.toContain(pathOf(id, lang));
-      for (const id of ['privacy', 'terms', 'support', 'accountDeletion', 'privacyChoices', 'legalNotice', 'security'] as const) expect(links).toContain(pathOf(id, lang));
+      for (const id of ['privacy', 'terms', 'support', 'privacyChoices', 'legalNotice', 'security'] as const) expect(links).toContain(pathOf(id, lang));
+      // Account deletion is a Dukan ERP document: on the product page, not in the company's footer (2026-10-19).
+      expect(links).not.toContain(pathOf('accountDeletion', lang));
       expect(document.documentElement.dir).toBe(lang === 'ar' ? 'rtl' : 'ltr');
       expectNoPriceOutsideTheShowcase(lang);
       expect(requests).toEqual([]);

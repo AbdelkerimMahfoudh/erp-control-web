@@ -219,16 +219,20 @@ export function RelatedPages() {
 /**
  * The legal and support pages in the current language, each a compact pill. The page the reader is on is in the list
  * too, so the set never changes shape, but as plain text marked current — not a link that leads back to itself.
+ *
+ * Account deletion is listed only in the pages the Dukan ERP app opens, where the reader has an account in mind. On the
+ * company website it is a Dukan ERP document: the product page's Documentation and Support lead to it (2026-10-19).
  */
 export function LegalLinks() {
   const { t } = useI18n();
   const to = useLegalPath();
   const { pathname } = useLocation();
+  const inApp = useContext(InAppContext);
   const pages: [PublicRouteId, string][] = [
     ['privacy', t('footer.privacy')],
     ['privacyChoices', t('footer.privacyChoices')],
     ['terms', t('footer.terms')],
-    ['accountDeletion', t('footer.deletion')],
+    ...(inApp ? ([['accountDeletion', t('footer.deletion')]] as [PublicRouteId, string][]) : []),
     ['support', t('footer.support')],
     ['security', t('footer.security')],
     ['legalNotice', t('footer.legalNotice')],

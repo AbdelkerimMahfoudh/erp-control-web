@@ -201,7 +201,8 @@ function Footer() {
   const columns: [string, [PublicRouteId, string][]][] = [
     [INDIVIDUAL_OPERATOR ? SITE.displayName : t('footer.company'), [['services', t('nav.services')], ['about', t('nav.about')], ['contact', t('nav.contact')]]],
     [t('footer.product'), [['dukanErp', t('nav.dukanErp')], ['products', t('nav.products')], ['apply', t('nav.apply')]]],
-    [t('footer.help'), [['support', t('nav.support')], ['applicationStatus', t('footer.applicationStatus')], ['accountDeletion', t('footer.deletion')]]],
+    // Account deletion is a Dukan ERP matter, not TSX-MR's: it is documented on the product page and in Support, not here.
+    [t('footer.help'), [['support', t('nav.support')], ['applicationStatus', t('footer.applicationStatus')]]],
     [
       t('footer.legal'),
       [
