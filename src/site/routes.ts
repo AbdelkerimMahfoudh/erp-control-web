@@ -16,6 +16,7 @@ export type PublicRouteId =
   | 'about'
   | 'products'
   | 'dukanErp'
+  | 'riyade'
   | 'contact'
   | 'support'
   | 'privacy'
@@ -41,6 +42,8 @@ export const PUBLIC_ROUTES: readonly PublicRoute[] = [
   { id: 'about', path: '/about', indexable: true },
   { id: 'products', path: '/products', indexable: true },
   { id: 'dukanErp', path: '/products/dukan-erp', indexable: true },
+  // Coming soon: its name, one line, who makes it and its status — nothing more (content/riyade.ts).
+  { id: 'riyade', path: '/products/riyade', indexable: true },
   { id: 'contact', path: '/contact', indexable: true },
   { id: 'support', path: '/support', indexable: true },
   { id: 'privacy', path: '/privacy', indexable: true },

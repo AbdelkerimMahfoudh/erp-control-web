@@ -58,11 +58,12 @@ describe('every public page in every language', () => {
         const skip = document.querySelector('a.skip-link') as HTMLAnchorElement;
         expect(skip.getAttribute('href')).toBe('#main');
         expect(document.getElementById('main')?.tagName).toBe('MAIN');
-        // The footer links the policies, in this language.
+        // The footer links the policies, in this language — and not account deletion, a Dukan ERP document (2026-10-19).
         const footer = document.querySelector('footer')!;
-        for (const id of ['privacy', 'terms', 'support', 'accountDeletion'] as const) {
+        for (const id of ['privacy', 'terms', 'support'] as const) {
           expect(within(footer).getAllByRole('link').some((a) => a.getAttribute('href') === pathOf(id, lang))).toBe(true);
         }
+        expect(within(footer).getAllByRole('link').some((a) => a.getAttribute('href') === pathOf('accountDeletion', lang))).toBe(false);
         // Never a link to the administration area from a public page.
         expect([...document.querySelectorAll('a')].some((a) => (a.getAttribute('href') ?? '').startsWith('/admin'))).toBe(false);
         // No catalogue key ever shows as text.

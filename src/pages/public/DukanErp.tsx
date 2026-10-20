@@ -296,6 +296,24 @@ export function DukanErp() {
           <PlanPricing />
         </Band>
       )}
+
+      {/* The product's documentation, last and quiet: reference pages, not a call to action (2026-10-19). Its tone
+          alternates with the band before it, which is the subscription only in a full build. */}
+      <Band tone={SURFACE === 'public' ? 'tint' : 'light'} className="band-compact" aria-labelledby="docs-h">
+        <div className="product-docs">
+          <h2 id="docs-h">{t('dukanErp.docs.title')}</h2>
+          <p>{t('dukanErp.docs.lead')}</p>
+          <ul role="list">
+            <li>
+              <Link className="text-action" to={to('accountDeletion')}>
+                {t('dukanErp.docs.deletion')}
+                <Icon name="arrow" size={16} className="icon-arrow" />
+              </Link>
+              <p className="small">{t('dukanErp.docs.deletionNote')}</p>
+            </li>
+          </ul>
+        </div>
+      </Band>
     </div>
   );
 }

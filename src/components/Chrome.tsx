@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FocusEvent, type MouseEvent, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { SITE } from '../config/site';
+import { RIYADE_NAME } from '../content/riyade';
 import { LANGUAGE_CODES, LANGUAGES, storeLanguage, useI18n, type Language } from '../i18n';
 import { inAppPathOf, pathOf, publicRouteAt, type PublicRouteId } from '../site/routes';
 import { useReveal } from '../lib/reveal';
@@ -200,8 +201,10 @@ function Footer() {
   const to = (id: PublicRouteId) => pathOf(id, lang);
   const columns: [string, [PublicRouteId, string][]][] = [
     [INDIVIDUAL_OPERATOR ? SITE.displayName : t('footer.company'), [['services', t('nav.services')], ['about', t('nav.about')], ['contact', t('nav.contact')]]],
-    [t('footer.product'), [['dukanErp', t('nav.dukanErp')], ['products', t('nav.products')], ['apply', t('nav.apply')]]],
-    [t('footer.help'), [['support', t('nav.support')], ['applicationStatus', t('footer.applicationStatus')], ['accountDeletion', t('footer.deletion')]]],
+    // TSX-MR's own products, Dukan ERP first; Riyade, coming soon, by its name, which no language translates (2026-10-20).
+    [t('footer.product'), [['dukanErp', t('nav.dukanErp')], ['riyade', RIYADE_NAME], ['products', t('nav.products')], ['apply', t('nav.apply')]]],
+    // Account deletion is a Dukan ERP matter, not TSX-MR's: it is documented on the product page and in Support, not here.
+    [t('footer.help'), [['support', t('nav.support')], ['applicationStatus', t('footer.applicationStatus')]]],
     [
       t('footer.legal'),
       [
