@@ -1,0 +1,25 @@
+PASS  TLS tsxmr.com: valid certificate for the name — {"authorized":true,"error":null,"validTo":"Jan 15 06:56:11 2027 GMT","altNames":"DNS:tsxmr.com","issuer":"Google Trust Services","daysLeft":87}
+PASS  TLS www.tsxmr.com: valid certificate for the name — {"authorized":true,"error":null,"validTo":"Jan 15 06:57:55 2027 GMT","altNames":"DNS:www.tsxmr.com","issuer":"Google Trust Services","daysLeft":87}
+PASS  http://apex redirects to https://apex — {"status":301,"location":"https://tsxmr.com/"}
+PASS  https://www → apex, 301, path and query kept — {"status":301,"location":"https://tsxmr.com/privacy?check=1"}
+PASS  http://tsxmr.com/ ends at https://tsxmr.com/ with 200, no loop — ["301 http://tsxmr.com/","200 https://tsxmr.com/"]
+PASS  http://www.tsxmr.com/terms?x=2 ends at https://tsxmr.com/terms?x=2 with 200, no loop — ["301 http://www.tsxmr.com/terms?x=2","200 https://tsxmr.com/terms?x=2"]
+PASS  https://www.tsxmr.com/ ends at https://tsxmr.com/ with 200, no loop — ["301 https://www.tsxmr.com/","200 https://tsxmr.com/"]
+PASS  https://tsxmr.com/fr/contact ends at https://tsxmr.com/fr/contact with 200, no loop — ["200 https://tsxmr.com/fr/contact"]
+PASS  security headers on / equal dist/_headers — ["content-security-policy","strict-transport-security","x-content-type-options","x-frame-options","referrer-policy","permissions-policy","cross-origin-opener-policy"]
+PASS  HSTS without preload — max-age=31536000
+FAIL  every built file is served byte-for-byte as built (80 files) — [{"path":"/sitemap.xml","live":"8e6225e905c7","built":"05bd85e29efc","bytes":[17224,17224],"first":{"at":206,"built":"url>\n    <loc>https://tsxmr.com/</loc>\n    <lastmod>2026-10-20</lastmod>\n    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://tsxmr.com/\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://tsxmr.com/fr\"","live":"url>\n    <loc>https://tsxmr.com/</loc>\n    <lastmod>2026-10-19</lastmod>\n    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://tsxmr.com/\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://tsxmr.com/fr\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://tsxmr.com/ar\"/>\n    <xhtml:link rel=\""}}]
+PASS  60 pages: canonical on https://tsxmr.com, no preview host, tracker, beacon or plain-HTTP resource; in-app noindex — []
+PASS  no edge rewriting of the pages (Cloudflare Email Address Obfuscation off)
+FAIL  every difference from the build is that rewrite and nothing else — {"residue":[],"unexplained":[{"path":"/sitemap.xml","live":"8e6225e905c7","built":"05bd85e29efc","bytes":[17224,17224],"first":{"at":206,"built":"url>\n    <loc>https://tsxmr.com/</loc>\n    <lastmod>2026-10-20</lastmod>\n    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://tsxmr.com/\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://tsxmr.com/fr\"","live":"url>\n    <loc>https://tsxmr.com/</loc>\n    <lastmod>2026-10-19</lastmod>\n    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://tsxmr.com/\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://tsxmr.com/fr\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://tsxmr.com/ar\"/>\n    <xhtml:link rel=\""}}]}
+PASS  protected and unknown addresses answer 404 — {"/account":404,"/account/trial":404,"/admin":404,"/admin/businesses":404,"/apply":404,"/login":404,"/application-status":404,"/fr/apply":404,"/app-shell.html":404,"/no-such-page":404}
+PASS  sitemap: every URL on the production origin, no in-app or protected page — 39 URLs
+PASS  MX: the three Cloudflare Email Routing hosts only — [{"exchange":"route1.mx.cloudflare.net","priority":4},{"exchange":"route3.mx.cloudflare.net","priority":48},{"exchange":"route2.mx.cloudflare.net","priority":50}]
+PASS  SPF: exactly one record at the root, with Cloudflare Email Routing — ["v=spf1 include:_spf.mx.cloudflare.net ~all"]
+PASS  Brevo's code TXT at the root — ["brevo-code:…","v=spf1 include:_spf.mx.cloudflare.net ~all"]
+PASS  DMARC record present — ["v=DMARC1; p=none; rua=mailto:0124ca1c52ea4d7a94dc5ee5dc248a0b@dmarc-reports.cloudflare.net"]
+PASS  Cloudflare DKIM (cf2024-1) present — ["v=DKIM1; h=sha256; k=rsa…"]
+PASS  Brevo DKIM CNAMEs (brevo1, brevo2) present — {"brevo1":["b1.tsxmr-com.dkim.brevo.com"],"brevo2":["b2.tsxmr-com.dkim.brevo.com"]}
+INFO  preview hosts {"https://site-redesign.tsxmr-public.pages.dev/":{"status":200,"location":null,"robots":"noindex","canonical":"https://tsxmr.com/"},"https://tsxmr-public.pages.dev/":{"status":200,"location":null,"robots":null,"canonical":"https://tsxmr.com/"}}
+
+21/23 checks passed

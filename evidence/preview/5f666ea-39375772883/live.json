@@ -1,0 +1,246 @@
+{
+  "origin": "https://tsxmr.com",
+  "at": "2026-10-20T05:36:51.984Z",
+  "results": [
+    {
+      "name": "TLS tsxmr.com: valid certificate for the name",
+      "ok": true,
+      "detail": {
+        "authorized": true,
+        "error": null,
+        "validTo": "Jan 15 06:56:11 2027 GMT",
+        "altNames": "DNS:tsxmr.com",
+        "issuer": "Google Trust Services",
+        "daysLeft": 87
+      }
+    },
+    {
+      "name": "TLS www.tsxmr.com: valid certificate for the name",
+      "ok": true,
+      "detail": {
+        "authorized": true,
+        "error": null,
+        "validTo": "Jan 15 06:57:55 2027 GMT",
+        "altNames": "DNS:www.tsxmr.com",
+        "issuer": "Google Trust Services",
+        "daysLeft": 87
+      }
+    },
+    {
+      "name": "http://apex redirects to https://apex",
+      "ok": true,
+      "detail": {
+        "status": 301,
+        "location": "https://tsxmr.com/"
+      }
+    },
+    {
+      "name": "https://www → apex, 301, path and query kept",
+      "ok": true,
+      "detail": {
+        "status": 301,
+        "location": "https://tsxmr.com/privacy?check=1"
+      }
+    },
+    {
+      "name": "http://tsxmr.com/ ends at https://tsxmr.com/ with 200, no loop",
+      "ok": true,
+      "detail": [
+        "301 http://tsxmr.com/",
+        "200 https://tsxmr.com/"
+      ]
+    },
+    {
+      "name": "http://www.tsxmr.com/terms?x=2 ends at https://tsxmr.com/terms?x=2 with 200, no loop",
+      "ok": true,
+      "detail": [
+        "301 http://www.tsxmr.com/terms?x=2",
+        "200 https://tsxmr.com/terms?x=2"
+      ]
+    },
+    {
+      "name": "https://www.tsxmr.com/ ends at https://tsxmr.com/ with 200, no loop",
+      "ok": true,
+      "detail": [
+        "301 https://www.tsxmr.com/",
+        "200 https://tsxmr.com/"
+      ]
+    },
+    {
+      "name": "https://tsxmr.com/fr/contact ends at https://tsxmr.com/fr/contact with 200, no loop",
+      "ok": true,
+      "detail": [
+        "200 https://tsxmr.com/fr/contact"
+      ]
+    },
+    {
+      "name": "security headers on / equal dist/_headers",
+      "ok": true,
+      "detail": [
+        "content-security-policy",
+        "strict-transport-security",
+        "x-content-type-options",
+        "x-frame-options",
+        "referrer-policy",
+        "permissions-policy",
+        "cross-origin-opener-policy"
+      ]
+    },
+    {
+      "name": "HSTS without preload",
+      "ok": true,
+      "detail": "max-age=31536000"
+    },
+    {
+      "name": "every built file is served byte-for-byte as built (80 files)",
+      "ok": false,
+      "detail": [
+        {
+          "path": "/sitemap.xml",
+          "live": "8e6225e905c7",
+          "built": "05bd85e29efc",
+          "bytes": [
+            17224,
+            17224
+          ],
+          "first": {
+            "at": 206,
+            "built": "url>\n    <loc>https://tsxmr.com/</loc>\n    <lastmod>2026-10-20</lastmod>\n    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://tsxmr.com/\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://tsxmr.com/fr\"",
+            "live": "url>\n    <loc>https://tsxmr.com/</loc>\n    <lastmod>2026-10-19</lastmod>\n    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://tsxmr.com/\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://tsxmr.com/fr\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://tsxmr.com/ar\"/>\n    <xhtml:link rel=\""
+          }
+        }
+      ]
+    },
+    {
+      "name": "60 pages: canonical on https://tsxmr.com, no preview host, tracker, beacon or plain-HTTP resource; in-app noindex",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "name": "no edge rewriting of the pages (Cloudflare Email Address Obfuscation off)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "every difference from the build is that rewrite and nothing else",
+      "ok": false,
+      "detail": {
+        "residue": [],
+        "unexplained": [
+          {
+            "path": "/sitemap.xml",
+            "live": "8e6225e905c7",
+            "built": "05bd85e29efc",
+            "bytes": [
+              17224,
+              17224
+            ],
+            "first": {
+              "at": 206,
+              "built": "url>\n    <loc>https://tsxmr.com/</loc>\n    <lastmod>2026-10-20</lastmod>\n    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://tsxmr.com/\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://tsxmr.com/fr\"",
+              "live": "url>\n    <loc>https://tsxmr.com/</loc>\n    <lastmod>2026-10-19</lastmod>\n    <xhtml:link rel=\"alternate\" hreflang=\"en\" href=\"https://tsxmr.com/\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"fr\" href=\"https://tsxmr.com/fr\"/>\n    <xhtml:link rel=\"alternate\" hreflang=\"ar\" href=\"https://tsxmr.com/ar\"/>\n    <xhtml:link rel=\""
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "protected and unknown addresses answer 404",
+      "ok": true,
+      "detail": {
+        "/account": 404,
+        "/account/trial": 404,
+        "/admin": 404,
+        "/admin/businesses": 404,
+        "/apply": 404,
+        "/login": 404,
+        "/application-status": 404,
+        "/fr/apply": 404,
+        "/app-shell.html": 404,
+        "/no-such-page": 404
+      }
+    },
+    {
+      "name": "sitemap: every URL on the production origin, no in-app or protected page",
+      "ok": true,
+      "detail": "39 URLs"
+    },
+    {
+      "name": "MX: the three Cloudflare Email Routing hosts only",
+      "ok": true,
+      "detail": [
+        {
+          "exchange": "route1.mx.cloudflare.net",
+          "priority": 4
+        },
+        {
+          "exchange": "route3.mx.cloudflare.net",
+          "priority": 48
+        },
+        {
+          "exchange": "route2.mx.cloudflare.net",
+          "priority": 50
+        }
+      ]
+    },
+    {
+      "name": "SPF: exactly one record at the root, with Cloudflare Email Routing",
+      "ok": true,
+      "detail": [
+        "v=spf1 include:_spf.mx.cloudflare.net ~all"
+      ]
+    },
+    {
+      "name": "Brevo's code TXT at the root",
+      "ok": true,
+      "detail": [
+        "brevo-code:…",
+        "v=spf1 include:_spf.mx.cloudflare.net ~all"
+      ]
+    },
+    {
+      "name": "DMARC record present",
+      "ok": true,
+      "detail": [
+        "v=DMARC1; p=none; rua=mailto:0124ca1c52ea4d7a94dc5ee5dc248a0b@dmarc-reports.cloudflare.net"
+      ]
+    },
+    {
+      "name": "Cloudflare DKIM (cf2024-1) present",
+      "ok": true,
+      "detail": [
+        "v=DKIM1; h=sha256; k=rsa…"
+      ]
+    },
+    {
+      "name": "Brevo DKIM CNAMEs (brevo1, brevo2) present",
+      "ok": true,
+      "detail": {
+        "brevo1": [
+          "b1.tsxmr-com.dkim.brevo.com"
+        ],
+        "brevo2": [
+          "b2.tsxmr-com.dkim.brevo.com"
+        ]
+      }
+    },
+    {
+      "name": "preview hosts (information only)",
+      "ok": true,
+      "detail": {
+        "https://site-redesign.tsxmr-public.pages.dev/": {
+          "status": 200,
+          "location": null,
+          "robots": "noindex",
+          "canonical": "https://tsxmr.com/"
+        },
+        "https://tsxmr-public.pages.dev/": {
+          "status": 200,
+          "location": null,
+          "robots": null,
+          "canonical": "https://tsxmr.com/"
+        }
+      }
+    }
+  ]
+}
