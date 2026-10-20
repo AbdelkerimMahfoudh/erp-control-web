@@ -1,0 +1,145 @@
+# Platform-superadmin provisioning and persistent test businesses (D217), end to end, in WebKit.
+#
+# On a fresh runner: MySQL 8.4, the API built from the backend commit with every migration applied, an administrator
+# made from the shell with MFA; then the 12 provisioning journeys over real HTTP, the console (portal preview build)
+# and the app (web export) in WebKit — EN/FR/AR, RTL, light and dark, 320/393/1280 — through sign-in with the second
+# factor, a test business created and its setup code issued, the Owner's own password, and the test banner.
+#
+# WebKit here is browser automation on Linux, not a physical iPhone. Everything is fictional and disposable: the
+# database, the secrets (generated in the job, never printed) and the accounts end with the runner. Screenshots never
+# show a setup code. Edit verify/target.env and push this branch to run it again. It deploys nothing and changes
+# nothing but the `ci-evidence` branch, where its evidence is committed under evidence/provisioning/.
+name: verify-provisioning
+
+on:
+  push:
+    branches: [ops/verify-provisioning]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-provisioning
+  cancel-in-progress: false
+
+jobs:
+  webkit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: write # only to commit the evidence branch
+    services:
+      mysql:
+        image: mysql:8.4.11@sha256:24989179f58856db763f418010c1169fecc944e3ec1ea7e921572d83eb070f70
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1" --health-interval 5s --health-timeout 5s --health-retries 30
+    defaults:
+      run:
+        shell: bash
+    env:
+      WORK: ${{ github.workspace }}/work
+      API: http://127.0.0.1:3410/api/v1
+      SITE: http://127.0.0.1:4310
+      APP: http://127.0.0.1:4320
+      BROWSER: webkit
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: tools
+      - name: The target
+        run: |
+          set -a; source tools/verify/target.env; set +a
+          for v in BACKEND CONSOLE MOBILE; do [[ "${!v}" =~ ^[0-9a-f]{40}$ ]] || { echo "$v must be a full SHA"; exit 1; }; done
+          { echo "BACKEND=$BACKEND"; echo "CONSOLE=$CONSOLE"; echo "MOBILE=$MOBILE"; echo "EV=$GITHUB_WORKSPACE/evidence/provisioning/${BACKEND:0:7}-${CONSOLE:0:7}-${MOBILE:0:7}-$GITHUB_RUN_ID"; } >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+        with: { repository: AbdelkerimMahfoudh/erp-backend, ref: '${{ env.BACKEND }}', path: api }
+      - uses: actions/checkout@v4
+        with: { repository: AbdelkerimMahfoudh/erp-control-web, ref: '${{ env.CONSOLE }}', path: web }
+      - uses: actions/checkout@v4
+        with: { repository: AbdelkerimMahfoudh/erp-mobile, ref: '${{ env.MOBILE }}', path: app }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: |
+          mkdir -p "$EV" "$WORK"; chmod 700 "$WORK"
+          printf 'backend %s\nconsole %s\nmobile %s\nrun %s\n' "$BACKEND" "$CONSOLE" "$MOBILE" "$GITHUB_RUN_ID" > "$EV/target.txt"
+          (cd api && npm ci --no-audit --no-fund > "$EV/api-install.log" 2>&1)
+          (cd web && npm ci --no-audit --no-fund > "$EV/web-install.log" 2>&1)
+          (cd app && npm ci --no-audit --no-fund > "$EV/app-install.log" 2>&1)
+      - name: The database, the API and an administrator with MFA
+        run: |
+          umask 077
+          mysql -h 127.0.0.1 -P 3306 --protocol=TCP -u root -e "CREATE DATABASE sa_e2e CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+            CREATE USER 'phonestore_app'@'%' IDENTIFIED BY '$(openssl rand -hex 16 | tee "$WORK/app.pw")';
+            GRANT SELECT, INSERT, UPDATE, DELETE ON sa_e2e.* TO 'phonestore_app'@'%';"
+          {
+            echo "NODE_ENV=development"; echo "APP_ENV=staging"; echo "PORT=3410"
+            echo "DATABASE_URL=mysql://root:@127.0.0.1:3306/sa_e2e"
+            echo "APP_DATABASE_URL=mysql://phonestore_app:$(cat "$WORK/app.pw")@127.0.0.1:3306/sa_e2e"
+            for k in JWT_ACCESS_SECRET STAFF_INVITATION_KEY OTP_PEPPER MESSAGING_HASH_KEY; do echo "$k=$(openssl rand -hex 32)"; done
+            echo "PLATFORM_MFA_KEY=$(openssl rand -base64 32 | tr '+/' '-_' | tr -d '=')"
+            echo "CUSTOMER_ACTIVATION=closed"; echo "CORS_ORIGINS=$SITE,$APP"
+            echo "SWAGGER_ENABLED=false"; echo "LOG_LEVEL=warn"; echo "WHATSAPP_CHANNEL=disabled"; echo "EMAIL_CHANNEL=disabled"
+            echo "UPLOAD_DIR=$WORK/uploads"; echo "THROTTLE_LIMIT=1000"; echo "AUTH_THROTTLE_LIMIT=200"; echo "ACCOUNT_THROTTLE_LIMIT=200"
+          } > "$WORK/api.env"
+          openssl rand -hex 24 > "$WORK/admin.pw"
+          cd api
+          set -a; source "$WORK/api.env"; set +a
+          npx prisma generate > /dev/null
+          npx nest build > "$EV/api-build.log" 2>&1
+          npx prisma migrate deploy > "$EV/migrate.log" 2>&1
+          PLATFORM_ADMIN_PASSWORD="$(cat "$WORK/admin.pw")" npx ts-node --transpile-only prisma/create-platform-admin.ts ops@example.test "Platform Ops" > /dev/null 2>&1
+          npx ts-node --transpile-only prisma/platform-admin-mfa.ts enrolment-token ops@example.test > "$WORK/enrol.out" 2>&1
+          nohup node dist/src/main.js > "$WORK/api.log" 2>&1 &
+          for _ in $(seq 1 60); do curl -sf http://127.0.0.1:3410/api/health > /dev/null && break; sleep 1; done
+          curl -sf http://127.0.0.1:3410/api/health/ready | tee "$EV/ready.json"; echo
+      - name: The 12 provisioning journeys over real HTTP
+        run: |
+          set -o pipefail
+          node tools/verify/journeys.mjs 2>&1 | tee "$EV/journeys.log"
+      - name: The console (portal surface, preview build) and the app (web export), built against this API
+        run: |
+          (cd web && VITE_SITE_SURFACE=portal VITE_API_BASE=$API npm run build:preview > "$EV/console-build.log" 2>&1 && mv dist "$WORK/console-dist")
+          # The runner's API is plain HTTP on 127.0.0.1; production's is HTTPS. Only for this local run, the policy's
+          # upgrade-insecure-requests is dropped so the browser does not rewrite http://127.0.0.1 to https.
+          sed -i 's/; upgrade-insecure-requests//' "$WORK/console-dist/_headers"
+          echo "local run: upgrade-insecure-requests removed from the served policy (HTTP API on 127.0.0.1)" >> "$EV/target.txt"
+          (cd web && nohup node scripts/serve-dist.mjs 4310 "$WORK/console-dist" > "$WORK/console-serve.log" 2>&1 &)
+          (cd app && EXPO_PUBLIC_API_ORIGIN=${API%/api/v1} EXPO_PUBLIC_LEGAL_ORIGIN=https://tsxmr.com npx expo export --platform web --clear --output-dir "$WORK/app-dist" > "$EV/app-export.log" 2>&1)
+          nohup node tools/verify/static-serve.mjs "$WORK/app-dist" 4320 > "$WORK/app-serve.log" 2>&1 &
+          for port in 4310 4320; do for _ in $(seq 1 30); do curl -sf -o /dev/null "http://127.0.0.1:$port/" && break; sleep 1; done; done
+      - name: WebKit
+        run: (cd web && npx playwright install --with-deps webkit > "$EV/playwright-install.log" 2>&1)
+      - name: The console in WebKit — EN/FR/AR, light and dark, 320/393/1280
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          PW_FROM="$GITHUB_WORKSPACE/web/package.json" node tools/verify/ui-console.mjs 2>&1 | tee "$EV/ui-console.log"
+      - name: The app in WebKit — setup code, sign-in, the test banner
+        if: ${{ !cancelled() }}
+        run: |
+          set -o pipefail
+          PW_FROM="$GITHUB_WORKSPACE/web/package.json" node tools/verify/ui-app.mjs 2>&1 | tee "$EV/ui-app.log"
+      - name: Keep the evidence
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          printf 'result %s\nbrowser WebKit (Playwright on Linux) — not a physical iPhone\n' "$RESULT" >> "$EV/target.txt"
+          for f in journeys.json ui-console.json ui-app.json; do [ -f "$WORK/$f" ] && cp "$WORK/$f" "$EV/"; done
+          [ -d "$WORK/ui-shots" ] && cp -r "$WORK/ui-shots" "$EV/screenshots"
+          # Nothing secret leaves the runner: the evidence holds statuses, results and screenshots only.
+          if grep -rlE "$(cat "$WORK/admin.pw")|$(cat "$WORK/app.pw")" "$EV" > /dev/null 2>&1; then echo "a secret reached the evidence"; exit 1; fi
+          cd tools
+          git config user.name "ci-evidence"
+          git config user.email "ci-evidence@users.noreply.github.com"
+          git fetch -q origin ci-evidence && git checkout -q -B ci-evidence origin/ci-evidence
+          mkdir -p evidence/provisioning; cp -r "$GITHUB_WORKSPACE/evidence/provisioning/." evidence/provisioning/
+          git add evidence/provisioning
+          git commit -qm "evidence: provisioning (D217) in WebKit — backend ${BACKEND:0:7}, console ${CONSOLE:0:7}, mobile ${MOBILE:0:7} ($RESULT)"
+          for i in 1 2 3 4 5; do git push -q origin ci-evidence && break; git fetch -q origin ci-evidence && git rebase -q origin/ci-evidence; done
