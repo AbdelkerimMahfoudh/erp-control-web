@@ -389,10 +389,11 @@ select.compact {
   border-color: var(--ok-fg);
 }
 
-/* A business's setup and access facts (D217): label beside value, stacked on a phone. */
+/* A business's setup and access facts (D217): label beside value, stacked on a phone. A value may be a long status
+   badge ("Waiting for the Owner to choose a password"), so the value column shrinks and the badge wraps. */
 .facts {
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: max-content minmax(0, 1fr);
   gap: 6px 16px;
   margin: 0;
 }
@@ -402,9 +403,12 @@ select.compact {
 .facts dd {
   margin: 0;
 }
+.facts .badge {
+  white-space: normal;
+}
 @media (max-width: 480px) {
   .facts {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .facts dd {
     margin-bottom: 6px;
