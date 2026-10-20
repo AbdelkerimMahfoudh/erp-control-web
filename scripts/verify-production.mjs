@@ -6,9 +6,10 @@
 // Checks, each recorded as { name, ok, detail }: TLS for the apex and www; HTTP → HTTPS and www → apex (path and query
 // kept, no loop); the security headers against `dist/_headers`; every built page and file served byte-for-byte as built
 // (so the audits of that build apply to what is deployed); canonical URLs on the production origin; no preview host,
-// tracker, Cloudflare beacon or plain-HTTP resource in any page; the protected addresses answer 404; the sitemap; and
-// the email DNS records (Cloudflare Email Routing, one SPF, DMARC, Cloudflare and Brevo DKIM, Brevo's code) as they are
-// recorded in the handoff. Exits 1 if any check fails.
+// tracker, Cloudflare beacon or plain-HTTP resource in any page; the protected addresses answer 404; the sitemap, with
+// exactly the build's URLs and their expected number; Riyade's page in its three languages (2026-10-20); and the email
+// DNS records (Cloudflare Email Routing, one SPF, DMARC, Cloudflare and Brevo DKIM, Brevo's code) as they are recorded in
+// the handoff. Exits 1 if any check fails.
 import { createHash } from 'node:crypto';
 import { Resolver } from 'node:dns/promises';
 import { readFileSync, readdirSync, statSync, writeFileSync, mkdirSync } from 'node:fs';
@@ -184,10 +185,49 @@ check('no edge rewriting of the pages (Cloudflare Email Address Obfuscation off)
   for (const p of paths) statuses[p] = (await get(`${origin}${p}`)).status;
   check('protected and unknown addresses answer 404', Object.values(statuses).every((s) => s === 404), statuses);
 }
+// Riyade's page (the owner's approval of 2026-10-20), in each language: its address, its language and direction, its own
+// canonical, its name as the one heading, and no structured data that would present it as software to use or buy.
+const RIYADE = [
+  ['en', '/products/riyade', 'ltr'],
+  ['fr', '/fr/products/riyade', 'ltr'],
+  ['ar', '/ar/products/riyade', 'rtl'],
+];
+// 14 indexable pages in 3 languages since Riyade's page; this number moves with the site's page list.
+const EXPECTED_SITEMAP_URLS = 42;
 {
   const sitemap = await (await get(`${origin}/sitemap.xml`)).text();
   const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
   check('sitemap: every URL on the production origin, no in-app or protected page', locs.length > 0 && locs.every((l) => l.startsWith(`${origin}/`) && !/\/in-app(\/|$)|\/(account|admin)(\/|$)/.test(l)), `${locs.length} URLs`);
+  const built = [...readFileSync(join(distDir, 'sitemap.xml'), 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
+  const missing = built.filter((l) => !locs.includes(l));
+  const extra = locs.filter((l) => !built.includes(l));
+  const riyade = RIYADE.map(([, path]) => `${origin}${path}`);
+  check(
+    `sitemap: ${EXPECTED_SITEMAP_URLS} URLs, exactly the build's, Riyade's three among them`,
+    locs.length === EXPECTED_SITEMAP_URLS && missing.length === 0 && extra.length === 0 && riyade.every((l) => locs.includes(l)),
+    { count: locs.length, missing, extra, riyade: riyade.filter((l) => !locs.includes(l)) },
+  );
+}
+{
+  const facts = {};
+  for (const [lang, path, dir] of RIYADE) {
+    const r = await get(`${origin}${path}`);
+    const html = r.status === 200 ? await r.text() : '';
+    const h1 = [...html.matchAll(/<h1[^>]*>([\s\S]*?)<\/h1>/g)].map((m) => m[1].replace(/<[^>]+>/g, '').trim());
+    const jsonLd = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]).join('');
+    facts[path] = {
+      status: r.status,
+      langDir: html.includes(`<html lang="${lang}" dir="${dir}">`),
+      canonical: html.match(/<link rel="canonical" href="([^"]+)"/)?.[1] === `${origin}${path}`,
+      heading: h1.length === 1 && h1[0] === 'Riyade',
+      noProductMarkup: !/SoftwareApplication|"offers"|"price"|Riyade/.test(jsonLd),
+    };
+  }
+  check(
+    'Riyade in three languages: 200, its language and direction, its own canonical, its name as the one heading, no product markup',
+    Object.values(facts).every((f) => f.status === 200 && f.langDir && f.canonical && f.heading && f.noProductMarkup),
+    facts,
+  );
 }
 
 // ── Email DNS, as recorded in the handoff (only the website's own records may have changed) ─────────────────────────
