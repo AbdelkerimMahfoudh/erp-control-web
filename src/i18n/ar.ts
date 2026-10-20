@@ -538,7 +538,7 @@ export const ar: Catalogue = {
   'nav.languages': 'اللغات',
   'brand.home': '{name} — الصفحة الرئيسية',
   'footer.company': 'الشركة',
-  'footer.product': 'المنتج',
+  'footer.product': 'المنتجات',
   'footer.help': 'المساعدة',
   'footer.legal': 'الشؤون القانونية',
   'footer.applicationStatus': 'حالة الطلب',

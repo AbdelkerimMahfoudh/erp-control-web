@@ -7,6 +7,7 @@ import { fr } from '../src/i18n/fr';
 import { ar } from '../src/i18n/ar';
 import { IN_APP_ROUTE_IDS, inAppPathOf, pathOf, publicRoutesFor } from '../src/site/routes';
 import { DEMO_FIGURES, dukanDemo } from '../src/content/dukan-demo';
+import { riyade } from '../src/content/riyade';
 import { formatMru } from '../src/lib/format';
 
 /**
@@ -161,7 +162,7 @@ for (const lang of LANGS) {
     expect(notice.split(NAME).length - 1).toBe(2);
     expect(notice).not.toContain(c['org.legalForm']);
     expect(notice).not.toContain(c['org.registration']);
-    for (const id of ['home', 'services', 'about', 'contact', 'products', 'dukanErp'] as const) {
+    for (const id of ['home', 'services', 'about', 'contact', 'products', 'dukanErp', 'riyade'] as const) {
       await page.goto(pathOf(id, lang));
       const text = (await facts(page)).text;
       expect({ id, named: text.includes(NAME) }).toEqual({ id, named: false });
@@ -598,7 +599,7 @@ for (const lang of LANGS) {
       await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
       for (const width of [320, 375]) {
         await page.setViewportSize({ width, height: 800 });
-        for (const id of ['home', 'services', 'products', 'about', 'contact', 'dukanErp'] as const) {
+        for (const id of ['home', 'services', 'products', 'about', 'contact', 'dukanErp', 'riyade'] as const) {
           await page.goto(pathOf(id, lang));
           expect({ id, width, theme, overflow: (await facts(page)).overflow }).toEqual({ id, width, theme, overflow: 0 });
         }
@@ -634,6 +635,116 @@ for (const lang of LANGS) {
         if (width === 320) await page.screenshot({ path: shot(`deletion-320-${theme}`, lang, deletion) });
       }
     }
+  });
+
+  // Riyade, coming soon (the owner's brief of 2026-10-20).
+  test(`public site: Riyade in ${lang} — after Dukan ERP, coming soon in words, a small page of its own with nothing to do`, async ({ page, browser, baseURL }) => {
+    const status = riyade[lang].status;
+    const own = pathOf('riyade', lang);
+    for (const theme of ['light', 'dark'] as const) {
+      for (const width of [320, 375, 1280]) {
+        await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
+        await page.setViewportSize({ width, height: 800 });
+        await page.goto(own);
+        // The page's language and direction, once the providers have settled (the outer one starts from the device's).
+        await expect.poll(() => page.evaluate(() => [document.documentElement.lang, document.documentElement.dir])).toEqual([lang, lang === 'ar' ? 'rtl' : 'ltr']);
+        // One heading, its name, whole on one line and on the screen, in the same face in every language; its status in
+        // words; no link, button or field in the page; nothing wider than the screen.
+        const f = await page.evaluate(() => {
+          const h1 = document.querySelector('main h1')!;
+          const mark = h1.querySelector('.riyade-mark')!;
+          const r = mark.getBoundingClientRect();
+          const size = parseFloat(getComputedStyle(mark).fontSize);
+          return {
+            h1: h1.textContent,
+            dir: document.documentElement.dir,
+            actions: document.querySelectorAll('main a, main button, main form, main input, main select, main textarea').length,
+            overflow: document.documentElement.scrollWidth - window.innerWidth,
+            inside: r.left >= 0 && r.right <= window.innerWidth + 0.5,
+            oneLine: r.height < size * 1.6,
+            face: getComputedStyle(mark).fontFamily.includes('Bricolage Grotesque'),
+            tagline: (() => {
+              const t = document.querySelector('main .riyade-tagline')!;
+              return t.scrollWidth <= t.clientWidth + 1;
+            })(),
+          };
+        });
+        expect({ theme, width, ...f }).toEqual({ theme, width, h1: 'Riyade', dir: lang === 'ar' ? 'rtl' : 'ltr', actions: 0, overflow: 0, inside: true, oneLine: true, face: true, tagline: true });
+        await expect(page.locator('main .riyade-status')).toHaveText(status);
+        if (width !== 320) await page.screenshot({ path: shot(`riyade-${theme}-${width}`, lang, own), fullPage: true });
+      }
+    }
+    // Its head: the canonical address and the alternates of its own page, and nothing that describes software for sale.
+    const head = await page.evaluate(() => ({
+      canonical: document.querySelector('link[rel="canonical"]')?.getAttribute('href') ?? '',
+      alternates: [...document.querySelectorAll('link[rel="alternate"][hreflang]')].map((l) => [l.getAttribute('hreflang'), new URL(l.getAttribute('href')!).pathname]),
+      title: document.title,
+      og: document.querySelector('meta[property="og:title"]')?.getAttribute('content'),
+      jsonLd: [...document.querySelectorAll('script[type="application/ld+json"]')].map((s) => s.textContent).join(''),
+    }));
+    expect(new URL(head.canonical).pathname).toBe(own);
+    expect(head.alternates).toEqual([...LANGS.map((l) => [l, pathOf('riyade', l)]), ['x-default', pathOf('riyade', 'en')]]);
+    expect([head.title, head.og]).toEqual(['Riyade — TSX-MR', 'Riyade — TSX-MR']);
+    expect(head.jsonLd).not.toMatch(/SoftwareApplication|Riyade|offers|price/);
+
+    // The Products page: Dukan ERP first and the larger card, then Riyade, each saying its own status.
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(pathOf('products', lang));
+    const cards = page.locator('main ul.products-grid > li');
+    await expect(cards).toHaveCount(2);
+    await expect(cards.nth(0).locator('.product-mark-name')).toHaveText('Dukan ERP');
+    await expect(cards.nth(0)).toContainText(CATALOGUE[lang]['prelaunch.badge']);
+    await expect(cards.nth(1).locator('h2')).toHaveText('Riyade');
+    await expect(cards.nth(1).locator('.riyade-status')).toHaveText(status);
+    const [first, second] = [(await cards.nth(0).boundingBox())!, (await cards.nth(1).boundingBox())!];
+    expect({ dukanFirst: first.y < second.y, dukanLarger: first.height > second.height }).toEqual({ dukanFirst: true, dukanLarger: true });
+    // Its one action opens its page, at the top, with its heading in focus.
+    await cards.nth(1).locator('a').click();
+    await expect(page).toHaveURL(new RegExp(`${own}$`));
+    await expect(page.locator('main h1')).toHaveText('Riyade');
+    await expect.poll(() => page.evaluate(() => [window.scrollY, document.activeElement === document.querySelector('main h1')])).toEqual([0, true]);
+
+    // The home page: one row under the featured Dukan ERP card, leading to the same page.
+    await page.goto(pathOf('home', lang));
+    const row = page.locator('.riyade-row a');
+    await expect(row).toHaveAttribute('href', own);
+    await expect(row).toContainText(status);
+    await row.scrollIntoViewIfNeeded();
+    const [featured, under] = [(await page.locator('.featured-product').boundingBox())!, (await page.locator('.riyade-row').boundingBox())!];
+    expect(under.y).toBeGreaterThan(featured.y + featured.height);
+    // Pointed at, it rises like every card, and the edge of its band (which hides what overflows) cuts none of it.
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'no-preference' });
+    const card = page.locator('.riyade-row');
+    await card.hover();
+    await expect.poll(() => card.evaluate((e) => getComputedStyle(e).translate)).toBe('0px -4px');
+    expect(await card.evaluate((e) => e.getBoundingClientRect().top - e.closest('section')!.getBoundingClientRect().top)).toBeGreaterThanOrEqual(4);
+    await page.setViewportSize({ width: 375, height: 800 });
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+    await page.locator('.riyade-row').scrollIntoViewIfNeeded();
+    await page.locator('.riyade-row').screenshot({ path: shot('riyade-row-dark', lang, pathOf('home', lang)) });
+    await row.click();
+    await expect(page).toHaveURL(new RegExp(`${own}$`));
+
+    // Without a script its page and the Products card are complete, at rest.
+    const plain = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 375, height: 800 }, baseURL });
+    const noScript = await plain.newPage();
+    await noScript.goto(own);
+    await expect(noScript.locator('main h1')).toHaveText('Riyade');
+    await expect(noScript.locator('main .riyade-status')).toHaveText(status);
+    await noScript.goto(pathOf('products', lang));
+    expect(await noScript.locator('.riyade-card').evaluate((e) => [getComputedStyle(e).opacity, getComputedStyle(e).transform])).toEqual(['1', 'none']);
+    await plain.close();
+
+    // Switching language keeps Riyade's page.
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto(own);
+    const other = lang === 'ar' ? 'en' : 'ar';
+    await page.locator(`.languages-wide a[lang="${other}"]`).click();
+    await expect(page).toHaveURL(new RegExp(`${pathOf('riyade', other)}$`));
+    await expect.poll(() => page.evaluate(() => [document.documentElement.lang, document.documentElement.dir])).toEqual([other, other === 'ar' ? 'rtl' : 'ltr']);
+    await expect(page.locator('main h1')).toHaveText('Riyade');
+    await expect(page.locator('main .riyade-status')).toHaveText(riyade[other].status);
   });
 
   // The Dukan ERP showcase (the owner's approval of 2026-10-18).

@@ -6,6 +6,7 @@ import { SITE, SURFACE } from '../../config/site';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
 import { ContactMethods, INDIVIDUAL_OPERATOR, LegalView, OrgDetails, PageIntro, ProductMark, RelatedPages, Sections, useLegalPath } from '../../components/public/blocks';
+import { RiyadeCard } from '../../components/public/riyade';
 import { textValues } from '../../components/public/RichText';
 import { RichText } from '../../components/public/RichText';
 
@@ -100,6 +101,8 @@ export function Products() {
             </div>
           </li>
         ))}
+        {/* Riyade after Dukan ERP, coming soon and told in a few words (2026-10-20). */}
+        <RiyadeCard />
       </ul>
       {/* Owned products and client services, told apart: the other half of what TSX-MR does is one step away. */}
       <p className="products-services">

@@ -551,7 +551,7 @@ export const en = {
   'nav.languages': 'Languages',
   'brand.home': '{name} — home page',
   'footer.company': 'Company',
-  'footer.product': 'Product',
+  'footer.product': 'Products',
   'footer.help': 'Help',
   'footer.legal': 'Legal',
   'footer.applicationStatus': 'Application status',
