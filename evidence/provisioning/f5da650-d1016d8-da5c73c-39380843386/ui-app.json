@@ -1,0 +1,291 @@
+{
+  "at": "2026-10-20T06:41:59.420Z",
+  "results": [
+    {
+      "what": "the administrator makes a test business with a setup code",
+      "ok": true,
+      "detail": "status 201"
+    },
+    {
+      "what": "“I have a setup code” on the sign-in screen opens the setup screen",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "an unknown code reads the one refusal, in the app’s words",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the pasted code (spaces and a line break) sets the Owner’s password",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the code is kept nowhere in the browser, nor in the address",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "signed in before any access: the test banner shows",
+      "ok": true,
+      "detail": "/access-closed — Test business — for testing only, not a real shop Pending approval Your business access is pending approval. The app opens once it is approved. Managed by your organisation. Contact your organisation administrator if you believe this is a mistake. Check again Sign out Delete my account Privacy polic"
+    },
+    {
+      "what": "the administrator gives an explicit grant",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "what": "with access, the home screen shows the test banner",
+      "ok": true,
+      "detail": "/select-branch"
+    },
+    {
+      "what": "banner home en/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock en/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more en/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen en/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home en/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock en/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more en/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen en/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home en/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock en/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more en/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen en/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home en/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock en/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more en/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen en/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home fr/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock fr/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more fr/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen fr/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home fr/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock fr/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more fr/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen fr/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home fr/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock fr/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more fr/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen fr/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home fr/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock fr/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more fr/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen fr/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home ar/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock ar/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more ar/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen ar/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home ar/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock ar/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more ar/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen ar/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home ar/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock ar/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more ar/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen ar/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner home ar/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner stock ar/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "banner more ar/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "setup screen ar/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "reloading /setup stays on the setup screen",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "pageErrors": []
+}

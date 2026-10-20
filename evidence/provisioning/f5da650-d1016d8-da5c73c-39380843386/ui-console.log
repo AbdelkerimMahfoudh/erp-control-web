@@ -1,0 +1,119 @@
+PASS  the password alone leads to the second factor, not the console
+PASS  with the code, the console opens
+PASS  the console lists the two test businesses — 2 rows
+PASS  the new-business form starts as a test business
+PASS  the setup code is shown once after creation — 43 characters
+PASS  the setup code is not in the address
+PASS  the setup code is in neither localStorage nor sessionStorage
+PASS  “I have handed it over” removes the code from the page
+PASS  the new business reads awaiting the Owner’s setup, number unverified
+PASS  reloading the business page keeps it, and shows no code
+PASS  a reissued code is a different code
+PASS  the first code no longer works once reissued — status 400
+PASS  a test business without a grant cannot open a store from the console
+PASS  layout dashboard en/light/320
+PASS  layout businesses en/light/320
+PASS  layout new en/light/320
+PASS  layout lab en/light/320
+PASS  layout awaiting en/light/320
+PASS  layout dashboard en/light/393
+PASS  layout businesses en/light/393
+PASS  layout new en/light/393
+PASS  layout lab en/light/393
+PASS  layout awaiting en/light/393
+PASS  layout dashboard en/light/1280
+PASS  layout businesses en/light/1280
+PASS  layout new en/light/1280
+PASS  layout lab en/light/1280
+PASS  layout awaiting en/light/1280
+PASS  layout dashboard en/dark/320
+PASS  layout businesses en/dark/320
+PASS  layout new en/dark/320
+PASS  layout lab en/dark/320
+PASS  layout awaiting en/dark/320
+PASS  layout dashboard en/dark/393
+PASS  layout businesses en/dark/393
+PASS  layout new en/dark/393
+PASS  layout lab en/dark/393
+PASS  layout awaiting en/dark/393
+PASS  layout dashboard en/dark/1280
+PASS  layout businesses en/dark/1280
+PASS  layout new en/dark/1280
+PASS  layout lab en/dark/1280
+PASS  layout awaiting en/dark/1280
+PASS  layout dashboard fr/light/320
+PASS  layout businesses fr/light/320
+PASS  layout new fr/light/320
+PASS  layout lab fr/light/320
+PASS  layout awaiting fr/light/320
+PASS  layout dashboard fr/light/393
+PASS  layout businesses fr/light/393
+PASS  layout new fr/light/393
+PASS  layout lab fr/light/393
+PASS  layout awaiting fr/light/393
+PASS  layout dashboard fr/light/1280
+PASS  layout businesses fr/light/1280
+PASS  layout new fr/light/1280
+PASS  layout lab fr/light/1280
+PASS  layout awaiting fr/light/1280
+PASS  layout dashboard fr/dark/320
+PASS  layout businesses fr/dark/320
+PASS  layout new fr/dark/320
+PASS  layout lab fr/dark/320
+PASS  layout awaiting fr/dark/320
+PASS  layout dashboard fr/dark/393
+PASS  layout businesses fr/dark/393
+PASS  layout new fr/dark/393
+PASS  layout lab fr/dark/393
+PASS  layout awaiting fr/dark/393
+PASS  layout dashboard fr/dark/1280
+PASS  layout businesses fr/dark/1280
+PASS  layout new fr/dark/1280
+PASS  layout lab fr/dark/1280
+PASS  layout awaiting fr/dark/1280
+PASS  layout dashboard ar/light/320
+PASS  layout businesses ar/light/320
+PASS  layout new ar/light/320
+PASS  layout lab ar/light/320
+PASS  layout awaiting ar/light/320
+PASS  layout dashboard ar/light/393
+PASS  layout businesses ar/light/393
+PASS  layout new ar/light/393
+PASS  layout lab ar/light/393
+PASS  layout awaiting ar/light/393
+PASS  layout dashboard ar/light/1280
+PASS  layout businesses ar/light/1280
+PASS  layout new ar/light/1280
+PASS  layout lab ar/light/1280
+PASS  layout awaiting ar/light/1280
+PASS  layout dashboard ar/dark/320
+PASS  layout businesses ar/dark/320
+PASS  layout new ar/dark/320
+PASS  layout lab ar/dark/320
+PASS  layout awaiting ar/dark/320
+PASS  layout dashboard ar/dark/393
+PASS  layout businesses ar/dark/393
+PASS  layout new ar/dark/393
+PASS  layout lab ar/dark/393
+PASS  layout awaiting ar/dark/393
+PASS  layout dashboard ar/dark/1280
+PASS  layout businesses ar/dark/1280
+PASS  layout new ar/dark/1280
+PASS  layout lab ar/dark/1280
+PASS  layout awaiting ar/dark/1280
+
+103/103 checks passed
+browser console errors (165):
+  en/light/393: Failed to load resource: the server responded with a status of 401 (Unauthorized)
+  en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+  en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+  en/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+  en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+  en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+  en/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+  fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+  fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+  fr/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+  fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+  fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.
+server-recorded English timeline note seen on 36 page renders (existing convention)
