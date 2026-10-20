@@ -219,16 +219,20 @@ export function RelatedPages() {
 /**
  * The legal and support pages in the current language, each a compact pill. The page the reader is on is in the list
  * too, so the set never changes shape, but as plain text marked current — not a link that leads back to itself.
+ *
+ * Account deletion is listed only in the pages the Dukan ERP app opens, where the reader has an account in mind. On the
+ * company website it is a Dukan ERP document: the product page's Documentation and Support lead to it (2026-10-19).
  */
 export function LegalLinks() {
   const { t } = useI18n();
   const to = useLegalPath();
   const { pathname } = useLocation();
+  const inApp = useContext(InAppContext);
   const pages: [PublicRouteId, string][] = [
     ['privacy', t('footer.privacy')],
     ['privacyChoices', t('footer.privacyChoices')],
     ['terms', t('footer.terms')],
-    ['accountDeletion', t('footer.deletion')],
+    ...(inApp ? ([['accountDeletion', t('footer.deletion')]] as [PublicRouteId, string][]) : []),
     ['support', t('footer.support')],
     ['security', t('footer.security')],
     ['legalNotice', t('footer.legalNotice')],
@@ -310,7 +314,11 @@ export function OrgDetails() {
  * A number has no purpose of its own here (none is documented), so each is simply a number to call, and none is
  * labelled WhatsApp unless `VITE_SUPPORT_WHATSAPP` names one. Nothing configured is said, never left as a dead end.
  */
-export function ContactMethods() {
+/**
+ * `reveal`: the cards appear as the reader reaches them (lib/reveal.ts) — on the Contact page only, never inside a
+ * legal text or a page the app opens.
+ */
+export function ContactMethods({ reveal = false }: { reveal?: boolean } = {}) {
   const { t } = useI18n();
   const emails: [string, string][] = [
     [t('org.contactEmail'), SITE.contactEmail],
@@ -336,6 +344,7 @@ export function ContactMethods() {
                 value={email}
                 action={t('contact.write')}
                 name={t('contact.writeName', { purpose, value: email })}
+                reveal={reveal}
               />
             ))}
           </ul>
@@ -353,10 +362,11 @@ export function ContactMethods() {
                 value={phone}
                 action={t('contact.call')}
                 name={t('contact.callName', { value: phone })}
+                reveal={reveal}
               />
             ))}
             {SITE.supportWhatsapp ? (
-              <li className="contact-card elevated">
+              <li className="contact-card elevated" data-reveal={reveal ? '' : undefined}>
                 <div className="contact-body">
                   <span className="icon-badge contact-icon">
                     <Icon name="messages" />
@@ -378,9 +388,9 @@ export function ContactMethods() {
 }
 
 /** One way to reach TSX-MR: the whole card is the link, the value stays visible and left to right in Arabic. */
-function ContactCard({ icon, href, purpose, value, action, name }: { icon: IconName; href: string; purpose?: string; value: string; action: string; name: string }) {
+function ContactCard({ icon, href, purpose, value, action, name, reveal }: { icon: IconName; href: string; purpose?: string; value: string; action: string; name: string; reveal: boolean }) {
   return (
-    <li className="contact-card elevated">
+    <li className="contact-card elevated" data-reveal={reveal ? '' : undefined}>
       <a className="contact-body contact-link" href={href} aria-label={name}>
         <span className="icon-badge contact-icon">
           <Icon name={icon} />

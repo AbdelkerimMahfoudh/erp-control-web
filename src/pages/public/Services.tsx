@@ -70,7 +70,7 @@ export function Services() {
               ))}
             </ul>
           </div>
-          <aside className="card own-product elevated" aria-labelledby="own-product-h">
+          <aside className="card own-product elevated" aria-labelledby="own-product-h" data-reveal="">
             <h2 id="own-product-h" className="own-product-title">
               <RichText text={page.product.title} />
             </h2>

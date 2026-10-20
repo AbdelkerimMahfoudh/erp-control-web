@@ -11,7 +11,7 @@ import { ar } from '../src/i18n/ar';
 const SAME_EVERYWHERE = new Set([
   'WhatsApp', 'E-mail', 'Email', 'MRU', 'Mobile money', 'Action', 'Version {n}', '{from} → {to}',
   // The public site (docs/74): names (the product, the stores) and words French writes as English does.
-  'Dukan ERP', 'App Store', 'Google Play', 'Menu', 'Contact', 'Services', 'Version {version}', '© {year} {name}', 'Administration — {name}',
+  'Dukan ERP', 'Documentation', 'App Store', 'Google Play', 'Menu', 'Contact', 'Services', 'Version {version}', '© {year} {name}', 'Administration — {name}',
 ]);
 
 /**

@@ -21,6 +21,8 @@ const { pathOf } = await import('../src/site/routes');
 const { fr } = await import('../src/i18n/fr');
 const { ar } = await import('../src/i18n/ar');
 const CATALOGUE = { en, fr, ar } as const;
+const { dukanDemo, DEMO_FIGURES } = await import('../src/content/dukan-demo');
+const { formatMru } = await import('../src/lib/format');
 
 const requests: string[] = [];
 
@@ -54,6 +56,24 @@ afterEach(() => {
 
 const hrefs = () => [...document.querySelectorAll('a')].map((a) => a.getAttribute('href') ?? '');
 
+/**
+ * Nothing is on sale before launch (docs/96 §2): no price anywhere on the page. The one place an amount appears is the
+ * Dukan ERP showcase (the owner's approval of 2026-10-18) — a customer's fictional sale and exchange, never a price of
+ * Dukan ERP — and it is held to more than the page: its amounts are exactly the walkthrough's three figures, each set
+ * apart as a value, under the words that say it is an illustration with fictional data.
+ */
+function expectNoPriceOutsideTheShowcase(lang: (typeof LANGUAGES)[number]) {
+  const rest = document.body.cloneNode(true) as HTMLElement;
+  rest.querySelectorAll('.showcase').forEach((el) => el.remove());
+  // A whole word: the footer's "TSX-MR" runs into the next line's first letter in `textContent` ("TSX-MRUne …").
+  expect(rest.textContent).not.toMatch(/\bMRU\b|7-day|essai gratuit|تجربة مجانية/);
+  const showcase = document.querySelector('.showcase')!;
+  expect(showcase.querySelector('.sc-note')?.textContent).toBe(dukanDemo[lang].note);
+  const amounts = [...showcase.querySelectorAll('bdi')].map((b) => b.textContent ?? '').filter((t) => t.includes('MRU'));
+  expect(amounts.length).toBe(showcase.textContent!.split('MRU').length - 1);
+  expect([...new Set(amounts)].sort()).toEqual([DEMO_FIGURES.salePrice, DEMO_FIGURES.exchangeAmount, DEMO_FIGURES.commission].map((n) => formatMru(n, lang)).sort());
+}
+
 describe('a public build, page by page', () => {
   for (const lang of LANGUAGES) {
     it(`the Dukan ERP page in ${lang}: no prices, no application or sign-in, a way to contact, and no request to any API`, async () => {
@@ -68,8 +88,7 @@ describe('a public build, page by page', () => {
       // Coming soon, said plainly; no subscription section.
       expect(screen.getByText(CATALOGUE[lang]['prelaunch.badge'])).toBeTruthy();
       expect(document.getElementById('subscription-h')).toBeNull();
-      // A whole word: the footer's "TSX-MR" runs into the next line's first letter in `textContent` ("TSX-MRUne …").
-      expect(document.body.textContent).not.toMatch(/\bMRU\b|7-day|essai gratuit|تجربة مجانية/);
+      expectNoPriceOutsideTheShowcase(lang);
       expect(requests).toEqual([]);
     });
 
@@ -78,8 +97,12 @@ describe('a public build, page by page', () => {
       await screen.findAllByRole('heading', { level: 1 });
       const links = hrefs();
       for (const id of ['apply', 'login', 'applicationStatus'] as const) expect(links).not.toContain(pathOf(id, lang));
-      for (const id of ['privacy', 'terms', 'support', 'accountDeletion', 'privacyChoices', 'legalNotice', 'security'] as const) expect(links).toContain(pathOf(id, lang));
+      for (const id of ['privacy', 'terms', 'support', 'privacyChoices', 'legalNotice', 'security'] as const) expect(links).toContain(pathOf(id, lang));
+      // Account deletion is a Dukan ERP document: on the product page, not in the company's footer (2026-10-19).
+      expect(links).not.toContain(pathOf('accountDeletion', lang));
       expect(document.documentElement.dir).toBe(lang === 'ar' ? 'rtl' : 'ltr');
+      expectNoPriceOutsideTheShowcase(lang);
+      expect(requests).toEqual([]);
     });
   }
 

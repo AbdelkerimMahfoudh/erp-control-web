@@ -6,6 +6,7 @@ import { SITE, SURFACE } from '../../config/site';
 import { useI18n } from '../../i18n';
 import { pathOf } from '../../site/routes';
 import { ContactMethods, INDIVIDUAL_OPERATOR, LegalView, OrgDetails, PageIntro, ProductMark, RelatedPages, Sections, useLegalPath } from '../../components/public/blocks';
+import { RiyadeCard } from '../../components/public/riyade';
 import { textValues } from '../../components/public/RichText';
 import { RichText } from '../../components/public/RichText';
 
@@ -68,7 +69,7 @@ export function Products() {
       <PageIntro title={doc.title} summary={doc.summary} />
       <ul className="card-grid products-grid">
         {doc.sections.map((s) => (
-          <li key={s.id} className="card product-card elevated">
+          <li key={s.id} className="card product-card elevated" data-reveal="">
             <h2>
               <ProductMark size="lg" />
             </h2>
@@ -100,6 +101,8 @@ export function Products() {
             </div>
           </li>
         ))}
+        {/* Riyade after Dukan ERP, coming soon and told in a few words (2026-10-20). */}
+        <RiyadeCard />
       </ul>
       {/* Owned products and client services, told apart: the other half of what TSX-MR does is one step away. */}
       <p className="products-services">
@@ -123,7 +126,7 @@ export function Contact() {
       <Sections
         doc={doc}
         after={{
-          write: <ContactMethods />,
+          write: <ContactMethods reveal />,
         }}
       />
       {postal ? (

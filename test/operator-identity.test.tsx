@@ -100,6 +100,7 @@ describe('the name, only where a legal text needs it', () => {
         about: 0,
         products: 0,
         dukanErp: 0,
+        riyade: 0,
         contact: 0,
         support: 0,
         privacy: 1,

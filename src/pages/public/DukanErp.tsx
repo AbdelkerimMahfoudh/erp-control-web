@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { SITE, SURFACE } from '../../config/site';
 import { dukanErpFor, dukanOverviewFor } from '../../content';
+import { dukanDemo } from '../../content/dukan-demo';
 import { ComingSoon } from '../../components/ComingSoon';
 import type { ActivityCard } from '../../content/dukan-erp';
 import { useI18n } from '../../i18n';
@@ -9,17 +10,18 @@ import { pathOf, type PublicRouteId } from '../../site/routes';
 import { PlanPricing } from '../../components/PlanPricing';
 import { AccountLink, accountHref } from '../../components/AccountLink';
 import { Band, ProductMark, SectionHead } from '../../components/public/blocks';
+import { DukanShowcase } from '../../components/public/DukanShowcase';
 import { Icon, type IconName } from '../../components/public/icons';
 import { ProductVisual } from '../../components/public/ProductVisual';
 import { RichText } from '../../components/public/RichText';
 
 /**
  * The Dukan ERP product page (docs/74 §4; redesigned 2026-10-17): the product in its hero with its three proofs, what it
- * replaces, its six parts, its two activities kept apart, what it is not (no provider integration), how a business
- * starts, the screens, the mobile app, the three languages, trust, and — in a full build only — the prices the server
- * publishes (`GET platform/plan`, D140). The pre-launch website (docs/96) sells nothing. Since the owner's brief of
- * 2026-10-17 (fourth) the product's detail is here and nowhere else: the home page introduces TSX-MR and features
- * this page.
+ * replaces, its six parts, its two activities kept apart and shown at work on the phone (the showcase, 2026-10-18),
+ * what it is not (no provider integration), how a business starts, the screens, the mobile app, the three languages,
+ * trust, and — in a full build only — the prices the server publishes (`GET platform/plan`, D140). The pre-launch
+ * website (docs/96) sells nothing. Since the owner's brief of 2026-10-17 (fourth) the product's detail is here and
+ * nowhere else: the home page introduces TSX-MR and features this page.
  */
 const PROOF_ICONS: IconName[] = ['scan', 'check-circle', 'store'];
 const PROBLEM_ICONS: IconName[] = ['notebook', 'messages', 'box', 'coins', 'lock'];
@@ -32,6 +34,7 @@ export function DukanErp() {
   const { t, lang } = useI18n();
   const c = dukanErpFor(lang, SURFACE);
   const o = dukanOverviewFor(lang, SURFACE);
+  const demo = dukanDemo[lang];
   const to = (id: PublicRouteId) => pathOf(id, lang);
   const accountLinks = accountHref('apply', lang) !== null;
   return (
@@ -132,6 +135,15 @@ export function DukanErp() {
         <p className="either">
           <RichText text={c.either} />
         </p>
+        <section className="product-showcase" aria-labelledby="showcase-h" data-reveal="">
+          <h3 id="showcase-h">
+            <RichText text={demo.title} />
+          </h3>
+          <p className="lead">
+            <RichText text={demo.lead} />
+          </p>
+          <DukanShowcase />
+        </section>
         <aside className="notice tone-info providers" aria-labelledby="providers-h">
           <h3 id="providers-h">
             <RichText text={c.providers.title} />
@@ -284,6 +296,24 @@ export function DukanErp() {
           <PlanPricing />
         </Band>
       )}
+
+      {/* The product's documentation, last and quiet: reference pages, not a call to action (2026-10-19). Its tone
+          alternates with the band before it, which is the subscription only in a full build. */}
+      <Band tone={SURFACE === 'public' ? 'tint' : 'light'} className="band-compact" aria-labelledby="docs-h">
+        <div className="product-docs">
+          <h2 id="docs-h">{t('dukanErp.docs.title')}</h2>
+          <p>{t('dukanErp.docs.lead')}</p>
+          <ul role="list">
+            <li>
+              <Link className="text-action" to={to('accountDeletion')}>
+                {t('dukanErp.docs.deletion')}
+                <Icon name="arrow" size={16} className="icon-arrow" />
+              </Link>
+              <p className="small">{t('dukanErp.docs.deletionNote')}</p>
+            </li>
+          </ul>
+        </div>
+      </Band>
     </div>
   );
 }

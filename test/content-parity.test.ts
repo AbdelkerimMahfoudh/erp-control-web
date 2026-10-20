@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { brand, DOCUMENTS, dukanErp, dukanOverview, stringsOf, terms } from '../src/content';
+import { brand, DOCUMENTS, dukanDemo, dukanErp, dukanOverview, riyade, stringsOf, terms } from '../src/content';
 import { BLOCKERS } from '../src/content/blockers';
 import { blockersIn, inputsIn, shapeOf, textsOf } from '../src/content/types';
 import { INPUTS } from '../src/config/schema';
@@ -23,7 +23,7 @@ function deepShape(v: unknown): unknown {
   return v;
 }
 
-const ALL: [string, Record<(typeof LANGS)[number], unknown>][] = [...Object.entries(DOCUMENTS), ['brand', brand], ['dukanOverview', dukanOverview], ['dukanErp', dukanErp]];
+const ALL: [string, Record<(typeof LANGS)[number], unknown>][] = [...Object.entries(DOCUMENTS), ['brand', brand], ['dukanOverview', dukanOverview], ['dukanErp', dukanErp], ['dukanDemo', dukanDemo], ['riyade', riyade]];
 /** The words of a value: a document's texts (not its section ids or block kinds), or every string of a page. */
 const wordsOf = (name: string, v: unknown): string[] => (name in DOCUMENTS ? textsOf(v as never) : stringsOf(v));
 

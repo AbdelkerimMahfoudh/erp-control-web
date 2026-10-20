@@ -9,6 +9,7 @@ import { LANGUAGES } from './i18n/languages';
 import { Home } from './pages/public/Home';
 import { Services } from './pages/public/Services';
 import { DukanErp } from './pages/public/DukanErp';
+import { Riyade } from './pages/public/Riyade';
 import { Apply } from './pages/public/Apply';
 import { About, AccountDeletion, ApplicationStatus, Contact, LegalNotice, Login, Privacy, PrivacyChoices, Products, Security, Support, Terms } from './pages/public/Legal';
 import { NotFound } from './pages/public/NotFound';
@@ -26,6 +27,7 @@ const PAGES: Record<PublicRouteId, ComponentType> = {
   about: About,
   products: Products,
   dukanErp: DukanErp,
+  riyade: Riyade,
   contact: Contact,
   support: Support,
   privacy: Privacy,

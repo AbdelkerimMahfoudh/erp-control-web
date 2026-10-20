@@ -88,27 +88,31 @@ describe('the public legal and support pages', () => {
         expect(main.querySelectorAll('.legal-related')).toHaveLength(1);
         const related = main.querySelector('.legal-related')!;
         const hrefs = [...related.querySelectorAll('a')].map((a) => a.getAttribute('href'));
-        const others = LEGAL.map(([r]) => pathOf(r, lang)).filter((h) => h !== pathOf(id, lang));
+        // Account deletion is a Dukan ERP document (2026-10-19): the company's quick links leave it out, so on its own
+        // page none of them is current.
+        const others = LEGAL.filter(([r]) => r !== 'accountDeletion').map(([r]) => pathOf(r, lang)).filter((h) => h !== pathOf(id, lang));
         expect(hrefs).toEqual(others.sort((a, b) => order(a, lang) - order(b, lang)));
-        const current = related.querySelector('[aria-current="page"]')!;
-        expect(current.tagName).toBe('SPAN');
+        const current = related.querySelector('[aria-current="page"]');
+        expect(current?.tagName ?? null).toBe(id === 'accountDeletion' ? null : 'SPAN');
         expect(related.querySelector(`a[href="${pathOf(id, lang)}"]`)).toBeNull();
       });
     }
   }
 
-  it('the footer links to every legal and support page, on public and signed-in pages alike', () => {
+  it('the footer links to every legal and support page but account deletion, on public and signed-in pages alike', () => {
+    // Account deletion is a Dukan ERP document, reached from the product page and Support (2026-10-19).
+    const linked = (id: PublicRouteId) => id !== 'accountDeletion';
     for (const lang of LANGS) {
       mount(pathOf('home', lang));
       const footer = document.querySelector('footer.chrome-footer')!;
       const hrefs = new Set([...footer.querySelectorAll('a')].map((a) => a.getAttribute('href')));
-      for (const [id] of LEGAL) expect({ lang, id, linked: hrefs.has(pathOf(id, lang)) }).toEqual({ lang, id, linked: true });
+      for (const [id] of LEGAL) expect({ lang, id, linked: hrefs.has(pathOf(id, lang)) }).toEqual({ lang, id, linked: linked(id) });
       cleanup();
     }
     mount('/account');
     const footer = document.querySelector('footer.chrome-footer')!;
     const hrefs = new Set([...footer.querySelectorAll('a')].map((a) => a.getAttribute('href')));
-    for (const [id] of LEGAL) expect({ area: 'account', id, linked: hrefs.has(pathOf(id, 'en')) }).toEqual({ area: 'account', id, linked: true });
+    for (const [id] of LEGAL) expect({ area: 'account', id, linked: hrefs.has(pathOf(id, 'en')) }).toEqual({ area: 'account', id, linked: linked(id) });
   });
 
   it('names TSX-MR as the operator on the privacy policy, the terms and the legal notice', () => {
