@@ -1,11 +1,14 @@
-# The private test console's build (D217; backend docs/100 §16.7), on Linux.
+# The private test sites' builds (D217; backend docs/100 §16.7), on Linux.
 #
-# The owner's PC cannot run Vite: Windows Smart App Control blocks Rolldown's native binary. So this builds the portal
-# surface in preview mode from the console commit in build/target.env, with production's API and the test console's
-# origin, and commits the dist with its checksums to `ci-evidence` under evidence/test-console/. The owner's local
-# session packages it with scripts/caddy-release.mjs and installs it with the backend's test-sites.sh. Nothing secret
-# is involved, and this workflow deploys nothing. Edit build/target.env and push this branch to build again.
-name: build-test-console
+# The owner's PC cannot run either build: Windows Smart App Control blocks Rolldown's native binary (Vite, the console)
+# and lightningcss 1.33's (Expo's Metro config, the app). So this builds, from the commits in build/target.env:
+# - the console: the portal surface in preview mode, with production's API and the test console's origin;
+# - the app: the web export, with production's API.
+# Each output is committed with its checksums to `ci-evidence` under evidence/test-console/. The owner's local session
+# packages them (scripts/caddy-release.mjs, scripts/web-test-release.mjs --production-api) and installs them with the
+# backend's test-sites.sh. Nothing secret is involved, and this workflow deploys nothing. Edit build/target.env and
+# push this branch to build again.
+name: build-test-sites
 
 on:
   push:
@@ -22,7 +25,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 40
     permissions:
       contents: write # only to commit the evidence branch
     defaults:
@@ -35,39 +38,54 @@ jobs:
       - name: The target
         run: |
           set -a; source tools/build/target.env; set +a
-          [[ "$CONSOLE" =~ ^[0-9a-f]{40}$ ]] || { echo "CONSOLE must be a full SHA"; exit 1; }
+          for v in CONSOLE MOBILE; do [[ "${!v}" =~ ^[0-9a-f]{40}$ ]] || { echo "$v must be a full SHA"; exit 1; }; done
           [ "$API_BASE" = "https://api.tsxmr.com/api/v1" ] || { echo "API_BASE must be production's API"; exit 1; }
           [ "$PORTAL_ORIGIN" = "https://dukan-test.tsxmr.com" ] || { echo "PORTAL_ORIGIN must be the test console"; exit 1; }
-          { echo "CONSOLE=$CONSOLE"; echo "API_BASE=$API_BASE"; echo "PORTAL_ORIGIN=$PORTAL_ORIGIN"; echo "EV=$GITHUB_WORKSPACE/evidence/test-console/${CONSOLE:0:7}-$GITHUB_RUN_ID"; } >> "$GITHUB_ENV"
+          { echo "CONSOLE=$CONSOLE"; echo "MOBILE=$MOBILE"; echo "API_BASE=$API_BASE"; echo "PORTAL_ORIGIN=$PORTAL_ORIGIN"
+            echo "EV=$GITHUB_WORKSPACE/evidence/test-console/${CONSOLE:0:7}-${MOBILE:0:7}-$GITHUB_RUN_ID"; } >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
         with: { repository: AbdelkerimMahfoudh/erp-control-web, ref: '${{ env.CONSOLE }}', path: web }
+      - uses: actions/checkout@v4
+        with: { repository: AbdelkerimMahfoudh/erp-mobile, ref: '${{ env.MOBILE }}', path: app }
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Install and build (portal surface, preview mode)
+      - name: The console (portal surface, preview mode)
         run: |
           mkdir -p "$EV"
-          [ "$(git -C web rev-parse HEAD)" = "$CONSOLE" ] || { echo "the checkout is not $CONSOLE"; exit 1; }
-          (cd web && npm ci --no-audit --no-fund > "$EV/install.log" 2>&1)
-          (cd web && VITE_SITE_SURFACE=portal VITE_API_BASE="$API_BASE" VITE_PORTAL_ORIGIN="$PORTAL_ORIGIN" npm run build:preview > "$EV/build.log" 2>&1)
+          [ "$(git -C web rev-parse HEAD)" = "$CONSOLE" ] || { echo "the console checkout is not $CONSOLE"; exit 1; }
+          (cd web && npm ci --no-audit --no-fund > "$EV/console-install.log" 2>&1)
+          (cd web && VITE_SITE_SURFACE=portal VITE_API_BASE="$API_BASE" VITE_PORTAL_ORIGIN="$PORTAL_ORIGIN" npm run build:preview > "$EV/console-build.log" 2>&1)
           cp -r web/dist "$EV/dist"
           (cd "$EV/dist" && find . -type f -print0 | sort -z | xargs -0 sha256sum) > "$EV/dist.sha256"
-          printf 'console %s\napi_base %s\nportal_origin %s\nnode %s\nrun %s\nfiles %s\n' "$CONSOLE" "$API_BASE" "$PORTAL_ORIGIN" "$(node -v)" "$GITHUB_RUN_ID" "$(wc -l < "$EV/dist.sha256")" > "$EV/target.txt"
-      - name: The build names production's API and is a portal build
+          for f in app-shell.html 404.html _headers _redirects; do [ -f "$EV/dist/$f" ] || { echo "no $f in the console build"; exit 1; }; done
+          grep -qF "${API_BASE%/api/v1}" "$EV/dist/_headers" || { echo "the console's policy does not name the API"; exit 1; }
+      - name: The app (web export)
         run: |
-          for f in app-shell.html 404.html _headers _redirects; do [ -f "$EV/dist/$f" ] || { echo "no $f in the build"; exit 1; }; done
-          grep -qF "${API_BASE%/api/v1}" "$EV/dist/_headers" || { echo "the policy does not name the API"; exit 1; }
-      - name: Keep the build
+          [ "$(git -C app rev-parse HEAD)" = "$MOBILE" ] || { echo "the app checkout is not $MOBILE"; exit 1; }
+          (cd app && npm ci --no-audit --no-fund > "$EV/app-install.log" 2>&1)
+          (cd app && EXPO_PUBLIC_API_ORIGIN="${API_BASE%/api/v1}" EXPO_PUBLIC_LEGAL_ORIGIN=https://tsxmr.com npx expo export --platform web --clear --output-dir "$EV/app-export" > "$EV/app-export.log" 2>&1)
+          (cd "$EV/app-export" && find . -type f -print0 | sort -z | xargs -0 sha256sum) > "$EV/app-export.sha256"
+          [ -f "$EV/app-export/index.html" ] || { echo "no index.html in the app export"; exit 1; }
+          grep -rqF "\"${API_BASE%/api/v1}\"" "$EV/app-export/_expo/static/js" || { echo "the app bundle does not name the API"; exit 1; }
+      - name: The record
+        if: always()
+        run: |
+          mkdir -p "$EV"
+          printf 'console %s\nmobile %s\napi_base %s\nportal_origin %s\nnode %s\nrun %s\nconsole_files %s\napp_files %s\n' \
+            "$CONSOLE" "$MOBILE" "$API_BASE" "$PORTAL_ORIGIN" "$(node -v)" "$GITHUB_RUN_ID" \
+            "$(cat "$EV/dist.sha256" 2>/dev/null | wc -l)" "$(cat "$EV/app-export.sha256" 2>/dev/null | wc -l)" > "$EV/target.txt"
+      - name: Keep the builds
         if: always()
         env:
           RESULT: ${{ job.status }}
         run: |
-          mkdir -p "$EV"; printf 'result %s\n' "$RESULT" >> "$EV/target.txt"
+          printf 'result %s\n' "$RESULT" >> "$EV/target.txt"
           cd tools
           git config user.name "ci-evidence"
           git config user.email "ci-evidence@users.noreply.github.com"
           git fetch -q origin ci-evidence && git checkout -q -B ci-evidence origin/ci-evidence
           mkdir -p evidence/test-console; cp -r "$GITHUB_WORKSPACE/evidence/test-console/." evidence/test-console/
           git add evidence/test-console
-          git commit -qm "evidence: test console build (D217) — console ${CONSOLE:0:7} for ${PORTAL_ORIGIN} ($RESULT)"
+          git commit -qm "evidence: test sites build (D217) — console ${CONSOLE:0:7}, app ${MOBILE:0:7} for production's API ($RESULT)"
           for i in 1 2 3 4 5; do git push -q origin ci-evidence && break; git fetch -q origin ci-evidence && git rebase -q origin/ci-evidence; done
