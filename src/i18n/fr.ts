@@ -518,7 +518,7 @@ export const fr: Catalogue = {
   'nav.languages': 'Langues',
   'brand.home': '{name} — page d’accueil',
   'footer.company': 'Société',
-  'footer.product': 'Produit',
+  'footer.product': 'Produits',
   'footer.help': 'Aide',
   'footer.legal': 'Mentions légales',
   'footer.applicationStatus': 'Suivi de la demande',

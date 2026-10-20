@@ -86,17 +86,17 @@ export const about: Docs = {
 export const products: Docs = {
   en: {
     title: 'Products',
-    summary: 'The software {displayName} builds as its own products. Today there is one: Dukan ERP.',
+    summary: 'The software {displayName} builds as its own products.',
     sections: [{ id: 'dukan', heading: 'Dukan ERP', blocks: [{ kind: 'p', text: 'A business-management platform for retail and electronics shops and for money-services agents: stock, sales, money, teams and reports in one application.' }] }],
   },
   fr: {
     title: 'Produits',
-    summary: 'Les logiciels que {displayName} développe comme ses propres produits. Il y en a un aujourd’hui : Dukan ERP.',
+    summary: 'Les logiciels que {displayName} développe comme ses propres produits.',
     sections: [{ id: 'dukan', heading: 'Dukan ERP', blocks: [{ kind: 'p', text: 'Une plateforme de gestion pour les commerces de détail et d’électronique et pour les agents de services monétaires : stock, ventes, argent, équipes et rapports dans une seule application.' }] }],
   },
   ar: {
     title: 'المنتجات',
-    summary: 'البرمجيات التي تطوّرها {displayName} منتجاتٍ خاصة بها. ويوجد اليوم منتج واحد: Dukan ERP.',
+    summary: 'البرمجيات التي تطوّرها {displayName} منتجاتٍ خاصة بها.',
     sections: [{ id: 'dukan', heading: 'Dukan ERP', blocks: [{ kind: 'p', text: 'منصة لإدارة الأعمال موجّهة إلى متاجر التجزئة والإلكترونيات وإلى وكلاء الخدمات المالية: المخزون والمبيعات والأموال والفرق والتقارير في تطبيق واحد.' }] }],
   },
 };

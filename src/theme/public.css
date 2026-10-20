@@ -367,6 +367,7 @@ main:focus {
 .public-page.home,
 .public-page.services,
 .public-page.product,
+.public-page.riyade-page,
 .public-page.not-found {
   gap: 0;
   padding-block-end: 0;
@@ -2422,6 +2423,230 @@ html[lang='ar'] .contact-group-title {
   align-items: center;
   margin: 0;
   color: var(--text-2);
+}
+
+/*
+ * ── Riyade, coming soon (components/public/riyade.tsx, pages/public/Riyade.tsx; 2026-10-20) ──────────────────────
+ * Its own look inside the site's system, with nothing new to approve: no symbol and no new colour. Its name is set in
+ * the display face — on Arabic pages too, so the wordmark is the same letters in every language — its picture is rings
+ * and points drawn in the surrounding band's tokens, and its status is a small pill that says it in words. Dukan ERP
+ * keeps the indigo mark, the phone and the larger cards.
+ */
+.riyade-mark {
+  font-family: 'Bricolage Grotesque', var(--font-body);
+  font-weight: 650;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+.riyade-mark-lg {
+  font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
+}
+.riyade-mark-xl {
+  font-size: clamp(3.5rem, 2rem + 6.5vw, 6.75rem);
+}
+.riyade-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 5px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-brand);
+  background: var(--info-bg);
+  color: var(--info-fg);
+  font-size: 0.85rem;
+  font-weight: 650;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.riyade-status-dot {
+  inline-size: 7px;
+  block-size: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+/* On navy: the amber of every "coming soon" on a dark band (Dukan ERP's hero pill, the eyebrows). */
+.band-dark .riyade-status {
+  border-color: var(--amber-soft);
+  background: var(--amber-soft);
+  color: var(--amber);
+}
+
+/* The drawing: thin rings, an amber centre, points in the brand colour. On a light surface by default; on navy below. */
+.riyade-art {
+  display: block;
+}
+.ra-ring,
+.ra-link {
+  fill: none;
+  stroke-width: 1.5;
+}
+.ra-ring {
+  stroke: var(--border);
+}
+.ra-ring-1,
+.ra-link {
+  stroke: var(--border-raised);
+}
+.ra-link {
+  stroke-dasharray: 3 6;
+  stroke-linecap: round;
+}
+.ra-halo {
+  fill: var(--amber-soft);
+}
+.ra-core {
+  fill: var(--amber);
+}
+.ra-node {
+  fill: var(--brand);
+}
+.ra-node-quiet {
+  fill: var(--border-brand);
+}
+.band-dark .ra-ring {
+  stroke: var(--ink-line);
+}
+.band-dark .ra-ring-1,
+.band-dark .ra-link {
+  stroke: var(--ink-line-strong);
+}
+.band-dark .ra-node {
+  fill: var(--brand-on-ink);
+}
+.band-dark .ra-node-quiet {
+  fill: var(--on-ink-3);
+}
+
+/* Its page: one navy band — the name large, its line, who makes it, its status — beside the drawing. */
+.riyade-hero {
+  padding-block: clamp(64px, 3rem + 6vw, 144px);
+}
+.riyade-copy {
+  gap: 18px;
+}
+.riyade-title {
+  margin: 0;
+  color: var(--on-ink);
+}
+/* Above `.band-dark p`: the line under the name is as bright as the name. */
+.riyade-hero .riyade-tagline {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.45rem, 1.05rem + 1.6vw, 2.15rem);
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -0.015em;
+  color: var(--on-ink);
+  max-inline-size: 22ch;
+  text-wrap: balance;
+}
+.riyade-hero .riyade-lead {
+  font-size: clamp(1.05rem, 1rem + 0.3vw, 1.2rem);
+  max-inline-size: 44ch;
+  color: var(--on-ink-2);
+}
+.riyade-copy .riyade-status {
+  margin-block-start: 6px;
+}
+.riyade-stage .riyade-art {
+  inline-size: min(100%, 248px);
+  margin-inline: auto;
+}
+@media (min-width: 1000px) {
+  .riyade-stage .riyade-art {
+    inline-size: min(100%, 440px);
+  }
+}
+
+/* The Products page: a lighter card than Dukan ERP's, after it — its mark, its line, its status and one quiet button. */
+.riyade-card {
+  grid-template-columns: minmax(0, 1fr);
+}
+.riyade-card-copy {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+}
+/* Above `.card p`: the line reads as strongly as a heading, the sentence under it as the card's text. */
+.riyade-card .riyade-card-tagline {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text);
+}
+.riyade-card .riyade-status {
+  margin-block-start: 2px;
+}
+.riyade-card-art {
+  display: none;
+}
+@media (min-width: 760px) {
+  .riyade-card {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 32px;
+  }
+  .riyade-card-art {
+    display: block;
+    inline-size: 176px;
+    block-size: 176px;
+  }
+}
+
+/* The home page: one row under the featured Dukan ERP card, continuing its tinted band; the whole row is the link. */
+/* A band continuing the one before it: almost no space above, but enough that a card rising 4 px on hover or showing
+   its focus ring is not cut by the band's edge (`.band` hides what overflows it). */
+.band-follow {
+  padding-block-start: 12px;
+}
+.riyade-row {
+  padding: 0;
+}
+.riyade-row-link {
+  display: grid;
+  gap: 10px 28px;
+  align-items: center;
+  padding: clamp(18px, 2vw, 24px) clamp(20px, 2.4vw, 32px);
+  border-radius: inherit;
+  color: inherit;
+  text-decoration: none;
+}
+@media (min-width: 760px) {
+  .riyade-row-link {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+}
+.riyade-row-name {
+  color: var(--text);
+}
+.riyade-row-text {
+  color: var(--text-2);
+}
+.riyade-row-end {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+.riyade-row .icon-arrow {
+  color: var(--brand);
+  transition: translate var(--dur) var(--ease);
+}
+@media (hover: hover) and (pointer: fine) {
+  .riyade-row-link:hover .icon-arrow {
+    translate: var(--nudge) 0;
+  }
+  [dir='rtl'] .riyade-row-link:hover .icon-arrow {
+    translate: calc(-1 * var(--nudge)) 0;
+  }
+}
+html[lang='ar'] .riyade-hero .riyade-tagline,
+html[lang='ar'] .riyade-card .riyade-card-tagline {
+  line-height: 1.55;
+  letter-spacing: 0;
 }
 
 /* The home page's hero drawing (components/public/brand.tsx): a website, a phone and a small dashboard, no words. */

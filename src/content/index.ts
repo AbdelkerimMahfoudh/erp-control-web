@@ -14,6 +14,7 @@ import { dukanOverview } from './dukan-overview';
 import { brand, type BrandContent } from './brand';
 import { dukanErp } from './dukan-erp';
 import { dukanDemo } from './dukan-demo';
+import { riyade } from './riyade';
 import { BLOCKERS, type Blocker } from './blockers';
 import { looksLikePlaceholder } from '../config/schema';
 import { blockersIn, textsOf, type Document, type LegalDocument } from './types';
@@ -23,7 +24,7 @@ import type { DukanErpContent } from './dukan-erp';
 import { aboutPrelaunch, contactPrelaunch, dukanErpAsPrelaunch, dukanErpPrelaunch, dukanOverviewAsPrelaunch, dukanOverviewPrelaunch, supportPrelaunch } from './prelaunch';
 import { accountDeletionPrelaunch, legalNoticePrelaunch, privacyChoicesPrelaunch, privacyPrelaunch, securityPrelaunch, termsPrelaunch } from './legal-prelaunch';
 
-export { about, applicationStatus, contact, login, products, support, accountDeletion, privacy, terms, privacyChoices, legalNotice, security, brand, dukanOverview, dukanErp, dukanDemo };
+export { about, applicationStatus, contact, login, products, support, accountDeletion, privacy, terms, privacyChoices, legalNotice, security, brand, dukanOverview, dukanErp, dukanDemo, riyade };
 
 export const DOCUMENTS = { about, applicationStatus, contact, login, products, support, accountDeletion, privacy, terms, privacyChoices, legalNotice, security } satisfies Record<string, Record<Language, Document>>;
 
@@ -88,6 +89,7 @@ export function allTexts(lang: Language, surface: Surface = 'full'): string[] {
     ...stringsOf(dukanOverviewFor(lang, surface)),
     ...stringsOf(shown),
     ...stringsOf(dukanDemo[lang]),
+    ...stringsOf(riyade[lang]),
   ];
 }
 

@@ -4,6 +4,7 @@
  * Values are raw texts (with `{inputs}`); `plainText` fills them.
  */
 import { applicationStatus, brandFor, documentsFor, dukanErpFor, login } from '../content';
+import { riyadeMeta } from '../content/riyade';
 import { SURFACE } from '../config/site';
 import type { Surface } from '../config/schema';
 import { translate } from '../i18n';
@@ -26,6 +27,8 @@ export function metaFor(id: PublicRouteId, lang: Language, surface: Surface = SU
       return { title: `${brandFor(lang).servicesPage.title}${SUFFIX}`, description: brandFor(lang).servicesPage.summary };
     case 'dukanErp':
       return { title: `${dukanErpFor(lang, surface).title}${SUFFIX}`, description: dukanErpFor(lang, surface).summary };
+    case 'riyade':
+      return { title: `${riyadeMeta(lang).title}${SUFFIX}`, description: riyadeMeta(lang).description };
     case 'apply':
       return { title: `${translate(lang, 'page.apply.title')}${SUFFIX}`, description: translate(lang, 'page.apply.description', { name: '{displayName}' }) };
     case 'about':
