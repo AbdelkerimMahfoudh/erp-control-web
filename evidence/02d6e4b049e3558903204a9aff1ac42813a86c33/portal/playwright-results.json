@@ -1,0 +1,1337 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.3/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/playwright.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/02d6e4b049e3558903204a9aff1ac42813a86c33",
+        "commitHash": "02d6e4b049e3558903204a9aff1ac42813a86c33",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39371889317"
+      },
+      "gitCommit": {
+        "shortHash": "02d6e4b",
+        "hash": "02d6e4b049e3558903204a9aff1ac42813a86c33",
+        "subject": "Console: platform-superadmin provisioning and persistent test businesses (D217)",
+        "body": "Console: platform-superadmin provisioning and persistent test businesses (D217)\n\n- New business (/admin/businesses/new): a business and its Owner, a test\n  business by default; one key per set of answers so a retry finds the same\n  business; the Owner's one-time setup code shown once, never stored, gone when\n  handed over. The Owner's number stays unverified; nothing is sent.\n- Business page: an unmistakable test banner and badge; \"Setup and access\"\n  tells provisioning (the Owner's password) and activation (the subscription)\n  apart, with the setup code's state and the contacts' verification and\n  consent; issue or reissue the setup code after a step-up; set or clear the\n  test status with a reason; add a store (granted under a test business's\n  grant, or a customer's priced request). No payment decision for a test\n  business.\n- Businesses list marks test businesses and links to New business; the\n  dashboard says how many test businesses its figures leave out.\n- Provisioning refusals said in EN/FR/AR by their code. Arabic names a test\n  business \"اختباري\", never \"تجريبي\", the free trial's word.\n- Tests: provisioning-console (10), French \"Test\" allowed as English writes it.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+        "author": {
+          "name": "Claude",
+          "email": "noreply@anthropic.com",
+          "time": 1792471957000
+        },
+        "committer": {
+          "name": "Claude",
+          "email": "noreply@anthropic.com",
+          "time": 1792471957000
+        },
+        "branch": "superadmin-provisioning"
+      },
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/02d6e4b049e3558903204a9aff1ac42813a86c33/portal/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/02d6e4b049e3558903204a9aff1ac42813a86c33",
+            "commitHash": "02d6e4b049e3558903204a9aff1ac42813a86c33",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39371889317"
+          },
+          "gitCommit": {
+            "shortHash": "02d6e4b",
+            "hash": "02d6e4b049e3558903204a9aff1ac42813a86c33",
+            "subject": "Console: platform-superadmin provisioning and persistent test businesses (D217)",
+            "body": "Console: platform-superadmin provisioning and persistent test businesses (D217)\n\n- New business (/admin/businesses/new): a business and its Owner, a test\n  business by default; one key per set of answers so a retry finds the same\n  business; the Owner's one-time setup code shown once, never stored, gone when\n  handed over. The Owner's number stays unverified; nothing is sent.\n- Business page: an unmistakable test banner and badge; \"Setup and access\"\n  tells provisioning (the Owner's password) and activation (the subscription)\n  apart, with the setup code's state and the contacts' verification and\n  consent; issue or reissue the setup code after a step-up; set or clear the\n  test status with a reason; add a store (granted under a test business's\n  grant, or a customer's priced request). No payment decision for a test\n  business.\n- Businesses list marks test businesses and links to New business; the\n  dashboard says how many test businesses its figures leave out.\n- Provisioning refusals said in EN/FR/AR by their code. Arabic names a test\n  business \"اختباري\", never \"تجريبي\", the free trial's word.\n- Tests: provisioning-console (10), French \"Test\" allowed as English writes it.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "Claude",
+              "email": "noreply@anthropic.com",
+              "time": 1792471957000
+            },
+            "committer": {
+              "name": "Claude",
+              "email": "noreply@anthropic.com",
+              "time": 1792471957000
+            },
+            "branch": "superadmin-provisioning"
+          },
+          "actualWorkers": 4
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/portal\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/02d6e4b049e3558903204a9aff1ac42813a86c33/portal/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/02d6e4b049e3558903204a9aff1ac42813a86c33",
+            "commitHash": "02d6e4b049e3558903204a9aff1ac42813a86c33",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/39371889317"
+          },
+          "gitCommit": {
+            "shortHash": "02d6e4b",
+            "hash": "02d6e4b049e3558903204a9aff1ac42813a86c33",
+            "subject": "Console: platform-superadmin provisioning and persistent test businesses (D217)",
+            "body": "Console: platform-superadmin provisioning and persistent test businesses (D217)\n\n- New business (/admin/businesses/new): a business and its Owner, a test\n  business by default; one key per set of answers so a retry finds the same\n  business; the Owner's one-time setup code shown once, never stored, gone when\n  handed over. The Owner's number stays unverified; nothing is sent.\n- Business page: an unmistakable test banner and badge; \"Setup and access\"\n  tells provisioning (the Owner's password) and activation (the subscription)\n  apart, with the setup code's state and the contacts' verification and\n  consent; issue or reissue the setup code after a step-up; set or clear the\n  test status with a reason; add a store (granted under a test business's\n  grant, or a customer's priced request). No payment decision for a test\n  business.\n- Businesses list marks test businesses and links to New business; the\n  dashboard says how many test businesses its figures leave out.\n- Provisioning refusals said in EN/FR/AR by their code. Arabic names a test\n  business \"اختباري\", never \"تجريبي\", the free trial's word.\n- Tests: provisioning-console (10), French \"Test\" allowed as English writes it.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\nClaude-Session: https://claude.ai/code/session_01WqJ1WH6TJWfctbXGjyqFZt\n",
+            "author": {
+              "name": "Claude",
+              "email": "noreply@anthropic.com",
+              "time": 1792471957000
+            },
+            "committer": {
+              "name": "Claude",
+              "email": "noreply@anthropic.com",
+              "time": 1792471957000
+            },
+            "branch": "superadmin-provisioning"
+          },
+          "actualWorkers": 4
+        },
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/02d6e4b049e3558903204a9aff1ac42813a86c33/portal/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "portal.spec.ts",
+      "file": "portal.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "the host files: nothing indexed, the root and the old address sent to /subscription, the shell for every portal address",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 166,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:52.647Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-969a2f4c408e93e0a190",
+          "file": "portal.spec.ts",
+          "line": 153,
+          "column": 1
+        },
+        {
+          "title": "signed out, en at 375: the Owner's sign-in, the company site's legal links, left to right",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2300,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:52.538Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-8f5602418fc64bfdf089",
+          "file": "portal.spec.ts",
+          "line": 188,
+          "column": 5
+        },
+        {
+          "title": "signed out, en at desktop: the Owner's sign-in, the company site's legal links, left to right",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2504,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:52.555Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-ad6da065a745823291d3",
+          "file": "portal.spec.ts",
+          "line": 188,
+          "column": 5
+        },
+        {
+          "title": "signed out, fr at 375: the Owner's sign-in, the company site's legal links, left to right",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 2604,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:52.636Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-280e6fde11ef7cc7adce",
+          "file": "portal.spec.ts",
+          "line": 188,
+          "column": 5
+        },
+        {
+          "title": "signed out, fr at desktop: the Owner's sign-in, the company site's legal links, left to right",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2451,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:52.905Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-524c002e022543e14251",
+          "file": "portal.spec.ts",
+          "line": 188,
+          "column": 5
+        },
+        {
+          "title": "signed out, ar at 375: the Owner's sign-in, the company site's legal links, right to left",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1852,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:55.017Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-6742377472292c3a8882",
+          "file": "portal.spec.ts",
+          "line": 188,
+          "column": 5
+        },
+        {
+          "title": "signed out, ar at desktop: the Owner's sign-in, the company site's legal links, right to left",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1936,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:55.330Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-ae668553fed7d49c6270",
+          "file": "portal.spec.ts",
+          "line": 188,
+          "column": 5
+        },
+        {
+          "title": "signed in, trial-available, en at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2564,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:55.581Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-aa199f277c64fea28c43",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-available, en at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 2631,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:55.586Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-4e47a616946c75a4de83",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-available, fr at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2394,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:56.916Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-4909eabab53d1129715a",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-available, fr at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2542,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:57.317Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-f96656ed47ed69fca4a2",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-available, ar at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2554,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:58.185Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-1de97d4f4701e23710e2",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-available, ar at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 2636,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:58.269Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-5607bd09b74bc9e6de2f",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-active, en at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2408,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:59.339Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-77992a8a05ba76028d04",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-active, en at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2479,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:00:59.912Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-db0e69e62bb47095fefc",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-active, fr at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2512,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:00.765Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-21feb1972b22bd24bd4d",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-active, fr at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 2554,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:00.943Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-a04754519174b5ef47c9",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-active, ar at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2434,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:01.770Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-244bc735a63dacfc38e5",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, trial-active, ar at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2503,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:02.416Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-8c88e6ead9ca694c0eb1",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, grace-active, en at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2648,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:03.303Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-f93dd1695e15ce49795b",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, grace-active, en at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 2708,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:03.546Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-cb421f4df210d9b22af4",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, grace-active, fr at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2624,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:04.222Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-e25ffb7f25d9e6cfebe9",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, grace-active, fr at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2623,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:04.944Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-ccc847a885ea230af55a",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, grace-active, ar at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2562,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:05.979Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-0d1ebf29c0696723a7fe",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, grace-active, ar at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 2573,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:06.286Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-1e06b8353699bdcfb734",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, read-only, en at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2543,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:06.865Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-dbcc8029567f3b49fe14",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, read-only, en at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2644,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:07.603Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-a2fd278e34b295f16d29",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, read-only, fr at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2581,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:08.565Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-a7bf11562c55c03b1482",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, read-only, fr at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 2620,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:08.916Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-cfa9008fbfc2cbf9118e",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, read-only, ar at 375: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 2457,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:09.431Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-5af1ff724d90b3a98f3e",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "signed in, read-only, ar at desktop: the server's status, in words, no sideways scroll, no violation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 2777,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:10.270Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-590d0d5f977e4824583a",
+          "file": "portal.spec.ts",
+          "line": 217,
+          "column": 7
+        },
+        {
+          "title": "the claim, en: the button asks first, the confirmation sends it once, with the session's CSRF token",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 2378,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:11.166Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-657796ce2bce475344c4",
+          "file": "portal.spec.ts",
+          "line": 241,
+          "column": 3
+        },
+        {
+          "title": "the claim, fr: the button asks first, the confirmation sends it once, with the session's CSRF token",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 2235,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:11.591Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-3e7822eacc58c53a18e0",
+          "file": "portal.spec.ts",
+          "line": 241,
+          "column": 3
+        },
+        {
+          "title": "the claim, ar: the button asks first, the confirmation sends it once, with the session's CSRF token",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1937,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-20T05:01:11.919Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "291f6c0e7fe47579f0c2-e2c6c65b4c6c15594594",
+          "file": "portal.spec.ts",
+          "line": 241,
+          "column": 3
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-20T05:00:51.036Z",
+    "duration": 22918.66,
+    "expected": 34,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
