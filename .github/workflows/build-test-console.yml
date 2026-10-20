@@ -1,0 +1,73 @@
+# The private test console's build (D217; backend docs/100 §16.7), on Linux.
+#
+# The owner's PC cannot run Vite: Windows Smart App Control blocks Rolldown's native binary. So this builds the portal
+# surface in preview mode from the console commit in build/target.env, with production's API and the test console's
+# origin, and commits the dist with its checksums to `ci-evidence` under evidence/test-console/. The owner's local
+# session packages it with scripts/caddy-release.mjs and installs it with the backend's test-sites.sh. Nothing secret
+# is involved, and this workflow deploys nothing. Edit build/target.env and push this branch to build again.
+name: build-test-console
+
+on:
+  push:
+    branches: [ops/build-test-console]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-test-console
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    permissions:
+      contents: write # only to commit the evidence branch
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: tools
+      - name: The target
+        run: |
+          set -a; source tools/build/target.env; set +a
+          [[ "$CONSOLE" =~ ^[0-9a-f]{40}$ ]] || { echo "CONSOLE must be a full SHA"; exit 1; }
+          [ "$API_BASE" = "https://api.tsxmr.com/api/v1" ] || { echo "API_BASE must be production's API"; exit 1; }
+          [ "$PORTAL_ORIGIN" = "https://dukan-test.tsxmr.com" ] || { echo "PORTAL_ORIGIN must be the test console"; exit 1; }
+          { echo "CONSOLE=$CONSOLE"; echo "API_BASE=$API_BASE"; echo "PORTAL_ORIGIN=$PORTAL_ORIGIN"; echo "EV=$GITHUB_WORKSPACE/evidence/test-console/${CONSOLE:0:7}-$GITHUB_RUN_ID"; } >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+        with: { repository: AbdelkerimMahfoudh/erp-control-web, ref: '${{ env.CONSOLE }}', path: web }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install and build (portal surface, preview mode)
+        run: |
+          mkdir -p "$EV"
+          [ "$(git -C web rev-parse HEAD)" = "$CONSOLE" ] || { echo "the checkout is not $CONSOLE"; exit 1; }
+          (cd web && npm ci --no-audit --no-fund > "$EV/install.log" 2>&1)
+          (cd web && VITE_SITE_SURFACE=portal VITE_API_BASE="$API_BASE" VITE_PORTAL_ORIGIN="$PORTAL_ORIGIN" npm run build:preview > "$EV/build.log" 2>&1)
+          cp -r web/dist "$EV/dist"
+          (cd "$EV/dist" && find . -type f -print0 | sort -z | xargs -0 sha256sum) > "$EV/dist.sha256"
+          printf 'console %s\napi_base %s\nportal_origin %s\nnode %s\nrun %s\nfiles %s\n' "$CONSOLE" "$API_BASE" "$PORTAL_ORIGIN" "$(node -v)" "$GITHUB_RUN_ID" "$(wc -l < "$EV/dist.sha256")" > "$EV/target.txt"
+      - name: The build names production's API and is a portal build
+        run: |
+          for f in app-shell.html 404.html _headers _redirects; do [ -f "$EV/dist/$f" ] || { echo "no $f in the build"; exit 1; }; done
+          grep -qF "${API_BASE%/api/v1}" "$EV/dist/_headers" || { echo "the policy does not name the API"; exit 1; }
+      - name: Keep the build
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          mkdir -p "$EV"; printf 'result %s\n' "$RESULT" >> "$EV/target.txt"
+          cd tools
+          git config user.name "ci-evidence"
+          git config user.email "ci-evidence@users.noreply.github.com"
+          git fetch -q origin ci-evidence && git checkout -q -B ci-evidence origin/ci-evidence
+          mkdir -p evidence/test-console; cp -r "$GITHUB_WORKSPACE/evidence/test-console/." evidence/test-console/
+          git add evidence/test-console
+          git commit -qm "evidence: test console build (D217) — console ${CONSOLE:0:7} for ${PORTAL_ORIGIN} ($RESULT)"
+          for i in 1 2 3 4 5; do git push -q origin ci-evidence && break; git fetch -q origin ci-evidence && git rebase -q origin/ci-evidence; done
