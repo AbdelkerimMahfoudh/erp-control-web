@@ -5,6 +5,7 @@ import { adminRequest } from '../../auth/admin';
 import { Empty, ErrorNotice, Loading, StateBadge, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatInstant, formatInt } from '../../lib/format';
+import { TestBadge } from './provisioning';
 
 /** Every state the server computes, in the order a business meets them: the free trial's three (2026-10-13) come before paid access. */
 const STATES: EntitlementState[] = ['pending', 'trial_available', 'trial_active', 'trial_expired', 'active', 'grace', 'complimentary', 'suspended', 'expired', 'cancelled', 'rejected'];
@@ -51,7 +52,12 @@ export function Businesses() {
 
   return (
     <div className="stack">
-      <h1>{t('admin.businesses.title')}</h1>
+      <div className="row spread">
+        <h1>{t('admin.businesses.title')}</h1>
+        <Link className="btn btn-primary btn-sm" to="/admin/businesses/new">
+          {t('admin.new.title')}
+        </Link>
+      </div>
       <div className="row">
         <input placeholder={t('admin.businesses.search')} value={q} onChange={(e) => (setPage(1), setQ(e.target.value))} aria-label={t('admin.businesses.search')} />
         <select className="compact" value={state} onChange={(e) => (setPage(1), setState(e.target.value))} aria-label={t('admin.businesses.state')}>
@@ -75,9 +81,12 @@ export function Businesses() {
               {
                 label: t('apply.business'),
                 render: (r) => (
-                  <Link to={`/admin/businesses/${r.id}`}>
-                    <strong>{r.name}</strong>
-                  </Link>
+                  <span className="row">
+                    <Link to={`/admin/businesses/${r.id}`}>
+                      <strong>{r.name}</strong>
+                    </Link>
+                    {r.isTest ? <TestBadge /> : null}
+                  </span>
                 ),
               },
               { label: t('admin.business.storeId'), render: (r) => <span className="ltr">{r.publicStoreId}</span> },

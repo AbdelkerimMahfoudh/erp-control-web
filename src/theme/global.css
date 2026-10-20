@@ -389,6 +389,33 @@ select.compact {
   border-color: var(--ok-fg);
 }
 
+/* A business's setup and access facts (D217): label beside value, stacked on a phone. */
+.facts {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 6px 16px;
+  margin: 0;
+}
+.facts dt {
+  color: var(--text-2);
+}
+.facts dd {
+  margin: 0;
+}
+@media (max-width: 480px) {
+  .facts {
+    grid-template-columns: 1fr;
+  }
+  .facts dd {
+    margin-bottom: 6px;
+  }
+}
+/* The Owner's one-time setup code: long, unbroken, so it wraps anywhere rather than widening the page. */
+.setup-code code {
+  overflow-wrap: anywhere;
+  font-size: 1.05rem;
+}
+
 .money {
   font-variant-numeric: tabular-nums;
   font-weight: 700;

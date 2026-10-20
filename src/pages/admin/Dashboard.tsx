@@ -35,6 +35,7 @@ export function Dashboard() {
           </div>
         ))}
       </div>
+      {data.testBusinesses ? <p className="muted small">{t('admin.dashboard.testBusinesses', { n: formatInt(data.testBusinesses, lang) })}</p> : null}
       <section className="card">
         <h2>{t('admin.dashboard.byState')}</h2>
         <div className="row">

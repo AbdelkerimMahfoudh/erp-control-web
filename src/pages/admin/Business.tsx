@@ -13,6 +13,7 @@ import { formatDate, formatDateTime, formatInstant, formatInt } from '../../lib/
 import { detailOf } from '../../lib/trial';
 import { BusinessTrial } from './BusinessTrial';
 import { BusinessGrace, BusinessMessages } from './BusinessLifecycle';
+import { ConsoleStore, SetupPanel, TestBadge, TestBanner, TestStatus } from './provisioning';
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
 
@@ -37,7 +38,9 @@ const ROUTE: Record<Decision, string> = {
  * it is offered approve, refuse and grant — and paid or granted access decided while a trial runs starts when the
  * trial ends, which the server sets. None creates, extends or shortens a trial; there is no decision here that could.
  */
-function decisionsFor(status: string | undefined): Decision[] {
+function decisionsFor(status: string | undefined, isTest = false): Decision[] {
+  // A test business is never paid for (D217): its access is a grant, so no payment is offered.
+  if (isTest) return decisionsFor(status).filter((d) => d !== 'payment');
   switch (status) {
     case 'pending_activation':
     case 'rejected':
@@ -92,6 +95,7 @@ export function Business() {
           <h1>{data.name}</h1>
           <p className="lead row">
             <StateBadge state={ent?.state} />
+            {data.isTest ? <TestBadge /> : null}
             <span className="ltr muted">{data.publicStoreId}</span>
             {data.city ? <span className="muted">{data.city}</span> : null}
             <span className="muted small">{t('admin.business.version', { n: formatInt(data.version, lang) })}</span>
@@ -102,6 +106,9 @@ export function Business() {
         </button>
       </section>
       <ErrorNotice error={error} />
+      {data.isTest ? <TestBanner /> : null}
+
+      <SetupPanel business={data} ask={ask} onDone={load} />
 
       <BusinessTrial business={data} />
 
@@ -110,6 +117,8 @@ export function Business() {
       <BusinessMessages businessId={id} timeZone={ent?.timeZone} version={data} />
 
       <Decisions business={data} ask={ask} onDone={load} />
+
+      <ConsoleStore business={data} ask={ask} onDone={load} />
 
       <section className="grid">
         <div className="card stack">
@@ -217,6 +226,8 @@ export function Business() {
         />
       </section>
 
+      <TestStatus business={data} ask={ask} onDone={load} />
+
       <section className="card stack">
         <h2>{t('admin.seats.title')}</h2>
         {outcome ? (
@@ -323,7 +334,7 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [done, setDone] = useState<string | null>(null);
-  const available = decisionsFor(business.entitlement?.status);
+  const available = decisionsFor(business.entitlement?.status, business.isTest === true);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();

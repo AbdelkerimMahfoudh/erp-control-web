@@ -614,6 +614,8 @@ export interface Dashboard {
   activeUsers: number;
   pendingSeatRequests: number;
   pendingStaff: number;
+  /** Persistent test businesses (D217): left out of every figure above. Absent from an API older than 0102. */
+  testBusinesses?: number;
   revenue: null;
   calculatedAt: string;
 }
@@ -662,6 +664,8 @@ export interface BusinessRow {
   complimentary?: ComplimentaryGrant | null;
   /** The business's free trial, when it has or may claim one (C18). Absent from an API older than it. */
   trial?: TrialSummary | null;
+  /** A persistent test business (D217). Absent from an API older than 0102. */
+  isTest?: boolean;
   version: number;
 }
 
@@ -699,6 +703,72 @@ export interface BusinessDetail {
   payments: PaymentRow[];
   /** The trial's recorded facts, for the console only. Absent from an API older than the trial. */
   trial?: BusinessTrial | null;
+  /** A persistent test business (D217). Absent from an API older than 0102. */
+  isTest?: boolean;
+  /** Provisioning and activation, separately (D217). Absent from an API older than 0102. */
+  setup?: ProvisioningStatus | null;
+}
+
+/** Where the Owner's setup invitation stands (0075): the newest one, or none was ever issued. */
+export type InvitationState = 'none' | 'active' | 'expired' | 'accepted' | 'revoked';
+
+/** A WhatsApp number's consent, as the server reads it (D213). */
+export type ConsentState = 'none' | 'pending' | 'active' | 'outdated' | 'withdrawn' | 'superseded';
+
+/**
+ * Where a business stands on two separate questions (D217): is it built and can its Owner sign in (provisioning), and
+ * may it work (activation — the subscription's status). Never a credential.
+ */
+export interface ProvisioningStatus {
+  isTest: boolean;
+  testMarkedAt: string | null;
+  testMarkedBy: string | null;
+  customerActivation: 'open' | 'closed';
+  createdBy: 'console' | 'self_service' | 'other';
+  provisioning: 'awaiting_owner_setup' | 'ready';
+  owner: {
+    name: string;
+    passwordSet: boolean | null;
+    phone: { present: boolean; verified: boolean; whatsappConsent: ConsentState | null };
+    email: { present: boolean; verified: boolean };
+    lastLoginAt: string | null;
+  } | null;
+  invitation: {
+    state: InvitationState;
+    issuedAt: string | null;
+    issuedBy: string | null;
+    expiresAt: string | null;
+    acceptedAt: string | null;
+    revokedAt: string | null;
+  };
+  activation: { status: string | null; complimentaryUntil: string | null };
+}
+
+/** The Owner's setup invitation, as it is issued: the token is in this answer once, and nowhere else, ever. */
+export interface IssuedInvitation {
+  token: string;
+  expiresAt: string;
+  delivery: 'manual';
+  owner: { name: string; destinationMasked: string | null };
+  replaced?: number;
+}
+
+/** POST platform/businesses: the business, and its Owner's invitation when this request made it. */
+export interface CreatedBusiness {
+  companyId: string;
+  publicStoreId: string;
+  created: boolean;
+  invitation: IssuedInvitation | null;
+  /** The business exists but its invitation could not be issued: the console issues one from the business. */
+  invitationFailed?: boolean;
+  setup?: ProvisioningStatus | null;
+}
+
+/** POST platform/businesses/:id/stores (D217): granted under a test business's grant, or a customer's priced request. */
+export interface ConsoleStoreResult {
+  mode: 'granted' | 'requested';
+  created: boolean;
+  allocation: SeatRequest;
 }
 
 /**

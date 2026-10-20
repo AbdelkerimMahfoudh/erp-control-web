@@ -14,6 +14,8 @@ const SAME_EVERYWHERE = new Set([
   'Dukan ERP', 'Documentation', 'App Store', 'Google Play', 'Menu', 'Contact', 'Services', 'Version {version}', '© {year} {name}', 'Administration — {name}',
   // The portal's and the console's messages (docs/101): the same words in French.
   'Messages', 'Message',
+  // A test business's badge (D217): French writes « Test » as English does.
+  'Test',
 ]);
 
 /**

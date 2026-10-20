@@ -8,6 +8,7 @@ import { useI18n } from '../../i18n';
 import { Dashboard } from './Dashboard';
 import { Pending } from './Pending';
 import { Businesses } from './Businesses';
+import { NewBusiness } from './NewBusiness';
 import { Business } from './Business';
 import { SeatRequests } from './SeatRequests';
 import { Audit } from './Audit';
@@ -90,6 +91,7 @@ export function Admin() {
         <Route index element={<Dashboard />} />
         <Route path="pending" element={<Pending />} />
         <Route path="businesses" element={<Businesses />} />
+        <Route path="businesses/new" element={<NewBusiness />} />
         <Route path="businesses/:id" element={<Business />} />
         <Route path="seat-requests" element={<SeatRequests />} />
         <Route path="trials" element={<TrialClaims />} />
