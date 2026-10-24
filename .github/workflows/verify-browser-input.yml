@@ -1,0 +1,164 @@
+# Browser input, focus ring and the Owner's setup code (2026-10-24), end to end on GitHub runners.
+#
+# backend: the deployed backend commit's whole unit suite and its real-MySQL database gates (identities, every migration
+#   from empty, the 0101 employee-invitation and 0102 provisioning specs: setup-code claim under concurrency included).
+# browser (Chromium, WebKit): MySQL 8.4.11, the API built from the backend commit with every migration applied, an
+#   administrator made from the shell with MFA, the app's web export from the mobile commit; then
+#   - the access journey: a test business, the Owner's setup code redeemed once, signed in at once with no approval
+#     step, "no active access yet" without an entitlement (EN/FR/AR), no paid subscription, a no-payment grant that
+#     opens the ERP at once;
+#   - the input matrix: one focus ring on the sign-in fields (touch and keyboard), Add an account, New team member and
+#     New category typed and kept, validation then correction saved for real — 320/375/390, EN/FR/AR (RTL), light/dark.
+#
+# WebKit here is browser automation on Linux, not a physical iPhone. Everything is fictional and disposable: the
+# database, the secrets (generated in the job, never printed) and the accounts end with the runner. Screenshots never
+# show a setup code or a password. It deploys nothing; its evidence goes to `ci-evidence` under evidence/browser-input/.
+name: verify-browser-input
+
+on:
+  push:
+    branches: [ops/verify-browser-input]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-browser-input
+  cancel-in-progress: false
+
+jobs:
+  backend:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with: { path: tools }
+      - name: The target
+        run: |
+          set -a; source tools/verify/target.env; set +a
+          [[ "$BACKEND" =~ ^[0-9a-f]{40}$ ]] || { echo "BACKEND must be a full SHA"; exit 1; }
+          echo "BACKEND=$BACKEND" >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+        with: { repository: AbdelkerimMahfoudh/erp-backend, ref: '${{ env.BACKEND }}', path: api }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Install
+        run: cd api && npm ci --no-audit --no-fund
+      - name: The unit suite (setup code — replay, expiry, one answer for every unusable code; employee invitations; consent)
+        run: cd api && npx jest --ci 2>&1 | tail -n 40
+      - name: The real-MySQL database gates (0101 employee invitations, 0102 provisioning — the setup code's claim under concurrency)
+        env:
+          CI_DATABASE_GATES: disposable
+          ROOT_PW: root
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_PORT: '3306'
+        run: |
+          sudo systemctl start mysql.service
+          cd api && bash deploy/ci-database-gates.sh
+
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    permissions:
+      contents: write # only to commit the evidence branch
+    services:
+      mysql:
+        image: mysql:8.4.11@sha256:24989179f58856db763f418010c1169fecc944e3ec1ea7e921572d83eb070f70
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd "mysqladmin ping -h 127.0.0.1" --health-interval 5s --health-timeout 5s --health-retries 30
+    defaults:
+      run:
+        shell: bash
+    env:
+      WORK: ${{ github.workspace }}/work
+      APPDIR: ${{ github.workspace }}/app
+      API: http://127.0.0.1:3410/api/v1
+      APP: http://127.0.0.1:4320
+      BROWSER: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with: { path: tools }
+      - name: The target
+        run: |
+          set -a; source tools/verify/target.env; set +a
+          for v in BACKEND MOBILE; do [[ "${!v}" =~ ^[0-9a-f]{40}$ ]] || { echo "$v must be a full SHA"; exit 1; }; done
+          { echo "BACKEND=$BACKEND"; echo "MOBILE=$MOBILE"; echo "EV=$GITHUB_WORKSPACE/evidence/browser-input/${BACKEND:0:7}-${MOBILE:0:7}-$GITHUB_RUN_ID/${{ matrix.browser }}"; } >> "$GITHUB_ENV"
+      - uses: actions/checkout@v4
+        with: { repository: AbdelkerimMahfoudh/erp-backend, ref: '${{ env.BACKEND }}', path: api }
+      - uses: actions/checkout@v4
+        with: { repository: AbdelkerimMahfoudh/erp-mobile, ref: '${{ env.MOBILE }}', path: app }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Install
+        run: |
+          mkdir -p "$EV" "$WORK"; chmod 700 "$WORK"
+          printf 'backend %s\nmobile %s\nbrowser %s\nrun %s\n' "$BACKEND" "$MOBILE" "$BROWSER" "$GITHUB_RUN_ID" > "$EV/target.txt"
+          (cd api && npm ci --no-audit --no-fund > "$EV/api-install.log" 2>&1)
+          (cd app && npm ci --no-audit --no-fund > "$EV/app-install.log" 2>&1)
+          (cd tools && npm install --no-audit --no-fund > "$EV/tools-install.log" 2>&1 && npx playwright install --with-deps "$BROWSER" > "$EV/playwright-install.log" 2>&1)
+      - name: The database, the API and an administrator with MFA
+        run: |
+          umask 077
+          mysql -h 127.0.0.1 -P 3306 --protocol=TCP -u root -e "CREATE DATABASE sa_e2e CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+            CREATE USER 'phonestore_app'@'%' IDENTIFIED BY '$(openssl rand -hex 16 | tee "$WORK/app.pw")';
+            GRANT SELECT, INSERT, UPDATE, DELETE ON sa_e2e.* TO 'phonestore_app'@'%';"
+          {
+            echo "NODE_ENV=development"; echo "APP_ENV=staging"; echo "PORT=3410"
+            echo "DATABASE_URL=mysql://root:@127.0.0.1:3306/sa_e2e"
+            echo "APP_DATABASE_URL=mysql://phonestore_app:$(cat "$WORK/app.pw")@127.0.0.1:3306/sa_e2e"
+            for k in JWT_ACCESS_SECRET STAFF_INVITATION_KEY OTP_PEPPER MESSAGING_HASH_KEY; do echo "$k=$(openssl rand -hex 32)"; done
+            echo "PLATFORM_MFA_KEY=$(openssl rand -base64 32 | tr '+/' '-_' | tr -d '=')"
+            echo "CUSTOMER_ACTIVATION=closed"; echo "CORS_ORIGINS=$APP"
+            echo "SWAGGER_ENABLED=false"; echo "LOG_LEVEL=warn"; echo "WHATSAPP_CHANNEL=disabled"; echo "EMAIL_CHANNEL=disabled"
+            echo "UPLOAD_DIR=$WORK/uploads"; echo "THROTTLE_LIMIT=5000"; echo "AUTH_THROTTLE_LIMIT=1000"; echo "ACCOUNT_THROTTLE_LIMIT=1000"
+          } > "$WORK/api.env"
+          openssl rand -hex 24 > "$WORK/admin.pw"
+          cd api
+          set -a; source "$WORK/api.env"; set +a
+          npx prisma generate > /dev/null
+          npx nest build > "$EV/api-build.log" 2>&1
+          npx prisma migrate deploy > "$EV/migrate.log" 2>&1
+          PLATFORM_ADMIN_PASSWORD="$(cat "$WORK/admin.pw")" npx ts-node --transpile-only prisma/create-platform-admin.ts ops@example.test "Platform Ops" > /dev/null 2>&1
+          npx ts-node --transpile-only prisma/platform-admin-mfa.ts enrolment-token ops@example.test > "$WORK/enrol.out" 2>&1
+          nohup node dist/src/main.js > "$WORK/api.log" 2>&1 &
+          for _ in $(seq 1 60); do curl -sf http://127.0.0.1:3410/api/health > /dev/null && break; sleep 1; done
+          curl -sf http://127.0.0.1:3410/api/health/ready | tee "$EV/ready.json"; echo
+      - name: The app (web export) against this API
+        run: |
+          (cd app && EXPO_PUBLIC_API_ORIGIN=${API%/api/v1} EXPO_PUBLIC_LEGAL_ORIGIN=https://tsxmr.com npx expo export --platform web --clear --output-dir "$WORK/app-dist" > "$EV/app-export.log" 2>&1)
+          nohup node tools/verify/static-serve.mjs "$WORK/app-dist" 4320 > "$WORK/app-serve.log" 2>&1 &
+          for _ in $(seq 1 30); do curl -sf -o /dev/null "$APP/" && break; sleep 1; done
+      - name: The administrator's second factor
+        run: cd tools && node verify/enrol.mjs 2>&1 | tee "$EV/enrol.log"
+      - name: The access journey — setup code, no approval step, no paid subscription, the grant opens the ERP
+        run: set -o pipefail; cd tools && node verify/access-journey.mjs 2>&1 | tee "$EV/access-journey.log"
+      - name: The input matrix — focus ring, sheet fields, validation — 320/375/390, EN/FR/AR, light/dark
+        if: ${{ !cancelled() }}
+        run: set -o pipefail; cd tools && node verify/ui-input.mjs 2>&1 | tee "$EV/ui-input.log"
+      - name: Keep the evidence
+        if: always()
+        env:
+          RESULT: ${{ job.status }}
+        run: |
+          printf 'result %s\nbrowser %s (Playwright on Linux) — not a physical iPhone\n' "$RESULT" "$BROWSER" >> "$EV/target.txt"
+          for f in "$WORK"/access-journey-*.json "$WORK"/ui-input-*.json "$WORK"/enrol-*.json; do [ -f "$f" ] && cp "$f" "$EV/"; done
+          [ -d "$WORK/shots" ] && cp -r "$WORK/shots" "$EV/screenshots"
+          # Nothing secret leaves the runner: statuses, results and screenshots only — never the Owner's browser state.
+          if grep -rlE "$(cat "$WORK/admin.pw")|$(cat "$WORK/app.pw")" "$EV" > /dev/null 2>&1; then echo "a secret reached the evidence"; exit 1; fi
+          if [ -f "$WORK/owner-state.json" ] && grep -rlF "$(node -e "const s=require('$WORK/owner-state.json');const v=s.origins?.[0]?.localStorage?.find(x=>x.name==='erp.accessToken')?.value;process.stdout.write(v||'no-token-here')")" "$EV" > /dev/null 2>&1; then echo "a token reached the evidence"; exit 1; fi
+          cd tools
+          git config user.name "ci-evidence"
+          git config user.email "ci-evidence@users.noreply.github.com"
+          git fetch -q origin ci-evidence && git checkout -q -B ci-evidence origin/ci-evidence
+          mkdir -p evidence/browser-input; cp -r "$GITHUB_WORKSPACE/evidence/browser-input/." evidence/browser-input/
+          git add evidence/browser-input
+          git commit -qm "evidence: browser input and setup code in $BROWSER — backend ${BACKEND:0:7}, mobile ${MOBILE:0:7} ($RESULT)"
+          for i in 1 2 3 4 5; do git push -q origin ci-evidence && break; git fetch -q origin ci-evidence && git rebase -q origin/ci-evidence; done
