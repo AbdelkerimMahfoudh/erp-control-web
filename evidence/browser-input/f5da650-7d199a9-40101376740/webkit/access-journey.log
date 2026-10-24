@@ -1,0 +1,50 @@
+(node:7665) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/runner/work/erp-control-web/erp-control-web/app/lib/i18n/en.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/runner/work/erp-control-web/erp-control-web/app/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS  [webkit] the administrator signs in with the password and the second factor — sign-in 200, code 200
+PASS  [webkit] the administrator creates a test business, its Owner and store, with a setup code — status 201
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+locator.tap: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('input:not([type="checkbox"])').first()
+    - locator resolved to <input rows="1" value="" dir="auto" type="text" autocorrect="off" spellcheck="false" autocapitalize="none" data-app-field="true" autocomplete="username" virtualkeyboardpolicy="auto" class="css-11aywtz r-6taxm2 r-13awgt0 r-a023e6 r-10yl4k r-t60dpp r-1mmae3n"/>
+  - attempting tap action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying tap action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not visible
+    - retrying tap action
+      - waiting 100ms
+    55 × waiting for element to be visible, enabled and stable
+       - element is not visible
+     - retrying tap action
+       - waiting 500ms
+
+    at /home/runner/work/erp-control-web/erp-control-web/tools/verify/access-journey.mjs:51:20 {
+  log: [
+    `  - waiting for locator('input:not([type="checkbox"])').first()`,
+    '    - locator resolved to <input rows="1" value="" dir="auto" type="text" autocorrect="off" spellcheck="false" autocapitalize="none" data-app-field="true" autocomplete="username" virtualkeyboardpolicy="auto" class="css-11aywtz r-6taxm2 r-13awgt0 r-a023e6 r-10yl4k r-t60dpp r-1mmae3n"/>',
+    '  - attempting tap action',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying tap action',
+    '    - waiting 20ms',
+    '    2 × waiting for element to be visible, enabled and stable',
+    '      - element is not visible',
+    '    - retrying tap action',
+    '      - waiting 100ms',
+    '    55 × waiting for element to be visible, enabled and stable',
+    '       - element is not visible',
+    '     - retrying tap action',
+    '       - waiting 500ms'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v22.23.3
