@@ -74,7 +74,7 @@ for (const lang of LANGS) {
         const page = await context.newPage();
         page.on('pageerror', (e) => pageErrors.push(`${where}: ${String(e).slice(0, 160)}`));
         await page.goto(`${APP}/login`);
-        const id = page.locator('input').first();
+        const id = page.locator('input:visible').first();
         await id.waitFor({ timeout: 20000 });
         await page.waitForTimeout(400);
         const well = id.locator('xpath=..');

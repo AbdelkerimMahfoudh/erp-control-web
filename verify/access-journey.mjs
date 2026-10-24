@@ -47,7 +47,8 @@ const OWNER_PW = `pw-${randomUUID()}`;
 await page.goto(`${APP}/login`);
 await page.getByText(T.en['auth.action.setup'], { exact: true }).first().tap();
 await page.getByText(T.en['setup.title']).first().waitFor({ timeout: 20000 });
-const boxes = page.locator('input:not([type="checkbox"])');
+// Visible ones only: the navigator keeps the previous screen (sign-in) mounted, hidden, behind the current one.
+const boxes = page.locator('input:not([type="checkbox"]):visible');
 await boxes.nth(0).tap();
 await page.keyboard.type(SETUP, { delay: 2 });
 await boxes.nth(1).tap();
