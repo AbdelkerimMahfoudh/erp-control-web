@@ -109,7 +109,7 @@ export const en = {
   'apply.done.activity': 'First store: {activity}.',
 
   // ── statuses ──
-  'status.pending': 'Pending review',
+  'status.pending': 'No access yet',
   'status.active': 'Active',
   'status.grace': 'Grace period',
   'status.expired': 'Expired',
@@ -118,7 +118,7 @@ export const en = {
   'status.cancelled': 'Cancelled',
   'status.rejected': 'Refused',
   'status.unknown': 'Unknown',
-  'status.explain.pending': 'The platform has not approved this business yet. The app stays closed until it does.',
+  'status.explain.pending': 'This business has no active subscription or access grant yet. The app stays closed until it has one.',
   'status.explain.active': 'Everything works. The period ends on {date}.',
   'status.explain.grace': 'The period ended on {date}. The app keeps working for 72 hours while payment is arranged.',
   'status.explain.expired': 'The period ended on {date}. The app is read-only until a payment is confirmed.',
@@ -321,7 +321,7 @@ export const en = {
   'admin.pending.registered': 'Applied {date}',
   'admin.pending.open': 'Review',
   'admin.pending.incomplete': 'Incomplete',
-  'admin.pending.status.pending_activation': 'Awaiting approval',
+  'admin.pending.status.pending_activation': 'No access yet',
   'admin.pending.status.activated': 'Approved',
   'admin.pending.status.suspended': 'Suspended',
   'admin.pending.status.cancelled': 'Cancelled',

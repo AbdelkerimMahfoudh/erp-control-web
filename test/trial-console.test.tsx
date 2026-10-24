@@ -270,7 +270,7 @@ describe('the console: a business’s trial, recorded', () => {
       expect(at('Boutique Neuve').textContent).toContain('Free trial not started');
       expect(at('Boutique Finie').textContent).toContain('Free trial ended');
       expect(at('Boutique Finie').textContent).not.toContain('ends on');
-      expect(at('Boutique Console').textContent).toContain('Pending review');
+      expect(at('Boutique Console').textContent).toContain('No access yet');
       for (const name of ['Boutique Essai', 'Boutique Neuve', 'Boutique Finie', 'Boutique Console']) expect(at(name).textContent).not.toMatch(/pending.activation|_/);
     });
 
@@ -281,7 +281,7 @@ describe('the console: a business’s trial, recorded', () => {
         row('d3', 'Boutique C', { status: 'something_newer' }),
         row('d4', 'Boutique D', { companyId: null, status: 'incomplete' }),
       ]);
-      expect(at('Boutique A').textContent).toContain('Awaiting approval');
+      expect(at('Boutique A').textContent).toContain('No access yet');
       expect(at('Boutique B').textContent).toContain('Refused');
       expect(at('Boutique C').textContent).toContain('Unknown');
       expect(at('Boutique D').textContent).toContain('Incomplete');
