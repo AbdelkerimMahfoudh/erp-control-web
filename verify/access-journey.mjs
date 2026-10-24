@@ -89,6 +89,13 @@ await page.getByText(T.en['access.recheck'], { exact: true }).first().tap();
 const opened = await page.getByText(T.en['testBusiness.banner']).first().waitFor({ timeout: 20000 }).then(() => true, () => false);
 await page.waitForTimeout(1500);
 check('with the grant the ERP opens at once — “Check again”, no sign-out, no approval', opened && !/access-closed/.test(page.url()), new URL(page.url()).pathname);
+// The first time in, the Owner picks the store to work in (the app's store picker), as any Owner does once.
+if (/select-branch/.test(page.url())) {
+  await page.getByText(branchName, { exact: true }).first().tap();
+  await page.waitForURL((u) => !/select-branch/.test(u.pathname), { timeout: 20000 }).catch(() => {});
+  await page.waitForTimeout(1500);
+}
+check('the Owner works in the test store: the app home, the test banner on it', !/select-branch|access-closed|login/.test(page.url()) && (await page.getByText(T.en['testBusiness.banner']).first().isVisible()), new URL(page.url()).pathname);
 const after = await call('GET', 'entitlement', { token });
 check('the grant is access without payment: complimentary, writes, still no paid period',
   after.json?.state === 'complimentary' && after.json?.canWrite === true && after.json?.periodEnd === null,
