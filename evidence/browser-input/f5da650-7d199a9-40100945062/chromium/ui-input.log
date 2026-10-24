@@ -1,0 +1,14 @@
+node:fs:440
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open '/home/runner/work/erp-control-web/erp-control-web/work/owner.json'
+    at readFileSync (node:fs:440:20)
+    at file:///home/runner/work/erp-control-web/erp-control-web/tools/verify/ui-input.mjs:13:40 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: '/home/runner/work/erp-control-web/erp-control-web/work/owner.json'
+}
+
+Node.js v22.23.3
