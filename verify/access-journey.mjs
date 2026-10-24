@@ -18,7 +18,8 @@ const APPROVAL = { en: /approv|review/i, fr: /approb|approuv|examen/i, ar: /مو
 // ── The administrator: a test business, its Owner and store, and the setup code ─────────────────────────────────────
 const signIn = await call('POST', 'platform/admin/sign-in', { body: { email: 'ops@example.test', password: ADMIN_PW } });
 const cookie = signIn.setCookie.map((c) => c.split(';')[0]).join('; ');
-await call('POST', 'platform/admin/mfa/verify', { cookie, admin: true, body: { code: await freshCode(SECRET) } });
+const verified = await call('POST', 'platform/admin/mfa/verify', { cookie, admin: true, body: { code: await freshCode(SECRET) } });
+check('the administrator signs in with the password and the second factor', signIn.status === 200 && verified.status === 200, `sign-in ${signIn.status}, code ${verified.status}`);
 const stepUp = async () => {
   const s = await call('POST', 'platform/admin/step-up', { cookie, admin: true, body: { password: ADMIN_PW, code: await freshCode(SECRET) } });
   if (s.status !== 200) throw new Error(`step-up ${s.status}`);

@@ -79,12 +79,18 @@ export function totp(secret, step) {
   const o = mac[mac.length - 1] & 0x0f;
   return String((((mac[o] & 0x7f) << 24) | (mac[o + 1] << 16) | (mac[o + 2] << 8) | mac[o + 3]) % 1e6).padStart(6, '0');
 }
-let lastStep = -1;
+// The server refuses a code from a 30-second step it has already accepted (a replay), across processes too: the last
+// step used is kept in the work directory, so the next script waits for a later one.
+const STEP_FILE = `${WORK}totp.step`;
 export async function freshCode(secret) {
+  let last = -1;
+  try {
+    last = Number(readFileSync(STEP_FILE, 'utf8')) || -1;
+  } catch {}
   for (;;) {
     const step = Math.floor(Date.now() / 30000);
-    if (step > lastStep && Date.now() % 30000 < 27000) {
-      lastStep = step;
+    if (step > last && Date.now() % 30000 < 27000) {
+      writeFileSync(STEP_FILE, String(step), { mode: 0o600 });
       return totp(secret, step);
     }
     await new Promise((r) => setTimeout(r, 500));
