@@ -46,8 +46,12 @@ async function tapType(page, input, text) {
 }
 async function layout(page, lang) {
   const over = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  // What sticks out, when something does: the deepest elements past the right edge, by text.
+  const wide = over > 1 ? await page.evaluate(() => [...document.querySelectorAll('body *')]
+    .filter((e) => e.getBoundingClientRect().right > window.innerWidth + 1 && ![...e.children].some((c) => c.getBoundingClientRect().right > window.innerWidth + 1))
+    .slice(0, 4).map((e) => `${e.tagName.toLowerCase()} w${Math.round(e.getBoundingClientRect().width)} r${Math.round(e.getBoundingClientRect().right)} "${(e.textContent || e.getAttribute('aria-label') || '').trim().slice(0, 40)}"`)) : [];
   const dir = await page.evaluate(() => getComputedStyle(document.body).direction + '|' + (document.documentElement.dir || ''));
-  return { over, rtl: /rtl/.test(dir), ok: over <= 1 && (lang !== 'ar' || /rtl/.test(dir)) };
+  return { over, rtl: /rtl/.test(dir), ok: over <= 1 && (lang !== 'ar' || /rtl/.test(dir)), wide };
 }
 async function openSheet(page, path, button) {
   await page.goto(`${APP}${path}`);
@@ -127,7 +131,7 @@ for (const lang of LANGS) {
         check(`Add an account, Other: the service name types and the account name stays ${where}`, count === 2 && both[0] === 'Masrvi' && both[1] === 'Caisse principale', JSON.stringify({ count, both }));
         // Edit after typing: select-all and replace (delete and retype) works.
         await fields(page).last().tap();
-        await page.keyboard.press(BROWSER === 'webkit' ? 'Meta+A' : 'Control+A');
+        await page.keyboard.press('ControlOrMeta+A');
         await page.keyboard.type('Caisse 2', { delay: 8 });
         check(`Add an account: select, delete and retype ${where}`, (await fields(page).last().inputValue()).endsWith('Caisse 2'), await fields(page).last().inputValue());
         if (width === 375) await page.screenshot({ path: `${OUT}/add-account-${lang}-${theme}.png` });
@@ -213,7 +217,7 @@ for (const [lang, theme, width] of [['en', 'light', 375], ['ar', 'dark', 320]]) 
   await sheet(page).getByText(t['team.create.submit'], { exact: true }).last().tap();
   const phoneRefused = await sheet(page).getByText(t['team.error.phone']).first().waitFor({ timeout: 5000 }).then(() => true, () => false);
   await f.nth(1).tap();
-  await page.keyboard.press(BROWSER === 'webkit' ? 'Meta+A' : 'Control+A');
+  await page.keyboard.press('ControlOrMeta+A');
   await page.keyboard.press('Backspace');
   const phone = `+2224${String(Date.now()).slice(-7)}`;
   await page.keyboard.type(phone, { delay: 8 });

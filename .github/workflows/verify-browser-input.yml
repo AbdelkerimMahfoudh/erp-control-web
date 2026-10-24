@@ -143,6 +143,19 @@ jobs:
       - name: The input matrix — focus ring, sheet fields, validation — 320/375/390, EN/FR/AR, light/dark
         if: ${{ !cancelled() }}
         run: set -o pipefail; cd tools && node verify/ui-input.mjs 2>&1 | tee "$EV/ui-input.log"
+      - name: Diagnostic — the sign-in at 320 px, under test and before this phase (never fails the run)
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: |
+          set -a; source tools/verify/target.env; set +a
+          if [ -n "${BASELINE_MOBILE:-}" ]; then
+            git -C app fetch -q --depth 1 origin "$BASELINE_MOBILE" && git -C app checkout -q "$BASELINE_MOBILE"
+            (cd app && EXPO_PUBLIC_API_ORIGIN=${API%/api/v1} EXPO_PUBLIC_LEGAL_ORIGIN=https://tsxmr.com npx expo export --platform web --clear --output-dir "$WORK/base-dist" > "$EV/base-export.log" 2>&1)
+            nohup node tools/verify/static-serve.mjs "$WORK/base-dist" 4330 > /dev/null 2>&1 &
+            for _ in $(seq 1 30); do curl -sf -o /dev/null http://127.0.0.1:4330/ && break; sleep 1; done
+            export BASELINE_APP=http://127.0.0.1:4330
+          fi
+          cd tools && node verify/signin-layout.mjs 2>&1 | tee "$EV/signin-layout.log"
       - name: Keep the evidence
         if: always()
         env:
