@@ -1,0 +1,47 @@
+(node:7795) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/runner/work/erp-control-web/erp-control-web/app/lib/i18n/en.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/runner/work/erp-control-web/erp-control-web/app/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS  [webkit] the console signs in with the second factor and opens Promoters
+PASS  [webkit] a new promoter has no code until "Generate code and QR" is pressed
+PASS  [webkit] the promoter’s page shows the full number to the administrator
+PASS  [webkit] the server drew a six-digit code
+PASS  [webkit] the QR address is <portal>/join?r=<50-character token>
+PASS  [webkit] the token carries no id, number, code or name
+PASS  [webkit] the card shows the brand, the name, the code and the instruction
+PASS  [webkit] the card never shows the number or the note
+PASS  [webkit] the card downloads as a PNG — 76979 bytes
+PASS  [webkit] the promoter’s page in ar, dark, at 375 px: no sideways scroll, the card right to left
+PASS  [webkit] the list in ar masks the number
+PASS  [webkit] the promoter’s page in fr, light, at 320 px: no sideways scroll, the card left to right
+PASS  [webkit] the list in fr masks the number
+PASS  [webkit] the promoter’s page in en, dark, at 320 px: no sideways scroll, the card left to right
+PASS  [webkit] the list in en masks the number
+PASS  [webkit] regenerating gives a new code and a new QR
+PASS  [webkit] the old code and the old QR answer only "unusable"
+PASS  [webkit] the new QR names the promoter and prefills the new code — nothing else
+PASS  [webkit] the history keeps both codes
+PASS  [webkit] /join in en: the token leaves the address, the promoter is named, no sideways scroll
+PASS  [webkit] /join in en is never indexed
+PASS  [webkit] the application form opens with the code prefilled, in memory
+PASS  [webkit] /join in ar: the token leaves the address, the promoter is named, no sideways scroll
+PASS  [webkit] /join in ar is never indexed
+PASS  [webkit] the app’s registration names the promoter from the QR and takes the token out of the address
+PASS  [webkit] registered from the QR: one attribution, by QR, version 2, the name as it was
+PASS  [webkit] Arabic digits are read as the code, left to right in an Arabic page
+PASS  [webkit] the registration at 320 px in Arabic: no sideways scroll
+PASS  [webkit] registered with the typed code: attributed by code
+PASS  [webkit] a code deactivated after its check refuses the registration, and nothing is saved
+PASS  [webkit] a deactivated code answers only "unusable"
+PASS  [webkit] activated again, the same code opens again
+PASS  [webkit] the app’s /join hands a registration address to registration (not the team’s join)
+PASS  [webkit] registered from an invitation: attributed to the inviting business
+PASS  [webkit] the report counts two promoter registrations and one invitation — {"none":0,"promoter":2,"userInvite":1,"total":3}
+PASS  [webkit] the list counts the promoter’s registrations
+PASS  [webkit] five wrong guesses each answer the one identical "unusable"
+PASS  [webkit] then even a real code is refused (429), so a hit cannot be told from a miss
+PASS  [webkit] and the website’s door is the same budget
+PASS  [webkit] another address is not affected
+FAIL  [webkit] no console error in any page — site /admin/promoters/01a173a9-ce13-718d-b61b-30e22b5598f2: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive | site /admin/promoters/01a173a9-ce13-718d-b61b-30e22b5598f2: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive | site /admin/promoters/01a173a9-ce13-718d-b61b-30e22b5598f2: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive
+
+[webkit] promoter-journey: 40/41 checks passed
