@@ -7,7 +7,8 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Subscription } from './pages/portal/Subscription';
 import { Admin } from './pages/admin/Admin';
-import { PORTAL_HOME } from './site/routes';
+import { Join } from './pages/join/Join';
+import { JOIN_PATH, PORTAL_HOME } from './site/routes';
 
 export const PROTECTED_AREAS_BUILT = true;
 
@@ -17,6 +18,7 @@ export function ProtectedRoutes() {
       <Route path={`${PORTAL_HOME}/*`} element={<Subscription />} />
       <Route path="/account/*" element={<Navigate to={PORTAL_HOME} replace />} />
       <Route path="/admin/*" element={<Admin />} />
+      <Route path={JOIN_PATH} element={<Join />} />
     </Routes>
   );
 }

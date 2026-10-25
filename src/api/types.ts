@@ -807,3 +807,81 @@ export interface AdminIdentity {
   email: string;
   name: string;
 }
+
+// ── Promoters and registration sources (0103, D221) ─────────────────────────
+
+/** A promoter in the console's list: the number masked, never in full. */
+export interface PromoterRow {
+  id: string;
+  displayName: string;
+  whatsappMasked: string;
+  code: string | null;
+  isActive: boolean;
+  createdAt: string;
+  registrations: number;
+  completedRegistrations: number;
+}
+
+export interface PromoterList {
+  total: number;
+  page: number;
+  pageSize: number;
+  rows: PromoterRow[];
+}
+
+/** One promoter in full, for the platform administrator only: the number and the note included. */
+export interface PromoterDetail {
+  id: string;
+  displayName: string;
+  whatsappMasked: string;
+  whatsappNumber: string;
+  note: string | null;
+  isActive: boolean;
+  createdAt: string;
+  createdBy: string;
+  updatedBy: string;
+  updatedAt: string;
+  code: { code: string; version: number; issuedAt: string; issuedBy: string } | null;
+  /** `<portal>/join?r=…`, signed again on every read; null until a code exists. */
+  qrLink: string | null;
+  registrations: number;
+  completedRegistrations: number;
+  codeHistory: { code: string; version: number; issuedAt: string; issuedBy: string; retiredAt: string | null; retiredBy: string | null }[];
+}
+
+export type AcquisitionSource = 'none' | 'promoter' | 'user_invite';
+
+export interface AcquisitionRow {
+  companyId: string;
+  businessName: string | null;
+  isTest: boolean;
+  registeredAt: string;
+  status: string | null;
+  closed: boolean;
+  /** The Owner proved their contact: the registration was finished. */
+  completed: boolean;
+  source: AcquisitionSource;
+  mechanism: 'promo_code' | 'promoter_qr' | 'user_invite' | null;
+  promoter: { id: string; nameSnapshot: string | null; codeVersion: number | null } | null;
+  inviter: { companyId: string; businessName: string } | null;
+}
+
+export interface AcquisitionReport {
+  total: number;
+  page: number;
+  pageSize: number;
+  rows: AcquisitionRow[];
+}
+
+export interface AcquisitionSummary {
+  none: number;
+  promoter: number;
+  userInvite: number;
+  total: number;
+}
+
+/** What a registration link or a typed promo code is, before registering: usable or not, and a display name. */
+export type AcquisitionLookup =
+  | { usable: false }
+  | { usable: true; source: 'promoter'; promoterName: string; code: string }
+  | { usable: true; source: 'user_invite' };

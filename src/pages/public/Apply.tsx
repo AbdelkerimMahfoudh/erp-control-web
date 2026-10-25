@@ -1,8 +1,10 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react';
-import { Link } from 'react-router-dom';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { ApiError, request } from '../../api/client';
 import type { Activity, PublicPlan } from '../../api/types';
 import { ActivityCards } from '../../components/activity';
+import { AcquisitionField, type AcquisitionClaim } from '../../components/PromoCode';
+import type { JoinState } from '../join/Join';
 import { ErrorNotice, Field, Notice } from '../../components/ui';
 import { LANGUAGES, LANGUAGE_LABELS, useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, isActivity } from '../../lib/activity';
@@ -59,6 +61,11 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [unavailable, setUnavailable] = useState(false);
+  // The registration link the person came with (0103), handed over in memory by `/join` — never read from the address.
+  const arrived = (useLocation().state as Partial<JoinState> | null)?.referralToken ?? null;
+  const [claim, setClaim] = useState<AcquisitionClaim>(null);
+  const [checking, setChecking] = useState(false);
+  const onClaim = useCallback((c: AcquisitionClaim) => setClaim(c), []);
   const set = (k: keyof typeof form) => (e: { target: { value: string } }) => setForm({ ...form, [k]: e.target.value });
 
   // The prices beside the choice. Without them the choice still works; no figure is invented.
@@ -96,6 +103,8 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
         ...(form.email.trim() ? { email: form.email.trim() } : {}),
         password: form.password,
         language: form.language,
+        // At most one source; the server checks it again and refuses, saving nothing, if it stopped being usable.
+        ...(claim ?? {}),
       };
       const sent = JSON.stringify(payload);
       if (attempt.current?.payload !== sent) attempt.current = { key: crypto.randomUUID(), payload: sent };
@@ -147,6 +156,7 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
         <Field label={t('apply.password')} hint={t('apply.password.hint')}>
           <input type="password" required minLength={8} maxLength={200} autoComplete="new-password" value={form.password} onChange={set('password')} />
         </Field>
+        <AcquisitionField arrived={arrived} onClaim={onClaim} onBusy={setChecking} disabled={busy} />
         <Field label={t('apply.language')}>
           <select value={form.language} onChange={set('language')}>
             {LANGUAGES.map((l) => (
@@ -158,7 +168,7 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
         </Field>
         <ErrorNotice error={error} />
         <div className="row">
-          <button type="submit" className="btn btn-primary" disabled={busy}>
+          <button type="submit" className="btn btn-primary" disabled={busy || checking}>
             {busy ? t('apply.sending') : t('apply.submit')}
           </button>
         </div>

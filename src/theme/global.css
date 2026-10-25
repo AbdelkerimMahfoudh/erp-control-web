@@ -726,3 +726,111 @@ dialog.modal .body {
 .disclosure[open] > summary {
   margin-block-end: 8px;
 }
+
+/* Promoters (0103, D221): a code read aloud and typed, digit by digit, left to right in every language. */
+.list-plain {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.code-digits {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+.code-big {
+  margin: 0;
+  font-size: 2.4rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.18em;
+}
+
+/* The promoter's card: black on white whatever the theme — a camera reads contrast — and the only thing printed. */
+.print-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 360px;
+  width: 100%;
+  margin-inline: auto;
+  padding: 24px 20px;
+  border: 1px solid var(--print-line);
+  border-radius: 16px;
+  background: var(--print-paper);
+  color: var(--print-ink);
+  text-align: center;
+}
+.print-card p {
+  margin: 0;
+}
+.print-card .qr {
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+}
+.print-card-brand {
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+.print-card-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.print-card-label,
+.print-card-instruction {
+  color: var(--print-muted);
+  font-size: 0.95rem;
+}
+.print-card-code {
+  font-size: 2.2rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.18em;
+}
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-card,
+  .print-card * {
+    visibility: visible;
+  }
+  .print-card {
+    position: absolute;
+    inset: 0 0 auto 0;
+    max-width: none;
+    border: 0;
+  }
+  .print-card .qr {
+    max-width: 70%;
+  }
+}
+
+/* The promo code's six boxes (0103): left to right in every language, each a thumb-sized target. */
+fieldset.promo {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+fieldset.promo legend {
+  padding: 0;
+  font-weight: 600;
+}
+.code-boxes {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+.code-box {
+  width: 44px;
+  min-width: 0;
+  flex: 0 1 44px;
+  min-height: 48px;
+  padding: 0;
+  text-align: center;
+  font-size: 1.25rem;
+  font-variant-numeric: tabular-nums;
+}

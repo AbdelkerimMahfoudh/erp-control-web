@@ -7,7 +7,7 @@ import { useI18n } from './i18n';
 import { PROTECTED_AREAS_BUILT, ProtectedRoutes } from './protected-areas';
 import { PublicAreas } from './public-areas';
 import { applyProtectedHead } from './site/head';
-import { isProtectedPath } from './site/routes';
+import { isProtectedPath, JOIN_PATH } from './site/routes';
 
 /**
  * Two areas, structurally apart (docs/38, docs/74 §2, docs/101): the company site's public pages (`public-areas.tsx`)
@@ -39,9 +39,10 @@ function ProtectedArea() {
   const { t } = useI18n();
   const { pathname } = useLocation();
   const admin = pathname.startsWith('/admin');
+  const join = pathname === JOIN_PATH;
   useEffect(() => {
-    applyProtectedHead(admin ? t('page.protected.admin', { name: SITE.displayName }) : t('page.protected.subscription'));
-  }, [admin, t]);
+    applyProtectedHead(admin ? t('page.protected.admin', { name: SITE.displayName }) : join ? t('page.join.title') : t('page.protected.subscription'));
+  }, [admin, join, t]);
   return (
     <PortalChrome>
       <ProtectedRoutes />

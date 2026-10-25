@@ -16,6 +16,9 @@ import { Grace } from './Grace';
 import { Messages } from './Messages';
 import { TrialClaims } from './TrialClaims';
 import { Plans } from './Plans';
+import { Promoters } from './Promoters';
+import { Promoter } from './Promoter';
+import { RegistrationSources } from './RegistrationSources';
 
 type Session =
   | { kind: 'checking' }
@@ -72,6 +75,8 @@ export function Admin() {
           <NavLink to="/admin/messages">{t('admin.nav.messages')}</NavLink>
           <NavLink to="/admin/audit">{t('admin.nav.audit')}</NavLink>
           <NavLink to="/admin/plans">{t('admin.nav.plans')}</NavLink>
+          <NavLink to="/admin/promoters">{t('admin.nav.promoters')}</NavLink>
+          <NavLink to="/admin/sources">{t('admin.nav.sources')}</NavLink>
         </nav>
         <div className="row">
           <span className="muted small">{session.admin.email}</span>
@@ -99,6 +104,9 @@ export function Admin() {
         <Route path="messages" element={<Messages />} />
         <Route path="audit" element={<Audit />} />
         <Route path="plans" element={<Plans />} />
+        <Route path="promoters" element={<Promoters />} />
+        <Route path="promoters/:id" element={<Promoter />} />
+        <Route path="sources" element={<RegistrationSources />} />
       </Routes>
     </div>
   );

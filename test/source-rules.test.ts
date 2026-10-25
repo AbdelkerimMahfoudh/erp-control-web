@@ -238,6 +238,16 @@ describe('the portal session lives in its cookies and in memory only, and only t
     }
   });
 
+  it('the registration link’s landing reads one parameter, `r`, and takes it out of the address at once (0103)', () => {
+    const landing = executable(read(join(SRC, 'pages/join/Join.tsx'))).join('\n');
+    expect([...landing.matchAll(/\.get\('(\w+)'\)/g)].map((m) => m[1])).toEqual(['r']);
+    expect(landing).toMatch(/window\.history\.replaceState\(window\.history\.state, '', window\.location\.pathname\)/);
+    // Asked about by POST, never logged in an address: the application form receives it in memory (router state).
+    expect(landing).toMatch(/request<AcquisitionLookup>\('platform\/acquisition\/link', \{ method: 'POST'/);
+    const apply = executable(read(join(SRC, 'pages/public/Apply.tsx'))).join('\n');
+    expect(apply).not.toMatch(/URLSearchParams|location\.(hash|search)|searchParams/);
+  });
+
   it('no page reads where a request came from, or sends where it came from (a client can forge both; correction 6)', () => {
     for (const f of code) {
       const src = read(f);
@@ -365,5 +375,15 @@ describe('a public build carries no API and no preview value', () => {
     }
     const config = read(join(process.cwd(), 'vite.config.ts'));
     for (const stub of ['protected-areas.public.tsx', 'api/client.public.ts', 'components/PlanPricing.public.tsx', 'pages/public/Apply.public.tsx']) expect(config).toContain(stub);
+  });
+
+  it('every import of the protected areas, from any folder, is one the public build replaces', () => {
+    // `components/RouteScroll.tsx` imports them from one level down; a pattern matching only `./protected-areas` once let
+    // the real areas into the public build's module graph, where a library with side effects survived tree-shaking.
+    const alias = /^(\.{1,2}\/)+protected-areas$/;
+    expect(read(join(process.cwd(), 'vite.config.ts'))).toContain(String.raw`{ find: /^(\.{1,2}\/)+protected-areas$/`);
+    const imports = code.flatMap((f) => [...read(f).matchAll(/from '([^']*protected-areas)'/g)].map((m) => m[1]!));
+    expect(imports.length).toBeGreaterThanOrEqual(2);
+    for (const specifier of imports) expect({ specifier, replaced: alias.test(specifier) }).toEqual({ specifier, replaced: true });
   });
 });

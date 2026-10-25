@@ -51,7 +51,8 @@ function surfaceAliases(mode: string) {
   if (surface === 'portal') return [{ find: /^\.\/public-areas$/, replacement: stub('./src/public-areas.portal.tsx') }];
   if (surface !== 'public') return [];
   return [
-    { find: /^\.\/protected-areas$/, replacement: stub('./src/protected-areas.public.tsx') },
+    // Any depth: `components/RouteScroll.tsx` asks from one level down (`../protected-areas`).
+    { find: /^(\.{1,2}\/)+protected-areas$/, replacement: stub('./src/protected-areas.public.tsx') },
     { find: /^(\.{1,2}\/)+api\/client$/, replacement: stub('./src/api/client.public.ts') },
     { find: /^(\.{1,2}\/)+components\/PlanPricing$/, replacement: stub('./src/components/PlanPricing.public.tsx') },
     { find: /^\.\/pages\/public\/Apply$/, replacement: stub('./src/pages/public/Apply.public.tsx') },

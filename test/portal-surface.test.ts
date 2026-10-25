@@ -67,9 +67,9 @@ describe('the portal’s gate (PORTAL, a portal build)', () => {
 });
 
 describe('what a portal build publishes', () => {
-  it('no page of the company site; the Owner’s page and the console behind a sign-in', () => {
+  it('no page of the company site; the Owner’s page and the console behind a sign-in, and the registration link’s landing', () => {
     expect(publicRoutesFor('portal')).toEqual([]);
-    expect(protectedPrefixesFor('portal')).toEqual([PORTAL_HOME, '/admin']);
+    expect(protectedPrefixesFor('portal')).toEqual([PORTAL_HOME, '/admin', '/join']);
     expect(PORTAL_HOME).toBe('/subscription');
   });
 
@@ -86,7 +86,7 @@ describe('what a portal build publishes', () => {
     expect(all).toContain('X-Robots-Tag: noindex, nofollow');
     expect(all).toContain('X-Frame-Options: DENY');
     expect(all).toContain('Referrer-Policy: strict-origin-when-cross-origin');
-    for (const p of ['/subscription', '/subscription/*', '/admin', '/admin/*', '/account', '/account/*', '/app-shell.html']) {
+    for (const p of ['/subscription', '/subscription/*', '/admin', '/admin/*', '/join', '/join/*', '/account', '/account/*', '/app-shell.html']) {
       expect(file).toContain(`${p}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
     }
     expect(file).not.toContain('/in-app/');
@@ -103,6 +103,8 @@ describe('what a portal build publishes', () => {
         '/subscription/* /app-shell.html 200',
         '/admin /app-shell.html 200',
         '/admin/* /app-shell.html 200',
+        '/join /app-shell.html 200',
+        '/join/* /app-shell.html 200',
         '',
       ].join('\n'),
     );

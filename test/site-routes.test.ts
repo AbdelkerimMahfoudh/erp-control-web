@@ -157,10 +157,11 @@ describe('the generated files (docs/74 §5–§6)', () => {
     expect(headersFile(SITE, true)).toMatch(/^\/\*\n[\s\S]*X-Robots-Tag: noindex, nofollow/);
   });
 
-  it('headers: no address keeps a token any more, so none needs its own referrer policy — every address has the site’s', () => {
+  it('headers: only the registration link’s landing keeps a token in its address (0103), so only it sends no referrer — every other address has the site’s', () => {
     for (const preview of [false, true]) {
       const file = headersFile(SITE, preview);
-      expect(file).not.toContain('no-referrer');
+      expect(file.match(/no-referrer/g)).toHaveLength(1);
+      expect(file).toContain('/join\n  Referrer-Policy: no-referrer');
       expect(file).not.toContain('/account/trial');
       expect(file.split('\n\n')[0]).toContain('Referrer-Policy: strict-origin-when-cross-origin');
     }
@@ -168,7 +169,7 @@ describe('the generated files (docs/74 §5–§6)', () => {
 
   it('rewrites: the Owner page’s old address goes to /subscription for good, only the protected areas load the shell; other unknown addresses stay 404', () => {
     expect(redirectsFile()).toBe(
-      '/account /subscription 301\n/account/* /subscription 301\n/subscription /app-shell.html 200\n/subscription/* /app-shell.html 200\n/admin /app-shell.html 200\n/admin/* /app-shell.html 200\n',
+      '/account /subscription 301\n/account/* /subscription 301\n/subscription /app-shell.html 200\n/subscription/* /app-shell.html 200\n/admin /app-shell.html 200\n/admin/* /app-shell.html 200\n/join /app-shell.html 200\n/join/* /app-shell.html 200\n',
     );
   });
 

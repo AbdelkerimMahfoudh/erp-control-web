@@ -24,6 +24,11 @@
   --on-brand: #ffffff;
   --org: #172033;
   --on-org: #ffffff;
+  /* The promoter's printable card (0103): black on white in both themes — a camera reads contrast. */
+  --print-paper: #ffffff;
+  --print-ink: #0b1f33;
+  --print-muted: #334155;
+  --print-line: #cbd5e1;
   --product-a: #5146d9;
   --product-b: #7a52e0;
   --on-product: #ffffff;
@@ -93,6 +98,11 @@
   --on-brand: #0b0f17;
   --org: #e7ecf5;
   --on-org: #0b0f17;
+  /* The promoter's printable card (0103): black on white in both themes — a camera reads contrast. */
+  --print-paper: #ffffff;
+  --print-ink: #0b1f33;
+  --print-muted: #334155;
+  --print-line: #cbd5e1;
   --product-a: #7d74ee;
   --product-b: #a07cf0;
   --on-product: #0b0f17;

@@ -65,8 +65,15 @@ export const PUBLIC_ROUTES: readonly PublicRoute[] = [
  */
 export const PORTAL_HOME = '/subscription';
 
-/** The areas behind a sign-in: never prerendered, never indexed. */
-export const PROTECTED_PREFIXES = [PORTAL_HOME, '/admin'] as const;
+/**
+ * Where a registration link lands (0103, D221): `<portal>/join?r=<token>` — a promoter's QR card or a user's invitation.
+ * No sign-in, but served like the areas behind one: from the application shell, never prerendered, never indexed,
+ * never cached, and with no referrer sent on (`generated.ts`).
+ */
+export const JOIN_PATH = '/join';
+
+/** The areas the application shell serves — behind a sign-in, and the registration link's landing: never prerendered, never indexed. */
+export const PROTECTED_PREFIXES = [PORTAL_HOME, '/admin', JOIN_PATH] as const;
 
 /**
  * Where the Owner's page was before the portal (`/account`, `/account/trial`): sent on to {@link PORTAL_HOME}, never

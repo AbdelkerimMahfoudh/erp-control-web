@@ -6,7 +6,7 @@
 import { LANGUAGES } from '../i18n/languages';
 import type { SiteInputs } from '../config/schema';
 import { surfaceOf as namedSurface } from '../config/surface';
-import { IN_APP_PREFIX, LANGUAGE_PREFIX, pathOf, PORTAL_HOME, protectedPrefixesFor, publicRoutesFor, RETIRED_PREFIXES } from './routes';
+import { IN_APP_PREFIX, JOIN_PATH, LANGUAGE_PREFIX, pathOf, PORTAL_HOME, protectedPrefixesFor, publicRoutesFor, RETIRED_PREFIXES } from './routes';
 
 /** The surface a generated file describes; `full` when a caller does not say (`schema.ts` SURFACES). */
 type WithSurface = Partial<Pick<SiteInputs, 'siteSurface'>>;
@@ -95,6 +95,8 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, pre
     blocks.push(`${p}/*\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
   }
   if (surface !== 'public') blocks.push(`${APP_SHELL}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
+  // A registration link carries its token in the address: nothing it leads to is told where it came from (0103).
+  if (surface !== 'public') blocks.push(`${JOIN_PATH}\n  Referrer-Policy: no-referrer`);
   // The pages the mobile app opens: public texts, never indexed (their public pages are). Not on the portal.
   if (surface !== 'portal') for (const prefix of Object.values(LANGUAGE_PREFIX)) blocks.push(`${prefix}${IN_APP_PREFIX}/*\n  X-Robots-Tag: noindex, nofollow`);
   // Hashed assets never change; everything else is revalidated.
