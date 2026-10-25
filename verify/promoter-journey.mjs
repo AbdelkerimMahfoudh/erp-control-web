@@ -56,15 +56,16 @@ async function adminCookie() {
 const browser = await engine.launch();
 const consoleErrors = [];
 // WebKit reports two style refusals that are not the page's own styles, each recorded with its source:
-//  - `style-src-attr` on a SELECT, raised where React creates the element: WebKit styling its own control (the
-//    application form's existing select does the same);
+//  - `style-src-attr` raised where React creates a SELECT: WebKit styling its own control (the application form's
+//    existing select does the same). WebKit names the target SELECT, or the document when the element is not yet
+//    attached, so a refusal counts here only from the exact source position that also refused on a SELECT;
 //  - `style-src-elem` from a script with no source file: what Playwright injects to take a screenshot.
 // Any other refusal — or a refusal no violation explains — still fails.
 const cspViolations = [];
 let cspRefusals = 0;
-const engineOrTooling = (v) =>
-  / style-src-attr blocked=inline source=\S+\/assets\/index-\S+ sample= element=SELECT$/.test(v.text) ||
-  / style-src-elem blocked=inline source=:\d+:\d+ sample= element=#document$/.test(v.text);
+const SELECT_STYLE = / style-src-attr blocked=inline source=(\S+\/assets\/index-\S+) sample= element=(SELECT|#document)$/;
+const engineOrTooling = (v, selectSources) =>
+  selectSources.has(SELECT_STYLE.exec(v.text)?.[1]) || / style-src-elem blocked=inline source=:\d+:\d+ sample= element=#document$/.test(v.text);
 async function newPage({ lang = 'en', theme = 'light', width = 1280 } = {}) {
   const context = await browser.newContext({ viewport: { width, height: width <= 375 ? 760 : 900 }, colorScheme: theme, acceptDownloads: true });
   await context.addInitScript(([l, t]) => {
@@ -331,7 +332,8 @@ check('and the website’s door is the same budget', otherDoor.status === 429);
 check('another address is not affected', elsewhere.json?.usable === true);
 
 check('no console error in any page', consoleErrors.length === 0, consoleErrors.join(' | '));
-const unexplained = cspViolations.filter((v) => !engineOrTooling(v));
+const selectSources = new Set(cspViolations.map((v) => SELECT_STYLE.exec(v.text)).filter((m) => m?.[2] === 'SELECT').map((m) => m[1]));
+const unexplained = cspViolations.filter((v) => !engineOrTooling(v, selectSources));
 check(
   'no style refused but the engine’s own select and the screenshot tool’s',
   unexplained.length === 0 && cspRefusals === cspViolations.length,
