@@ -769,3 +769,134 @@ for (const lang of LANGS) {
     });
   }
 }
+
+// ── Promoters, the registration link and the promo code (0103, D221) ─────────────────────────────────────────────────
+
+const PROMOTER_ID = '0192f000-0000-7000-8000-0000000000p1';
+const PROMOTER_NUMBER = '+22236001122';
+const PROMOTER_NOTE = 'Met at the Capitale market';
+const JOIN_TOKEN = 'AQEBAQEBAQEBAQEBAQEBAQEAAAABx2e3m2D5yVnQ8f3nH0nWZQ';
+const PROMOTER = {
+  id: PROMOTER_ID,
+  displayName: 'Sidi Mohamed Ould Ahmed',
+  whatsappMasked: '+222***22',
+  whatsappNumber: PROMOTER_NUMBER,
+  note: PROMOTER_NOTE,
+  isActive: true,
+  createdAt: '2026-10-25T08:00:00.000Z',
+  createdBy: 'admin@preview.invalid',
+  updatedBy: 'admin@preview.invalid',
+  updatedAt: '2026-10-25T08:00:00.000Z',
+  code: { code: '004217', version: 2, issuedAt: '2026-10-25T08:05:00.000Z', issuedBy: 'admin@preview.invalid' },
+  qrLink: `https://dukan.tsxmr.com/join?r=${JOIN_TOKEN}`,
+  registrations: 3,
+  completedRegistrations: 2,
+  codeHistory: [
+    { code: '004217', version: 2, issuedAt: '2026-10-25T08:05:00.000Z', issuedBy: 'admin@preview.invalid', retiredAt: null, retiredBy: null },
+    { code: '771903', version: 1, issuedAt: '2026-10-24T08:05:00.000Z', issuedBy: 'admin@preview.invalid', retiredAt: '2026-10-25T08:05:00.000Z', retiredBy: 'admin@preview.invalid' },
+  ],
+};
+const ATTRIBUTED = {
+  total: 2,
+  page: 0,
+  pageSize: 50,
+  rows: [
+    { companyId: '0192f000-0000-7000-8000-0000000000b1', businessName: 'Boutique Aicha Électronique', isTest: false, registeredAt: '2026-10-25T10:00:00.000Z', status: 'pending_activation', closed: false, completed: true, source: 'promoter', mechanism: 'promoter_qr', promoter: { id: PROMOTER_ID, nameSnapshot: 'Sidi Mohamed Ould Ahmed', codeVersion: 2 }, inviter: null },
+    { companyId: '0192f000-0000-7000-8000-0000000000b2', businessName: 'Phone Center Ksar', isTest: true, registeredAt: '2026-10-24T10:00:00.000Z', status: 'activated', closed: false, completed: false, source: 'user_invite', mechanism: 'user_invite', promoter: null, inviter: { companyId: '0192f000-0000-7000-8000-0000000000b3', businessName: 'Nour Electronics' } },
+  ],
+};
+
+/** The promoter routes, answered on top of `mockApi` (a later route is matched first). */
+async function mockAcquisition(page: Page) {
+  await page.route(`${API}/**`, async (route) => {
+    const url = route.request().url();
+    const json = (body: unknown) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) });
+    if (url.includes('/platform/promoters?')) {
+      return json({ total: 1, page: 0, pageSize: 50, rows: [{ id: PROMOTER_ID, displayName: PROMOTER.displayName, whatsappMasked: PROMOTER.whatsappMasked, code: '004217', isActive: true, createdAt: PROMOTER.createdAt, registrations: 3, completedRegistrations: 2 }] });
+    }
+    if (url.endsWith(`/platform/promoters/${PROMOTER_ID}`)) return json(PROMOTER);
+    if (url.includes(`/platform/promoters/${PROMOTER_ID}/businesses`)) return json({ ...ATTRIBUTED, rows: ATTRIBUTED.rows.slice(0, 1), total: 1 });
+    if (url.includes('/platform/acquisitions/summary')) return json({ none: 4, promoter: 1, userInvite: 2, total: 7 });
+    if (url.includes('/platform/acquisitions?')) return json(ATTRIBUTED);
+    if (url.endsWith('/platform/acquisition/link')) return json({ usable: true, source: 'promoter', promoterName: PROMOTER.displayName, code: '004217' });
+    if (url.endsWith('/platform/acquisition/code')) return json({ usable: true, source: 'promoter', promoterName: PROMOTER.displayName, code: '004217' });
+    return route.fallback();
+  });
+}
+
+const ACQUISITION_PAGES: [name: string, path: string, admin: boolean][] = [
+  ['promoters', '/admin/promoters', true],
+  ['promoter', `/admin/promoters/${PROMOTER_ID}`, true],
+  ['sources', '/admin/sources', true],
+  ['join', `/join?r=${JOIN_TOKEN}`, false],
+];
+
+for (const lang of LANGS) {
+  for (const theme of ['light', 'dark'] as const) {
+    for (const [name, path, admin] of ACQUISITION_PAGES) {
+      test(`promoter attribution: ${name}, ${lang}, ${theme}, at 375 and 320 px and desktop`, async ({ page }) => {
+        const errors = watchConsole(page);
+        await page.addInitScript((t) => localStorage.setItem('erp.web.theme', t), theme);
+        await mockApi(page, { admin, lang });
+        await mockAcquisition(page);
+        await page.setViewportSize({ width: 375, height: 812 });
+        await page.goto(path);
+        await page.waitForLoadState('networkidle');
+        const l = await layout(page);
+        const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
+        const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+        await page.screenshot({ path: join(EV, 'screenshots', 'promoters', `${name}-${lang}-${theme}-375.jpg`), fullPage: true, type: 'jpeg', quality: 70 });
+        await page.setViewportSize({ width: 320, height: 720 });
+        const at320 = await layout(page);
+        await page.screenshot({ path: join(EV, 'screenshots', 'promoters', `${name}-${lang}-${theme}-320.jpg`), fullPage: true, type: 'jpeg', quality: 60 });
+        await page.setViewportSize({ width: 1280, height: 800 });
+        const desktop = await layout(page);
+        const text = await page.locator('body').innerText();
+        record({ test: 'promoter-attribution', name, lang, theme, layout: l, overflow320: at320.overflow, offenders320: at320.offenders, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
+        expect([l.lang, l.dir]).toEqual([lang, lang === 'ar' ? 'rtl' : 'ltr']);
+        expect(l.robots).toBe('noindex, nofollow');
+        expect(l.overflow, 'no sideways scroll at 375 px').toBeLessThanOrEqual(0);
+        expect(at320.overflow, 'no sideways scroll at 320 px').toBeLessThanOrEqual(0);
+        expect(desktop.overflow, 'no sideways scroll at desktop').toBeLessThanOrEqual(0);
+        expect(errors).toEqual([]);
+        expect(serious.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+        if (name === 'promoters') expect(text).not.toContain(PROMOTER_NUMBER);
+        if (name === 'join') {
+          // The token left the address at once, and nothing personal is shown.
+          expect(new URL(page.url()).search).toBe('');
+          expect(text).not.toContain(PROMOTER_NUMBER);
+        }
+        if (name === 'promoter') {
+          const card = await page.getByTestId('promoter-card').innerText();
+          expect(card).not.toContain(PROMOTER_NUMBER);
+          expect(card).not.toContain(PROMOTER_NOTE);
+          expect(card).toContain('004217');
+        }
+      });
+    }
+  }
+}
+
+for (const lang of LANGS) {
+  test(`promoter attribution: the promo code on the application form, ${lang}, typed in Arabic digits, at 320 px`, async ({ page }) => {
+    const cat = { en, fr, ar }[lang];
+    const errors = watchConsole(page);
+    await mockApi(page);
+    await mockAcquisition(page);
+    await page.setViewportSize({ width: 320, height: 900 });
+    await page.goto(pathOf('apply', lang));
+    const first = page.getByLabel(cat['promo.digit'].replace('{n}', '1'), { exact: true });
+    await first.click();
+    await page.keyboard.insertText('٠٠٤٢١٧');
+    await expect(page.getByText(cat['promo.from'].replace('{name}', PROMOTER.displayName))).toBeVisible();
+    const digits = await page.locator('.code-box').evaluateAll((els) => els.map((e) => (e as HTMLInputElement).value).join(''));
+    const order = await page.locator('.code-box').evaluateAll((els) => els.map((e) => Math.round(e.getBoundingClientRect().left)));
+    const l = await layout(page);
+    await page.screenshot({ path: join(EV, 'screenshots', 'promoters', `apply-promo-${lang}-320.jpg`), fullPage: true, type: 'jpeg', quality: 60 });
+    expect(digits).toBe('004217');
+    // Left to right on every page, Arabic included: the first digit is the leftmost box.
+    expect(order).toEqual([...order].sort((a, b) => a - b));
+    expect(l.overflow, 'no sideways scroll at 320 px').toBeLessThanOrEqual(0);
+    expect(errors).toEqual([]);
+  });
+}

@@ -764,6 +764,12 @@ dialog.modal .body {
 .print-card p {
   margin: 0;
 }
+/* Its own ink, never the page's: a card's paragraphs are light in the dark theme, and this card stays white. */
+.print-card .print-card-brand,
+.print-card .print-card-name,
+.print-card .print-card-code {
+  color: var(--print-ink);
+}
 .print-card .qr {
   width: 100%;
   max-width: 240px;
@@ -778,8 +784,8 @@ dialog.modal .body {
   font-weight: 600;
   overflow-wrap: anywhere;
 }
-.print-card-label,
-.print-card-instruction {
+.print-card .print-card-label,
+.print-card .print-card-instruction {
   color: var(--print-muted);
   font-size: 0.95rem;
 }
@@ -814,6 +820,8 @@ fieldset.promo {
   margin: 0;
   padding: 0;
   min-width: 0;
+  /* One column no wider than the form: at 320px the six boxes shrink rather than push the page sideways. */
+  grid-template-columns: minmax(0, 1fr);
 }
 fieldset.promo legend {
   padding: 0;
@@ -823,6 +831,7 @@ fieldset.promo legend {
   display: flex;
   gap: 8px;
   flex-wrap: nowrap;
+  width: 100%;
 }
 .code-box {
   width: 44px;
