@@ -66,7 +66,7 @@ async function newPage({ lang = 'en', theme = 'light', width = 1280 } = {}) {
     } catch {}
   }, [lang, theme]);
   const page = await context.newPage();
-  page.on('console', (m) => m.type() === 'error' && !/Failed to load resource/.test(m.text()) && consoleErrors.push(m.text().slice(0, 160)));
+  page.on('console', (m) => m.type() === 'error' && !/Failed to load resource/.test(m.text()) && consoleErrors.push(`${new URL(page.url()).origin === WEB ? 'site' : 'app'} ${new URL(page.url()).pathname}: ${m.text().slice(0, 120)}`));
   return page;
 }
 const overflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
