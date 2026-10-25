@@ -1,0 +1,48 @@
+(node:5853) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/runner/work/erp-control-web/erp-control-web/app/lib/i18n/en.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/runner/work/erp-control-web/erp-control-web/app/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS  [chromium] the console signs in with the second factor and opens Promoters
+PASS  [chromium] a new promoter has no code until "Generate code and QR" is pressed
+PASS  [chromium] the promoter’s page shows the full number to the administrator
+PASS  [chromium] the server drew a six-digit code
+PASS  [chromium] the QR address is <portal>/join?r=<50-character token>
+PASS  [chromium] the token carries no id, number, code or name
+PASS  [chromium] the card shows the brand, the name, the code and the instruction
+PASS  [chromium] the card never shows the number or the note
+PASS  [chromium] the card downloads as a PNG — 115109 bytes
+PASS  [chromium] the promoter’s page in ar, dark, at 375 px: no sideways scroll, the card right to left
+PASS  [chromium] the list in ar masks the number
+PASS  [chromium] the promoter’s page in fr, light, at 320 px: no sideways scroll, the card left to right
+PASS  [chromium] the list in fr masks the number
+PASS  [chromium] the promoter’s page in en, dark, at 320 px: no sideways scroll, the card left to right
+PASS  [chromium] the list in en masks the number
+PASS  [chromium] regenerating gives a new code and a new QR
+PASS  [chromium] the old code and the old QR answer only "unusable"
+PASS  [chromium] the new QR names the promoter and prefills the new code — nothing else
+PASS  [chromium] the history keeps both codes
+PASS  [chromium] /join in en: the token leaves the address, the promoter is named, no sideways scroll
+PASS  [chromium] /join in en is never indexed
+PASS  [chromium] the application form opens with the code prefilled, in memory
+PASS  [chromium] /join in ar: the token leaves the address, the promoter is named, no sideways scroll
+PASS  [chromium] /join in ar is never indexed
+PASS  [chromium] the app’s registration names the promoter from the QR and takes the token out of the address
+PASS  [chromium] registered from the QR: one attribution, by QR, version 2, the name as it was
+PASS  [chromium] Arabic digits are read as the code, left to right in an Arabic page
+PASS  [chromium] the registration at 320 px in Arabic: no sideways scroll
+PASS  [chromium] registered with the typed code: attributed by code
+PASS  [chromium] a code deactivated after its check refuses the registration, and nothing is saved
+PASS  [chromium] a deactivated code answers only "unusable"
+PASS  [chromium] activated again, the same code opens again
+PASS  [chromium] the app’s /join hands a registration address to registration (not the team’s join)
+PASS  [chromium] registered from an invitation: attributed to the inviting business
+PASS  [chromium] the report counts two promoter registrations and one invitation — {"none":0,"promoter":2,"userInvite":1,"total":3}
+PASS  [chromium] the list counts the promoter’s registrations
+PASS  [chromium] five wrong guesses each answer the one identical "unusable"
+PASS  [chromium] then even a real code is refused (429), so a hit cannot be told from a miss
+PASS  [chromium] and the website’s door is the same budget
+PASS  [chromium] another address is not affected
+PASS  [chromium] no console error in any page
+PASS  [chromium] no style refused but the engine’s own select and the screenshot tool’s — 0 engine/tooling, 0 other, 0 refusals
+
+[chromium] promoter-journey: 42/42 checks passed
