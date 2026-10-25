@@ -1,0 +1,211 @@
+{
+  "at": "2026-10-25T14:59:01.957Z",
+  "browser": "chromium",
+  "results": [
+    {
+      "what": "the console signs in with the second factor and opens Promoters",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "a new promoter has no code until \"Generate code and QR\" is pressed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the promoter’s page shows the full number to the administrator",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the server drew a six-digit code",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the QR address is <portal>/join?r=<50-character token>",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the token carries no id, number, code or name",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the card shows the brand, the name, the code and the instruction",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the card never shows the number or the note",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the card downloads as a PNG",
+      "ok": true,
+      "detail": "112651 bytes"
+    },
+    {
+      "what": "the promoter’s page in ar, dark, at 375 px: no sideways scroll, the card right to left",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the list in ar masks the number",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the promoter’s page in fr, light, at 320 px: no sideways scroll, the card left to right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the list in fr masks the number",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the promoter’s page in en, dark, at 320 px: no sideways scroll, the card left to right",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the list in en masks the number",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "regenerating gives a new code and a new QR",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the old code and the old QR answer only \"unusable\"",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the new QR names the promoter and prefills the new code — nothing else",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the history keeps both codes",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "/join in en: the token leaves the address, the promoter is named, no sideways scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "/join in en is never indexed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the application form opens with the code prefilled, in memory",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "/join in ar: the token leaves the address, the promoter is named, no sideways scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "/join in ar is never indexed",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the app’s registration names the promoter from the QR and takes the token out of the address",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "registered from the QR: one attribution, by QR, version 2, the name as it was",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "Arabic digits are read as the code, left to right in an Arabic page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the registration at 320 px in Arabic: no sideways scroll",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "registered with the typed code: attributed by code",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "a code deactivated after its check refuses the registration, and nothing is saved",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "a deactivated code answers only \"unusable\"",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "activated again, the same code opens again",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the app’s /join hands a registration address to registration (not the team’s join)",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "registered from an invitation: attributed to the inviting business",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the report counts two promoter registrations and one invitation",
+      "ok": true,
+      "detail": "{\"none\":0,\"promoter\":2,\"userInvite\":1,\"total\":3}"
+    },
+    {
+      "what": "the list counts the promoter’s registrations",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "five wrong guesses each answer the one identical \"unusable\"",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "then even a real code is refused (429), so a hit cannot be told from a miss",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "and the website’s door is the same budget",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "another address is not affected",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "no console error in any page",
+      "ok": true,
+      "detail": ""
+    }
+  ]
+}
