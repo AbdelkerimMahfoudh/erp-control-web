@@ -1,0 +1,31 @@
+(node:7921) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/runner/work/erp-control-web/erp-control-web/app/lib/i18n/en.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to /home/runner/work/erp-control-web/erp-control-web/app/package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS  [webkit] the console signs in with the second factor and opens Promoters
+PASS  [webkit] a new promoter has no code until "Generate code and QR" is pressed
+PASS  [webkit] the promoter’s page shows the full number to the administrator
+      site /admin/promoters/01a173c8-03ed-71b6-8754-d6c5f076787d (after "the promoter’s page shows the full number to the administrator"): csp-violation style-src-attr blocked=inline source=http://127.0.0.1:4173/assets/index-D_4ED5dx.js:8:89214 sample= element=SELECT
+PASS  [webkit] the server drew a six-digit code
+PASS  [webkit] the QR address is <portal>/join?r=<50-character token>
+PASS  [webkit] the token carries no id, number, code or name
+PASS  [webkit] the card shows the brand, the name, the code and the instruction
+PASS  [webkit] the card never shows the number or the note
+PASS  [webkit] the card downloads as a PNG — 76231 bytes
+      site /admin/promoters/01a173c8-03ed-71b6-8754-d6c5f076787d (after "the card downloads as a PNG"): csp-violation style-src-elem blocked=inline source=:5:30 sample= element=#document
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+page.goto: Timeout 30000ms exceeded.
+Call log:
+  - navigating to "http://127.0.0.1:4173/admin/promoters/01a173c8-03ed-71b6-8754-d6c5f076787d", waiting until "load"
+
+    at /home/runner/work/erp-control-web/erp-control-web/tools/verify/promoter-journey.mjs:153:11 {
+  log: [
+    '  - navigating to "http://127.0.0.1:4173/admin/promoters/01a173c8-03ed-71b6-8754-d6c5f076787d", waiting until "load"'
+  ],
+  name: 'TimeoutError'
+}
+
+Node.js v22.23.3
