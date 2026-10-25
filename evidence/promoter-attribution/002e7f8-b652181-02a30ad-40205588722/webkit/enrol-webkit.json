@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-25T15:14:00.239Z",
+  "browser": "webkit",
+  "results": [
+    {
+      "what": "the administrator signs in with the password",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "what": "enrolment with the server-issued token returns the key once",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "what": "the first code confirms the second factor",
+      "ok": true,
+      "detail": "status 200"
+    }
+  ]
+}
