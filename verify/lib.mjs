@@ -96,8 +96,10 @@ export async function freshCode(secret) {
     await new Promise((r) => setTimeout(r, 500));
   }
 }
-export async function call(method, path, { cookie, token, branch, body, admin } = {}) {
+export async function call(method, path, { cookie, token, branch, body, admin, ip } = {}) {
   const headers = { Accept: 'application/json' };
+  // The client's address as the trusted local proxy reports it (API_INGRESS=loopback): one per check that is meant to fail.
+  if (ip) headers['X-Forwarded-For'] = ip;
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   if (cookie) headers.Cookie = cookie;
   if (token) headers.Authorization = `Bearer ${token}`;

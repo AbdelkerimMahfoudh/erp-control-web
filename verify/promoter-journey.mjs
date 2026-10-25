@@ -150,9 +150,9 @@ await stepUp(admin);
 await admin.waitForFunction((old) => document.querySelector('.code-big')?.textContent?.trim() !== old, code1);
 const code2 = (await admin.locator('.code-big').innerText()).trim();
 const token2 = new URL((await call('GET', `platform/promoters/${promoterId}`, { cookie })).json.qrLink).searchParams.get('r');
-const oldCode = await call('POST', 'auth/acquisition/code', { body: { code: code1 } });
-const oldLink = await call('POST', 'auth/acquisition/link', { body: { token: token1 } });
-const newLink = await call('POST', 'auth/acquisition/link', { body: { token: token2 } });
+const oldCode = await call('POST', 'auth/acquisition/code', { body: { code: code1 }, ip: '203.0.113.11' });
+const oldLink = await call('POST', 'auth/acquisition/link', { body: { token: token1 }, ip: '203.0.113.12' });
+const newLink = await call('POST', 'auth/acquisition/link', { body: { token: token2 }, ip: '203.0.113.13' });
 check('regenerating gives a new code and a new QR', code2 !== code1 && token2 !== token1);
 check('the old code and the old QR answer only "unusable"', JSON.stringify(oldCode.json) === '{"usable":false}' && JSON.stringify(oldLink.json) === '{"usable":false}');
 check('the new QR names the promoter and prefills the new code — nothing else', JSON.stringify(newLink.json) === JSON.stringify({ usable: true, source: 'promoter', promoterName: NAME, code: code2 }));
@@ -240,12 +240,12 @@ async function register(p, lang, business, { submit = true } = {}) {
   await p.getByText(app.en['register.promo.unavailableNow']).waitFor();
   check('a code deactivated after its check refuses the registration, and nothing is saved', companies() === before && acquisitionOf('Refused Shop Test') === '');
   await shot(p, 'app-register-refused-en-375');
-  const deactivated = await call('POST', 'auth/acquisition/code', { body: { code: code2 } });
+  const deactivated = await call('POST', 'auth/acquisition/code', { body: { code: code2 }, ip: '203.0.113.14' });
   check('a deactivated code answers only "unusable"', JSON.stringify(deactivated.json) === '{"usable":false}');
   await admin.getByRole('button', { name: web.en['admin.promoter.activate'] }).click();
   await stepUp(admin);
   await admin.getByRole('button', { name: web.en['admin.promoter.deactivate'] }).waitFor();
-  const again = await call('POST', 'auth/acquisition/code', { body: { code: code2 } });
+  const again = await call('POST', 'auth/acquisition/code', { body: { code: code2 }, ip: '203.0.113.15' });
   check('activated again, the same code opens again', again.json?.usable === true);
   await p.context().close();
 }
@@ -274,20 +274,18 @@ check('the report counts two promoter registrations and one invitation', summary
 const listed = (await call('GET', `platform/promoters?q=${code2}`, { cookie })).json;
 check('the list counts the promoter’s registrations', listed.rows[0]?.registrations === 2 && !JSON.stringify(listed).includes(NUMBER));
 
-await new Promise((r) => setTimeout(r, 61_000)); // a fresh request budget, so only the wrong-guess limit can answer
-// The limit counts every unusable answer this address had in the last 15 minutes (the old code and QR above, the
-// deactivated code): wrong guesses are answered until it is spent, never more than five.
+// The enumeration limit, from one fresh address (the trusted proxy's X-Forwarded-For): five wrong guesses are
+// answered, each the one identical "unusable"; the sixth lookup — a real code — is refused, on both doors.
+const GUESSER = '203.0.113.99';
 const answers = [];
-for (let i = 0; i < 6; i++) {
-  const a = await call('POST', 'auth/acquisition/code', { body: { code: String((Number(code2) + 1 + i) % 1e6).padStart(6, '0') } });
-  if (a.status === 429) break;
-  answers.push(a);
-}
-const stopped = await call('POST', 'auth/acquisition/code', { body: { code: code2 } });
-check('every wrong guess answers the one identical "unusable", and no more than five in the window', answers.length >= 1 && answers.length <= 5 && answers.every((a) => a.status === 200 && JSON.stringify(a.json) === '{"usable":false}'), `${answers.length} answered`);
+for (let i = 0; i < 5; i++) answers.push(await call('POST', 'auth/acquisition/code', { body: { code: String((Number(code2) + 1 + i) % 1e6).padStart(6, '0') }, ip: GUESSER }));
+const stopped = await call('POST', 'auth/acquisition/code', { body: { code: code2 }, ip: GUESSER });
+const otherDoor = await call('POST', 'platform/acquisition/link', { body: { token: token2 }, ip: GUESSER });
+const elsewhere = await call('POST', 'auth/acquisition/code', { body: { code: code2 }, ip: '203.0.113.98' });
+check('five wrong guesses each answer the one identical "unusable"', answers.every((a) => a.status === 200 && JSON.stringify(a.json) === '{"usable":false}'));
 check('then even a real code is refused (429), so a hit cannot be told from a miss', stopped.status === 429 && stopped.json?.code === 'acquisition_lookup_limited');
-const otherDoor = await call('POST', 'platform/acquisition/link', { body: { token: token2 } });
 check('and the website’s door is the same budget', otherDoor.status === 429);
+check('another address is not affected', elsewhere.json?.usable === true);
 
 check('no console error in any page', consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));
 writeFileSync(`${WORK}promoter-journey-facts-${BROWSER}.json`, JSON.stringify({ codeVersions: [1, 2], summary }, null, 2));

@@ -85,6 +85,8 @@ jobs:
             GRANT SELECT, INSERT, UPDATE, DELETE ON sa_e2e.* TO 'phonestore_app'@'%';"
           {
             echo "NODE_ENV=development"; echo "APP_ENV=staging"; echo "STAGING_CONTACT_OUTBOX=enabled"; echo "PORT=3410"
+            # Behind a trusted local proxy: the journey gives each check meant to fail its own client address.
+            echo "API_INGRESS=loopback"; echo "API_BIND=127.0.0.1"
             echo "DATABASE_URL=mysql://root:@127.0.0.1:3306/sa_e2e"
             echo "APP_DATABASE_URL=mysql://phonestore_app:$(cat "${WORK}app.pw")@127.0.0.1:3306/sa_e2e"
             for k in JWT_ACCESS_SECRET STAFF_INVITATION_KEY OTP_PEPPER MESSAGING_HASH_KEY REFERRAL_KEY; do echo "$k=$(openssl rand -hex 32)"; done
