@@ -190,10 +190,27 @@ async function register(p, lang, business, { submit = true } = {}) {
   await fields().nth(0).fill('Owner Test');
   await p.getByText(c['register.next'], { exact: true }).click();
   await fields().nth(0).fill(`+2223${String(Date.now()).slice(-7)}`);
-  await p.getByTestId('whatsapp-consent-check').click();
+  // The box is shown once the server's consent copy has arrived; a tick before that does not take, and the app rightly
+  // sends nothing. Tick it when it is there, and go on only once it is ticked.
+  const consent = p.getByTestId('whatsapp-consent-check');
+  await consent.waitFor();
+  for (let i = 0; i < 20 && (await consent.getAttribute('aria-checked')) !== 'true'; i++) {
+    if ((await consent.getAttribute('aria-disabled')) !== 'true') await consent.click();
+    await p.waitForTimeout(250);
+  }
   await fields().nth(2).fill('a-long-password');
   await fields().nth(3).fill('a-long-password');
   if (submit) await p.getByText(c['register.submit'], { exact: true }).click();
+}
+
+/** The code check, or a screenshot of what the person saw instead. */
+async function toCodeCheck(p, name) {
+  try {
+    await p.waitForURL(/verify/, { timeout: 30_000 });
+  } catch (e) {
+    await shot(p, `${name}-not-sent`);
+    throw e;
+  }
 }
 
 // ── C. From the QR address, as the portal's "Create my business" opens the app ──────────────────────────────────────
@@ -204,7 +221,7 @@ async function register(p, lang, business, { submit = true } = {}) {
   check('the app’s registration names the promoter from the QR and takes the token out of the address', !p.url().includes('r='));
   await shot(p, 'app-register-qr-en-390');
   await register(p, 'en', 'QR Shop Test');
-  await p.waitForURL(/verify/);
+  await toCodeCheck(p, 'app-register-qr');
   check('registered from the QR: one attribution, by QR, version 2, the name as it was', acquisitionOf('QR Shop Test') === `promoter\tpromoter_qr\t2\t${NAME}\t`);
   await p.context().close();
 }
@@ -221,7 +238,7 @@ async function register(p, lang, business, { submit = true } = {}) {
   check('the registration at 320 px in Arabic: no sideways scroll', (await overflow(p)) <= 0);
   await shot(p, 'app-register-code-ar-dark-320');
   await register(p, 'ar', 'Code Shop Test');
-  await p.waitForURL(/verify/);
+  await toCodeCheck(p, 'app-register-code');
   check('registered with the typed code: attributed by code', acquisitionOf('Code Shop Test') === `promoter\tpromo_code\t2\t${NAME}\t`);
   await p.context().close();
 }
@@ -265,7 +282,7 @@ async function register(p, lang, business, { submit = true } = {}) {
   check('the app’s /join hands a registration address to registration (not the team’s join)', p.url().includes('register') && !p.url().includes('r='));
   await shot(p, 'app-register-invited-en-390');
   await register(p, 'en', 'Invited Shop Test');
-  await p.waitForURL(/verify/);
+  await toCodeCheck(p, 'app-register-invited');
   check('registered from an invitation: attributed to the inviting business', acquisitionOf('Invited Shop Test') === `user_invite\tuser_invite\t\t\t${inviter[0]}`);
   await p.context().close();
 }
