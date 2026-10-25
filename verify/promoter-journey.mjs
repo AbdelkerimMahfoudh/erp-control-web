@@ -70,7 +70,9 @@ async function newPage({ lang = 'en', theme = 'light', width = 1280 } = {}) {
   return page;
 }
 const overflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-const shot = (page, name) => page.screenshot({ path: `${OUT}/${name}.jpg`, type: 'jpeg', quality: 70, fullPage: true });
+// `caret: 'initial'`: hiding the caret makes Playwright insert a <style>, which the site's CSP (style-src 'self')
+// rightly refuses in WebKit — a console error of the tooling's own, not the page's.
+const shot = (page, name) => page.screenshot({ path: `${OUT}/${name}.jpg`, type: 'jpeg', quality: 70, fullPage: true, caret: 'initial' });
 
 async function stepUp(page) {
   const dialog = page.locator('dialog[open]').filter({ hasText: web.en['admin.stepup.title'] });
