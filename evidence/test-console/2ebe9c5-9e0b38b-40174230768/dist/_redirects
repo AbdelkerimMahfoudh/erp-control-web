@@ -1,0 +1,7 @@
+/ /subscription 302
+/account /subscription 301
+/account/* /subscription 301
+/subscription /app-shell.html 200
+/subscription/* /app-shell.html 200
+/admin /app-shell.html 200
+/admin/* /app-shell.html 200
