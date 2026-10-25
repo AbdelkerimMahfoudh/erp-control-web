@@ -1,0 +1,9 @@
+{
+  "name": "verify-promoter-attribution",
+  "private": true,
+  "type": "module",
+  "description": "Tooling only: the promoter-attribution journey against a disposable API, in Chromium and WebKit (ops/verify-promoter-attribution).",
+  "dependencies": {
+    "playwright": "1.64.0"
+  }
+}
