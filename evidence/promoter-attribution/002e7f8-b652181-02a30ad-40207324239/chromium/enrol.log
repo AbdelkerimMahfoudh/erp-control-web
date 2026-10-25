@@ -1,0 +1,5 @@
+PASS  [chromium] the administrator signs in with the password — status 200
+PASS  [chromium] enrolment with the server-issued token returns the key once — status 200
+PASS  [chromium] the first code confirms the second factor — status 200
+
+[chromium] enrol: 3/3 checks passed
