@@ -13,3 +13,8 @@
 faaae673e7eaa3e77b7e10c6cf455b42732ea5d0:evidence/feca99aabeee99ee71b76e9cb094a3b402ad0d35/portal/browser/portal-claim-ar.json:generic-api-key:6
 faaae673e7eaa3e77b7e10c6cf455b42732ea5d0:evidence/feca99aabeee99ee71b76e9cb094a3b402ad0d35/portal/browser/portal-claim-en.json:generic-api-key:6
 faaae673e7eaa3e77b7e10c6cf455b42732ea5d0:evidence/feca99aabeee99ee71b76e9cb094a3b402ad0d35/portal/browser/portal-claim-fr.json:generic-api-key:6
+#
+# A fixture in the browser checks of promoter attribution (0103): a fictional 50-character registration-address token
+# the stub API answers, written as a literal in b35c6e8 and built from bytes since. Not a credential: no server ever
+# signed it.
+b35c6e8ec4bc9d629570826b44acf839b75fd8ba:e2e/site.spec.ts:generic-api-key:778

@@ -775,7 +775,8 @@ for (const lang of LANGS) {
 const PROMOTER_ID = '0192f000-0000-7000-8000-0000000000p1';
 const PROMOTER_NUMBER = '+22236001122';
 const PROMOTER_NOTE = 'Met at the Capitale market';
-const JOIN_TOKEN = 'AQEBAQEBAQEBAQEBAQEBAQEAAAABx2e3m2D5yVnQ8f3nH0nWZQ';
+// A token-shaped fixture (50 base64url characters), built rather than written: the stub API answers whatever it is.
+const JOIN_TOKEN = Buffer.alloc(37, 1).toString('base64url');
 const PROMOTER = {
   id: PROMOTER_ID,
   displayName: 'Sidi Mohamed Ould Ahmed',
