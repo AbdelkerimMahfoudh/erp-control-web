@@ -13,7 +13,7 @@
 import { execFileSync } from 'node:child_process';
 import { createHmac, randomBytes } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
-import { API, APP, BROWSER, OUT, WORK, adminPassword, call, check, engine, finish, freshCode } from './lib.mjs';
+import { API, APP, BROWSER, OUT, WORK, adminPassword, call, check, engine, results, finish, freshCode } from './lib.mjs';
 
 const WEB = process.env.WEB ?? 'http://127.0.0.1:4173';
 const WEBDIR = process.env.WEBDIR;
@@ -65,8 +65,18 @@ async function newPage({ lang = 'en', theme = 'light', width = 1280 } = {}) {
       localStorage.setItem('erp.theme', t);
     } catch {}
   }, [lang, theme]);
+  // What a policy refused, and from where — a refusal is otherwise a bare sentence in the console.
+  await context.addInitScript(() =>
+    document.addEventListener('securitypolicyviolation', (e) =>
+      console.warn(`csp-violation ${e.effectiveDirective} blocked=${e.blockedURI} source=${e.sourceFile}:${e.lineNumber}:${e.columnNumber} sample=${(e.sample || '').slice(0, 80)} element=${e.target?.nodeName ?? ''}`),
+    ),
+  );
   const page = await context.newPage();
-  page.on('console', (m) => m.type() === 'error' && !/Failed to load resource/.test(m.text()) && consoleErrors.push(`${new URL(page.url()).origin === WEB ? 'site' : 'app'} ${new URL(page.url()).pathname}: ${m.text().slice(0, 120)}`));
+  const where = () => `${new URL(page.url()).origin === WEB ? 'site' : 'app'} ${new URL(page.url()).pathname} (after "${results.at(-1)?.what ?? 'start'}")`;
+  page.on('console', (m) => {
+    if (m.type() === 'warning' && m.text().startsWith('csp-violation')) console.log(`      ${where()}: ${m.text()}`);
+    if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) consoleErrors.push(`${where()}: ${m.text().slice(0, 120)} at ${m.location().url}:${m.location().lineNumber}`);
+  });
   return page;
 }
 const overflow = (page) => page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
@@ -306,7 +316,7 @@ check('then even a real code is refused (429), so a hit cannot be told from a mi
 check('and the website’s door is the same budget', otherDoor.status === 429);
 check('another address is not affected', elsewhere.json?.usable === true);
 
-check('no console error in any page', consoleErrors.length === 0, consoleErrors.slice(0, 3).join(' | '));
+check('no console error in any page', consoleErrors.length === 0, consoleErrors.join(' | '));
 writeFileSync(`${WORK}promoter-journey-facts-${BROWSER}.json`, JSON.stringify({ codeVersions: [1, 2], summary }, null, 2));
 await browser.close();
 finish('promoter-journey');
