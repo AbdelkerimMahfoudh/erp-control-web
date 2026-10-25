@@ -55,6 +55,16 @@ async function adminCookie() {
 
 const browser = await engine.launch();
 const consoleErrors = [];
+// WebKit reports two style refusals that are not the page's own styles, each recorded with its source:
+//  - `style-src-attr` on a SELECT, raised where React creates the element: WebKit styling its own control (the
+//    application form's existing select does the same);
+//  - `style-src-elem` from a script with no source file: what Playwright injects to take a screenshot.
+// Any other refusal — or a refusal no violation explains — still fails.
+const cspViolations = [];
+let cspRefusals = 0;
+const engineOrTooling = (v) =>
+  / style-src-attr blocked=inline source=\S+\/assets\/index-\S+ sample= element=SELECT$/.test(v.text) ||
+  / style-src-elem blocked=inline source=:\d+:\d+ sample= element=#document$/.test(v.text);
 async function newPage({ lang = 'en', theme = 'light', width = 1280 } = {}) {
   const context = await browser.newContext({ viewport: { width, height: width <= 375 ? 760 : 900 }, colorScheme: theme, acceptDownloads: true });
   await context.addInitScript(([l, t]) => {
@@ -74,8 +84,12 @@ async function newPage({ lang = 'en', theme = 'light', width = 1280 } = {}) {
   const page = await context.newPage();
   const where = () => `${new URL(page.url()).origin === WEB ? 'site' : 'app'} ${new URL(page.url()).pathname} (after "${results.at(-1)?.what ?? 'start'}")`;
   page.on('console', (m) => {
-    if (m.type() === 'warning' && m.text().startsWith('csp-violation')) console.log(`      ${where()}: ${m.text()}`);
-    if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) consoleErrors.push(`${where()}: ${m.text().slice(0, 120)} at ${m.location().url}:${m.location().lineNumber}`);
+    if (m.type() === 'warning' && m.text().startsWith('csp-violation')) {
+      console.log(`      ${where()}: ${m.text()}`);
+      cspViolations.push({ at: where(), text: m.text() });
+    }
+    if (m.type() === 'error' && /^Refused to apply a stylesheet/.test(m.text())) cspRefusals += 1;
+    else if (m.type() === 'error' && !/Failed to load resource/.test(m.text())) consoleErrors.push(`${where()}: ${m.text().slice(0, 120)} at ${m.location().url}:${m.location().lineNumber}`);
   });
   return page;
 }
@@ -317,6 +331,12 @@ check('and the website’s door is the same budget', otherDoor.status === 429);
 check('another address is not affected', elsewhere.json?.usable === true);
 
 check('no console error in any page', consoleErrors.length === 0, consoleErrors.join(' | '));
+const unexplained = cspViolations.filter((v) => !engineOrTooling(v));
+check(
+  'no style refused but the engine’s own select and the screenshot tool’s',
+  unexplained.length === 0 && cspRefusals === cspViolations.length,
+  `${cspViolations.length - unexplained.length} engine/tooling, ${unexplained.length} other, ${cspRefusals} refusals${unexplained.length ? ` — ${unexplained.map((v) => `${v.at}: ${v.text}`).join(' | ')}` : ''}`,
+);
 writeFileSync(`${WORK}promoter-journey-facts-${BROWSER}.json`, JSON.stringify({ codeVersions: [1, 2], summary }, null, 2));
 await browser.close();
 finish('promoter-journey');
