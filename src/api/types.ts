@@ -666,6 +666,8 @@ export interface BusinessRow {
   trial?: TrialSummary | null;
   /** A persistent test business (D217). Absent from an API older than 0102. */
   isTest?: boolean;
+  /** D224: a test business running a controlled store pilot. */
+  isPilot?: boolean;
   version: number;
 }
 
@@ -683,6 +685,10 @@ export interface Person {
   phone: string | null;
   emailVerified: boolean;
   phoneVerified: boolean;
+  /** D224: `deferred_by_platform` is NOT verified. Optional: a server before 0109 does not send it. */
+  phoneVerification?: 'required' | 'deferred_by_platform' | 'verified';
+  role?: string | null;
+  branchIds?: string[];
   isActive: boolean;
   status: 'active' | 'pending' | 'inactive';
   lastLoginAt: string | null;
@@ -705,6 +711,8 @@ export interface BusinessDetail {
   trial?: BusinessTrial | null;
   /** A persistent test business (D217). Absent from an API older than 0102. */
   isTest?: boolean;
+  /** D224: a test business running a controlled store pilot. */
+  isPilot?: boolean;
   /** Provisioning and activation, separately (D217). Absent from an API older than 0102. */
   setup?: ProvisioningStatus | null;
 }
@@ -729,7 +737,7 @@ export interface ProvisioningStatus {
   owner: {
     name: string;
     passwordSet: boolean | null;
-    phone: { present: boolean; verified: boolean; whatsappConsent: ConsentState | null };
+    phone: { present: boolean; verified: boolean; verification?: 'required' | 'deferred_by_platform' | 'verified'; whatsappConsent: ConsentState | null };
     email: { present: boolean; verified: boolean };
     lastLoginAt: string | null;
   } | null;
@@ -761,7 +769,43 @@ export interface CreatedBusiness {
   invitation: IssuedInvitation | null;
   /** The business exists but its invitation could not be issued: the console issues one from the business. */
   invitationFailed?: boolean;
+  /** D224: a deferred Owner's setup code, in place of the setup invitation. */
+  setupCode?: IssuedSetupCode;
+  ownerPhoneVerification?: VerificationPolicy;
   setup?: ProvisioningStatus | null;
+}
+
+/** D224: the number's verification policy an administrator chooses for an account they provision. */
+export type VerificationPolicy = 'required' | 'deferred_by_platform';
+
+/** A platform-provisioned person's one-time setup code (0109): shown once, never stored by the console. */
+export interface IssuedSetupCode {
+  token: string;
+  expiresAt: string;
+  delivery: 'manual';
+}
+
+/** POST platform/businesses/:id/test-staff. */
+export interface TestStaffResult {
+  user: { id: string; name: string; role: 'store_manager' | 'store_employee'; stores: string[]; phoneVerification: VerificationPolicy; status: 'pending' };
+  setupCode: IssuedSetupCode;
+}
+
+/** GET platform/phone-verification/deferred: an account whose verification is deferred, and who decided it. */
+export interface DeferredAccount {
+  companyId: string;
+  business: string;
+  userId: string;
+  name: string;
+  role: string | null;
+  stores: string[];
+  phoneVerification: 'deferred_by_platform';
+  grantedBy: string;
+  grantedAt: string;
+  reason: string;
+  reviewAt: string | null;
+  setupCode: 'none' | 'active' | 'expired' | 'used' | 'revoked';
+  activated: boolean;
 }
 
 /** POST platform/businesses/:id/stores (D217): granted under a test business's grant, or a customer's priced request. */

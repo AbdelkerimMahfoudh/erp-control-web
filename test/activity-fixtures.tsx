@@ -61,6 +61,9 @@ export function serve(handler: Handler) {
     if (url.endsWith('/platform/my-subscription/trial')) return json(NO_TRIAL);
     // The step-up every administrator decision takes first (0094): accepted unless a test answers otherwise.
     if (url.endsWith('/platform/admin/step-up')) return json({ expiresAt: '2026-10-12T10:05:00.000Z' });
+    // Deferred WhatsApp verification (D224): switched off, and no account deferred, unless a test answers otherwise.
+    if (url.endsWith('/platform/capabilities')) return json({ phoneVerificationDeferral: false });
+    if (url.includes('/platform/phone-verification/deferred')) return json({ accounts: [] });
     return json({ message: `unexpected ${url}` }, 500);
   });
   vi.stubGlobal('fetch', fetchMock);

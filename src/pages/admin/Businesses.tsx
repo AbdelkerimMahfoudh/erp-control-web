@@ -38,6 +38,7 @@ export function Businesses() {
   const { t, lang } = useI18n();
   const [q, setQ] = useState('');
   const [state, setState] = useState('');
+  const [deferredOnly, setDeferredOnly] = useState(false);
   const [page, setPage] = useState(1);
   const [data, setData] = useState<BusinessList | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -46,9 +47,10 @@ export function Businesses() {
     const params = new URLSearchParams();
     if (q.trim()) params.set('q', q.trim());
     if (state) params.set('state', state);
+    if (deferredOnly) params.set('verification', 'deferred');
     params.set('page', String(page));
     adminRequest<BusinessList>(`platform/businesses?${params.toString()}`).then(setData).catch(setError);
-  }, [q, state, page]);
+  }, [q, state, page, deferredOnly]);
 
   return (
     <div className="stack">
@@ -68,6 +70,10 @@ export function Businesses() {
             </option>
           ))}
         </select>
+        <label className="row small">
+          <input type="checkbox" className="checkbox-inline" checked={deferredOnly} onChange={(e) => (setPage(1), setDeferredOnly(e.target.checked))} />
+          {t('admin.businesses.deferredOnly')}
+        </label>
       </div>
       <ErrorNotice error={error} />
       {!data ? (

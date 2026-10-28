@@ -5,6 +5,7 @@ import { adminRequest } from '../../auth/admin';
 import { Badge, ErrorNotice, Field, Notice, Phrase } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDateTime } from '../../lib/format';
+import { PhoneVerificationBadge } from './deferral';
 
 /** The activities a store can have (D154), in the order the console offers them. */
 export const ACTIVITY_CHOICES: Activity[] = ['electronics', 'money_agent', 'both'];
@@ -19,6 +20,12 @@ const CODED = [
   'test_business_only',
   'grant_required',
   'store_name_in_use',
+  'deferral_disabled',
+  'deferral_mfa_required',
+  'deferral_test_business_only',
+  'deferral_reason_required',
+  'deferral_confirmation_required',
+  'deferral_review_date',
 ] as const;
 
 /** A provisioning refusal in words, or any other error as every page says one. */
@@ -144,7 +151,7 @@ export function SetupPanel({ business, ask, onDone }: { business: BusinessDetail
         <dt>{t('admin.setup.phone')}</dt>
         <dd>
           {owner?.phone.present ? (
-            <Badge tone={owner.phone.verified ? 'ok' : 'warn'}>{owner.phone.verified ? t('admin.business.verified') : t('admin.business.unverified')}</Badge>
+            <PhoneVerificationBadge state={owner.phone.verification} verified={owner.phone.verified} />
           ) : (
             t('admin.setup.noPhone')
           )}

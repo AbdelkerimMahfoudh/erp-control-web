@@ -6,6 +6,7 @@ import { Field, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { ACTIVITY_CHOICES, ProvisioningRefusal, SetupCode, TestBadge } from './provisioning';
 import { useStepUp } from './useStepUp';
+import { PersonSetupCode, REQUIRED, VerificationChoice, useDeferralAvailable, verificationBody, verificationReady, type VerificationValue } from './deferral';
 
 const EMPTY = { businessName: '', ownerName: '', phone: '', email: '', city: '', branchName: '', activity: 'electronics' as Activity, language: 'fr' as 'en' | 'fr' | 'ar', isTest: true, reason: '' };
 
@@ -27,6 +28,10 @@ export function NewBusiness() {
   const [error, setError] = useState<unknown>(null);
   const [result, setResult] = useState<CreatedBusiness | null>(null);
   const [codeShown, setCodeShown] = useState(true);
+  const [verification, setVerification] = useState<VerificationValue>(REQUIRED);
+  const deferralAvailable = useDeferralAvailable();
+  // Only a test business may defer (the server decides; the console offers it only where it can be asked).
+  const offerDeferral = deferralAvailable && form.isTest;
   const attempt = useRef<{ key: string; payload: string } | null>(null);
 
   const submit = async (e: FormEvent) => {
@@ -43,6 +48,7 @@ export function NewBusiness() {
       language: form.language,
       isTest: form.isTest,
       reason: form.reason.trim(),
+      ...(offerDeferral ? verificationBody(verification) : {}),
     };
     const sent = JSON.stringify(payload);
     if (attempt.current?.payload !== sent) attempt.current = { key: crypto.randomUUID(), payload: sent };
@@ -64,6 +70,7 @@ export function NewBusiness() {
     attempt.current = null;
     setResult(null);
     setForm(EMPTY);
+    setVerification(REQUIRED);
   };
 
   if (result) {
@@ -76,6 +83,7 @@ export function NewBusiness() {
           {result.invitationFailed ? <div>{t('admin.new.invitationFailed')}</div> : null}
         </Notice>
         {result.invitation && codeShown ? <SetupCode invitation={result.invitation} onDone={() => setCodeShown(false)} /> : null}
+        {result.setupCode && codeShown ? <PersonSetupCode code={result.setupCode} name={form.ownerName.trim()} onDone={() => setCodeShown(false)} /> : null}
         <div className="row">
           <Link className="btn btn-primary" to={`/admin/businesses/${result.companyId}`}>
             {t('admin.new.open')}
@@ -140,9 +148,10 @@ export function NewBusiness() {
         <Field label={t('admin.action.reason')} hint={t('admin.action.reason.required')}>
           <input required maxLength={500} value={form.reason} onChange={set('reason')} />
         </Field>
+        {offerDeferral ? <VerificationChoice name="owner-verification" value={verification} onChange={setVerification} /> : null}
         <ProvisioningRefusal error={error} />
         <div className="row">
-          <button type="submit" className="btn btn-primary" disabled={busy}>
+          <button type="submit" className="btn btn-primary" disabled={busy || (offerDeferral && !verificationReady(verification))}>
             {t('admin.new.submit')}
           </button>
           <Link className="btn" to="/admin/businesses">

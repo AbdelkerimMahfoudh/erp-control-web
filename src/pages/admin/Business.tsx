@@ -14,6 +14,7 @@ import { detailOf } from '../../lib/trial';
 import { BusinessTrial } from './BusinessTrial';
 import { BusinessGrace, BusinessMessages } from './BusinessLifecycle';
 import { ConsoleStore, SetupPanel, TestBadge, TestBanner, TestStatus } from './provisioning';
+import { DeferredAccounts, PhoneVerificationBadge, PilotStatus, TestStaff } from './deferral';
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
 
@@ -120,6 +121,10 @@ export function Business() {
 
       <ConsoleStore business={data} ask={ask} onDone={load} />
 
+      <DeferredAccounts business={data} ask={ask} onDone={load} />
+
+      <TestStaff business={data} ask={ask} onDone={load} />
+
       <section className="grid">
         <div className="card stack">
           <h2>{t('account.stores')}</h2>
@@ -207,7 +212,7 @@ export function Business() {
                   {p.phone ? (
                     <>
                       <span className="ltr">{p.phone}</span>
-                      <Badge tone={p.phoneVerified ? 'ok' : 'warn'}>{p.phoneVerified ? t('admin.business.verified') : t('admin.business.unverified')}</Badge>
+                      <PhoneVerificationBadge state={p.phoneVerification} verified={p.phoneVerified} />
                     </>
                   ) : null}
                 </span>
@@ -227,6 +232,8 @@ export function Business() {
       </section>
 
       <TestStatus business={data} ask={ask} onDone={load} />
+
+      <PilotStatus business={data} ask={ask} onDone={load} />
 
       <section className="card stack">
         <h2>{t('admin.seats.title')}</h2>
