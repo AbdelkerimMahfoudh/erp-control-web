@@ -1,0 +1,668 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:5:103). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:6:75). Import the index file directly
+  - import "./surface" without a file extension (src/config/schema.ts:10:40). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./surface" without a file extension (src/config/schema.ts:40:51). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./legal-choices" without a file extension (src/content/index.ts:10:32). Add the file extension
+  - import "./legal-notice" without a file extension (src/content/index.ts:11:29). Add the file extension
+  - import "./legal-security" without a file extension (src/content/index.ts:12:26). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/index.ts:13:31). Add the file extension
+  - import "./brand" without a file extension (src/content/index.ts:14:42). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:15:26). Add the file extension
+  - import "./dukan-demo" without a file extension (src/content/index.ts:16:27). Add the file extension
+  - import "./riyade" without a file extension (src/content/index.ts:17:24). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:18:40). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:19:38). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:20:72). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:21:30). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/index.ts:22:36). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:23:38). Add the file extension
+  - import "./prelaunch" without a file extension (src/content/index.ts:24:158). Add the file extension
+  - import "./legal-prelaunch" without a file extension (src/content/index.ts:25:142). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-overview.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-demo.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/riyade.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/brand.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-prelaunch.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/brand.ts:2:27). Add the file extension
+  - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/prelaunch.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-prelaunch.ts:2:36). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/prelaunch.ts:3:36). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/prelaunch.ts:4:38). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 657[2mms[22m[39m
+   [32m✓[39m a scheduled store or seat starts on the server’s instant, told in the row’s own zone (D176) [2m(4)[22m
+     [33m[2m✓[22m[39m no source formats an activation’s start except with that same activation’s zone, and none formats `effectiveAt`[33m 343[2mms[22m[39m
+ [32m✓[39m test/dukan-showcase.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 3080[2mms[22m[39m
+   [32m✓[39m keyboard, languages and what it never does [2m(3)[22m
+     [33m[2m✓[22m[39m the tabs follow the arrow keys in the page’s direction; one tab stop; the hidden panel is out of reach[33m 851[2mms[22m[39m
+     [33m[2m✓[22m[39m asks nothing of the network, the storage, the camera or the reader[33m 452[2mms[22m[39m
+ [32m✓[39m test/trial-console.test.tsx [2m([22m[2m40 tests[22m[2m)[22m[33m 10921[2mms[22m[39m
+   [32m✓[39m the console: a business’s trial, recorded [2m(12)[22m
+     [33m[2m✓[22m[39m shows the eligibility and the claim with their exact instants, and that no decision creates or extends a trial[33m 637[2mms[22m[39m
+     [32m✓[39m an end date inside a running trial (R4-05) [2m(4)[22m
+       [33m[2m✓[22m[39m refused: a title of its own and the trial’s end in the business’s zone — not "something went wrong", not the server’s UTC sentence[33m 611[2mms[22m[39m
+       [33m[2m✓[22m[39m the end the server names in its refusal comes first, said in French in the business’s zone[33m 467[2mms[22m[39m
+   [32m✓[39m the console: a store or seat paid for during a trial (D176) [2m(25)[22m
+     [33m[2m✓[22m[39m confirmed during the trial: the outcome says when it starts — the server’s instant in the business’s zone — never that the store opened[33m 369[2mms[22m[39m
+     [33m[2m✓[22m[39m confirmed with a paid period in force: the server opened the store, and the outcome says so — and nothing of a start to come[33m 330[2mms[22m[39m
+     [33m[2m✓[22m[39m a confirmation that would be charged again by the first paid period is refused in words: nothing was recorded, the request still waits[33m 366[2mms[22m[39m
+     [32m✓[39m every state in English [2m(6)[22m
+       [33m[2m✓[22m[39m confirmed during the trial: when it starts, in the business’s zone — never that the store opened[33m 397[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with no paid access approved yet: the first paid month, no date — and the seat’s person waits for it to start[33m 318[2mms[22m[39m
+       [33m[2m✓[22m[39m the seat’s person proves their contacts and waits for the seat to start — its start is never a proof[33m 327[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with a paid period in force: the store was opened, and nothing of a start to come[33m 366[2mms[22m[39m
+       [33m[2m✓[22m[39m a confirmation the first paid period would charge again is refused in words: nothing recorded, the form kept[33m 366[2mms[22m[39m
+     [32m✓[39m every state in French [2m(6)[22m
+       [33m[2m✓[22m[39m confirmed during the trial: when it starts, in the business’s zone — never that the store opened[33m 335[2mms[22m[39m
+       [33m[2m✓[22m[39m the seat’s person proves their contacts and waits for the seat to start — its start is never a proof[33m 343[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with a paid period in force: the store was opened, and nothing of a start to come[33m 362[2mms[22m[39m
+       [33m[2m✓[22m[39m a confirmation the first paid period would charge again is refused in words: nothing recorded, the form kept[33m 364[2mms[22m[39m
+     [32m✓[39m every state in Arabic [2m(6)[22m
+       [33m[2m✓[22m[39m confirmed during the trial: when it starts, in the business’s zone — never that the store opened[33m 329[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with no paid access approved yet: the first paid month, no date — and the seat’s person waits for it to start[33m 354[2mms[22m[39m
+       [33m[2m✓[22m[39m the seat’s person proves their contacts and waits for the seat to start — its start is never a proof[33m 360[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with a paid period in force: the store was opened, and nothing of a start to come[33m 347[2mms[22m[39m
+       [33m[2m✓[22m[39m a confirmation the first paid period would charge again is refused in words: nothing recorded, the form kept[33m 380[2mms[22m[39m
+     [33m[2m✓[22m[39m the business page says, above its requests, that what was paid for during the trial is not collected again — while one is scheduled, and once one started[33m 343[2mms[22m[39m
+ [32m✓[39m test/trial-account.test.tsx [2m([22m[2m65 tests[22m[2m)[22m[33m 12899[2mms[22m[39m
+   [32m✓[39m the Owner’s trial card on /subscription [2m(6)[22m
+     [33m[2m✓[22m[39m an Owner who may claim sees the terms, the end the server would set — in the business’s zone — and one button[33m 513[2mms[22m[39m
+     [33m[2m✓[22m[39m no offer and no trial, a paid business after its trial, another role (403), an older API (404): no card, no error[33m 463[2mms[22m[39m
+   [32m✓[39m the portal instructions on the card [2m(15)[22m
+     [33m[2m✓[22m[39m sent by email for a recorded reason: where, and why WhatsApp could not carry it[33m 864[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing carried them: said, with the recorded reason — and the claim stands, as delivery is never a condition[33m 588[2mms[22m[39m
+     [33m[2m✓[22m[39m the requests in French and Arabic, and no list when nothing was ever asked for[33m 334[2mms[22m[39m
+     [33m[2m✓[22m[39m a refused send is said in words: too soon (with the server’s instant), nothing can be sent, no trial any more[33m 400[2mms[22m[39m
+   [32m✓[39m Apply ends at the portal’s sign-in [2m(2)[22m
+     [33m[2m✓[22m[39m a confirmed application leads to the portal, where the Owner signs in with the password just chosen — no token is kept, Apply claims nothing[33m 1374[2mms[22m[39m
+     [33m[2m✓[22m[39m an application the server does not call eligible says what it always said[33m 746[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/promoters.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 3540[2mms[22m[39m
+   [32m✓[39m the promoters list [2m(2)[22m
+     [33m[2m✓[22m[39m shows each promoter with the number masked, the code, the state and finished registrations — and searches by code[33m 442[2mms[22m[39m
+     [33m[2m✓[22m[39m creates a promoter after a step-up — with no code: that is an explicit click on their page[33m 997[2mms[22m[39m
+   [32m✓[39m a promoter’s page [2m(5)[22m
+     [33m[2m✓[22m[39m generates the code and QR only on the explicit click and a step-up[33m 356[2mms[22m[39m
+     [33m[2m✓[22m[39m regenerating is confirmed twice — what it does, then the step-up[33m 405[2mms[22m[39m
+     [33m[2m✓[22m[39m deactivates after a step-up, and says the code no longer opens[33m 316[2mms[22m[39m
+   [32m✓[39m the promo code on the application form [2m(3)[22m
+     [33m[2m✓[22m[39m typing moves on, Backspace moves back; an unavailable code says so and can be removed[33m 325[2mms[22m[39m
+ [32m✓[39m test/riyade.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 2388[2mms[22m[39m
+   [32m✓[39m Riyade on a public build, page by page [2m(21)[22m
+     [33m[2m✓[22m[39m its page in en: the name as the one heading, its line, who makes it, coming soon — and nothing to do[33m 314[2mms[22m[39m
+     [33m[2m✓[22m[39m no page that shows Riyade in en links anywhere this build does not publish[33m 308[2mms[22m[39m
+ [32m✓[39m test/deferred-verification-console.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 6507[2mms[22m[39m
+   [32m✓[39m creating a business: WhatsApp verification [2m(4)[22m
+     [33m[2m✓[22m[39m is Required by default, and a Required request sends no deferral[33m 1297[2mms[22m[39m
+     [33m[2m✓[22m[39m Deferred asks for a reason and the controlled-test confirmation, shows the warning word for word, and shows the Owner’s setup code[33m 1221[2mms[22m[39m
+     [33m[2m✓[22m[39m while the switch is off, the choice never appears[33m 495[2mms[22m[39m
+     [33m[2m✓[22m[39m the server’s refusal is said in words[33m 804[2mms[22m[39m
+   [32m✓[39m a business’s page [2m(4)[22m
+     [33m[2m✓[22m[39m requires verification after a step-up, with a reason, and sends nothing to the number[33m 565[2mms[22m[39m
+     [33m[2m✓[22m[39m adds a deferred Employee with a store, and shows their setup code once[33m 725[2mms[22m[39m
+   [32m✓[39m an ordinary business [2m(2)[22m
+     [33m[2m✓[22m[39m offers the choice with the test-business box unticked, and sends no test or pilot field[33m 950[2mms[22m[39m
+ [32m✓[39m test/console-oversight.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1438[2mms[22m[39m
+   [32m✓[39m the console: every subscription message [2m(3)[22m
+     [33m[2m✓[22m[39m lists which message, for which business, by which channel to which masked destination, what became of it and why[33m 418[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 2364[2mms[22m[39m
+   [32m✓[39m Account: a store’s activity and its change [2m(9)[22m
+     [33m[2m✓[22m[39m lists each store with its activity; a warehouse offers no change[33m 488[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade is explained by the server’s own answer, then shows the amount the server recorded[33m 436[2mms[22m[39m
+     [33m[2m✓[22m[39m keeping today’s activity withdraws the scheduled change[33m 303[2mms[22m[39m
+ [32m✓[39m test/portal-status.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 3140[2mms[22m[39m
+   [32m✓[39m the access, in colour and words [2m(4)[22m
+     [33m[2m✓[22m[39m operational: its badge and what it means[33m 507[2mms[22m[39m
+   [32m✓[39m the Owner’s email address, verified on the portal [2m(2)[22m
+     [33m[2m✓[22m[39m a code to the address on the account — never one typed here — then the code back; the address is verified[33m 376[2mms[22m[39m
+ [32m✓[39m test/site-surface.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m test/apply.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 24054[2mms[22m[39m
+   [32m✓[39m Apply: the WhatsApp number is required, an email address optional (docs/101) [2m(2)[22m
+     [33m[2m✓[22m[39m without the WhatsApp number nothing is sent, and the page says what is missing[33m 1198[2mms[22m[39m
+     [33m[2m✓[22m[39m the WhatsApp number alone is an application; an email address goes with it when given[33m 850[2mms[22m[39m
+   [32m✓[39m Apply: a contact whose code cannot be sent now (C10) [2m(4)[22m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: the WhatsApp number[33m 742[2mms[22m[39m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: the email[33m 849[2mms[22m[39m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: both[33m 886[2mms[22m[39m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: none named[33m 747[2mms[22m[39m
+   [32m✓[39m Apply: one attempt, one key (C11; the app’s R5-7) [2m(1)[22m
+     [33m[2m✓[22m[39m a retry of the same form keeps its key, so the server replays; a corrected field is a new attempt with a new key[33m 1066[2mms[22m[39m
+   [32m✓[39m Apply: a code check that got no answer is never called a wrong code (R2-1 / C14 on the website) [2m(23)[22m
+     [33m[2m✓[22m[39m no answer (the network failed), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 917[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request was aborted), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 934[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request timed out), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 858[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 989[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 734[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 641[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 949[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 821[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 688[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 834[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 741[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 749[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got no answer from the API in time (504), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 855[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got an invalid one (502), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 788[2mms[22m[39m
+     [33m[2m✓[22m[39m a 503 is an answer — the request was not taken: an error, no account promised[33m 594[2mms[22m[39m
+     [33m[2m✓[22m[39m a lost answer, then the same code accepted after all: the application ends signed in, as it always does[33m 705[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer is an answer: a server error is said as one, and no account is promised[33m 770[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose body was cut off keeps its status — a refusal is still a refusal: the code is wrong, and no account is promised[33m 616[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose body was cut off keeps its status — a server error is still an error, and no account is promised[33m 715[2mms[22m[39m
+     [32m✓[39m a request the rate limit refused [2m(4)[22m
+       [33m[2m✓[22m[39m in English: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 785[2mms[22m[39m
+       [33m[2m✓[22m[39m in French: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 674[2mms[22m[39m
+       [33m[2m✓[22m[39m in Arabic: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 686[2mms[22m[39m
+       [33m[2m✓[22m[39m the application itself refused by the limit: wait a minute, the form kept as it was[33m 661[2mms[22m[39m
+ [32m✓[39m test/provisioning-console.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 4580[2mms[22m[39m
+   [32m✓[39m creating a business and its Owner [2m(2)[22m
+     [33m[2m✓[22m[39m sends a test business by default with its key and no password, and shows the setup code once[33m 1285[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps its key when the same answers are sent again after a lost answer, and says a customer cannot be created while activation is closed[33m 932[2mms[22m[39m
+   [32m✓[39m a test business’s page [2m(4)[22m
+     [33m[2m✓[22m[39m issues the Owner’s setup code after a step-up and shows it once[33m 353[2mms[22m[39m
+     [33m[2m✓[22m[39m opens a store under the grant, and a retry with the same name says nothing new was made[33m 825[2mms[22m[39m
+     [33m[2m✓[22m[39m says a test status refusal in words[33m 467[2mms[22m[39m
+ [32m✓[39m test/site-refinement.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 1092[2mms[22m[39m
+ [32m✓[39m test/portal-session.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 2912[2mms[22m[39m
+   [32m✓[39m signing in on the portal [2m(9)[22m
+     [33m[2m✓[22m[39m signs in with the app’s identity on the portal’s own route; no bearer, nothing stored, no request carries a token[33m 804[2mms[22m[39m
+     [33m[2m✓[22m[39m every POST carries the session’s CSRF token; no GET does[33m 403[2mms[22m[39m
+     [33m[2m✓[22m[39m an access cookie that expired is refreshed once — for requests refused together — and each is sent again[33m 320[2mms[22m[39m
+     [33m[2m✓[22m[39m signing out ends the session on the server and forgets the CSRF token here[33m 347[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing is claimed without the confirmation — not on load, at sign-in, at the button alone or as the page reads the trial again[33m 308[2mms[22m[39m
+ [31m❯[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[33m 3228[2mms[22m[39m
+   [31m❯[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 1061[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the confirmation’s result on screen after the paid request leaves the queue[33m 393[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 740[2mms[22m[39m
+[31m     [31m×[31m shows each branch’s activity, its scheduled change and its fee on the business page[39m[33m 1031[2mms[22m[39m
+ [32m✓[39m test/legal-pages.test.tsx [2m([22m[2m67 tests[22m[2m)[22m[33m 4995[2mms[22m[39m
+   [32m✓[39m the public legal and support pages [2m(44)[22m
+     [33m[2m✓[22m[39m /privacy renders with one heading, its language and direction, and asks the API nothing[33m 340[2mms[22m[39m
+     [33m[2m✓[22m[39m names TSX-MR as the operator on the privacy policy, the terms and the legal notice[33m 444[2mms[22m[39m
+ [32m✓[39m test/prelaunch-gates.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 131[2mms[22m[39m
+ [32m✓[39m test/site-routes.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/site-navigation.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 1987[2mms[22m[39m
+   [32m✓[39m the phone menu [2m(4)[22m
+     [33m[2m✓[22m[39m is an icon button with no visible word, that names its action and controls a panel hidden while closed[33m 492[2mms[22m[39m
+     [33m[2m✓[22m[39m closes when a destination is chosen, and when a press lands outside it[33m 309[2mms[22m[39m
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1581[2mms[22m[39m
+   [32m✓[39m Account: the platform grant and its own dates [2m(6)[22m
+     [33m[2m✓[22m[39m an active grant says its own end, never the billing period’s start[33m 462[2mms[22m[39m
+ [32m✓[39m test/portal-operator.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 432[2mms[22m[39m
+ [32m✓[39m test/site-config.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m test/portal-surface.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m test/admin-mfa.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2769[2mms[22m[39m
+   [32m✓[39m signing in to the console [2m(3)[22m
+     [33m[2m✓[22m[39m a password leads to the code screen; the console opens only once the code is accepted[33m 1048[2mms[22m[39m
+     [33m[2m✓[22m[39m a recovery code can stand in for the authenticator[33m 433[2mms[22m[39m
+     [33m[2m✓[22m[39m with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once[33m 569[2mms[22m[39m
+   [32m✓[39m a decision’s step-up [2m(1)[22m
+     [33m[2m✓[22m[39m a wrong password or code keeps the dialog open with the reason, and the decision is never sent[33m 716[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 354[2mms[22m[39m
+ [32m✓[39m test/not-found.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 726[2mms[22m[39m
+ [32m✓[39m test/deletion-docs.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 3168[2mms[22m[39m
+   [32m✓[39m account deletion on a public build [2m(16)[22m
+     [33m[2m✓[22m[39m the company’s pages in en: no deletion link in the navigation, the footer or the quick links[33m 632[2mms[22m[39m
+     [33m[2m✓[22m[39m the company’s pages in fr: no deletion link in the navigation, the footer or the quick links[33m 653[2mms[22m[39m
+     [33m[2m✓[22m[39m the company’s pages in ar: no deletion link in the navigation, the footer or the quick links[33m 513[2mms[22m[39m
+ [32m✓[39m test/operator-identity.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 2368[2mms[22m[39m
+   [32m✓[39m the name, only where a legal text needs it [2m(3)[22m
+     [33m[2m✓[22m[39m in en: the brand pages and the footer never name the person; each legal text names them as it must[33m 846[2mms[22m[39m
+     [33m[2m✓[22m[39m in fr: the brand pages and the footer never name the person; each legal text names them as it must[33m 693[2mms[22m[39m
+     [33m[2m✓[22m[39m in ar: the brand pages and the footer never name the person; each legal text names them as it must[33m 596[2mms[22m[39m
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 2287[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 1440[2mms[22m[39m
+   [32m✓[39m The Dukan ERP page: three prices and an estimate by activity (moved from the home page, docs/74) [2m(2)[22m
+     [33m[2m✓[22m[39m lists the three prices and sends one activity per store to the quote[33m 642[2mms[22m[39m
+ [32m✓[39m test/content-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 108[2mms[22m[39m
+ [32m✓[39m test/site-surface-render.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 2199[2mms[22m[39m
+   [32m✓[39m a public build, page by page [2m(14)[22m
+     [33m[2m✓[22m[39m the Dukan ERP page in en: no prices, no application or sign-in, a way to contact, and no request to any API[33m 668[2mms[22m[39m
+     [33m[2m✓[22m[39m the Dukan ERP page in fr: no prices, no application or sign-in, a way to contact, and no request to any API[33m 315[2mms[22m[39m
+ [32m✓[39m test/portal-surface-render.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 1147[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2073[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns (on the Dukan ERP page)[33m 1189[2mms[22m[39m
+     [33m[2m✓[22m[39m moves to the same page in Arabic, mirrors the document and keeps the language across visits[33m 795[2mms[22m[39m
+ [32m✓[39m test/throttle.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1859[2mms[22m[39m
+   [32m✓[39m a request the API’s rate limit refused [2m(5)[22m
+     [33m[2m✓[22m[39m in English: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s[33m 691[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s[33m 349[2mms[22m[39m
+     [33m[2m✓[22m[39m a refusal of the API’s own, with its code — the code lock — keeps the server’s sentence, never "a minute"[33m 325[2mms[22m[39m
+ [32m✓[39m test/caddy-release.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m test/portal-operator-company.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[33m 324[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m test/public-pages.test.tsx [2m([22m[2m56 tests[22m[2m)[22m[33m 6933[2mms[22m[39m
+   [32m✓[39m every public page in every language [2m(51)[22m
+     [33m[2m✓[22m[39m / renders in en[33m 609[2mms[22m[39m
+     [33m[2m✓[22m[39m /products/dukan-erp renders in en[33m 326[2mms[22m[39m
+ [32m✓[39m test/api-client.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m test/activity-console.test.tsx[2m > [22mthe platform console[2m > [22mshows each branch’s activity, its scheduled change and its fee on the business page
+[31m[1mTestingLibraryElementError[22m[39m: Found multiple elements with the text: Boutique Ksar
+
+Here are the matching elements:
+
+Ignored nodes: comments, script, style
+[36m<label[39m
+  [33mclass[39m=[32m"row"[39m
+[36m>[39m
+  [36m<input[39m
+    [33mclass[39m=[32m"checkbox-inline"[39m
+    [33mtype[39m=[32m"checkbox"[39m
+  [36m/>[39m
+  [0mBoutique Ksar[0m
+[36m</label>[39m
+
+Ignored nodes: comments, script, style
+[36m<td[39m
+  [33mdata-label[39m=[32m"Store"[39m
+[36m>[39m
+  [0mBoutique Ksar[0m
+[36m</td>[39m
+
+(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<a[39m
+      [33mclass[39m=[32m"skip-link"[39m
+      [33mhref[39m=[32m"#main"[39m
+    [36m>[39m
+      [0mSkip to main content[0m
+    [36m</a>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"preview-banner"[39m
+      [33mdata-filled[39m=[32m"publicSiteOrigin adminSiteOrigin apiBase portalOrigin appWebOrigin phone commercialEmail supportHours supportLanguages supportResponseTime supportWhatsapp appleAppStoreUrl googlePlayUrl deletionChannel legalEffectiveDate"[39m
+      [33mdata-mode[39m=[32m"test"[39m
+      [33mrole[39m=[32m"note"[39m
+    [36m>[39m
+      [0mPreview build — test values are shown and nothing here is for publication.[0m
+    [36m</div>[39m
+    [36m<header[39m
+      [33mclass[39m=[32m"chrome-header in-app-header portal-header"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"container chrome-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Dukan ERP — platform administration"[39m
+          [33mclass[39m=[32m"brand"[39m
+          [33mdata-discover[39m=[32m"true"[39m
+          [33mhref[39m=[32m"/admin"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"product-mark product-mark-md"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"product-mark-symbol"[39m
+            [36m>[39m
+              [0mD[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"product-mark-name"[39m
+            [36m>[39m
+              [0mDukan ERP[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"controls"[39m
+        [36m>[39m
+          [36m<ul[39m
+            [33maria-label[39m=[32m"Languages"[39m
+            [33mclass[39m=[32m"languages"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"EN, English"[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"link-button"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mEN[0m
+              [36m</button>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"FR, Français"[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"link-button"[39m
+                [33mlang[39m=[32m"fr"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mFR[0m
+              [36m</button>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"AR, العربية"[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"link-button"[39m
+                [33mlang[39m=[32m"ar"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mAR[0m
+              [36m</button>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Switch to dark mode"[39m
+            [33mclass[39m=[32m"icon-button theme-toggle"[39m
+            [33mtitle[39m=[32m"Switch to dark mode"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"icon theme-icon-moon"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mfocusable[39m=[32m"false"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.8"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"icon theme-icon-sun"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mfocusable[39m=[32m"false"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.8"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 16.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</header>[39m
+    [36m<main[39m
+      [33mclass[39m=[32m"container"[39m
+      [33mid[39m=[32m"main"[39m
+      [33mtabindex[39m=[32m"-1"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"stack"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"row spread"[39m
+        [36m>[39m
+          [36m<nav[39m
+            [33maria-label[39m=[32m"platform"[39m
+            [33mclass[39m=[32m"nav"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m""[39m
+              [33mdata-discover[39m=[32m"true"[39m
+              [33mhref[39m=[32m"/admin"[39m
+            [36m>[39m
+              [0mOverview[0m
+            [36m</a>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m""[39m
+              [33mdata-discover[39m=[32m"true"[39m
+              [33mhref[39m=[32m"/admin/pending"[39m
+            [36m>[39m
+              [0mApplications[0m
+            [36m</a>[39m
+            [36m<a[39m
+              [33maria-current[39m=[32m"page"[39m
+              [33mclass[39m=[32m"active"[39m
+              [33mdata-discover[39m=[32m"true"[39m
+              [33mhref[39m=[32m"/admin/businesses"[39m
+            [36m>[39m
+              [0mBusinesses[0m
+            [36m</a>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m""[39m
+              [33mdata-discover[39m=[32m"true"[39m
+              [33mhref[39m=[32m"/admin/seat-requests"[39m
+            [36...
+
+Ignored nodes: comments, script, style
+[36m<body>[39m
+  [36m<div>[39m
+    [36m<a[39m
+      [33mclass[39m=[32m"skip-link"[39m
+      [33mhref[39m=[32m"#main"[39m
+    [36m>[39m
+      [0mSkip to main content[0m
+    [36m</a>[39m
+    [36m<div[39m
+      [33mclass[39m=[32m"preview-banner"[39m
+      [33mdata-filled[39m=[32m"publicSiteOrigin adminSiteOrigin apiBase portalOrigin appWebOrigin phone commercialEmail supportHours supportLanguages supportResponseTime supportWhatsapp appleAppStoreUrl googlePlayUrl deletionChannel legalEffectiveDate"[39m
+      [33mdata-mode[39m=[32m"test"[39m
+      [33mrole[39m=[32m"note"[39m
+    [36m>[39m
+      [0mPreview build — test values are shown and nothing here is for publication.[0m
+    [36m</div>[39m
+    [36m<header[39m
+      [33mclass[39m=[32m"chrome-header in-app-header portal-header"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"container chrome-bar"[39m
+      [36m>[39m
+        [36m<a[39m
+          [33maria-label[39m=[32m"Dukan ERP — platform administration"[39m
+          [33mclass[39m=[32m"brand"[39m
+          [33mdata-discover[39m=[32m"true"[39m
+          [33mhref[39m=[32m"/admin"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"product-mark product-mark-md"[39m
+          [36m>[39m
+            [36m<span[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"product-mark-symbol"[39m
+            [36m>[39m
+              [0mD[0m
+            [36m</span>[39m
+            [36m<span[39m
+              [33mclass[39m=[32m"product-mark-name"[39m
+            [36m>[39m
+              [0mDukan ERP[0m
+            [36m</span>[39m
+          [36m</span>[39m
+        [36m</a>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"controls"[39m
+        [36m>[39m
+          [36m<ul[39m
+            [33maria-label[39m=[32m"Languages"[39m
+            [33mclass[39m=[32m"languages"[39m
+          [36m>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"EN, English"[39m
+                [33maria-pressed[39m=[32m"true"[39m
+                [33mclass[39m=[32m"link-button"[39m
+                [33mlang[39m=[32m"en"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mEN[0m
+              [36m</button>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"FR, Français"[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"link-button"[39m
+                [33mlang[39m=[32m"fr"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mFR[0m
+              [36m</button>[39m
+            [36m</li>[39m
+            [36m<li>[39m
+              [36m<button[39m
+                [33maria-label[39m=[32m"AR, العربية"[39m
+                [33maria-pressed[39m=[32m"false"[39m
+                [33mclass[39m=[32m"link-button"[39m
+                [33mlang[39m=[32m"ar"[39m
+                [33mtype[39m=[32m"button"[39m
+              [36m>[39m
+                [0mAR[0m
+              [36m</button>[39m
+            [36m</li>[39m
+          [36m</ul>[39m
+          [36m<button[39m
+            [33maria-label[39m=[32m"Switch to dark mode"[39m
+            [33mclass[39m=[32m"icon-button theme-toggle"[39m
+            [33mtitle[39m=[32m"Switch to dark mode"[39m
+            [33mtype[39m=[32m"button"[39m
+          [36m>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"icon theme-icon-moon"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mfocusable[39m=[32m"false"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.8"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+            [36m<svg[39m
+              [33maria-hidden[39m=[32m"true"[39m
+              [33mclass[39m=[32m"icon theme-icon-sun"[39m
+              [33mfill[39m=[32m"none"[39m
+              [33mfocusable[39m=[32m"false"[39m
+              [33mheight[39m=[32m"20"[39m
+              [33mstroke[39m=[32m"currentColor"[39m
+              [33mstroke-linecap[39m=[32m"round"[39m
+              [33mstroke-linejoin[39m=[32m"round"[39m
+              [33mstroke-width[39m=[32m"1.8"[39m
+              [33mviewBox[39m=[32m"0 0 24 24"[39m
+              [33mwidth[39m=[32m"20"[39m
+            [36m>[39m
+              [36m<path[39m
+                [33md[39m=[32m"M12 16.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"[39m
+              [36m/>[39m
+            [36m</svg>[39m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</header>[39m
+    [36m<main[39m
+      [33mclass[39m=[32m"container"[39m
+      [33mid[39m=[32m"main"[39m
+      [33mtabindex[39m=[32m"-1"[39m
+    [36m>[39m
+      [36m<div[39m
+        [33mclass[39m=[32m"stack"[39m
+      [36m>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"row spread"[39m
+        [36m>[39m
+          [36m<nav[39m
+            [33maria-label[39m=[32m"platform"[39m
+            [33mclass[39m=[32m"nav"[39m
+          [36m>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m""[39m
+              [33mdata-discover[39m=[32m"true"[39m
+              [33mhref[39m=[32m"/admin"[39m
+            [36m>[39m
+              [0mOverview[0m
+            [36m</a>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m""[39m
+              [33mdata-discover[39m=[32m"true"[39m
+              [33mhref[39m=[32m"/admin/pending"[39m
+            [36m>[39m
+              [0mApplications[0m
+            [36m</a>[39m
+            [36m<a[39m
+              [33maria-current[39m=[32m"page"[39m
+              [33mclass[39m=[32m"active"[39m
+              [33mdata-discover[39m=[32m"true"[39m
+              [33mhref[39m=[32m"/admin/businesses"[39m
+            [36m>[39m
+              [0mBusinesses[0m
+            [36m</a>[39m
+            [36m<a[39m
+              [33mclass[39m=[32m""[39m
+              [33mdata-discover[39m=[32m"true"[39m
+              [33mhref[39m=[32m"/admin/seat-requests"[39m
+            [36...
+[90m [2m❯[22m waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:[2m163:27[22m[39m
+[90m [2m❯[22m node_modules/@testing-library/dom/dist/query-helpers.js:[2m86:33[22m[39m
+[36m [2m❯[22m test/activity-console.test.tsx:[2m152:32[22m[39m
+    [90m150|[39m     });
+    [90m151|[39m     mount(`/admin/businesses/${BUSINESS.id}`);
+    [90m152|[39m     const ksar = (await screen.findByText('Boutique Ksar')).closest('t…
+    [90m   |[39m                                [31m^[39m
+    [90m153|[39m     expect(within(ksar).getByText(BOTH)).toBeTruthy();
+    [90m154|[39m     expect(within(ksar).getByText('Changes to Money services agent at …
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m39 passed[39m[22m[90m (40)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m641 passed[39m[22m[90m (642)[39m
+[2m   Start at [22m 11:30:51
+[2m   Duration [22m 59.51s[2m (tests 69%, environment 22%, import 6%, transform 2%)[22m
+
+[2m    Isolate [22m [33m40 workers spawned[39m[2m · ~1.10s startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~13.51s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/activity-console.test.tsx,title=test/activity-console.test.tsx > the platform console > shows each branch’s activity%2C its scheduled change and its fee on the business page,line=152,column=32::TestingLibraryElementError: Found multiple elements with the text: Boutique Ksar%0A%0AHere are the matching elements:%0A%0AIgnored nodes: comments, script, style%0A<label%0A  class="row"%0A>%0A  <input%0A    class="checkbox-inline"%0A    type="checkbox"%0A  />%0A  Boutique Ksar%0A</label>%0A%0AIgnored nodes: comments, script, style%0A<td%0A  data-label="Store"%0A>%0A  Boutique Ksar%0A</td>%0A%0A(If this is intentional, then use the `*AllBy*` variant of the query (like `queryAllByText`, `getAllByText`, or `findAllByText`)).%0A%0AIgnored nodes: comments, script, style%0A<body>%0A  <div>%0A    <a%0A      class="skip-link"%0A      href="#main"%0A    >%0A      Skip to main content%0A    </a>%0A    <div%0A      class="preview-banner"%0A      data-filled="publicSiteOrigin adminSiteOrigin apiBase portalOrigin appWebOrigin phone commercialEmail supportHours supportLanguages supportResponseTime supportWhatsapp appleAppStoreUrl googlePlayUrl deletionChannel legalEffectiveDate"%0A      data-mode="test"%0A      role="note"%0A    >%0A      Preview build — test values are shown and nothing here is for publication.%0A    </div>%0A    <header%0A      class="chrome-header in-app-header portal-header"%0A    >%0A      <div%0A        class="container chrome-bar"%0A      >%0A        <a%0A          aria-label="Dukan ERP — platform administration"%0A          class="brand"%0A          data-discover="true"%0A          href="/admin"%0A        >%0A          <span%0A            class="product-mark product-mark-md"%0A          >%0A            <span%0A              aria-hidden="true"%0A              class="product-mark-symbol"%0A            >%0A              D%0A            </span>%0A            <span%0A              class="product-mark-name"%0A            >%0A              Dukan ERP%0A            </span>%0A          </span>%0A        </a>%0A        <div%0A          class="controls"%0A        >%0A          <ul%0A            aria-label="Languages"%0A            class="languages"%0A          >%0A            <li>%0A              <button%0A                aria-label="EN, English"%0A                aria-pressed="true"%0A                class="link-button"%0A                lang="en"%0A                type="button"%0A              >%0A                EN%0A              </button>%0A            </li>%0A            <li>%0A              <button%0A                aria-label="FR, Français"%0A                aria-pressed="false"%0A                class="link-button"%0A                lang="fr"%0A                type="button"%0A              >%0A                FR%0A              </button>%0A            </li>%0A            <li>%0A              <button%0A                aria-label="AR, العربية"%0A                aria-pressed="false"%0A                class="link-button"%0A                lang="ar"%0A                type="button"%0A              >%0A                AR%0A              </button>%0A            </li>%0A          </ul>%0A          <button%0A            aria-label="Switch to dark mode"%0A            class="icon-button theme-toggle"%0A            title="Switch to dark mode"%0A            type="button"%0A          >%0A            <svg%0A              aria-hidden="true"%0A              class="icon theme-icon-moon"%0A              fill="none"%0A              focusable="false"%0A              height="20"%0A              stroke="currentColor"%0A              stroke-linecap="round"%0A              stroke-linejoin="round"%0A              stroke-width="1.8"%0A              viewBox="0 0 24 24"%0A              width="20"%0A            >%0A              <path%0A                d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"%0A              />%0A            </svg>%0A            <svg%0A              aria-hidden="true"%0A              class="icon theme-icon-sun"%0A              fill="none"%0A              focusable="false"%0A              height="20"%0A              stroke="currentColor"%0A              stroke-linecap="round"%0A              stroke-linejoin="round"%0A              stroke-width="1.8"%0A              viewBox="0 0 24 24"%0A              width="20"%0A            >%0A              <path%0A                d="M12 16.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"%0A              />%0A            </svg>%0A          </button>%0A        </div>%0A      </div>%0A    </header>%0A    <main%0A      class="container"%0A      id="main"%0A      tabindex="-1"%0A    >%0A      <div%0A        class="stack"%0A      >%0A        <div%0A          class="row spread"%0A        >%0A          <nav%0A            aria-label="platform"%0A            class="nav"%0A          >%0A            <a%0A              class=""%0A              data-discover="true"%0A              href="/admin"%0A            >%0A              Overview%0A            </a>%0A            <a%0A              class=""%0A              data-discover="true"%0A              href="/admin/pending"%0A            >%0A              Applications%0A            </a>%0A            <a%0A              aria-current="page"%0A              class="active"%0A              data-discover="true"%0A              href="/admin/businesses"%0A            >%0A              Businesses%0A            </a>%0A            <a%0A              class=""%0A              data-discover="true"%0A              href="/admin/seat-requests"%0A            ...%0A%0AIgnored nodes: comments, script, style%0A<body>%0A  <div>%0A    <a%0A      class="skip-link"%0A      href="#main"%0A    >%0A      Skip to main content%0A    </a>%0A    <div%0A      class="preview-banner"%0A      data-filled="publicSiteOrigin adminSiteOrigin apiBase portalOrigin appWebOrigin phone commercialEmail supportHours supportLanguages supportResponseTime supportWhatsapp appleAppStoreUrl googlePlayUrl deletionChannel legalEffectiveDate"%0A      data-mode="test"%0A      role="note"%0A    >%0A      Preview build — test values are shown and nothing here is for publication.%0A    </div>%0A    <header%0A      class="chrome-header in-app-header portal-header"%0A    >%0A      <div%0A        class="container chrome-bar"%0A      >%0A        <a%0A          aria-label="Dukan ERP — platform administration"%0A          class="brand"%0A          data-discover="true"%0A          href="/admin"%0A        >%0A          <span%0A            class="product-mark product-mark-md"%0A          >%0A            <span%0A              aria-hidden="true"%0A              class="product-mark-symbol"%0A            >%0A              D%0A            </span>%0A            <span%0A              class="product-mark-name"%0A            >%0A              Dukan ERP%0A            </span>%0A          </span>%0A        </a>%0A        <div%0A          class="controls"%0A        >%0A          <ul%0A            aria-label="Languages"%0A            class="languages"%0A          >%0A            <li>%0A              <button%0A                aria-label="EN, English"%0A                aria-pressed="true"%0A                class="link-button"%0A                lang="en"%0A                type="button"%0A              >%0A                EN%0A              </button>%0A            </li>%0A            <li>%0A              <button%0A                aria-label="FR, Français"%0A                aria-pressed="false"%0A                class="link-button"%0A                lang="fr"%0A                type="button"%0A              >%0A                FR%0A              </button>%0A            </li>%0A            <li>%0A              <button%0A                aria-label="AR, العربية"%0A                aria-pressed="false"%0A                class="link-button"%0A                lang="ar"%0A                type="button"%0A              >%0A                AR%0A              </button>%0A            </li>%0A          </ul>%0A          <button%0A            aria-label="Switch to dark mode"%0A            class="icon-button theme-toggle"%0A            title="Switch to dark mode"%0A            type="button"%0A          >%0A            <svg%0A              aria-hidden="true"%0A              class="icon theme-icon-moon"%0A              fill="none"%0A              focusable="false"%0A              height="20"%0A              stroke="currentColor"%0A              stroke-linecap="round"%0A              stroke-linejoin="round"%0A              stroke-width="1.8"%0A              viewBox="0 0 24 24"%0A              width="20"%0A            >%0A              <path%0A                d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"%0A              />%0A            </svg>%0A            <svg%0A              aria-hidden="true"%0A              class="icon theme-icon-sun"%0A              fill="none"%0A              focusable="false"%0A              height="20"%0A              stroke="currentColor"%0A              stroke-linecap="round"%0A              stroke-linejoin="round"%0A              stroke-width="1.8"%0A              viewBox="0 0 24 24"%0A              width="20"%0A            >%0A              <path%0A                d="M12 16.5a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zM12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"%0A              />%0A            </svg>%0A          </button>%0A        </div>%0A      </div>%0A    </header>%0A    <main%0A      class="container"%0A      id="main"%0A      tabindex="-1"%0A    >%0A      <div%0A        class="stack"%0A      >%0A        <div%0A          class="row spread"%0A        >%0A          <nav%0A            aria-label="platform"%0A            class="nav"%0A          >%0A            <a%0A              class=""%0A              data-discover="true"%0A              href="/admin"%0A            >%0A              Overview%0A            </a>%0A            <a%0A              class=""%0A              data-discover="true"%0A              href="/admin/pending"%0A            >%0A              Applications%0A            </a>%0A            <a%0A              aria-current="page"%0A              class="active"%0A              data-discover="true"%0A              href="/admin/businesses"%0A            >%0A              Businesses%0A            </a>%0A            <a%0A              class=""%0A              data-discover="true"%0A              href="/admin/seat-requests"%0A            ...%0A ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27%0A ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33%0A ❯ test/activity-console.test.tsx:152:32%0A%0A
