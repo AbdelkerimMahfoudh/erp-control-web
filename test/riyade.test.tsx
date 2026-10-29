@@ -178,7 +178,7 @@ describe('Riyade on a public build, page by page', () => {
       expect(cards).toHaveLength(2);
       const [dukan, card] = cards as [HTMLElement, HTMLElement];
       // Dukan ERP: its mark, its six parts, its status, its page as the primary action and Contact.
-      expect(dukan.querySelector('h2')?.textContent).toBe('DDukan ERP');
+      expect(dukan.querySelector('h2')?.textContent).toBe('Dukan ERP');
       expect(dukan.querySelectorAll('.feature-list li')).toHaveLength(6);
       expect(within(dukan).getByText(CATALOGUE[lang]['prelaunch.badge'])).toBeTruthy();
       expect([...dukan.querySelectorAll('a')].map((a) => [a.getAttribute('href'), a.className])).toEqual([
@@ -227,7 +227,7 @@ describe('Riyade on a public build, page by page', () => {
     it(`the Dukan ERP page in ${lang} is untouched: its title, summary and status, and no word of Riyade`, () => {
       expect(metaFor('dukanErp', lang)).toEqual({ title: 'Dukan ERP — {displayName}', description: dukanErpPrelaunch[lang].summary });
       mount(pathOf('dukanErp', lang));
-      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('DDukan ERP');
+      expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Dukan ERP');
       expect(screen.getByText(CATALOGUE[lang]['prelaunch.badge'])).toBeTruthy();
       expect(main().textContent).not.toContain('Riyade');
     });

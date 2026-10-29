@@ -90,15 +90,21 @@ main:focus {
   color: var(--on-org);
 }
 .product-mark-symbol {
-  background: linear-gradient(135deg, var(--product-a), var(--product-b));
-  color: var(--on-product);
-  border-radius: 10px;
+  /* The Dukan ledger mark itself (2026-10-29): no tile behind it, its own colours. */
+  border-radius: 0;
+}
+.product-mark-symbol .mark-left {
+  fill: var(--mark-left);
+}
+.product-mark-symbol .mark-right {
+  fill: var(--mark-right);
+}
+.product-mark-symbol .mark-highlight {
+  stroke: var(--mark-highlight);
 }
 .product-mark-lg .product-mark-symbol {
   inline-size: 44px;
   block-size: 44px;
-  font-size: 1.4rem;
-  border-radius: 12px;
 }
 
 /* ── Header: navy, one row, joined to the hero ─────────────────────────────────────────────────────────────────── */
@@ -598,8 +604,6 @@ html[lang='fr'] .hero-copy h1 {
 .hero-product .product-mark-symbol {
   inline-size: 52px;
   block-size: 52px;
-  font-size: 1.6rem;
-  border-radius: 14px;
 }
 /* The three proofs: one aligned row at desktop width, never two-and-one. */
 .proofs {

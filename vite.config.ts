@@ -32,6 +32,23 @@ function releaseGuard(): Plugin {
   };
 }
 
+/**
+ * A portal build is the product's (docs/101): its tab and home-screen icons are the Dukan ledger mark, not the company's.
+ */
+function portalIcons(mode: string): Plugin {
+  const portal = surfaceOf(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_SURFACE) === 'portal';
+  return {
+    name: 'dukan-portal-icons',
+    transformIndexHtml: {
+      order: 'pre',
+      handler(html) {
+        if (!portal) return html;
+        return html.replace('/icons/icon.svg', '/icons/dukan-icon.svg').replace('/icons/apple-touch-icon.png', '/icons/dukan-apple-touch-icon.png');
+      },
+    },
+  };
+}
+
 /*
  * The tests speak of "this browser's zone" as UTC, as CI's runners are: pinned here, before Vitest starts its workers,
  * so a developer in another zone gets the same results. The business-zone dates under test are formatted with explicit
@@ -69,7 +86,7 @@ function siteInputs(mode: string) {
 }
 
 export default defineConfig(({ mode }) => ({
-  plugins: [react(), releaseGuard()],
+  plugins: [react(), releaseGuard(), portalIcons(mode)],
   resolve: { alias: surfaceAliases(mode) },
   define: siteInputs(mode),
   server: { port: 5173, host: '127.0.0.1' },

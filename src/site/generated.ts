@@ -150,11 +150,18 @@ export function webManifest(site: Pick<SiteInputs, 'displayName'> & WithSurface,
       display: 'browser',
       background_color: background,
       theme_color: themeColor,
-      icons: [
-        { src: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml' },
-        { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
-        { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
-      ],
+      // The portal wears the product's mark (the Dukan ledger, 2026-10-29); the company site keeps the company's.
+      icons: portal
+        ? [
+            { src: '/icons/dukan-icon.svg', sizes: 'any', type: 'image/svg+xml' },
+            { src: '/icons/dukan-icon-192.png', sizes: '192x192', type: 'image/png' },
+            { src: '/icons/dukan-icon-512.png', sizes: '512x512', type: 'image/png' },
+          ]
+        : [
+            { src: '/icons/icon.svg', sizes: 'any', type: 'image/svg+xml' },
+            { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+            { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+          ],
     },
     null,
     2,

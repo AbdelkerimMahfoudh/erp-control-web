@@ -1,4 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
+import { DukanMark } from './DukanMark';
 import { createContext, useContext, useEffect, type HTMLAttributes, type ReactNode } from 'react';
 import { BUILD_MODE, FILLED_INPUTS, IS_PREVIEW, SITE, SURFACE } from '../../config/site';
 import { phoneList } from '../../config/schema';
@@ -36,9 +37,7 @@ export function OrgMark() {
 export function ProductMark({ size = 'md' }: { size?: 'md' | 'lg' }) {
   return (
     <span className={`product-mark product-mark-${size}`}>
-      <span className="product-mark-symbol" aria-hidden="true">
-        D
-      </span>
+      <DukanMark className="product-mark-symbol" />
       <span className="product-mark-name">Dukan ERP</span>
     </span>
   );

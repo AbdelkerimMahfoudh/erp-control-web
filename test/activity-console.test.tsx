@@ -149,7 +149,7 @@ describe('the platform console', () => {
       return undefined;
     });
     mount(`/admin/businesses/${BUSINESS.id}`);
-    const ksar = (await screen.findByText('Boutique Ksar')).closest('tr')!;
+    const ksar = (await screen.findAllByText('Boutique Ksar')).map((n) => n.closest('tr')).find(Boolean)!;
     expect(within(ksar).getByText(BOTH)).toBeTruthy();
     expect(within(ksar).getByText('Changes to Money services agent at the next renewal')).toBeTruthy();
     expect(within(ksar).getByText('700 MRU')).toBeTruthy();

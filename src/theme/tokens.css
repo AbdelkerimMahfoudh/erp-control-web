@@ -17,6 +17,10 @@
   --text-2: #4a5468;
   --text-3: #5b667c;
   --brand: #5146d9;
+  /* The Dukan ledger mark (2026-10-29): navy and indigo, the lavender connection. */
+  --mark-left: #172033;
+  --mark-right: #5146d9;
+  --mark-highlight: #a29bea;
   --brand-strong: #3f35b8;
   --brand-wash: #eeecfc;
   /* The underline of a link in running text: the brand colour, lighter, until pointed at. */
@@ -92,6 +96,9 @@
   --text-2: #b4bdcf;
   --text-3: #9aa4b9;
   --brand: #8f87f1;
+  --mark-left: #e7ecf5;
+  --mark-right: #8b82ef;
+  --mark-highlight: #a29bea;
   --brand-strong: #aaa4f5;
   --brand-wash: #1e1b3d;
   --link-line: rgba(143, 135, 241, 0.5);
