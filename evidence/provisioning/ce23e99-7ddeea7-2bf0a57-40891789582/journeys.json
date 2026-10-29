@@ -1,0 +1,251 @@
+{
+  "at": "2026-10-29T14:32:01.824Z",
+  "results": [
+    {
+      "journey": 1,
+      "what": "sign-in with the password sets an HttpOnly session cookie",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "journey": 1,
+      "what": "a password alone reaches nothing: the dashboard asks for the second factor",
+      "ok": true,
+      "detail": "status 401 mfa_required"
+    },
+    {
+      "journey": 1,
+      "what": "enrolment with the server-issued token returns the authenticator key once",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "journey": 1,
+      "what": "the first code confirms the enrolment",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "journey": 1,
+      "what": "with the second factor, the console reads",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "journey": 1,
+      "what": "a decision without a fresh step-up (password + new code) is refused",
+      "ok": true,
+      "detail": "status 403 step_up_required"
+    },
+    {
+      "journey": 2,
+      "what": "the test business and its Owner are created, with a one-time setup code",
+      "ok": true,
+      "detail": "status 201"
+    },
+    {
+      "journey": 2,
+      "what": "the answer separates provisioning from activation",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "journey": 2,
+      "what": "the Owner’s number stays unverified, with no consent recorded",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "journey": 4,
+      "what": "retrying the creation finds the same business, without a new setup code",
+      "ok": true,
+      "detail": "status 201"
+    },
+    {
+      "journey": 5,
+      "what": "an explicit, audited grant gives the test business access",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "journey": 5,
+      "what": "no payment can be recorded for a test business",
+      "ok": true,
+      "detail": "status 403 test_business_no_payment"
+    },
+    {
+      "journey": 3,
+      "what": "two stores open at once, granted at no charge",
+      "ok": true,
+      "detail": "status 200/200"
+    },
+    {
+      "journey": 4,
+      "what": "the same store again opens nothing new",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "journey": 3,
+      "what": "the business has three stores, once each",
+      "ok": true,
+      "detail": "Agence Tevragh, Boutique Centre, Boutique Ksar"
+    },
+    {
+      "journey": 11,
+      "what": "a customer business cannot be created while customer activation is closed",
+      "ok": true,
+      "detail": "status 403 customer_activation_closed"
+    },
+    {
+      "journey": 5,
+      "what": "an unknown setup code reads the one refusal",
+      "ok": true,
+      "detail": "status 400"
+    },
+    {
+      "journey": 5,
+      "what": "the setup code sets the Owner’s password, and opens no session",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "journey": 5,
+      "what": "the setup code works once",
+      "ok": true,
+      "detail": "status 400"
+    },
+    {
+      "journey": 5,
+      "what": "the Owner signs in with their number and their own password",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "journey": 5,
+      "what": "the app is told it is a test business",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "journey": 6,
+      "what": "the Owner sees exactly their three stores",
+      "ok": true,
+      "detail": "Agence Tevragh, Boutique Centre, Boutique Ksar"
+    },
+    {
+      "journey": 6,
+      "what": "the second Owner sees only their own store",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "journey": 7,
+      "what": "the Owner creates a product",
+      "ok": true,
+      "detail": "status 201 "
+    },
+    {
+      "journey": 7,
+      "what": "the Owner opens the shop’s business day",
+      "ok": true,
+      "detail": "status 201 \"\""
+    },
+    {
+      "journey": 7,
+      "what": "five chargers are received into stock",
+      "ok": true,
+      "detail": "status 201 []"
+    },
+    {
+      "journey": 7,
+      "what": "one is sold for cash",
+      "ok": true,
+      "detail": "status 201 \"\""
+    },
+    {
+      "journey": 7,
+      "what": "four remain in stock",
+      "ok": true,
+      "detail": "{\"productId\":\"01a18813-3053-7602-87ab-7730e5843dd6\",\"brand\":\"Anker\",\"model\":\"Chargeur 20W\",\"variant\":null,\"barcode\":null,\"trackingType\":\"quantity\",\"specifications\":null,\"category\":\"accessory\",\"availab"
+    },
+    {
+      "journey": 8,
+      "what": "no session: creating a business is refused",
+      "ok": true,
+      "detail": "status 401"
+    },
+    {
+      "journey": 8,
+      "what": "an Owner’s app session is not an administrator’s",
+      "ok": true,
+      "detail": "status 401"
+    },
+    {
+      "journey": 8,
+      "what": "nor can an Owner change the test status",
+      "ok": true,
+      "detail": "status 401"
+    },
+    {
+      "journey": 8,
+      "what": "nor issue a setup code",
+      "ok": true,
+      "detail": "status 401"
+    },
+    {
+      "journey": 9,
+      "what": "an Owner cannot read another business’s store",
+      "ok": true,
+      "detail": "status 403"
+    },
+    {
+      "journey": 9,
+      "what": "another business cannot open this sale",
+      "ok": true,
+      "detail": "status 404"
+    },
+    {
+      "journey": 10,
+      "what": "after setup: provisioning ready, phone still unverified, consent still none",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "journey": 10,
+      "what": "the people list says the Owner’s number is unverified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "journey": 11,
+      "what": "test businesses are left out of the customer figures",
+      "ok": true,
+      "detail": "businesses 0, test 2"
+    },
+    {
+      "journey": 11,
+      "what": "the audit records actor, target and outcome — refusals included",
+      "ok": true,
+      "detail": "admin.mfa.enrolled, admin.mfa.enrolment_started, admin.mfa.reset, admin.sign_in, admin.step_up, business.create, business.create.refused, business.store_grant, owner_invitation.accept, owner_invitation.issue, subscription.activate_grant, subscription.payment.refused"
+    },
+    {
+      "journey": 12,
+      "what": "a console-made business is not offered the free trial",
+      "ok": true,
+      "detail": "status 200"
+    },
+    {
+      "journey": 12,
+      "what": "the Owner can still create an employee (an invitation, nothing sent)",
+      "ok": true,
+      "detail": "status 201 \"\""
+    },
+    {
+      "journey": 12,
+      "what": "self-service registration stays closed without a delivery channel",
+      "ok": true,
+      "detail": "status 503 registration_unavailable"
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+PASS  J1  sign-in with the password sets an HttpOnly session cookie — status 200
+PASS  J1  a password alone reaches nothing: the dashboard asks for the second factor — status 401 mfa_required
+PASS  J1  enrolment with the server-issued token returns the authenticator key once — status 200
+PASS  J1  the first code confirms the enrolment — status 200
+PASS  J1  with the second factor, the console reads — status 200
+PASS  J1  a decision without a fresh step-up (password + new code) is refused — status 403 step_up_required
+PASS  J2  the test business and its Owner are created, with a one-time setup code — status 201
+PASS  J2  the answer separates provisioning from activation
+PASS  J2  the Owner’s number stays unverified, with no consent recorded
+PASS  J4  retrying the creation finds the same business, without a new setup code — status 201
+PASS  J5  an explicit, audited grant gives the test business access — status 200
+PASS  J5  no payment can be recorded for a test business — status 403 test_business_no_payment
+PASS  J3  two stores open at once, granted at no charge — status 200/200
+PASS  J4  the same store again opens nothing new — status 200
+PASS  J3  the business has three stores, once each — Agence Tevragh, Boutique Centre, Boutique Ksar
+PASS  J11  a customer business cannot be created while customer activation is closed — status 403 customer_activation_closed
+PASS  J5  an unknown setup code reads the one refusal — status 400
+PASS  J5  the setup code sets the Owner’s password, and opens no session — status 200
+PASS  J5  the setup code works once — status 400
+PASS  J5  the Owner signs in with their number and their own password — status 200
+PASS  J5  the app is told it is a test business
+PASS  J6  the Owner sees exactly their three stores — Agence Tevragh, Boutique Centre, Boutique Ksar
+PASS  J6  the second Owner sees only their own store
+PASS  J7  the Owner creates a product — status 201 
+PASS  J7  the Owner opens the shop’s business day — status 201 ""
+PASS  J7  five chargers are received into stock — status 201 []
+PASS  J7  one is sold for cash — status 201 ""
+PASS  J7  four remain in stock — {"productId":"01a18813-3053-7602-87ab-7730e5843dd6","brand":"Anker","model":"Chargeur 20W","variant":null,"barcode":null,"trackingType":"quantity","specifications":null,"category":"accessory","availab
+PASS  J8  no session: creating a business is refused — status 401
+PASS  J8  an Owner’s app session is not an administrator’s — status 401
+PASS  J8  nor can an Owner change the test status — status 401
+PASS  J8  nor issue a setup code — status 401
+PASS  J9  an Owner cannot read another business’s store — status 403
+PASS  J9  another business cannot open this sale — status 404
+PASS  J10  after setup: provisioning ready, phone still unverified, consent still none
+PASS  J10  the people list says the Owner’s number is unverified
+PASS  J11  test businesses are left out of the customer figures — businesses 0, test 2
+PASS  J11  the audit records actor, target and outcome — refusals included — admin.mfa.enrolled, admin.mfa.enrolment_started, admin.mfa.reset, admin.sign_in, admin.step_up, business.create, business.create.refused, business.store_grant, owner_invitation.accept, owner_invitation.issue, subscription.activate_grant, subscription.payment.refused
+PASS  J12  a console-made business is not offered the free trial — status 200
+PASS  J12  the Owner can still create an employee (an invitation, nothing sent) — status 201 ""
+PASS  J12  self-service registration stays closed without a delivery channel — status 503 registration_unavailable
+
+41/41 checks passed
