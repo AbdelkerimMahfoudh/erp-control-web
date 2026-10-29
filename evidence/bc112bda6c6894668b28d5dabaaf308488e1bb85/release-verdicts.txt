@@ -1,0 +1,58 @@
+
+PUBLIC_WEBSITE: NO-GO — 3 reason(s)
+  - VITE_PUBLIC_SITE_ORIGIN [missing] Public website origin, e.g. https://<domain>
+  - VITE_LEGAL_EFFECTIVE_DATE [missing] Effective date of the published privacy policy and terms (YYYY-MM-DD)
+  - [external] the public browser checks did not all pass (passed 139, failed 33, flaky 0)
+
+PORTAL: NO-GO — 27 reason(s)
+  - VITE_PUBLIC_SITE_ORIGIN [missing] Public website origin, e.g. https://<domain>
+  - VITE_API_BASE [missing] API base URL including /api/v1, e.g. https://api.<domain>/api/v1 (not used by a public build)
+  - VITE_SUPPORT_HOURS [missing] When support answers, in words (days, hours and time zone), as TSX-MR commits to them
+  - VITE_SUPPORT_LANGUAGES [missing] The languages support answers in, in words, as TSX-MR commits to them
+  - VITE_SUPPORT_RESPONSE_TIME [missing] How soon support replies, in words, as TSX-MR commits to it
+  - VITE_ACCOUNT_DELETION_CHANNEL [missing] The deletion verification channel configured AND tested in production (whatsapp)
+  - VITE_LEGAL_EFFECTIVE_DATE [missing] Effective date of the published privacy policy and terms (YYYY-MM-DD)
+  - [legal_blocker] operator_registration: TSX-MR is operated by an individual with no trade registration. Mauritanian counsel must confirm whether the paid Dukan ERP service may be sold before the operator registers (for example as an individual trader at the RCCM, with a tax identification number), and what invoices and receipts must then show. The portal stays closed until then.
+  - [legal_blocker] backup_retention: How long backups are kept is not supplied by TSX-MR: deletion removes data from active storage at once, and backups expire on that schedule. Production stays blocked until TSX-MR fixes it.
+  - [legal_blocker] governing_law: Governing law, jurisdiction and dispute resolution for the terms of service are not decided.
+  - [legal_blocker] indemnity: Whether a business indemnifies TSX-MR, and for what, is a legal clause TSX-MR and its adviser must write or remove.
+  - [legal_blocker] international_transfer: Whether personal data is processed outside Mauritania depends on the hosting choice; the policy must say where.
+  - [legal_blocker] legal_review: The privacy policy, terms and deletion page are drafts written from the code; a legal adviser must review and approve them.
+  - [legal_blocker] liability: Limitation of liability and service-level wording for the terms of service are not decided.
+  - [legal_blocker] privacy_law: Which data-protection law applies, the legal bases it requires, the rights it grants and the authority a person may complain to are not confirmed by Mauritanian counsel.
+  - [legal_blocker] processors: Hosting, database, backup and email providers are not selected (docs/45 D4–D7); the policy must name them once contracted.
+  - [legal_blocker] refund_policy: The refund policy for business access paid outside the app is not decided by TSX-MR (today nothing is refunded by the system).
+  - [legal_blocker] retention_period: The legal retention period for business and accounting records (Mauritanian commercial and tax law) is not decided (docs/64 §6).
+  - [legal_blocker] sealed_history: Deletion cannot edit the hash-chained audit trail, subscription and platform audit events, or append-only money-agent records, which may hold names or contacts written before 2026-10-12 (docs/24); a legal adviser must approve this disclosure.
+  - [legal_draft] accountDeletion: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] legalNotice: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] privacy: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] privacyChoices: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] security: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] terms: still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [external] not proven here: The Dukan ERP backend runs in production at VITE_API_BASE, migrated with its matching API and configured (docs/78)
+  - [external] not proven here: Its operational channels are configured and proven: the email provider and WhatsApp delivery (D166)
+
+APP_STORE: NO-GO — 21 reason(s)
+  - [legal_blocker] backup_retention: How long backups are kept is not supplied by TSX-MR: deletion removes data from active storage at once, and backups expire on that schedule. Production stays blocked until TSX-MR fixes it.
+  - [legal_blocker] governing_law: Governing law, jurisdiction and dispute resolution for the terms of service are not decided.
+  - [legal_blocker] indemnity: Whether a business indemnifies TSX-MR, and for what, is a legal clause TSX-MR and its adviser must write or remove.
+  - [legal_blocker] international_transfer: Whether personal data is processed outside Mauritania depends on the hosting choice; the policy must say where.
+  - [legal_blocker] legal_review: The privacy policy, terms and deletion page are drafts written from the code; a legal adviser must review and approve them.
+  - [legal_blocker] liability: Limitation of liability and service-level wording for the terms of service are not decided.
+  - [legal_blocker] privacy_law: Which data-protection law applies, the legal bases it requires, the rights it grants and the authority a person may complain to are not confirmed by Mauritanian counsel.
+  - [legal_blocker] processors: Hosting, database, backup and email providers are not selected (docs/45 D4–D7); the policy must name them once contracted.
+  - [legal_blocker] refund_policy: The refund policy for business access paid outside the app is not decided by TSX-MR (today nothing is refunded by the system).
+  - [legal_blocker] retention_period: The legal retention period for business and accounting records (Mauritanian commercial and tax law) is not decided (docs/64 §6).
+  - [legal_blocker] sealed_history: Deletion cannot edit the hash-chained audit trail, subscription and platform audit events, or append-only money-agent records, which may hold names or contacts written before 2026-10-12 (docs/24); a legal adviser must approve this disclosure.
+  - [legal_draft] accountDeletion: the service text the app opens is still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] legalNotice: the service text the app opens is still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] privacy: the service text the app opens is still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] privacyChoices: the service text the app opens is still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] security: the service text the app opens is still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - [legal_draft] terms: the service text the app opens is still marked DRAFT — REQUIRES TSX-MR APPROVAL
+  - VITE_ACCOUNT_DELETION_CHANNEL [missing] the deletion channel the app relies on (whatsapp), once working end to end in production
+  - [external] not proven here: Account deletion works end to end by WhatsApp in production: the signed delivery proof (`npm run whatsapp:prove`) and a real deletion completed (F01 / O-A7)
+  - [external] not proven here: The mobile release check passes on the store build (erp-mobile: production origins, bundle audit, no development tools)
+  - [external] not proven here: Every App Store gate of docs/94 passes (identity, logo, privacy labels, demo account, export compliance, device checks)
+
