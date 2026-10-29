@@ -8,9 +8,9 @@ import { BRANCHES, LINES, SLOW_WAIT, mount, serve, subscription, useActivityHarn
 useActivityHarness();
 
 /*
- * Deferred WhatsApp verification in the console (D224, docs/109): Required is the default, Deferred is offered only
- * where the server says it may be asked — a test business while the kill switch is on — with its reason, confirmation,
- * review date and warning; a deferred number reads Deferred, never verified; test staff and the deferral's lifecycle.
+ * Deferred WhatsApp verification in the console (D224, docs/109; amended 2026-10-29): Required is the default, Deferred
+ * is offered per account, for an ordinary business, while the server's switch is on — with its reason, confirmation,
+ * review date and warning; a deferred number reads Deferred, never verified; provisioned staff and the lifecycle.
  */
 const ADMIN = { id: 'a1', email: 'admin@example.test', name: 'Admin' };
 const ID = '0192f000-0000-7000-8000-0000000000d1';
@@ -21,13 +21,13 @@ const CODE = { token: TOKEN, expiresAt: '2026-10-31T08:00:00.000Z', delivery: 'm
 
 function setup(over: Partial<ProvisioningStatus> = {}): ProvisioningStatus {
   return {
-    isTest: true,
-    testMarkedAt: '2026-10-28T08:00:00.000Z',
-    testMarkedBy: ADMIN.email,
+    isTest: false,
+    testMarkedAt: null,
+    testMarkedBy: null,
     customerActivation: 'closed',
     createdBy: 'console',
     provisioning: 'ready',
-    owner: { name: 'Pilot Owner', passwordSet: true, phone: { present: true, verified: false, verification: 'deferred_by_platform', whatsappConsent: 'none' }, email: { present: false, verified: false }, lastLoginAt: null },
+    owner: { name: 'Store Owner', passwordSet: true, phone: { present: true, verified: false, verification: 'deferred_by_platform', whatsappConsent: 'none' }, email: { present: false, verified: false }, lastLoginAt: null },
     invitation: { state: 'none', issuedAt: null, issuedBy: null, expiresAt: null, acceptedAt: null, revokedAt: null },
     activation: { status: 'activated', complimentaryUntil: '2026-11-28T00:00:00.000Z' },
     ...over,
@@ -38,7 +38,7 @@ function detail(over: Partial<BusinessDetail> = {}): BusinessDetail {
   const sub = subscription(BRANCHES, LINES);
   return {
     id: ID,
-    name: 'Pilot Store',
+    name: 'Dar Electronics',
     publicStoreId: 'PL12CD34EF',
     city: 'Nouakchott',
     createdAt: '2026-10-28T08:00:00.000Z',
@@ -52,8 +52,7 @@ function detail(over: Partial<BusinessDetail> = {}): BusinessDetail {
     events: [],
     payments: [],
     trial: null,
-    isTest: true,
-    isPilot: false,
+    isTest: false,
     setup: setup(),
     ...over,
   };
@@ -61,7 +60,7 @@ function detail(over: Partial<BusinessDetail> = {}): BusinessDetail {
 
 const DEFERRED: DeferredAccount = {
   companyId: ID,
-  business: 'Pilot Store',
+  business: 'Dar Electronics',
   userId: USER,
   name: 'Sidi Employee',
   role: 'store_employee',
@@ -69,7 +68,7 @@ const DEFERRED: DeferredAccount = {
   phoneVerification: 'deferred_by_platform',
   grantedBy: ADMIN.email,
   grantedAt: '2026-10-28T09:00:00.000Z',
-  reason: 'Store pilot: WhatsApp Business API not live yet',
+  reason: 'WhatsApp Business API not live yet',
   reviewAt: '2026-11-04T23:59:00.000Z',
   setupCode: 'used',
   activated: true,
@@ -105,15 +104,15 @@ beforeEach(() => {
 });
 
 async function fillBusiness(user: ReturnType<typeof userEvent.setup>) {
-  await user.type(await screen.findByLabelText('Business name', undefined, SLOW_WAIT), 'Pilot Store');
-  await user.type(screen.getByLabelText('Owner’s name'), 'Pilot Owner');
+  await user.type(await screen.findByLabelText('Business name', undefined, SLOW_WAIT), 'Dar Electronics');
+  await user.type(screen.getByLabelText('Owner’s name'), 'Store Owner');
   await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000010');
-  await user.type(screen.getByLabelText(/^Reason/), 'Controlled TestFlight pilot');
+  await user.type(screen.getByLabelText(/^Reason/), 'Store set-up from the console');
 }
 
-describe('creating a test business: WhatsApp verification', () => {
+describe('creating a business: WhatsApp verification', () => {
   it('is Required by default, and a Required request sends no deferral', async () => {
-    const sent = serveConsole({ deferral: true }, (url) => (url.endsWith('/platform/businesses') ? { status: 201, body: { companyId: ID, publicStoreId: 'PL12CD34EF', created: true, invitation: { ...CODE, owner: { name: 'Pilot Owner', destinationMasked: '***0010' } }, setup: setup() } } : undefined));
+    const sent = serveConsole({ deferral: true }, (url) => (url.endsWith('/platform/businesses') ? { status: 201, body: { companyId: ID, publicStoreId: 'PL12CD34EF', created: true, invitation: { ...CODE, owner: { name: 'Store Owner', destinationMasked: '***0010' } }, setup: setup() } } : undefined));
     mount('/admin/businesses/new');
     const user = userEvent.setup();
     await fillBusiness(user);
@@ -136,7 +135,7 @@ describe('creating a test business: WhatsApp verification', () => {
     const user = userEvent.setup();
     await fillBusiness(user);
     await user.click(within(await screen.findByTestId('verification-choice')).getByLabelText(en['admin.deferral.deferred']));
-    expect(screen.getByText('The number will remain unverified. No WhatsApp consent is recorded and no WhatsApp message can be sent. This exception is only for controlled testing and must be removed before normal customer use.')).toBeTruthy();
+    expect(screen.getByText(en['admin.deferral.warning'])).toBeTruthy();
     const submit = screen.getByRole('button', { name: 'Create the business' });
     expect((submit as HTMLButtonElement).disabled).toBe(true);
     await user.type(screen.getByLabelText(new RegExp(en['admin.deferral.reason'])), 'WhatsApp Business API not live yet');
@@ -147,19 +146,8 @@ describe('creating a test business: WhatsApp verification', () => {
     await stepUp(user);
     expect((await screen.findByTestId('setup-code')).textContent).toBe(TOKEN);
     const post = sent.find((r) => r.url.endsWith('/platform/businesses'))!.body as Record<string, unknown>;
-    expect(post).toMatchObject({ isTest: true, verification: 'deferred_by_platform', deferral: { reason: 'WhatsApp Business API not live yet', confirmControlledTest: true } });
+    expect(post).toMatchObject({ isTest: true, verification: 'deferred_by_platform', deferral: { reason: 'WhatsApp Business API not live yet', confirmUnverified: true } });
     expect(JSON.stringify(post)).not.toMatch(/"password"/);
-  }, 20_000);
-
-  it('is not offered for a customer business, nor while the server’s switch is off', async () => {
-    serveConsole({ deferral: true });
-    mount('/admin/businesses/new');
-    const user = userEvent.setup();
-    await fillBusiness(user);
-    expect(await screen.findByTestId('verification-choice')).toBeTruthy();
-    // Un-ticking "test business" takes the choice away: only a test business may defer.
-    await user.click(screen.getAllByRole('checkbox')[0]!);
-    expect(screen.queryByTestId('verification-choice')).toBeNull();
   }, 20_000);
 
   it('while the switch is off, the choice never appears', async () => {
@@ -177,7 +165,7 @@ describe('creating a test business: WhatsApp verification', () => {
     const user = userEvent.setup();
     await fillBusiness(user);
     await user.click(within(await screen.findByTestId('verification-choice')).getByLabelText(en['admin.deferral.deferred']));
-    await user.type(screen.getByLabelText(new RegExp(en['admin.deferral.reason'])), 'pilot');
+    await user.type(screen.getByLabelText(new RegExp(en['admin.deferral.reason'])), 'reason');
     await user.click(screen.getByLabelText(en['admin.deferral.confirm']));
     await user.click(screen.getByRole('button', { name: 'Create the business' }));
     await stepUp(user);
@@ -185,7 +173,7 @@ describe('creating a test business: WhatsApp verification', () => {
   }, 20_000);
 });
 
-describe('a test business’s page', () => {
+describe('a business’s page', () => {
   it('a deferred number reads Deferred — not verified — never Verified', async () => {
     serveConsole({ deferral: true, business: detail(), deferred: [DEFERRED] });
     mount(`/admin/businesses/${ID}`);
@@ -221,9 +209,9 @@ describe('a test business’s page', () => {
     expect(sent.find((r) => r.url.endsWith('/require-verification'))!.body).toEqual({ reason: 'WhatsApp API is live', confirmPassword: 'step-up-password' });
   });
 
-  it('adds a deferred test Employee with a store, and shows their setup code once', async () => {
+  it('adds a deferred Employee with a store, and shows their setup code once', async () => {
     const sent = serveConsole({ deferral: true, business: detail({ people: [] }) }, (url) =>
-      url.endsWith(`/platform/businesses/${ID}/test-staff`)
+      url.endsWith(`/platform/businesses/${ID}/provisioned-staff`)
         ? { status: 201, body: { user: { id: USER, name: 'Sidi Employee', role: 'store_employee', stores: ['Main Store'], phoneVerification: 'deferred_by_platform', status: 'pending' }, setupCode: CODE } }
         : undefined,
     );
@@ -234,42 +222,23 @@ describe('a test business’s page', () => {
     await user.type(within(card).getByLabelText(new RegExp(en['admin.testStaff.phone'])), '+22200000011');
     await user.click(within(card).getByLabelText('Main Store'));
     await user.click(within(card).getByLabelText(en['admin.deferral.deferred']));
-    await user.type(within(card).getByLabelText(new RegExp(en['admin.deferral.reason'])), 'Pilot staff');
+    await user.type(within(card).getByLabelText(new RegExp(en['admin.deferral.reason'])), 'New staff member');
     await user.click(within(card).getByLabelText(en['admin.deferral.confirm']));
     await user.click(within(card).getByRole('button', { name: en['admin.testStaff.submit'] }));
     await stepUp(user);
     expect((await within(card).findByTestId('setup-code')).textContent).toBe(TOKEN);
-    expect(sent.find((r) => r.url.endsWith('/test-staff'))!.body).toMatchObject({
+    expect(sent.find((r) => r.url.endsWith('/provisioned-staff'))!.body).toMatchObject({
       name: 'Sidi Employee',
       phone: '+22200000011',
       role: 'store_employee',
       branchIds: [STORE],
       verification: 'deferred_by_platform',
-      deferral: { reason: 'Pilot staff', confirmControlledTest: true },
+      deferral: { reason: 'New staff member', confirmUnverified: true },
     });
     await user.click(within(card).getByRole('button', { name: en['admin.setup.code.done'] }));
     expect(document.body.textContent).not.toContain(TOKEN);
   }, 20_000);
 
-  it('offers no test staff for a customer business', async () => {
-    serveConsole({ deferral: true, business: detail({ isTest: false, setup: setup({ isTest: false }) }) });
-    mount(`/admin/businesses/${ID}`);
-    await screen.findByRole('heading', { name: en['admin.business.people'] }, SLOW_WAIT);
-    expect(screen.queryByRole('heading', { name: en['admin.testStaff.title'] })).toBeNull();
-    expect(screen.queryByRole('heading', { name: en['admin.pilot.title'] })).toBeNull();
-  });
-
-  it('marks the test business as a store pilot after a step-up', async () => {
-    const sent = serveConsole({ deferral: true, business: detail() }, (url) => (url.endsWith(`/pilot-status`) ? { body: { applied: true, isPilot: true } } : undefined));
-    mount(`/admin/businesses/${ID}`);
-    const user = userEvent.setup();
-    const card = (await screen.findByRole('heading', { name: en['admin.pilot.title'] }, SLOW_WAIT)).closest('section')!;
-    await user.type(within(card).getByRole('textbox'), 'Real store pilot, 3–7 days');
-    await user.click(within(card).getByRole('button', { name: en['admin.pilot.mark'] }));
-    await stepUp(user);
-    await screen.findByRole('heading', { name: en['admin.pilot.title'] });
-    expect(sent.find((r) => r.url.endsWith('/pilot-status'))!.body).toEqual({ isPilot: true, reason: 'Real store pilot, 3–7 days', confirmPassword: 'step-up-password' });
-  });
 });
 
 describe('the businesses list', () => {
@@ -279,5 +248,33 @@ describe('the businesses list', () => {
     const user = userEvent.setup();
     await user.click(await screen.findByLabelText(en['admin.businesses.deferredOnly'], undefined, SLOW_WAIT));
     await waitFor(() => expect(sent.some((r) => r.url.includes('verification=deferred'))).toBe(true));
+  });
+});
+
+describe('an ordinary business', () => {
+  it('offers the choice with the test-business box unticked, and sends no test or pilot field', async () => {
+    const sent = serveConsole({ deferral: true }, (url) => (url.endsWith('/platform/businesses') ? { status: 201, body: { companyId: ID, publicStoreId: 'PL12CD34EF', created: true, invitation: null, setupCode: CODE, setup: setup() } } : undefined));
+    mount('/admin/businesses/new');
+    const user = userEvent.setup();
+    await fillBusiness(user);
+    await user.click(screen.getAllByRole('checkbox')[0]!);
+    const choice = await screen.findByTestId('verification-choice');
+    await user.click(within(choice).getByLabelText(en['admin.deferral.deferred']));
+    await user.type(screen.getByLabelText(new RegExp(en['admin.deferral.reason'])), 'WhatsApp Business API not live yet');
+    await user.click(screen.getByLabelText(en['admin.deferral.confirm']));
+    await user.click(screen.getByRole('button', { name: 'Create the business' }));
+    await stepUp(user);
+    await screen.findByTestId('setup-code');
+    const post = sent.find((r) => r.url.endsWith('/platform/businesses'))!.body as Record<string, unknown>;
+    expect(post).toMatchObject({ isTest: false, verification: 'deferred_by_platform' });
+    expect(JSON.stringify(post)).not.toMatch(/pilot/i);
+  }, 20_000);
+
+  it('has no pilot mark anywhere on its page', async () => {
+    serveConsole({ deferral: true, business: detail() });
+    mount(`/admin/businesses/${ID}`);
+    await screen.findByRole('heading', { name: en['admin.business.people'] }, SLOW_WAIT);
+    expect(document.body.textContent).not.toMatch(/pilot/i);
+    expect(screen.getByRole('heading', { name: en['admin.testStaff.title'] })).toBeTruthy();
   });
 });

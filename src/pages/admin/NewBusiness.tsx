@@ -30,8 +30,8 @@ export function NewBusiness() {
   const [codeShown, setCodeShown] = useState(true);
   const [verification, setVerification] = useState<VerificationValue>(REQUIRED);
   const deferralAvailable = useDeferralAvailable();
-  // Only a test business may defer (the server decides; the console offers it only where it can be asked).
-  const offerDeferral = deferralAvailable && form.isTest;
+  // Per account, for any business, while the server's switch is on (the server decides every condition).
+  const offerDeferral = deferralAvailable;
   const attempt = useRef<{ key: string; payload: string } | null>(null);
 
   const submit = async (e: FormEvent) => {

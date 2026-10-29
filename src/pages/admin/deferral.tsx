@@ -7,9 +7,10 @@ import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatDateTime } from '../../lib/format';
 
 /*
- * Deferred WhatsApp verification for accounts the platform provisions in a TEST business (D224, docs/109).
+ * Deferred WhatsApp verification, per account, for accounts the platform provisions (D224, docs/109; the owner's
+ * amendment of 2026-10-29: an ordinary business, its own seats).
  *
- * The server decides every condition — a superadmin with MFA, a fresh step-up, a test business, the kill switch — and
+ * The server decides every condition — a superadmin with MFA, a fresh step-up, the server's switch — and
  * this console only offers what it says may be asked. "Deferred" is never "verified": nothing here can mark a number
  * verified, and every list says Deferred in words.
  */
@@ -18,18 +19,15 @@ import { formatDate, formatDateTime } from '../../lib/format';
 const CODED = [
   'deferral_disabled',
   'deferral_mfa_required',
-  'deferral_test_business_only',
   'deferral_reason_required',
   'deferral_confirmation_required',
   'deferral_review_date',
-  'test_business_only',
   'seat_unavailable',
   'contact_in_use',
   'role_not_allowed',
   'not_deferred',
   'already_set_up',
   'owner_not_cancellable',
-  'pilot_test_business_only',
   'step_up_required',
 ] as const;
 
@@ -71,11 +69,11 @@ export function verificationBody(v: VerificationValue) {
   if (v.policy !== 'deferred_by_platform') return { verification: 'required' as const };
   return {
     verification: 'deferred_by_platform' as const,
-    deferral: { reason: v.reason.trim(), confirmControlledTest: v.confirmed, ...(v.reviewAt ? { reviewAt: new Date(`${v.reviewAt}T23:59:00`).toISOString() } : {}) },
+    deferral: { reason: v.reason.trim(), confirmUnverified: v.confirmed, ...(v.reviewAt ? { reviewAt: new Date(`${v.reviewAt}T23:59:00`).toISOString() } : {}) },
   };
 }
 
-/** A deferral is complete only with its written reason and the controlled-test confirmation. */
+/** A deferral is complete only with its written reason and the confirmation that the number stays unverified. */
 export function verificationReady(v: VerificationValue): boolean {
   return v.policy === 'required' || (v.reason.trim().length > 0 && v.confirmed);
 }
@@ -163,8 +161,8 @@ export function PhoneVerificationBadge({ state, verified }: { state?: 'required'
 
 type Ask = () => Promise<string | null>;
 
-/** Test Managers and Employees, provisioned by the administrator — a test business only (the server checks). */
-export function TestStaff({ business, ask, onDone }: { business: BusinessDetail; ask: Ask; onDone: () => Promise<void> }) {
+/** Managers and Employees, provisioned by the administrator, each taking one of the business's own seats. */
+export function ProvisionStaff({ business, ask, onDone }: { business: BusinessDetail; ask: Ask; onDone: () => Promise<void> }) {
   const { t } = useI18n();
   const available = useDeferralAvailable();
   const empty = { name: '', phone: '', email: '', role: 'store_employee' as 'store_manager' | 'store_employee', branchIds: [] as string[] };
@@ -173,8 +171,6 @@ export function TestStaff({ business, ask, onDone }: { business: BusinessDetail;
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [made, setMade] = useState<TestStaffResult | null>(null);
-  if (!business.isTest) return null;
-
   const toggle = (id: string) => setForm({ ...form, branchIds: form.branchIds.includes(id) ? form.branchIds.filter((b) => b !== id) : [...form.branchIds, id] });
   const ready = form.name.trim() && form.phone.trim() && form.branchIds.length > 0 && verificationReady(verification);
 
@@ -185,7 +181,7 @@ export function TestStaff({ business, ask, onDone }: { business: BusinessDetail;
     if (!confirmPassword) return;
     setBusy(true);
     try {
-      const r = await adminRequest<TestStaffResult>(`platform/businesses/${business.id}/test-staff`, {
+      const r = await adminRequest<TestStaffResult>(`platform/businesses/${business.id}/provisioned-staff`, {
         method: 'POST',
         body: { name: form.name.trim(), phone: form.phone.trim(), ...(form.email.trim() ? { email: form.email.trim() } : {}), role: form.role, branchIds: form.branchIds, ...verificationBody(verification), confirmPassword },
       });
@@ -237,51 +233,6 @@ export function TestStaff({ business, ask, onDone }: { business: BusinessDetail;
         <div className="row">
           <button type="submit" className="btn btn-primary" disabled={busy || !ready}>
             {t('admin.testStaff.submit')}
-          </button>
-        </div>
-      </form>
-    </section>
-  );
-}
-
-/** The pilot sub-mark on a test business (the owner's decision, 2026-10-28): the app's strip then says "Pilot business". */
-export function PilotStatus({ business, ask, onDone }: { business: BusinessDetail; ask: Ask; onDone: () => Promise<void> }) {
-  const { t } = useI18n();
-  const [reason, setReason] = useState('');
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<unknown>(null);
-  if (!business.isTest) return null;
-  const isPilot = business.isPilot === true;
-
-  const submit = async (e: FormEvent) => {
-    e.preventDefault();
-    setError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
-    setBusy(true);
-    try {
-      await adminRequest(`platform/businesses/${business.id}/pilot-status`, { method: 'POST', body: { isPilot: !isPilot, reason: reason.trim(), confirmPassword } });
-      setReason('');
-      await onDone();
-    } catch (err) {
-      setError(err);
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  return (
-    <section className="card stack" aria-labelledby="pilot-title">
-      <h2 id="pilot-title">{t('admin.pilot.title')}</h2>
-      <p>{isPilot ? <Badge tone="info">{t('admin.pilot.badge')}</Badge> : null} {isPilot ? t('admin.pilot.on') : t('admin.pilot.off')}</p>
-      <form className="stack" onSubmit={submit}>
-        <Field label={t('admin.action.reason')} hint={t('admin.action.reason.required')}>
-          <input required maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />
-        </Field>
-        <DeferralRefusal error={error} />
-        <div className="row">
-          <button type="submit" className="btn btn-sm" disabled={busy}>
-            {isPilot ? t('admin.pilot.unmark') : t('admin.pilot.mark')}
           </button>
         </div>
       </form>

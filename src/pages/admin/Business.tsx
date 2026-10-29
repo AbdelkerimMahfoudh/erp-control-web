@@ -14,7 +14,7 @@ import { detailOf } from '../../lib/trial';
 import { BusinessTrial } from './BusinessTrial';
 import { BusinessGrace, BusinessMessages } from './BusinessLifecycle';
 import { ConsoleStore, SetupPanel, TestBadge, TestBanner, TestStatus } from './provisioning';
-import { DeferredAccounts, PhoneVerificationBadge, PilotStatus, TestStaff } from './deferral';
+import { DeferredAccounts, PhoneVerificationBadge, ProvisionStaff } from './deferral';
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
 
@@ -123,7 +123,7 @@ export function Business() {
 
       <DeferredAccounts business={data} ask={ask} onDone={load} />
 
-      <TestStaff business={data} ask={ask} onDone={load} />
+      <ProvisionStaff business={data} ask={ask} onDone={load} />
 
       <section className="grid">
         <div className="card stack">
@@ -232,8 +232,6 @@ export function Business() {
       </section>
 
       <TestStatus business={data} ask={ask} onDone={load} />
-
-      <PilotStatus business={data} ask={ask} onDone={load} />
 
       <section className="card stack">
         <h2>{t('admin.seats.title')}</h2>

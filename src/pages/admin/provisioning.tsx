@@ -22,7 +22,6 @@ const CODED = [
   'store_name_in_use',
   'deferral_disabled',
   'deferral_mfa_required',
-  'deferral_test_business_only',
   'deferral_reason_required',
   'deferral_confirmation_required',
   'deferral_review_date',

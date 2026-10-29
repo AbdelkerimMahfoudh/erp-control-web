@@ -666,8 +666,6 @@ export interface BusinessRow {
   trial?: TrialSummary | null;
   /** A persistent test business (D217). Absent from an API older than 0102. */
   isTest?: boolean;
-  /** D224: a test business running a controlled store pilot. */
-  isPilot?: boolean;
   version: number;
 }
 
@@ -711,8 +709,6 @@ export interface BusinessDetail {
   trial?: BusinessTrial | null;
   /** A persistent test business (D217). Absent from an API older than 0102. */
   isTest?: boolean;
-  /** D224: a test business running a controlled store pilot. */
-  isPilot?: boolean;
   /** Provisioning and activation, separately (D217). Absent from an API older than 0102. */
   setup?: ProvisioningStatus | null;
 }
