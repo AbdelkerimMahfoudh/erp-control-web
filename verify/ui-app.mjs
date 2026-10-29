@@ -105,7 +105,7 @@ const overflow = (p) => p.evaluate(() => document.documentElement.scrollWidth - 
 const { context: ctx, page } = await newPage();
 await page.goto(`${APP}/login`);
 await page.getByText('I have a setup code').click();
-await page.getByText('Set up your business').first().waitFor();
+await page.getByText('Set up your account').first().waitFor();
 check('“I have a setup code” on the sign-in screen opens the setup screen', page.url().endsWith('/setup'));
 await page.screenshot({ path: `${OUT}/setup-empty-en-light-393.png`, fullPage: true });
 const boxes = page.getByRole('textbox');
@@ -155,7 +155,8 @@ const BANNER = {
   fr: 'Entreprise de test — pour les tests uniquement',
   ar: 'نشاط تجاري اختباري — للاختبار فقط',
 };
-const SETUP_TITLE = { en: 'Set up your business', fr: 'Configurer votre entreprise', ar: 'إعداد نشاطك التجاري' };
+// The setup screen's title is neutral since D224 (mobile 538b3c1): staff spend setup codes too.
+const SETUP_TITLE = { en: 'Set up your account', fr: 'Configurer votre compte', ar: 'إعداد حسابك' };
 for (const lang of ['en', 'fr', 'ar']) {
   for (const theme of ['light', 'dark']) {
     for (const width of [320, 393]) {
@@ -192,7 +193,7 @@ for (const lang of ['en', 'fr', 'ar']) {
 const deep = await newPage();
 await deep.page.goto(`${APP}/setup`);
 await deep.page.reload();
-const stayed = await deep.page.getByText('Set up your business').first().waitFor({ timeout: 20000 }).then(() => true, () => false);
+const stayed = await deep.page.getByText('Set up your account').first().waitFor({ timeout: 20000 }).then(() => true, () => false);
 check('reloading /setup stays on the setup screen', stayed && deep.page.url().endsWith('/setup'));
 await deep.context.close();
 
