@@ -90,8 +90,9 @@ main:focus {
   color: var(--on-org);
 }
 .product-mark-symbol {
-  /* The Dukan ledger mark itself (2026-10-29): no tile behind it, its own colours. */
+  /* The Dukan ledger mark itself (2026-10-29): no tile behind it, its own colours, never mirrored. */
   border-radius: 0;
+  direction: ltr;
 }
 .product-mark-symbol .mark-left {
   fill: var(--mark-left);

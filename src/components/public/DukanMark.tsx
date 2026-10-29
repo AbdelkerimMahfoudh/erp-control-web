@@ -11,7 +11,7 @@ let seq = 0;
 export function DukanMark({ className }: { className?: string }) {
   const id = `dukan-mark-${++seq}`;
   return (
-    <svg className={className} viewBox="96 96 832 832" aria-hidden="true" focusable="false" style={{ direction: 'ltr' }}>
+    <svg className={className} viewBox="96 96 832 832" aria-hidden="true" focusable="false">
       <defs>
         <mask id={`${id}-l`} maskUnits="userSpaceOnUse" x="0" y="0" width="1024" height="1024">
           <rect width="1024" height="1024" fill="white" />
