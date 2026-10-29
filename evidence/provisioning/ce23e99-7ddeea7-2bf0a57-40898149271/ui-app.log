@@ -1,0 +1,59 @@
+PASS  the administrator makes a test business with a setup code — status 201
+PASS  “I have a setup code” on the sign-in screen opens the setup screen
+PASS  an unknown code reads the one refusal, in the app’s words
+PASS  the pasted code (spaces and a line break) sets the Owner’s password
+PASS  the code is kept nowhere in the browser, nor in the address
+PASS  signed in before any access: the test banner shows — /access-closed — Test business — for testing only, not a real shop No active access yet Your account is ready, but this business does not have active access yet. The app opens as soon as it does. Managed by your organisation. Contact your organisation administrator if you believe this is a mistake. Check again Sign 
+PASS  the administrator gives an explicit grant — status 200
+PASS  with access, the home screen shows the test banner — /select-branch
+PASS  banner home en/light/320
+PASS  banner stock en/light/320
+PASS  banner more en/light/320
+PASS  setup screen en/light/320
+PASS  banner home en/light/393
+PASS  banner stock en/light/393
+PASS  banner more en/light/393
+PASS  setup screen en/light/393
+PASS  banner home en/dark/320
+PASS  banner stock en/dark/320
+PASS  banner more en/dark/320
+PASS  setup screen en/dark/320
+PASS  banner home en/dark/393
+PASS  banner stock en/dark/393
+PASS  banner more en/dark/393
+PASS  setup screen en/dark/393
+PASS  banner home fr/light/320
+PASS  banner stock fr/light/320
+PASS  banner more fr/light/320
+PASS  setup screen fr/light/320
+PASS  banner home fr/light/393
+PASS  banner stock fr/light/393
+PASS  banner more fr/light/393
+PASS  setup screen fr/light/393
+PASS  banner home fr/dark/320
+PASS  banner stock fr/dark/320
+PASS  banner more fr/dark/320
+PASS  setup screen fr/dark/320
+PASS  banner home fr/dark/393
+PASS  banner stock fr/dark/393
+PASS  banner more fr/dark/393
+PASS  setup screen fr/dark/393
+PASS  banner home ar/light/320
+PASS  banner stock ar/light/320
+PASS  banner more ar/light/320
+PASS  setup screen ar/light/320
+PASS  banner home ar/light/393
+PASS  banner stock ar/light/393
+PASS  banner more ar/light/393
+PASS  setup screen ar/light/393
+PASS  banner home ar/dark/320
+PASS  banner stock ar/dark/320
+PASS  banner more ar/dark/320
+PASS  setup screen ar/dark/320
+PASS  banner home ar/dark/393
+PASS  banner stock ar/dark/393
+PASS  banner more ar/dark/393
+PASS  setup screen ar/dark/393
+PASS  reloading /setup stays on the setup screen
+
+57/57 checks passed

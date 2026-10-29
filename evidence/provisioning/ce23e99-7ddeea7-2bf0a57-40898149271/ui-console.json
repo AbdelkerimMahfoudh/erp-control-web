@@ -1,0 +1,725 @@
+{
+  "at": "2026-10-29T15:13:45.227Z",
+  "results": [
+    {
+      "what": "the password alone leads to the second factor, not the console",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "with the code, the console opens",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the console lists the two test businesses",
+      "ok": true,
+      "detail": "2 rows"
+    },
+    {
+      "what": "the new-business form starts as a test business",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the setup code is shown once after creation",
+      "ok": true,
+      "detail": "43 characters"
+    },
+    {
+      "what": "the setup code is not in the address",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the setup code is in neither localStorage nor sessionStorage",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "“I have handed it over” removes the code from the page",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the new business reads awaiting the Owner’s setup, number unverified",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "reloading the business page keeps it, and shows no code",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "a reissued code is a different code",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "the first code no longer works once reissued",
+      "ok": true,
+      "detail": "status 400"
+    },
+    {
+      "what": "a test business without a grant cannot open a store from the console",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard en/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses en/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new en/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab en/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting en/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard en/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses en/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new en/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab en/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting en/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard en/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses en/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new en/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab en/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting en/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard en/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses en/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new en/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab en/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting en/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard en/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses en/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new en/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab en/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting en/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard en/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses en/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new en/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab en/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting en/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard fr/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses fr/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new fr/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab fr/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting fr/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard fr/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses fr/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new fr/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab fr/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting fr/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard fr/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses fr/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new fr/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab fr/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting fr/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard fr/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses fr/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new fr/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab fr/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting fr/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard fr/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses fr/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new fr/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab fr/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting fr/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard fr/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses fr/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new fr/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab fr/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting fr/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard ar/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses ar/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new ar/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab ar/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting ar/light/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard ar/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses ar/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new ar/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab ar/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting ar/light/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard ar/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses ar/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new ar/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab ar/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting ar/light/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard ar/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses ar/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new ar/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab ar/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting ar/dark/320",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard ar/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses ar/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new ar/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab ar/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting ar/dark/393",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout dashboard ar/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout businesses ar/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout new ar/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout lab ar/dark/1280",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "what": "layout awaiting ar/dark/1280",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "consoleErrors": [
+    "en/light/393: Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "en/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "fr/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/light/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/320: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/393: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy.",
+    "ar/dark/1280: Refused to apply a stylesheet because its hash, its nonce, or 'unsafe-inline' does not appear in the style-src directive of the Content Security Policy."
+  ]
+}
