@@ -94,6 +94,8 @@ describe('creating a business and its Owner', () => {
     const user = userEvent.setup();
     await user.type(await screen.findByLabelText('Business name', undefined, SLOW_WAIT), 'Labo Test');
     await user.type(screen.getByLabelText('Owner’s name'), 'Mariem');
+    await user.type(screen.getByLabelText(en['admin.new.businessAr']), 'متجر');
+    await user.type(screen.getByLabelText(en['admin.new.ownerAr']), 'مالك');
     await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000001');
     await user.type(screen.getByLabelText(/^Reason/), 'Phone-browser test');
     expect((screen.getByRole('checkbox') as HTMLInputElement).checked).toBe(true);
@@ -104,7 +106,7 @@ describe('creating a business and its Owner', () => {
     expect(code.textContent).toBe(TOKEN);
     expect(screen.getByText(en['admin.new.created'])).toBeTruthy();
     const post = sent.find((r) => r.url.endsWith('/platform/businesses'))!;
-    expect(post.body).toMatchObject({ businessName: 'Labo Test', ownerName: 'Mariem', phone: '+22200000001', isTest: true, reason: 'Phone-browser test', confirmPassword: 'step-up-password' });
+    expect(post.body).toMatchObject({ businessName: 'Labo Test', businessNameAr: 'متجر', ownerName: 'Mariem', ownerNameAr: 'مالك', phone: '+22200000001', isTest: true, reason: 'Phone-browser test', confirmPassword: 'step-up-password' });
     expect(typeof (post.body as { idempotencyKey: string }).idempotencyKey).toBe('string');
     expect(JSON.stringify(post.body)).not.toMatch(/"password"/);
 
@@ -130,6 +132,8 @@ describe('creating a business and its Owner', () => {
     const user = userEvent.setup();
     await user.type(await screen.findByLabelText('Business name', undefined, SLOW_WAIT), 'Real Shop');
     await user.type(screen.getByLabelText('Owner’s name'), 'Ahmed');
+    await user.type(screen.getByLabelText(en['admin.new.businessAr']), 'متجر');
+    await user.type(screen.getByLabelText(en['admin.new.ownerAr']), 'مالك');
     await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000002');
     await user.type(screen.getByLabelText(/^Reason/), 'By phone');
     await user.click(screen.getByRole('checkbox'));
@@ -189,15 +193,17 @@ describe('a test business’s page', () => {
     const user = userEvent.setup();
     const card = (await screen.findByRole('heading', { name: en['admin.store.title'] }, SLOW_WAIT)).closest('section')!;
     expect(within(card).getByText(en['admin.store.test'])).toBeTruthy();
-    const [name, reason] = within(card).getAllByRole('textbox');
+    const [name, nameAr, reason] = within(card).getAllByRole('textbox');
     await user.type(name!, 'Annexe');
+    await user.type(nameAr!, 'الملحق');
     await user.type(reason!, 'Second test store');
     await user.click(within(card).getByRole('button', { name: en['admin.store.submit'] }));
     await stepUp(user);
     expect(await within(card).findByText('The store “Annexe” is open, under the grant.')).toBeTruthy();
-    expect(sent.find((r) => r.url.endsWith('/stores'))!.body).toMatchObject({ name: 'Annexe', activity: 'electronics', reason: 'Second test store' });
-    const [again, why] = within(card).getAllByRole('textbox');
+    expect(sent.find((r) => r.url.endsWith('/stores'))!.body).toMatchObject({ name: 'Annexe', nameAr: 'الملحق', activity: 'electronics', reason: 'Second test store' });
+    const [again, againAr, why] = within(card).getAllByRole('textbox');
     await user.type(again!, 'Annexe');
+    await user.type(againAr!, 'الملحق');
     await user.type(why!, 'Second test store');
     await user.click(within(card).getByRole('button', { name: en['admin.store.submit'] }));
     await stepUp(user);

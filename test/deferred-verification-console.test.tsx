@@ -106,6 +106,8 @@ beforeEach(() => {
 async function fillBusiness(user: ReturnType<typeof userEvent.setup>) {
   await user.type(await screen.findByLabelText('Business name', undefined, SLOW_WAIT), 'Dar Electronics');
   await user.type(screen.getByLabelText('Owner’s name'), 'Store Owner');
+  await user.type(screen.getByLabelText(en['admin.new.businessAr']), 'متجر');
+  await user.type(screen.getByLabelText(en['admin.new.ownerAr']), 'مالك');
   await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000010');
   await user.type(screen.getByLabelText(/^Reason/), 'Store set-up from the console');
 }
@@ -219,6 +221,7 @@ describe('a business’s page', () => {
     const user = userEvent.setup();
     const card = (await screen.findByRole('heading', { name: en['admin.testStaff.title'] }, SLOW_WAIT)).closest('section')!;
     await user.type(within(card).getByLabelText(en['admin.testStaff.name']), 'Sidi Employee');
+    await user.type(within(card).getByLabelText(en['admin.testStaff.nameAr']), 'سيدي');
     await user.type(within(card).getByLabelText(new RegExp(en['admin.testStaff.phone'])), '+22200000011');
     await user.click(within(card).getByLabelText('Main Store'));
     await user.click(within(card).getByLabelText(en['admin.deferral.deferred']));

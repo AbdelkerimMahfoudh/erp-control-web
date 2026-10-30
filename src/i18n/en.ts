@@ -1020,6 +1020,23 @@ export const en = {
   'page.join.title': 'Create your business — Dukan ERP',
   'card.instruction': 'Scan to create your business in Dukan ERP, or enter this promo code when you register.',
   'card.codeLabel': 'Promo code',
+  // ── D225: bilingual names ──
+  'admin.new.businessAr': 'Business name in Arabic',
+  'admin.new.ownerAr': 'Owner’s name in Arabic',
+  'admin.new.storeAr': 'First store’s name in Arabic (with the name above)',
+  'admin.store.nameAr': 'Store name in Arabic',
+  'admin.testStaff.nameAr': 'Name in Arabic',
+  'admin.names.title': 'Names',
+  'admin.names.lead': 'Each name in the Latin alphabet (French and English screens) and in Arabic (Arabic screens). Receipts already issued keep the names they were issued under.',
+  'admin.names.missing': '{count} name(s) have no Arabic version yet: the Arabic screens show the Latin name meanwhile.',
+  'admin.names.kind.business': 'Business',
+  'admin.names.kind.store': 'Store',
+  'admin.names.kind.person': 'Person',
+  'admin.names.incomplete': 'Arabic name missing',
+  'admin.names.latin': 'Name in the Latin alphabet',
+  'admin.names.arabic': 'Name in Arabic',
+  'admin.names.save': 'Save names',
+  'admin.names.saved': 'Names saved.',
 } as const;
 
 export type Key = keyof typeof en;

@@ -165,14 +165,14 @@ type Ask = () => Promise<string | null>;
 export function ProvisionStaff({ business, ask, onDone }: { business: BusinessDetail; ask: Ask; onDone: () => Promise<void> }) {
   const { t } = useI18n();
   const available = useDeferralAvailable();
-  const empty = { name: '', phone: '', email: '', role: 'store_employee' as 'store_manager' | 'store_employee', branchIds: [] as string[] };
+  const empty = { name: '', nameAr: '', phone: '', email: '', role: 'store_employee' as 'store_manager' | 'store_employee', branchIds: [] as string[] };
   const [form, setForm] = useState(empty);
   const [verification, setVerification] = useState<VerificationValue>(REQUIRED);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [made, setMade] = useState<TestStaffResult | null>(null);
   const toggle = (id: string) => setForm({ ...form, branchIds: form.branchIds.includes(id) ? form.branchIds.filter((b) => b !== id) : [...form.branchIds, id] });
-  const ready = form.name.trim() && form.phone.trim() && form.branchIds.length > 0 && verificationReady(verification);
+  const ready = form.name.trim() && form.nameAr.trim() && form.phone.trim() && form.branchIds.length > 0 && verificationReady(verification);
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -183,7 +183,7 @@ export function ProvisionStaff({ business, ask, onDone }: { business: BusinessDe
     try {
       const r = await adminRequest<TestStaffResult>(`platform/businesses/${business.id}/provisioned-staff`, {
         method: 'POST',
-        body: { name: form.name.trim(), phone: form.phone.trim(), ...(form.email.trim() ? { email: form.email.trim() } : {}), role: form.role, branchIds: form.branchIds, ...verificationBody(verification), confirmPassword },
+        body: { name: form.name.trim(), nameAr: form.nameAr.trim(), phone: form.phone.trim(), ...(form.email.trim() ? { email: form.email.trim() } : {}), role: form.role, branchIds: form.branchIds, ...verificationBody(verification), confirmPassword },
       });
       setMade(r);
       setForm(empty);
@@ -204,7 +204,10 @@ export function ProvisionStaff({ business, ask, onDone }: { business: BusinessDe
       <form className="stack" onSubmit={submit}>
         <div className="grid">
           <Field label={t('admin.testStaff.name')}>
-            <input required maxLength={160} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <input required maxLength={160} dir="ltr" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          </Field>
+          <Field label={t('admin.testStaff.nameAr')}>
+            <input required maxLength={160} dir="rtl" lang="ar" value={form.nameAr} onChange={(e) => setForm({ ...form, nameAr: e.target.value })} />
           </Field>
           <Field label={t('admin.testStaff.phone')} hint={t('admin.testStaff.phone.hint')}>
             <input required inputMode="tel" dir="ltr" maxLength={24} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />

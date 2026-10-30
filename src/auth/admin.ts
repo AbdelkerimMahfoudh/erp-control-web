@@ -52,6 +52,6 @@ export async function adminSignOut(): Promise<void> {
   await request('platform/admin/sign-out', { method: 'POST', admin: true });
 }
 
-export function adminRequest<T>(path: string, options: { method?: 'GET' | 'POST'; body?: unknown } = {}): Promise<T> {
+export function adminRequest<T>(path: string, options: { method?: 'GET' | 'POST' | 'PATCH'; body?: unknown } = {}): Promise<T> {
   return request<T>(path, { ...options, admin: true });
 }

@@ -679,6 +679,8 @@ export interface BusinessList {
 export interface Person {
   id: string;
   name: string;
+  /** D225: the Arabic name; null until given. */
+  nameAr?: string | null;
   email: string | null;
   phone: string | null;
   emailVerified: boolean;
@@ -695,10 +697,12 @@ export interface Person {
 export interface BusinessDetail {
   id: string;
   name: string;
+  /** D225: the Arabic name; null until given. */
+  nameAr?: string | null;
   publicStoreId: string;
   city: string | null;
   createdAt: string;
-  branches: { id: string; name: string; type: string; activity?: Activity; activityNext?: Activity | null }[];
+  branches: { id: string; name: string; nameAr?: string | null; type: string; activity?: Activity; activityNext?: Activity | null }[];
   people: Person[];
   entitlement: Entitlement | null;
   pricing: Pricing | null;

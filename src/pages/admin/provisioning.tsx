@@ -249,7 +249,7 @@ export function TestStatus({ business, ask, onDone }: { business: BusinessDetail
  */
 export function ConsoleStore({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
   const { t } = useI18n();
-  const [form, setForm] = useState({ name: '', activity: 'electronics' as Activity, reason: '' });
+  const [form, setForm] = useState({ name: '', nameAr: '', activity: 'electronics' as Activity, reason: '' });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [done, setDone] = useState<string | null>(null);
@@ -266,10 +266,10 @@ export function ConsoleStore({ business, ask, onDone }: { business: BusinessDeta
     try {
       const r = await adminRequest<ConsoleStoreResult>(`platform/businesses/${business.id}/stores`, {
         method: 'POST',
-        body: { name: form.name.trim(), activity: form.activity, reason: form.reason.trim(), confirmPassword },
+        body: { name: form.name.trim(), nameAr: form.nameAr.trim(), activity: form.activity, reason: form.reason.trim(), confirmPassword },
       });
       setDone(!r.created ? t('admin.store.same') : r.mode === 'granted' ? t('admin.store.granted', { name: form.name.trim() }) : t('admin.store.requested', { name: form.name.trim() }));
-      setForm({ ...form, name: '', reason: '' });
+      setForm({ ...form, name: '', nameAr: '', reason: '' });
       await onDone();
     } catch (err) {
       setError(err);
@@ -286,7 +286,10 @@ export function ConsoleStore({ business, ask, onDone }: { business: BusinessDeta
       <form className="stack" onSubmit={submit}>
         <div className="grid">
           <Field label={t('admin.store.name')}>
-            <input required maxLength={160} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+            <input required maxLength={160} dir="ltr" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+          </Field>
+          <Field label={t('admin.store.nameAr')}>
+            <input required maxLength={160} dir="rtl" lang="ar" value={form.nameAr} onChange={(e) => setForm({ ...form, nameAr: e.target.value })} />
           </Field>
           <Field label={t('admin.store.activity')}>
             <select value={form.activity} onChange={(e) => setForm({ ...form, activity: e.target.value as Activity })}>

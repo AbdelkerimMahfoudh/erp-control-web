@@ -8,7 +8,7 @@ import { ACTIVITY_CHOICES, ProvisioningRefusal, SetupCode, TestBadge } from './p
 import { useStepUp } from './useStepUp';
 import { PersonSetupCode, REQUIRED, VerificationChoice, useDeferralAvailable, verificationBody, verificationReady, type VerificationValue } from './deferral';
 
-const EMPTY = { businessName: '', ownerName: '', phone: '', email: '', city: '', branchName: '', activity: 'electronics' as Activity, language: 'fr' as 'en' | 'fr' | 'ar', isTest: true, reason: '' };
+const EMPTY = { businessName: '', businessNameAr: '', ownerName: '', ownerNameAr: '', branchNameAr: '', phone: '', email: '', city: '', branchName: '', activity: 'electronics' as Activity, language: 'fr' as 'en' | 'fr' | 'ar', isTest: true, reason: '' };
 
 /**
  * A business and its Owner, created by a platform administrator (D217).
@@ -39,11 +39,15 @@ export function NewBusiness() {
     setError(null);
     const payload = {
       businessName: form.businessName.trim(),
+      businessNameAr: form.businessNameAr.trim(),
       ownerName: form.ownerName.trim(),
+      ownerNameAr: form.ownerNameAr.trim(),
       phone: form.phone.trim() || undefined,
       email: form.email.trim() || undefined,
       city: form.city.trim() || undefined,
       branchName: form.branchName.trim() || undefined,
+      // D225: the first store's Arabic name goes with its Latin one; neither means « Main Store » / « المتجر الرئيسي ».
+      branchNameAr: form.branchName.trim() ? form.branchNameAr.trim() : undefined,
       activity: form.activity,
       language: form.language,
       isTest: form.isTest,
@@ -111,10 +115,16 @@ export function NewBusiness() {
         <p className="muted small">{t('admin.new.test.hint')}</p>
         <div className="grid">
           <Field label={t('admin.new.business')}>
-            <input required maxLength={160} value={form.businessName} onChange={set('businessName')} />
+            <input required maxLength={160} dir="ltr" value={form.businessName} onChange={set('businessName')} />
+          </Field>
+          <Field label={t('admin.new.businessAr')}>
+            <input required maxLength={160} dir="rtl" lang="ar" value={form.businessNameAr} onChange={set('businessNameAr')} />
           </Field>
           <Field label={t('admin.new.owner')}>
-            <input required maxLength={160} value={form.ownerName} onChange={set('ownerName')} />
+            <input required maxLength={160} dir="ltr" value={form.ownerName} onChange={set('ownerName')} />
+          </Field>
+          <Field label={t('admin.new.ownerAr')}>
+            <input required maxLength={160} dir="rtl" lang="ar" value={form.ownerNameAr} onChange={set('ownerNameAr')} />
           </Field>
           <Field label={t('admin.new.phone')} hint={t('admin.new.phone.hint')}>
             <input required inputMode="tel" maxLength={24} dir="ltr" value={form.phone} onChange={set('phone')} />
@@ -126,7 +136,10 @@ export function NewBusiness() {
             <input maxLength={120} value={form.city} onChange={set('city')} />
           </Field>
           <Field label={t('admin.new.store')}>
-            <input maxLength={160} value={form.branchName} onChange={set('branchName')} />
+            <input maxLength={160} dir="ltr" value={form.branchName} onChange={set('branchName')} />
+          </Field>
+          <Field label={t('admin.new.storeAr')}>
+            <input required={form.branchName.trim() !== ''} maxLength={160} dir="rtl" lang="ar" value={form.branchNameAr} onChange={set('branchNameAr')} />
           </Field>
           <Field label={t('admin.new.activity')}>
             <select value={form.activity} onChange={set('activity')}>

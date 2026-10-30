@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import { BusinessNames } from './names';
 import { useParams } from 'react-router-dom';
 import { ApiError } from '../../api/client';
 import type { BusinessDetail, SeatRequest } from '../../api/types';
@@ -120,6 +121,8 @@ export function Business() {
       <Decisions business={data} ask={ask} onDone={load} />
 
       <ConsoleStore business={data} ask={ask} onDone={load} />
+
+      <BusinessNames business={data} ask={ask} onDone={load} />
 
       <DeferredAccounts business={data} ask={ask} onDone={load} />
 
