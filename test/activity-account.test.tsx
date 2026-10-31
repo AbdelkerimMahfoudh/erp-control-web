@@ -1,6 +1,7 @@
 import { act, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
+import { en } from '../src/i18n/en';
 import type { Activity, SeatRequest, SubscriptionBranch } from '../src/api/types';
 import { B1, B2, BOTH, BRANCHES, LINES, activityOptions, allocation, mount, serve, subscription, useActivityHarness } from './activity-fixtures';
 
@@ -171,7 +172,7 @@ describe('Account: a store’s activity and its change', () => {
     });
     mount('/account');
     const user = userEvent.setup();
-    await user.type(await screen.findByLabelText('Name of the new store'), 'Agence Port');
+    await user.type(await screen.findByLabelText(en['account.requests.store.name']), 'Agence Port');
     const select = screen.getByLabelText('What will it do?') as HTMLSelectElement;
     expect(await screen.findByText('Electronics store — 550 MRU per month')).toBeTruthy();
     expect([...select.options].map((o) => o.textContent)).toEqual(['Electronics store — 550 MRU per month', 'Money services agent — 330 MRU per month', `${BOTH} — 770 MRU per month`]);

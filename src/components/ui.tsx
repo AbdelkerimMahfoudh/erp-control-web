@@ -1,4 +1,4 @@
-import { Fragment, isValidElement, type ReactNode } from 'react';
+import { Fragment, cloneElement, isValidElement, useId, type ReactNode } from 'react';
 import { ApiError } from '../api/client';
 import type { EntitlementState, SeatRequestStatus } from '../api/types';
 import { useI18n, type Key } from '../i18n';
@@ -121,12 +121,28 @@ export function errorKey(e: unknown): Key {
   return 'error.generic';
 }
 
-/** The server's own sentence when it sent one, else the generic one. */
+/**
+ * Our own sentence for the refusal; the server's words only where they can help and can be read.
+ *
+ * The API's input validation ("ownerNameAr must be a string") names fields in English the operator was never meant
+ * to see, so it reads as "check the highlighted fields" — the form says which. The server's other sentences are
+ * English, so they are added only on an English screen; a refusal this page words itself (no answer body) is shown
+ * in every language.
+ */
+const VALIDATION_WORDING = / must be | should not exist|must not be empty|Invalid query parameters/;
+
+function isValidationRefusal(error: unknown): boolean {
+  return error instanceof ApiError && error.status === 400 && error.code === null && VALIDATION_WORDING.test(error.message);
+}
+
 export function ErrorNotice({ error }: { error: unknown }) {
-  const { t } = useI18n();
+  const { t, lang } = useI18n();
   if (!error) return null;
-  const key = errorKey(error);
-  const detail = key !== 'error.tooManyRequests' && error instanceof ApiError && error.status >= 400 && error.status < 500 && error.status !== 401 ? error.message : null;
+  const key: Key = isValidationRefusal(error) ? 'error.validation' : errorKey(error);
+  const detail =
+    key !== 'error.tooManyRequests' && key !== 'error.validation' && error instanceof ApiError && (lang === 'en' || error.body === null) && error.status >= 400 && error.status < 500 && error.status !== 401
+      ? error.message
+      : null;
   return (
     <Notice tone="danger" title={t(key)}>
       {detail && detail !== t(key) ? detail : null}
@@ -148,13 +164,28 @@ export function Empty({ text }: { text?: string }) {
   return <p className="muted">{text ?? t('state.empty')}</p>;
 }
 
-export function Field({ label, hint, children }: { label: string; hint?: ReactNode; children: ReactNode }) {
-  return (
-    <label className="field">
+/**
+ * A labelled input. `error`, when set, is said under the field — in the operator's language, never the API's words.
+ * It sits outside the label, so the field's name stays its label, and the input points to it for a screen reader.
+ */
+export function Field({ label, hint, error, children }: { label: string; hint?: ReactNode; error?: string | null; children: ReactNode }) {
+  const errorId = useId();
+  const field = error && isValidElement<{ 'aria-describedby'?: string }>(children) ? cloneElement(children, { 'aria-describedby': errorId }) : children;
+  const labelled = (
+    <label className={error ? 'field field-invalid' : 'field'}>
       {label}
       {hint ? <span className="hint">{hint}</span> : null}
-      {children}
+      {field}
     </label>
+  );
+  if (!error) return labelled;
+  return (
+    <div className="field-wrap">
+      {labelled}
+      <span className="field-error" id={errorId} role="alert">
+        {error}
+      </span>
+    </div>
   );
 }
 

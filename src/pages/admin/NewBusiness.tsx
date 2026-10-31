@@ -7,8 +7,42 @@ import { useI18n, type Key } from '../../i18n';
 import { ACTIVITY_CHOICES, ProvisioningRefusal, SetupCode, TestBadge } from './provisioning';
 import { useStepUp } from './useStepUp';
 import { PersonSetupCode, REQUIRED, VerificationChoice, useDeferralAvailable, verificationBody, verificationReady, type VerificationValue } from './deferral';
+import { arabicNameProblem, latinNameProblem, nameProblemKey, normalizeName } from '../../lib/names';
+
+type Form = typeof EMPTY;
+type FieldErrors = Partial<Record<keyof Form, Key>>;
 
 const EMPTY = { businessName: '', businessNameAr: '', ownerName: '', ownerNameAr: '', branchNameAr: '', phone: '', email: '', city: '', branchName: '', activity: 'electronics' as Activity, language: 'fr' as 'en' | 'fr' | 'ar', isTest: true, reason: '' };
+
+/**
+ * What the API would refuse, said beside each field before anything is sent (D225, 2026-10-31). The rules are the API's
+ * own: both of the business's and the Owner's names, each in its script; the first store's two names together or not at
+ * all; a WhatsApp number and a reason.
+ */
+export function newBusinessErrors(form: Form): FieldErrors {
+  const errors: FieldErrors = {};
+  const latin = (k: keyof Form, v: string) => {
+    const p = latinNameProblem(v);
+    if (p) errors[k] = nameProblemKey(p);
+  };
+  const arabic = (k: keyof Form, v: string) => {
+    const p = arabicNameProblem(v);
+    if (p) errors[k] = nameProblemKey(p);
+  };
+  latin('businessName', form.businessName);
+  arabic('businessNameAr', form.businessNameAr);
+  latin('ownerName', form.ownerName);
+  arabic('ownerNameAr', form.ownerNameAr);
+  if (normalizeName(form.branchName)) {
+    latin('branchName', form.branchName);
+    arabic('branchNameAr', form.branchNameAr);
+  } else if (normalizeName(form.branchNameAr)) {
+    errors.branchName = 'admin.new.storeLatin.needed';
+  }
+  if (!form.phone.trim()) errors.phone = 'form.required';
+  if (!form.reason.trim()) errors.reason = 'form.required';
+  return errors;
+}
 
 /**
  * A business and its Owner, created by a platform administrator (D217).
@@ -26,6 +60,7 @@ export function NewBusiness() {
   const [form, setForm] = useState(EMPTY);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [result, setResult] = useState<CreatedBusiness | null>(null);
   const [codeShown, setCodeShown] = useState(true);
   const [verification, setVerification] = useState<VerificationValue>(REQUIRED);
@@ -37,6 +72,10 @@ export function NewBusiness() {
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
+    // Checked here first: the API's refusal would name fields in English. What was typed stays as typed.
+    const problems = newBusinessErrors(form);
+    setFieldErrors(problems);
+    if (Object.keys(problems).length > 0) return;
     const payload = {
       businessName: form.businessName.trim(),
       businessNameAr: form.businessNameAr.trim(),
@@ -100,34 +139,39 @@ export function NewBusiness() {
     );
   }
 
-  const set = (k: keyof typeof EMPTY) => (e: { target: { value: string } }) => setForm({ ...form, [k]: e.target.value });
+  const set = (k: keyof typeof EMPTY) => (e: { target: { value: string } }) => {
+    setForm({ ...form, [k]: e.target.value });
+    if (fieldErrors[k]) setFieldErrors({ ...fieldErrors, [k]: undefined });
+  };
+  const err = (k: keyof Form) => (fieldErrors[k] ? t(fieldErrors[k]!) : null);
+  const invalid = (k: keyof Form) => (fieldErrors[k] ? { 'aria-invalid': true as const } : {});
 
   return (
     <div className="stack">
       {dialog}
       <h1>{t('admin.new.title')}</h1>
       <p className="lead">{t('admin.new.lead')}</p>
-      <form className="card stack" onSubmit={submit}>
+      <form className="card stack" onSubmit={submit} noValidate>
         <label className="row">
           <input type="checkbox" className="checkbox-inline" checked={form.isTest} onChange={(e) => setForm({ ...form, isTest: e.target.checked })} />
           <TestBadge /> {t('admin.new.test')}
         </label>
         <p className="muted small">{t('admin.new.test.hint')}</p>
         <div className="grid">
-          <Field label={t('admin.new.business')}>
-            <input required maxLength={160} dir="ltr" value={form.businessName} onChange={set('businessName')} />
+          <Field label={t('admin.new.business')} error={err('businessName')}>
+            <input required maxLength={160} dir="ltr" value={form.businessName} onChange={set('businessName')} {...invalid('businessName')} />
           </Field>
-          <Field label={t('admin.new.businessAr')}>
-            <input required maxLength={160} dir="rtl" lang="ar" value={form.businessNameAr} onChange={set('businessNameAr')} />
+          <Field label={t('admin.new.businessAr')} error={err('businessNameAr')}>
+            <input required maxLength={160} dir="rtl" lang="ar" value={form.businessNameAr} onChange={set('businessNameAr')} {...invalid('businessNameAr')} />
           </Field>
-          <Field label={t('admin.new.owner')}>
-            <input required maxLength={160} dir="ltr" value={form.ownerName} onChange={set('ownerName')} />
+          <Field label={t('admin.new.owner')} error={err('ownerName')}>
+            <input required maxLength={160} dir="ltr" value={form.ownerName} onChange={set('ownerName')} {...invalid('ownerName')} />
           </Field>
-          <Field label={t('admin.new.ownerAr')}>
-            <input required maxLength={160} dir="rtl" lang="ar" value={form.ownerNameAr} onChange={set('ownerNameAr')} />
+          <Field label={t('admin.new.ownerAr')} error={err('ownerNameAr')}>
+            <input required maxLength={160} dir="rtl" lang="ar" value={form.ownerNameAr} onChange={set('ownerNameAr')} {...invalid('ownerNameAr')} />
           </Field>
-          <Field label={t('admin.new.phone')} hint={t('admin.new.phone.hint')}>
-            <input required inputMode="tel" maxLength={24} dir="ltr" value={form.phone} onChange={set('phone')} />
+          <Field label={t('admin.new.phone')} hint={t('admin.new.phone.hint')} error={err('phone')}>
+            <input required inputMode="tel" maxLength={24} dir="ltr" value={form.phone} onChange={set('phone')} {...invalid('phone')} />
           </Field>
           <Field label={t('admin.new.email')}>
             <input type="email" maxLength={160} dir="ltr" value={form.email} onChange={set('email')} />
@@ -135,11 +179,11 @@ export function NewBusiness() {
           <Field label={t('admin.new.city')}>
             <input maxLength={120} value={form.city} onChange={set('city')} />
           </Field>
-          <Field label={t('admin.new.store')}>
-            <input maxLength={160} dir="ltr" value={form.branchName} onChange={set('branchName')} />
+          <Field label={t('admin.new.store')} error={err('branchName')}>
+            <input maxLength={160} dir="ltr" value={form.branchName} onChange={set('branchName')} {...invalid('branchName')} />
           </Field>
-          <Field label={t('admin.new.storeAr')}>
-            <input required={form.branchName.trim() !== ''} maxLength={160} dir="rtl" lang="ar" value={form.branchNameAr} onChange={set('branchNameAr')} />
+          <Field label={t('admin.new.storeAr')} error={err('branchNameAr')}>
+            <input required={form.branchName.trim() !== ''} maxLength={160} dir="rtl" lang="ar" value={form.branchNameAr} onChange={set('branchNameAr')} {...invalid('branchNameAr')} />
           </Field>
           <Field label={t('admin.new.activity')}>
             <select value={form.activity} onChange={set('activity')}>
@@ -158,10 +202,11 @@ export function NewBusiness() {
             </select>
           </Field>
         </div>
-        <Field label={t('admin.action.reason')} hint={t('admin.action.reason.required')}>
-          <input required maxLength={500} value={form.reason} onChange={set('reason')} />
+        <Field label={t('admin.action.reason')} hint={t('admin.action.reason.required')} error={err('reason')}>
+          <input required maxLength={500} value={form.reason} onChange={set('reason')} {...invalid('reason')} />
         </Field>
         {offerDeferral ? <VerificationChoice name="owner-verification" value={verification} onChange={setVerification} /> : null}
+        {Object.values(fieldErrors).some(Boolean) ? <Notice tone="danger">{t('form.fix')}</Notice> : null}
         <ProvisioningRefusal error={error} />
         <div className="row">
           <button type="submit" className="btn btn-primary" disabled={busy || (offerDeferral && !verificationReady(verification))}>

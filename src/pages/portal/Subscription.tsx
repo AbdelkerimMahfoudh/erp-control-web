@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { ApiError } from '../../api/client';
+import { arabicNameProblem, latinNameProblem, nameProblemKey, normalizeName } from '../../lib/names';
 import type {
   Activity,
   ActivityOption,
@@ -990,6 +991,8 @@ function Requests({
   const [error, setError] = useState<unknown>(null);
   const [branchId, setBranchId] = useState(stores[0]?.id ?? '');
   const [storeName, setStoreName] = useState('');
+  const [storeNameAr, setStoreNameAr] = useState('');
+  const [storeProblems, setStoreProblems] = useState<{ name?: Key; nameAr?: Key }>({});
   const [storeActivity, setStoreActivity] = useState<Activity>('electronics');
   const [busy, setBusy] = useState(false);
 
@@ -1078,13 +1081,28 @@ function Requests({
           className="stack"
           onSubmit={(e) => {
             e.preventDefault();
-            if (storeName.trim())
-              void act(() => ownerRequest('platform/my-subscription/store-requests', { method: 'POST', body: { name: storeName.trim(), activity: storeActivity } })).then(() => setStoreName(''));
+            // D225: the store's Arabic name is optional here, as the API has it; given, it must be Arabic and the other
+            // name Latin. Said beside the field, in the Owner's language, before anything is sent.
+            const hasAr = normalizeName(storeNameAr) !== '';
+            const latin = hasAr ? latinNameProblem(storeName) : normalizeName(storeName) ? null : 'name_blank';
+            const arabic = hasAr ? arabicNameProblem(storeNameAr) : null;
+            const problems = { name: latin ? nameProblemKey(latin) : undefined, nameAr: arabic ? nameProblemKey(arabic) : undefined };
+            setStoreProblems(problems);
+            if (problems.name || problems.nameAr) return;
+            const body = { name: storeName.trim(), ...(hasAr ? { nameAr: storeNameAr.trim() } : {}), activity: storeActivity };
+            void act(() => ownerRequest('platform/my-subscription/store-requests', { method: 'POST', body })).then(() => {
+              setStoreName('');
+              setStoreNameAr('');
+            });
           }}
+          noValidate
         >
           <h3>{t('account.requests.add.store')}</h3>
-          <Field label={t('account.requests.store.name')}>
-            <input maxLength={160} value={storeName} onChange={(e) => setStoreName(e.target.value)} />
+          <Field label={t('account.requests.store.name')} error={storeProblems.name ? t(storeProblems.name) : null}>
+            <input maxLength={160} dir="ltr" value={storeName} aria-invalid={storeProblems.name ? true : undefined} onChange={(e) => setStoreName(e.target.value)} />
+          </Field>
+          <Field label={t('portal.store.nameAr')} error={storeProblems.nameAr ? t(storeProblems.nameAr) : null}>
+            <input maxLength={160} dir="rtl" lang="ar" value={storeNameAr} aria-invalid={storeProblems.nameAr ? true : undefined} onChange={(e) => setStoreNameAr(e.target.value)} />
           </Field>
           <Field label={t('account.requests.store.activity')}>
             <select value={storeActivity} onChange={(e) => setStoreActivity(e.target.value as Activity)}>

@@ -104,8 +104,8 @@ beforeEach(() => {
 });
 
 async function fillBusiness(user: ReturnType<typeof userEvent.setup>) {
-  await user.type(await screen.findByLabelText('Business name', undefined, SLOW_WAIT), 'Dar Electronics');
-  await user.type(screen.getByLabelText('Owner’s name'), 'Store Owner');
+  await user.type(await screen.findByLabelText(en['admin.new.business'], undefined, SLOW_WAIT), 'Dar Electronics');
+  await user.type(screen.getByLabelText(en['admin.new.owner']), 'Store Owner');
   await user.type(screen.getByLabelText(en['admin.new.businessAr']), 'متجر');
   await user.type(screen.getByLabelText(en['admin.new.ownerAr']), 'مالك');
   await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000010');

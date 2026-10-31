@@ -304,6 +304,25 @@ label.field {
   font-weight: 600;
   font-size: 0.95rem;
 }
+/* A field the operator must correct: its own sentence under it, and the input outlined (D225, 2026-10-31). */
+.field-wrap {
+  display: grid;
+  gap: 4px;
+}
+.field-wrap > span.field-error {
+  font-weight: 500;
+  font-size: 0.85rem;
+  color: var(--danger-text, var(--danger-bg));
+}
+label.field-invalid input,
+label.field-invalid select,
+label.field-invalid textarea {
+  border-color: var(--danger-bg);
+}
+/* An Arabic name reads from the right, whatever the page's direction. */
+input[dir="rtl"] {
+  text-align: right;
+}
 label.field span.hint {
   font-weight: 400;
   color: var(--text-3);

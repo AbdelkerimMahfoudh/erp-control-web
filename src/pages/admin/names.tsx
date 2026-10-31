@@ -2,7 +2,8 @@ import { useState, type FormEvent } from 'react';
 import type { BusinessDetail } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
 import { Badge, ErrorNotice, Field, Notice } from '../../components/ui';
-import { useI18n } from '../../i18n';
+import { useI18n, type Key } from '../../i18n';
+import { arabicNameProblem, latinNameProblem, nameProblemKey, normalizeName } from '../../lib/names';
 
 type Ask = () => Promise<string | null>;
 type Target = { kind: 'business' | 'store' | 'person'; id: string; name: string; nameAr: string | null };
@@ -41,6 +42,7 @@ function NameRow({ business, target, ask, onDone }: { business: BusinessDetail; 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [saved, setSaved] = useState(false);
+  const [problems, setProblems] = useState<{ name?: Key; nameAr?: Key; reason?: Key }>({});
   const path =
     target.kind === 'business'
       ? `platform/businesses/${business.id}/names`
@@ -52,6 +54,16 @@ function NameRow({ business, target, ask, onDone }: { business: BusinessDetail; 
     e.preventDefault();
     setError(null);
     setSaved(false);
+    // The API's own rules, said beside the field in the operator's language. An empty Arabic name changes nothing.
+    const latin = latinNameProblem(name);
+    const arabic = normalizeName(nameAr) ? arabicNameProblem(nameAr) : null;
+    const next = {
+      name: latin ? nameProblemKey(latin) : undefined,
+      nameAr: arabic ? nameProblemKey(arabic) : undefined,
+      reason: reason.trim() ? undefined : ('form.required' as Key),
+    };
+    setProblems(next);
+    if (next.name || next.nameAr || next.reason) return;
     // Each name on its own: only what changed is sent, and the server never touches the other.
     const body: Record<string, string> = { reason: reason.trim() };
     if (name.trim() !== target.name) body.name = name.trim();
@@ -73,19 +85,19 @@ function NameRow({ business, target, ask, onDone }: { business: BusinessDetail; 
   };
 
   return (
-    <form className="stack" onSubmit={submit}>
+    <form className="stack" onSubmit={submit} noValidate>
       <p className="small">
         <strong>{t(`admin.names.kind.${target.kind}`)}</strong> {!target.nameAr ? <Badge tone="warn">{t('admin.names.incomplete')}</Badge> : null}
       </p>
       <div className="grid">
-        <Field label={t('admin.names.latin')}>
-          <input required maxLength={160} dir="ltr" value={name} onChange={(e) => setName(e.target.value)} />
+        <Field label={t('admin.names.latin')} error={problems.name ? t(problems.name) : null}>
+          <input required maxLength={160} dir="ltr" value={name} aria-invalid={problems.name ? true : undefined} onChange={(e) => setName(e.target.value)} />
         </Field>
-        <Field label={t('admin.names.arabic')}>
-          <input maxLength={160} dir="rtl" lang="ar" value={nameAr} onChange={(e) => setNameAr(e.target.value)} />
+        <Field label={t('admin.names.arabic')} error={problems.nameAr ? t(problems.nameAr) : null}>
+          <input maxLength={160} dir="rtl" lang="ar" value={nameAr} aria-invalid={problems.nameAr ? true : undefined} onChange={(e) => setNameAr(e.target.value)} />
         </Field>
-        <Field label={t('admin.action.reason')}>
-          <input required maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />
+        <Field label={t('admin.action.reason')} error={problems.reason ? t(problems.reason) : null}>
+          <input required maxLength={500} value={reason} aria-invalid={problems.reason ? true : undefined} onChange={(e) => setReason(e.target.value)} />
         </Field>
       </div>
       {saved ? <Notice tone="ok">{t('admin.names.saved')}</Notice> : null}

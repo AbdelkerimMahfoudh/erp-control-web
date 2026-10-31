@@ -1,6 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { BusinessDetail, ProvisioningStatus } from '../src/api/types';
 import { ar } from '../src/i18n/ar';
 import { en } from '../src/i18n/en';
@@ -8,6 +8,8 @@ import { fr } from '../src/i18n/fr';
 import { BRANCHES, LINES, SLOW_WAIT, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
 
 useActivityHarness();
+// Creating a business types every name in both scripts, then a step-up: more than five seconds on a loaded machine.
+vi.setConfig({ testTimeout: 20_000 });
 
 /*
  * Platform-superadmin provisioning in the console (D217): a business and its Owner created with a one-time setup
@@ -92,8 +94,8 @@ describe('creating a business and its Owner', () => {
     });
     mount('/admin/businesses/new');
     const user = userEvent.setup();
-    await user.type(await screen.findByLabelText('Business name', undefined, SLOW_WAIT), 'Labo Test');
-    await user.type(screen.getByLabelText('Owner’s name'), 'Mariem');
+    await user.type(await screen.findByLabelText(en['admin.new.business'], undefined, SLOW_WAIT), 'Labo Test');
+    await user.type(screen.getByLabelText(en['admin.new.owner']), 'Mariem');
     await user.type(screen.getByLabelText(en['admin.new.businessAr']), 'متجر');
     await user.type(screen.getByLabelText(en['admin.new.ownerAr']), 'مالك');
     await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000001');
@@ -130,8 +132,8 @@ describe('creating a business and its Owner', () => {
     });
     mount('/admin/businesses/new');
     const user = userEvent.setup();
-    await user.type(await screen.findByLabelText('Business name', undefined, SLOW_WAIT), 'Real Shop');
-    await user.type(screen.getByLabelText('Owner’s name'), 'Ahmed');
+    await user.type(await screen.findByLabelText(en['admin.new.business'], undefined, SLOW_WAIT), 'Real Shop');
+    await user.type(screen.getByLabelText(en['admin.new.owner']), 'Ahmed');
     await user.type(screen.getByLabelText(en['admin.new.businessAr']), 'متجر');
     await user.type(screen.getByLabelText(en['admin.new.ownerAr']), 'مالك');
     await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000002');
