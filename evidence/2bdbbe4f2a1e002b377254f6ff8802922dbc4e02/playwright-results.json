@@ -1,0 +1,174 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.4/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/playwright.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/2bdbbe4f2a1e002b377254f6ff8802922dbc4e02",
+        "commitHash": "2bdbbe4f2a1e002b377254f6ff8802922dbc4e02",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41346722831"
+      },
+      "gitCommit": {
+        "shortHash": "2bdbbe4f",
+        "hash": "2bdbbe4f2a1e002b377254f6ff8802922dbc4e02",
+        "subject": "test(portal): a pattern the audit line actually matches (D227)",
+        "body": "test(portal): a pattern the audit line actually matches (D227)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+        "author": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1793564683000
+        },
+        "committer": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1793564683000
+        },
+        "branch": "post-testflight-feedback"
+      }
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/2bdbbe4f2a1e002b377254f6ff8802922dbc4e02/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/2bdbbe4f2a1e002b377254f6ff8802922dbc4e02",
+            "commitHash": "2bdbbe4f2a1e002b377254f6ff8802922dbc4e02",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41346722831"
+          },
+          "gitCommit": {
+            "shortHash": "2bdbbe4f",
+            "hash": "2bdbbe4f2a1e002b377254f6ff8802922dbc4e02",
+            "subject": "test(portal): a pattern the audit line actually matches (D227)",
+            "body": "test(portal): a pattern the audit line actually matches (D227)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793564683000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793564683000
+            },
+            "branch": "post-testflight-feedback"
+          }
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(^|[\\\\/])site\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/2bdbbe4f2a1e002b377254f6ff8802922dbc4e02/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/2bdbbe4f2a1e002b377254f6ff8802922dbc4e02",
+            "commitHash": "2bdbbe4f2a1e002b377254f6ff8802922dbc4e02",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41346722831"
+          },
+          "gitCommit": {
+            "shortHash": "2bdbbe4f",
+            "hash": "2bdbbe4f2a1e002b377254f6ff8802922dbc4e02",
+            "subject": "test(portal): a pattern the audit line actually matches (D227)",
+            "body": "test(portal): a pattern the audit line actually matches (D227)\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793564683000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793564683000
+            },
+            "branch": "post-testflight-feedback"
+          }
+        },
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/2bdbbe4f2a1e002b377254f6ff8802922dbc4e02/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
+      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-11-01T20:31:42.046Z",
+    "duration": 141.10200000000003,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
