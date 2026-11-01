@@ -122,7 +122,7 @@ describe('the build takes the portal’s stub, and its files carry none of the c
   const read = (f: string) => readFileSync(join(root, f), 'utf8');
 
   it('vite aliases the company site’s pages to the stub in a portal build, and the stub imports no public page', () => {
-    expect(read('vite.config.ts')).toMatch(/surface === 'portal'\) return \[\{ find: \/\^\\\.\\\/public-areas\$\/, replacement: stub\('\.\/src\/public-areas\.portal\.tsx'\) \}\]/);
+    expect(read('vite.config.ts')).toMatch(/surface === 'portal'\) \{\s+const areas = \[\{ find: \/\^\\\.\\\/public-areas\$\/, replacement: stub\('\.\/src\/public-areas\.portal\.tsx'\) \}\]/);
     const stub = read('src/public-areas.portal.tsx');
     expect(stub).not.toMatch(/pages\/public|components\/Chrome'|Legal|Home|Apply/);
   });
