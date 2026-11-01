@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useState, type FormEvent } from 'react';
-import { NavLink, Route, Routes } from 'react-router-dom';
-import { isUnauthorized } from '../../api/client';
+import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { ApiError, isUnauthorized } from '../../api/client';
 import type { AdminIdentity } from '../../api/types';
-import { adminEnrolConfirm, adminEnrolStart, adminMe, adminSignIn, adminSignOut, adminVerify, type AdminMfaState } from '../../auth/admin';
+import { adminEnrolConfirm, adminEnrolStart, adminMe, adminSetup, adminSignIn, adminSignOut, adminVerify, type AdminMfaState } from '../../auth/admin';
 import { ErrorNotice, Field, Loading, Notice } from '../../components/ui';
-import { useI18n } from '../../i18n';
+import { useI18n, type Key } from '../../i18n';
 import { Dashboard } from './Dashboard';
 import { Pending } from './Pending';
 import { Businesses } from './Businesses';
@@ -24,7 +24,7 @@ type Session =
   | { kind: 'checking' }
   | { kind: 'anonymous' }
   /** A password was accepted; the session is pending until its second factor (0094). */
-  | { kind: 'second'; mfa: AdminMfaState }
+  | { kind: 'second'; mfa: AdminMfaState; enrolmentToken?: string }
   | { kind: 'signed'; admin: AdminIdentity };
 
 /**
@@ -37,6 +37,7 @@ type Session =
 export function Admin() {
   const { t } = useI18n();
   const [session, setSession] = useState<Session>({ kind: 'checking' });
+  const { pathname } = useLocation();
 
   const check = useCallback(async () => {
     try {
@@ -51,13 +52,19 @@ export function Admin() {
   }, [check]);
 
   if (session.kind === 'checking') return <Loading />;
-  if (session.kind === 'anonymous') return <SignIn onSigned={(mfa) => setSession({ kind: 'second', mfa })} />;
+  if (session.kind === 'anonymous') {
+    // An invited administrator's first visit (0115): the setup code and their own password, then their own authenticator.
+    if (pathname.replace(/\/+$/, '') === '/admin/setup') {
+      return <AdminSetup onReady={(enrolmentToken) => setSession({ kind: 'second', mfa: 'enrolment_required', enrolmentToken })} />;
+    }
+    return <SignIn onSigned={(mfa) => setSession({ kind: 'second', mfa })} />;
+  }
   if (session.kind === 'second') {
     const abandon = async () => {
       await adminSignOut().catch(() => undefined);
       setSession({ kind: 'anonymous' });
     };
-    return session.mfa === 'required' ? <SecondFactor onDone={check} onCancel={abandon} /> : <Enrol onDone={check} onCancel={abandon} />;
+    return session.mfa === 'required' ? <SecondFactor onDone={check} onCancel={abandon} /> : <Enrol onDone={check} onCancel={abandon} initialToken={session.enrolmentToken} />;
   }
 
   return (
@@ -230,9 +237,9 @@ function SecondFactor({ onDone, onCancel }: { onDone: () => Promise<void>; onCan
  * First enrolment, or after a reset on the server: the one-time token from the server → the key for the
  * authenticator (typed, or opened as an otpauth link) → its first code → the recovery codes, shown once.
  */
-function Enrol({ onDone, onCancel }: { onDone: () => Promise<void>; onCancel: () => Promise<void> }) {
+function Enrol({ onDone, onCancel, initialToken }: { onDone: () => Promise<void>; onCancel: () => Promise<void>; initialToken?: string }) {
   const { t } = useI18n();
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState(initialToken ?? '');
   const [key, setKey] = useState<{ secret: string; otpauthUri: string } | null>(null);
   const [code, setCode] = useState('');
   const [codes, setCodes] = useState<string[] | null>(null);
@@ -254,6 +261,14 @@ function Enrol({ onDone, onCancel }: { onDone: () => Promise<void>; onCancel: ()
     e.preventDefault();
     void run(async () => setKey(await adminEnrolStart(token.trim())));
   };
+  // Straight from the setup page: the token it was given opens the key at once, and is held nowhere else.
+  const startedFromSetup = useRef(false);
+  useEffect(() => {
+    if (!initialToken || startedFromSetup.current) return;
+    startedFromSetup.current = true;
+    void run(async () => setKey(await adminEnrolStart(initialToken)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialToken]);
   const confirm = (e: FormEvent) => {
     e.preventDefault();
     void run(async () => setCodes((await adminEnrolConfirm(code)).recoveryCodes));
@@ -335,6 +350,82 @@ function Enrol({ onDone, onCancel }: { onDone: () => Promise<void>; onCancel: ()
           </button>
         </form>
       )}
+    </div>
+  );
+}
+
+/**
+ * An invited administrator's first visit (0115): their address, the one-time setup code passed on to them privately,
+ * and a password of their own, typed twice. Then a sign-in with that password, and their own authenticator. Until
+ * the authenticator is confirmed the account reaches nothing. Every refusal reads the same — the page never says
+ * whether an address, a code or an account exists.
+ */
+const ADMIN_PASSWORD_MIN = 12;
+
+type SetupField = 'email' | 'code' | 'password' | 'again';
+
+function AdminSetup({ onReady }: { onReady: (enrolmentToken: string) => void }) {
+  const { t } = useI18n();
+  const [email, setEmail] = useState('');
+  const [code, setCode] = useState('');
+  const [password, setPassword] = useState('');
+  const [again, setAgain] = useState('');
+  const [problems, setProblems] = useState<Partial<Record<SetupField, Key>>>({});
+  const [refused, setRefused] = useState<Key | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    setRefused(null);
+    const next: Partial<Record<SetupField, Key>> = {
+      email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim()) ? undefined : 'admin.invited.problem.email',
+      code: code.trim().length >= 16 ? undefined : 'admin.invited.problem.code',
+      password: password.length >= ADMIN_PASSWORD_MIN ? undefined : 'admin.invited.problem.password',
+      again: again === password ? undefined : 'admin.invited.problem.again',
+    };
+    setProblems(next);
+    if (Object.values(next).some(Boolean)) return;
+    setBusy(true);
+    try {
+      const { enrolmentToken } = await adminSetup(email.trim(), code.trim(), password);
+      const { mfa } = await adminSignIn(email.trim(), password);
+      if (mfa !== 'enrolment_required') throw new Error('unexpected state');
+      setPassword('');
+      setAgain('');
+      setCode('');
+      onReady(enrolmentToken);
+    } catch (err) {
+      setRefused(err instanceof ApiError && err.status === 429 ? 'error.tooManyRequests' : 'admin.invited.refused');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const said = (k: SetupField) => (problems[k] ? t(problems[k]!) : null);
+  return (
+    <div className="stack">
+      <section className="hero">
+        <h1>{t('admin.invited.title')}</h1>
+        <p className="lead">{t('admin.invited.lead')}</p>
+      </section>
+      <form className="card stack" onSubmit={submit} noValidate>
+        <Field label={t('admin.email')} error={said('email')}>
+          <input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} dir="ltr" aria-invalid={problems.email ? true : undefined} />
+        </Field>
+        <Field label={t('admin.invited.code')} hint={t('admin.invited.codeHint')} error={said('code')}>
+          <input autoComplete="off" spellCheck={false} value={code} onChange={(e) => setCode(e.target.value)} dir="ltr" aria-invalid={problems.code ? true : undefined} />
+        </Field>
+        <Field label={t('admin.invited.password')} hint={t('admin.invited.passwordHint')} error={said('password')}>
+          <input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} aria-invalid={problems.password ? true : undefined} />
+        </Field>
+        <Field label={t('admin.invited.again')} error={said('again')}>
+          <input type="password" autoComplete="new-password" value={again} onChange={(e) => setAgain(e.target.value)} aria-invalid={problems.again ? true : undefined} />
+        </Field>
+        {refused ? <Notice tone="danger">{t(refused)}</Notice> : null}
+        <button type="submit" className="btn btn-primary" disabled={busy}>
+          {t('admin.invited.submit')}
+        </button>
+      </form>
     </div>
   );
 }

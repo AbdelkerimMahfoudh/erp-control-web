@@ -55,3 +55,12 @@ export async function adminSignOut(): Promise<void> {
 export function adminRequest<T>(path: string, options: { method?: 'GET' | 'POST' | 'PATCH'; body?: unknown } = {}): Promise<T> {
   return request<T>(path, { ...options, admin: true });
 }
+
+/**
+ * An invited administrator's setup (0115): the address, the one-time setup code passed on privately, and the
+ * password they choose. The answer is a 30-minute enrolment token for this browser only, used at once to set up
+ * their own authenticator; it is never stored here. Every refusal is one refusal.
+ */
+export function adminSetup(email: string, code: string, password: string): Promise<{ enrolmentToken: string; expiresAt: string }> {
+  return request('platform/admin/setup', { method: 'POST', body: { email, code, password }, admin: true });
+}
