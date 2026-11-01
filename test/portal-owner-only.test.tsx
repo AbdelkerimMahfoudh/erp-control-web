@@ -23,6 +23,6 @@ describe('the production portal has no console', () => {
 
   it('the bundle audit refuses a production portal build that carries the console', () => {
     // Read whole: this script's patterns contain what the comment stripper would eat.
-    expect(readFileSync(join(process.cwd(), 'scripts/audit-bundle.mjs'), 'utf8')).toContain("portalSurface && !preview && /platform\/admin/");
+    expect(readFileSync(join(process.cwd(), 'scripts/audit-bundle.mjs'), 'utf8')).toMatch(/portalSurface && !preview && \/platform.{1,2}admin/);
   });
 });
