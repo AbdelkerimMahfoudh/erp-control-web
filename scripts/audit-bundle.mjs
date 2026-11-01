@@ -63,6 +63,8 @@ for (const f of files) {
     if (rel === 'app-shell.html') findings.push({ file: rel, what: 'protected-area shell in a public build' });
     for (const [what, re] of PROTECTED_ONLY) if (re.test(text)) findings.push({ file: rel, what: `${what} in a public build` });
   }
+  // D227: a production portal is the customers'. The console's code must not reach it.
+  if (portalSurface && !preview && /platform\/admin/.test(text)) findings.push({ file: rel, what: 'the console in a production portal build' });
   if (portalSurface) {
     if (rel.endsWith('.html') && !PORTAL_HTML.has(rel)) findings.push({ file: rel, what: 'a company-site page in a portal build' });
     if (rel === 'sitemap.xml') findings.push({ file: rel, what: 'a sitemap in a portal build' });

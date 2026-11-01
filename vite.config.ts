@@ -65,7 +65,14 @@ if (process.env.VITEST) process.env.TZ = 'UTC';
 function surfaceAliases(mode: string) {
   const surface = surfaceOf(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_SURFACE);
   const stub = (path: string) => fileURLToPath(new URL(path, import.meta.url));
-  if (surface === 'portal') return [{ find: /^\.\/public-areas$/, replacement: stub('./src/public-areas.portal.tsx') }];
+  if (surface === 'portal') {
+    const areas = [{ find: /^\.\/public-areas$/, replacement: stub('./src/public-areas.portal.tsx') }];
+    // D227: the customers' portal holds no console. The password-protected test site is a preview build and keeps it.
+    if (mode === 'production') {
+      areas.push({ find: /^(\.{1,2}\/)+protected-areas$/, replacement: stub('./src/protected-areas.owner.tsx') });
+    }
+    return areas;
+  }
   if (surface !== 'public') return [];
   return [
     // Any depth: `components/RouteScroll.tsx` asks from one level down (`../protected-areas`).
