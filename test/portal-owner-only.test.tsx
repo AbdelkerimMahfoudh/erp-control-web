@@ -22,6 +22,6 @@ describe('the production portal has no console', () => {
   });
 
   it('the bundle audit refuses a production portal build that carries the console', () => {
-    expect(read('scripts/audit-bundle.mjs')).toMatch(/portalSurface && !preview[\s\S]*platform\/admin/);
+    expect(read('scripts/audit-bundle.mjs')).toContain("portalSurface && !preview && /platform\/admin/");
   });
 });
