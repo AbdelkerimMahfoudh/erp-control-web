@@ -14,7 +14,7 @@ import { formatDate, formatDateTime, formatInstant, formatInt } from '../../lib/
 import { detailOf } from '../../lib/trial';
 import { BusinessTrial } from './BusinessTrial';
 import { BusinessGrace, BusinessMessages } from './BusinessLifecycle';
-import { ConsoleStore, SetupPanel, TestBadge, TestBanner, TestStatus } from './provisioning';
+import { ConsoleStore, ProvisioningDraft, SetupPanel, TestBadge, TestBanner, TestStatus } from './provisioning';
 import { DeferredAccounts, PhoneVerificationBadge, ProvisionStaff } from './deferral';
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
@@ -110,6 +110,7 @@ export function Business() {
       <ErrorNotice error={error} />
       {data.isTest ? <TestBanner /> : null}
 
+      <ProvisioningDraft business={data} ask={ask} onDone={load} />
       <SetupPanel business={data} ask={ask} onDone={load} />
 
       <BusinessTrial business={data} />

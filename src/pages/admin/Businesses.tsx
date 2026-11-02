@@ -6,7 +6,7 @@ import { adminRequest } from '../../auth/admin';
 import { Empty, ErrorNotice, Loading, StateBadge, Table } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatInstant, formatInt } from '../../lib/format';
-import { TestBadge } from './provisioning';
+import { DraftBadge, TestBadge } from './provisioning';
 
 /** Every state the server computes, in the order a business meets them: the free trial's three (2026-10-13) come before paid access. */
 const STATES: EntitlementState[] = ['pending', 'trial_available', 'trial_active', 'trial_expired', 'active', 'grace', 'complimentary', 'suspended', 'expired', 'cancelled', 'rejected'];
@@ -93,6 +93,7 @@ export function Businesses() {
                       <strong>{r.name || adminAccountLine(r.accountLabel, t)}</strong>
                     </Link>
                     {r.isTest ? <TestBadge /> : null}
+                    {r.provisioningDraft ? <DraftBadge /> : null}
                   </span>
                 ),
               },

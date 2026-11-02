@@ -41,6 +41,11 @@ export function ProvisioningRefusal({ error }: { error: unknown }) {
 }
 
 /** A persistent test business, unmistakably (D217): a badge in lists, a banner on its page. */
+export function DraftBadge() {
+  const { t } = useI18n();
+  return <Badge tone="warn">{t('admin.draft.badge')}</Badge>;
+}
+
 export function TestBadge() {
   const { t } = useI18n();
   return <Badge tone="warn">{t('admin.test.badge')}</Badge>;
@@ -364,6 +369,52 @@ export function ConsoleStore({ business, ask, onDone }: { business: BusinessDeta
           </button>
         </div>
       </form>
+    </section>
+  );
+}
+
+/**
+ * An account whose provisioning stopped part-way (D227): plainly not an ordinary account, and finished from here with the
+ * request it already holds. Resuming recognises work already done, so it cannot pay or grant twice.
+ */
+export function ProvisioningDraft({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<string | null>; onDone: () => Promise<void> | void }) {
+  const { t } = useI18n();
+  const [busy, setBusy] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [error, setError] = useState<unknown>(null);
+  if (!business.setup?.provisioningDraft) return null;
+
+  const resume = async () => {
+    setError(null);
+    setFailed(false);
+    const confirmPassword = await ask();
+    if (!confirmPassword) return;
+    setBusy(true);
+    try {
+      const r = await adminRequest<{ provisioningDraft?: boolean }>(`platform/businesses/${business.id}/resume-provisioning`, {
+        method: 'POST',
+        body: { confirmPassword, reason: t('admin.draft.reason') },
+      });
+      if (r.provisioningDraft) setFailed(true);
+      else await onDone();
+    } catch (err) {
+      setError(err);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <section className="card stack">
+      <h2>{t('admin.draft.title')}</h2>
+      <Notice tone="warn">{t('admin.draft.body')}</Notice>
+      {failed ? <Notice tone="danger">{t('admin.draft.failed')}</Notice> : null}
+      <ProvisioningRefusal error={error} />
+      <div className="row">
+        <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void resume()}>
+          {t('admin.draft.resume')}
+        </button>
+      </div>
     </section>
   );
 }

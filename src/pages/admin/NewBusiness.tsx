@@ -132,10 +132,10 @@ export function NewBusiness() {
       <div className="stack">
         {dialog}
         <h1>{t('admin.new.title')}</h1>
-        <Notice tone={result.invitationFailed || result.accessFailed ? 'warn' : 'ok'}>
+        <Notice tone={result.invitationFailed || result.provisioningDraft ? 'warn' : 'ok'}>
           {result.created ? t('admin.new.created') : t('admin.new.existing')}
           {result.invitationFailed ? <div>{t('admin.new.invitationFailed')}</div> : null}
-          {result.accessFailed ? <div>{t('admin.access.failed')}</div> : null}
+          {result.provisioningDraft ? <div>{t('admin.draft.body')}</div> : null}
         </Notice>
         {result.invitation && codeShown ? <SetupCode invitation={result.invitation} onDone={() => setCodeShown(false)} /> : null}
         {result.setupCode && codeShown ? <PersonSetupCode code={result.setupCode} name={form.ownerName.trim()} onDone={() => setCodeShown(false)} /> : null}

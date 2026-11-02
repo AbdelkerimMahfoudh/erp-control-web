@@ -244,6 +244,24 @@ describe('a test business’s page', () => {
     expect(posts[1]!.body).toMatchObject({ requestId: 'req-1', access: { kind: 'grant', reason: 'Pilot' } });
   });
 
+  it('an unfinished account says so, and is finished from its page with what it holds (D227)', async () => {
+    let calls = 0;
+    const sent = serveBusiness(detail({ isTest: false, setup: setup({ isTest: false, customerActivation: 'closed', provisioningDraft: true }) }), (url) => {
+      if (!url.endsWith('/resume-provisioning')) return undefined;
+      calls += 1;
+      return { body: { provisioningDraft: calls === 1 } };
+    });
+    mount(`/admin/businesses/${ID}`);
+    const user = userEvent.setup();
+    expect(await screen.findByText(en['admin.draft.body'], undefined, SLOW_WAIT)).toBeTruthy();
+    await user.click(screen.getByRole('button', { name: en['admin.draft.resume'] }));
+    await stepUp(user);
+    expect(await screen.findByText(en['admin.draft.failed'])).toBeTruthy();
+    const body = sent.find((r) => r.url.endsWith('/resume-provisioning'))!.body;
+    expect(body).toMatchObject({ confirmPassword: 'step-up-password' });
+    expect(body).not.toHaveProperty('access');
+  });
+
   it('says a test status refusal in words', async () => {
     serveBusiness(detail({ isTest: false, setup: setup({ isTest: false, customerActivation: 'closed' }) }), (url) =>
       url.endsWith('/test-status') ? { status: 409, body: { statusCode: 409, code: 'test_status_connected', message: 'x' } } : undefined,

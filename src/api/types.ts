@@ -668,6 +668,7 @@ export interface BusinessRow {
   trial?: TrialSummary | null;
   /** A persistent test business (D217). Absent from an API older than 0102. */
   isTest?: boolean;
+  provisioningDraft?: boolean;
   version: number;
 }
 
@@ -715,6 +716,7 @@ export interface BusinessDetail {
   trial?: BusinessTrial | null;
   /** A persistent test business (D217). Absent from an API older than 0102. */
   isTest?: boolean;
+  provisioningDraft?: boolean;
   /** Provisioning and activation, separately (D217). Absent from an API older than 0102. */
   setup?: ProvisioningStatus | null;
 }
@@ -731,6 +733,7 @@ export type ConsentState = 'none' | 'pending' | 'active' | 'outdated' | 'withdra
  */
 export interface ProvisioningStatus {
   isTest: boolean;
+  provisioningDraft?: boolean;
   testMarkedAt: string | null;
   testMarkedBy: string | null;
   customerActivation: 'open' | 'closed';
@@ -765,7 +768,8 @@ export interface IssuedInvitation {
 
 /** POST platform/businesses: the business, and its Owner's invitation when this request made it. */
 export interface CreatedBusiness {
-  accessFailed?: boolean;
+  /** D227: not an ordinary account yet: its access basis did not apply, and it can be resumed. */
+  provisioningDraft?: boolean;
   companyId: string;
   publicStoreId: string;
   created: boolean;
