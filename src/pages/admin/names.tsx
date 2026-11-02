@@ -6,11 +6,11 @@ import { useI18n, type Key } from '../../i18n';
 import { arabicNameProblem, latinNameProblem, nameProblemKey, normalizeName } from '../../lib/names';
 
 type Ask = () => Promise<string | null>;
-type Target = { kind: 'business' | 'store' | 'person'; id: string; name: string; nameAr: string | null };
+type Target = { kind: 'business' | 'store' | 'person'; id: string; name: string | null; nameAr: string | null };
 
 /**
  * A business's, its stores' and its people's two names (D225): the Latin-alphabet name read in French and English, and
- * the Arabic name read in Arabic. Records created before the Arabic names existed are marked; completing one changes
+ * the Arabic name read in Arabic. A rename changes
  * what screens show from now on — receipts already issued keep the names they were issued under. Each change asks
  * why and for the administrator's password, and is in the platform audit.
  */
@@ -21,12 +21,10 @@ export function BusinessNames({ business, ask, onDone }: { business: BusinessDet
     ...business.branches.map((b) => ({ kind: 'store' as const, id: b.id, name: b.name, nameAr: b.nameAr ?? null })),
     ...business.people.map((p) => ({ kind: 'person' as const, id: p.id, name: p.name, nameAr: p.nameAr ?? null })),
   ];
-  const missing = targets.filter((x) => !x.nameAr).length;
   return (
     <section className="card stack" aria-labelledby="names-title">
       <h2 id="names-title">{t('admin.names.title')}</h2>
       <p className="muted small">{t('admin.names.lead')}</p>
-      {missing > 0 ? <Notice tone="warn">{t('admin.names.missing', { count: String(missing) })}</Notice> : null}
       {targets.map((target) => (
         <NameRow key={`${target.kind}:${target.id}`} business={business} target={target} ask={ask} onDone={onDone} />
       ))}
@@ -36,7 +34,7 @@ export function BusinessNames({ business, ask, onDone }: { business: BusinessDet
 
 function NameRow({ business, target, ask, onDone }: { business: BusinessDetail; target: Target; ask: Ask; onDone: () => Promise<void> }) {
   const { t } = useI18n();
-  const [name, setName] = useState(target.name);
+  const [name, setName] = useState(target.name ?? '');
   const [nameAr, setNameAr] = useState(target.nameAr ?? '');
   const [reason, setReason] = useState('');
   const [busy, setBusy] = useState(false);
@@ -55,7 +53,8 @@ function NameRow({ business, target, ask, onDone }: { business: BusinessDetail; 
     setError(null);
     setSaved(false);
     // The API's own rules, said beside the field in the operator's language. An empty Arabic name changes nothing.
-    const latin = latinNameProblem(name);
+    // A trading name is optional (D227); a store's or a person's is not.
+    const latin = target.kind === 'business' && !normalizeName(name) ? null : latinNameProblem(name);
     const arabic = normalizeName(nameAr) ? arabicNameProblem(nameAr) : null;
     const next = {
       name: latin ? nameProblemKey(latin) : undefined,
@@ -87,7 +86,7 @@ function NameRow({ business, target, ask, onDone }: { business: BusinessDetail; 
   return (
     <form className="stack" onSubmit={submit} noValidate>
       <p className="small">
-        <strong>{t(`admin.names.kind.${target.kind}`)}</strong> {!target.nameAr ? <Badge tone="warn">{t('admin.names.incomplete')}</Badge> : null}
+        <strong>{t(`admin.names.kind.${target.kind}`)}</strong> 
       </p>
       <div className="grid">
         <Field label={t('admin.names.latin')} error={problems.name ? t(problems.name) : null}>

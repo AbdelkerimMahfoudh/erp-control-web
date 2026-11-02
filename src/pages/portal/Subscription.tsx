@@ -256,7 +256,7 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
     <div className="stack">
       <section className="hero row spread">
         <div>
-          <h1>{data.business.name}</h1>
+          <h1>{data.business.name || t('portal.account')}</h1>
           <p className="lead">
             <StateBadge state={ent.state} /> {explanation(ent, t, lang)}
           </p>

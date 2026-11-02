@@ -96,6 +96,8 @@ describe('creating a business and its Owner', () => {
     const user = userEvent.setup();
     await user.type(await screen.findByLabelText(en['admin.new.business'], undefined, SLOW_WAIT), 'Labo Test');
     await user.type(screen.getByLabelText(en['admin.new.owner']), 'Mariem');
+    await user.type(screen.getByLabelText(en['admin.new.store']), 'Centre');
+    await user.type(screen.getByLabelText(en['admin.access.grantReason']), 'Console test');
     await user.type(screen.getByLabelText(en['admin.new.businessAr']), 'متجر');
     await user.type(screen.getByLabelText(en['admin.new.ownerAr']), 'مالك');
     await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000001');
@@ -134,6 +136,8 @@ describe('creating a business and its Owner', () => {
     const user = userEvent.setup();
     await user.type(await screen.findByLabelText(en['admin.new.business'], undefined, SLOW_WAIT), 'Real Shop');
     await user.type(screen.getByLabelText(en['admin.new.owner']), 'Ahmed');
+    await user.type(screen.getByLabelText(en['admin.new.store']), 'Centre');
+    await user.type(screen.getByLabelText(en['admin.access.grantReason']), 'Console test');
     await user.type(screen.getByLabelText(en['admin.new.businessAr']), 'متجر');
     await user.type(screen.getByLabelText(en['admin.new.ownerAr']), 'مالك');
     await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000002');
@@ -210,6 +214,34 @@ describe('a test business’s page', () => {
     await user.click(within(card).getByRole('button', { name: en['admin.store.submit'] }));
     await stepUp(user);
     expect(await within(card).findByText(en['admin.store.same'])).toBeTruthy();
+  });
+
+  it('a store its access does not cover: nothing opens until a reason is given for that exact request (D227)', async () => {
+    let calls = 0;
+    const sent = serveBusiness(detail({ isTest: false, setup: setup({ isTest: false, customerActivation: 'closed' }) }), (url) => {
+      if (!url.endsWith(`/platform/businesses/${ID}/stores`)) return undefined;
+      calls += 1;
+      return calls === 1
+        ? { status: 409, body: { statusCode: 409, code: 'access_basis_required', amount: 300, pendingRequestId: 'req-1', message: 'x' } }
+        : { body: { mode: 'opened', created: true, allocation: { id: 's1', status: 'active', monthlyAmount: 300 } } };
+    });
+    mount(`/admin/businesses/${ID}`);
+    const user = userEvent.setup();
+    const card = (await screen.findByRole('heading', { name: en['admin.store.title'] }, SLOW_WAIT)).closest('section')!;
+    const [name, , reason] = within(card).getAllByRole('textbox');
+    await user.type(name!, 'Annexe');
+    await user.type(reason!, 'Second store');
+    await user.click(within(card).getByRole('button', { name: en['admin.store.submit'] }));
+    await stepUp(user);
+    expect(await within(card).findByText(en['admin.store.needsBasis'].replace('{amount}', '300'))).toBeTruthy();
+    await user.click(within(card).getByLabelText(en['admin.access.grant']));
+    await user.type(within(card).getByLabelText(en['admin.access.grantReason']), 'Pilot');
+    await user.click(within(card).getByRole('button', { name: en['admin.store.submit'] }));
+    await stepUp(user);
+    expect(await within(card).findByText('The store “Annexe” is open.')).toBeTruthy();
+    const posts = sent.filter((r) => r.url.endsWith('/stores'));
+    expect(posts[0]!.body).not.toHaveProperty('access');
+    expect(posts[1]!.body).toMatchObject({ requestId: 'req-1', access: { kind: 'grant', reason: 'Pilot' } });
   });
 
   it('says a test status refusal in words', async () => {

@@ -30,7 +30,7 @@ describe('Apply: the first store’s activity', () => {
     expect(group.textContent).not.toMatch(/bank employee/i);
 
     await user.type(screen.getByLabelText('Your name'), 'Aminetou');
-    await user.type(screen.getByLabelText('Business name'), 'Agence Aminetou');
+    await user.type(screen.getByLabelText('Registered or trading name (optional)'), 'Agence Aminetou');
     await user.type(screen.getByLabelText('First store name'), 'Agence Centre');
     await user.type(screen.getByLabelText(/WhatsApp number/), '+22236000001');
     await user.type(screen.getByLabelText(/^Password/), 'a-long-password');

@@ -25,6 +25,10 @@ const CODED = [
   'deferral_reason_required',
   'deferral_confirmation_required',
   'deferral_review_date',
+  'existing_owner',
+  'store_name_required',
+  'no_running_period',
+  'grant_until_invalid',
 ] as const;
 
 /** A provisioning refusal in words, or any other error as every page says one. */
@@ -250,6 +254,9 @@ export function TestStatus({ business, ask, onDone }: { business: BusinessDetail
 export function ConsoleStore({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
   const { t } = useI18n();
   const [form, setForm] = useState({ name: '', nameAr: '', activity: 'electronics' as Activity, reason: '' });
+  // D227: what the server said this store still needs: the exact priced request, and why it should open.
+  const [pending, setPending] = useState<{ amount: number; requestId: string } | null>(null);
+  const [basis, setBasis] = useState({ kind: 'payment' as 'payment' | 'grant', amount: '', paidAt: '', reference: '', grantReason: '' });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [done, setDone] = useState<string | null>(null);
@@ -266,12 +273,24 @@ export function ConsoleStore({ business, ask, onDone }: { business: BusinessDeta
     try {
       const r = await adminRequest<ConsoleStoreResult>(`platform/businesses/${business.id}/stores`, {
         method: 'POST',
-        body: { name: form.name.trim(), nameAr: form.nameAr.trim(), activity: form.activity, reason: form.reason.trim(), confirmPassword },
+        body: { name: form.name.trim(), nameAr: form.nameAr.trim(), activity: form.activity, reason: form.reason.trim(), ...(pending ? {
+            requestId: pending.requestId,
+            access:
+              basis.kind === 'grant'
+                ? { kind: 'grant', reason: basis.grantReason.trim() }
+                : { kind: 'payment', amount: basis.amount.trim(), paidAt: new Date(basis.paidAt).toISOString(), reference: basis.reference.trim(), months: 1 },
+          } : {}), confirmPassword },
       });
-      setDone(!r.created ? t('admin.store.same') : r.mode === 'granted' ? t('admin.store.granted', { name: form.name.trim() }) : t('admin.store.requested', { name: form.name.trim() }));
+      setDone(!r.created ? t('admin.store.same') : r.mode === 'opened' ? t('admin.store.opened', { name: form.name.trim() }) : r.mode === 'granted' ? t('admin.store.granted', { name: form.name.trim() }) : t('admin.store.requested', { name: form.name.trim() }));
       setForm({ ...form, name: '', nameAr: '', reason: '' });
+      setPending(null);
       await onDone();
     } catch (err) {
+      const refused = err instanceof ApiError ? (err.body as { amount?: number; pendingRequestId?: string } | null) : null;
+      if (err instanceof ApiError && (err.code === 'access_basis_required' || err.code === 'pending_request_exists') && refused?.pendingRequestId) {
+        setPending({ amount: refused.amount ?? 0, requestId: refused.pendingRequestId });
+        return;
+      }
       setError(err);
     } finally {
       setBusy(false);
@@ -289,7 +308,7 @@ export function ConsoleStore({ business, ask, onDone }: { business: BusinessDeta
             <input required maxLength={160} dir="ltr" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
           </Field>
           <Field label={t('admin.store.nameAr')}>
-            <input required maxLength={160} dir="rtl" lang="ar" value={form.nameAr} onChange={(e) => setForm({ ...form, nameAr: e.target.value })} />
+            <input maxLength={160} dir="rtl" lang="ar" value={form.nameAr} onChange={(e) => setForm({ ...form, nameAr: e.target.value })} />
           </Field>
           <Field label={t('admin.store.activity')}>
             <select value={form.activity} onChange={(e) => setForm({ ...form, activity: e.target.value as Activity })}>
@@ -304,6 +323,40 @@ export function ConsoleStore({ business, ask, onDone }: { business: BusinessDeta
         <Field label={t('admin.action.reason')} hint={t('admin.action.reason.required')}>
           <input required maxLength={500} value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} />
         </Field>
+        {pending ? (
+          <fieldset className="stack">
+            <legend>{t('admin.access.title')}</legend>
+            <Notice tone="warn">{t('admin.store.needsBasis', { amount: String(pending.amount) })}</Notice>
+            <div className="row">
+              {(['payment', 'grant'] as const).map((kind) => (
+                <label key={kind} className="row">
+                  <input type="radio" name="store-access" className="checkbox-inline" checked={basis.kind === kind} onChange={() => setBasis({ ...basis, kind })} />
+                  {t(`admin.access.${kind}`)}
+                </label>
+              ))}
+            </div>
+            {basis.kind === 'grant' ? (
+              <>
+                <p className="muted small">{t('admin.store.grantRenewal')}</p>
+                <Field label={t('admin.access.grantReason')}>
+                  <input required maxLength={255} value={basis.grantReason} onChange={(e) => setBasis({ ...basis, grantReason: e.target.value })} />
+                </Field>
+              </>
+            ) : (
+              <div className="grid">
+                <Field label={t('admin.access.amount')}>
+                  <input required inputMode="decimal" dir="ltr" value={basis.amount} onChange={(e) => setBasis({ ...basis, amount: e.target.value })} />
+                </Field>
+                <Field label={t('admin.access.paidAt')}>
+                  <input required type="date" dir="ltr" value={basis.paidAt} onChange={(e) => setBasis({ ...basis, paidAt: e.target.value })} />
+                </Field>
+                <Field label={t('admin.access.reference')}>
+                  <input required maxLength={120} dir="ltr" value={basis.reference} onChange={(e) => setBasis({ ...basis, reference: e.target.value })} />
+                </Field>
+              </div>
+            )}
+          </fieldset>
+        ) : null}
         <ProvisioningRefusal error={error} />
         <div className="row">
           <button type="submit" className="btn btn-primary" disabled={busy || (isTest && !granted)}>

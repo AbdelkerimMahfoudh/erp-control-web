@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ar } from '../src/i18n/ar';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
-import { arabicNameProblem, latinNameProblem } from '../src/lib/names';
+import { adminAccountLine, arabicNameProblem, latinNameProblem } from '../src/lib/names';
 import { SLOW_WAIT, mount, serve, useActivityHarness } from './activity-fixtures';
 
 useActivityHarness();
@@ -53,10 +53,7 @@ describe('the form', () => {
     serve((url) => (url.endsWith('/platform/admin/me') ? { body: ADMIN } : undefined));
     mount('/admin/businesses/new');
     await screen.findByLabelText(en['admin.new.business'], undefined, SLOW_WAIT);
-    for (const key of ['admin.new.business', 'admin.new.owner', 'admin.new.store'] as const) {
-      expect(input(en[key]).getAttribute('dir')).toBe('ltr');
-      expect(en[key]).toMatch(/Latin letters/);
-    }
+    for (const key of ['admin.new.business', 'admin.new.owner', 'admin.new.store'] as const) expect(input(en[key]).getAttribute('dir')).toBe('ltr');
     for (const key of ['admin.new.businessAr', 'admin.new.ownerAr', 'admin.new.storeAr'] as const) {
       expect(input(en[key]).getAttribute('dir')).toBe('rtl');
       expect(input(en[key]).getAttribute('lang')).toBe('ar');
@@ -81,6 +78,7 @@ describe('creating a business with both names', () => {
       'admin.new.ownerAr': 'مريم',
       'admin.new.store': 'Centre',
       'admin.new.storeAr': 'الوسط',
+      'admin.access.grantReason': 'pilot',
     });
     await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000001');
     await user.type(screen.getByLabelText(/^Reason/), 'Console test');
@@ -98,44 +96,40 @@ describe('creating a business with both names', () => {
     });
   });
 
-  it('missing Arabic names: said beside each field, nothing sent, nothing typed lost', async () => {
+  it('no trading name and no Arabic name: accepted, and neither is sent as anything invented (D227)', async () => {
+    const sent = serve((url) => {
+      if (url.endsWith('/platform/admin/me')) return { body: ADMIN };
+      if (url.endsWith('/platform/businesses')) return { status: 201, body: { companyId: ID, publicStoreId: 'ABC', branchId: ID, activity: 'electronics', ownerUserId: ID, status: 'pending_activation', created: true, trialEligible: false, invitation: null, setup: null } };
+      return undefined;
+    });
+    mount('/admin/businesses/new');
+    const user = userEvent.setup();
+    await screen.findByLabelText(en['admin.new.business'], undefined, SLOW_WAIT);
+    await fill(user, { 'admin.new.owner': 'Mariem', 'admin.new.store': 'Centre', 'admin.access.grantReason': 'pilot' });
+    await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000001');
+    await user.type(screen.getByLabelText(/^Reason/), 'Console test');
+    await user.click(screen.getByRole('button', { name: en['admin.new.submit'] }));
+    await stepUp(user);
+    const post = sent.find((r) => r.url.endsWith('/platform/businesses'))!;
+    expect(post.body).not.toHaveProperty('businessName');
+    expect(post.body).toMatchObject({ ownerName: 'Mariem', branchName: 'Centre', access: { kind: 'grant', days: 30, reason: 'pilot' } });
+  });
+
+  it('what is required is said beside it, nothing is sent, nothing typed is lost', async () => {
     const sent = serve((url) => (url.endsWith('/platform/admin/me') ? { body: ADMIN } : undefined));
     mount('/admin/businesses/new');
     const user = userEvent.setup();
     await screen.findByLabelText(en['admin.new.business'], undefined, SLOW_WAIT);
-    await fill(user, { 'admin.new.business': 'Dar Phones', 'admin.new.owner': 'Mariem' });
-    await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000001');
-    await user.type(screen.getByLabelText(/^Reason/), 'Console test');
+    await fill(user, { 'admin.new.business': 'دار', 'admin.new.owner': 'Mariem' });
     await user.click(screen.getByRole('button', { name: en['admin.new.submit'] }));
-
-    expect(saidFor(en['admin.new.businessAr'])).toBe(en['names.problem.name_blank']);
-    expect(saidFor(en['admin.new.ownerAr'])).toBe(en['names.problem.name_blank']);
-    expect(input(en['admin.new.businessAr']).getAttribute('aria-invalid')).toBe('true');
+    expect(saidFor(en['admin.new.business'])).toBe(en['names.problem.name_latin_has_arabic']);
+    expect(saidFor(en['admin.new.store'])).toBe(en['admin.store.needed']);
+    expect(saidFor(en['admin.access.grantReason'])).toBe(en['form.required']);
+    expect(saidFor(en['admin.new.owner'])).toBeUndefined();
+    expect(saidFor(en['admin.new.ownerAr'])).toBeUndefined();
     expect(screen.getByText(en['form.fix'])).toBeTruthy();
     expect(sent.some((r) => r.url.endsWith('/platform/businesses'))).toBe(false);
-    expect(screen.queryByRole('dialog')).toBeNull();
-    expect(input(en['admin.new.business']).value).toBe('Dar Phones');
     expect(input(en['admin.new.owner']).value).toBe('Mariem');
-  });
-
-  it('a name in the wrong script, and a store\'s Arabic name without its Latin one, are each named', async () => {
-    serve((url) => (url.endsWith('/platform/admin/me') ? { body: ADMIN } : undefined));
-    mount('/admin/businesses/new');
-    const user = userEvent.setup();
-    await screen.findByLabelText(en['admin.new.business'], undefined, SLOW_WAIT);
-    await fill(user, {
-      'admin.new.business': 'دار',
-      'admin.new.businessAr': 'Dar',
-      'admin.new.owner': 'Mariem',
-      'admin.new.ownerAr': 'مريم',
-      'admin.new.storeAr': 'الوسط',
-    });
-    await user.click(screen.getByRole('button', { name: en['admin.new.submit'] }));
-    const said = (key: keyof typeof en) => saidFor(en[key]);
-    expect(said('admin.new.business')).toBe(en['names.problem.name_latin_has_arabic']);
-    expect(said('admin.new.businessAr')).toBe(en['names.problem.name_ar_needs_arabic']);
-    expect(said('admin.new.store')).toBe(en['admin.new.storeLatin.needed']);
-    expect(said('admin.new.owner')).toBeUndefined();
   });
 
   it('a refusal from the API never shows its validation wording, and the form keeps every answer', async () => {
@@ -149,7 +143,7 @@ describe('creating a business with both names', () => {
     mount('/admin/businesses/new');
     const user = userEvent.setup();
     await screen.findByLabelText(en['admin.new.business'], undefined, SLOW_WAIT);
-    await fill(user, { 'admin.new.business': 'Dar Phones', 'admin.new.businessAr': 'دار', 'admin.new.owner': 'Mariem', 'admin.new.ownerAr': 'مريم' });
+    await fill(user, { 'admin.new.store': 'Centre', 'admin.access.grantReason': 'pilot', 'admin.new.business': 'Dar Phones', 'admin.new.businessAr': 'دار', 'admin.new.owner': 'Mariem', 'admin.new.ownerAr': 'مريم' });
     await user.type(screen.getByLabelText(/Owner’s WhatsApp number/), '+22200000001');
     await user.type(screen.getByLabelText(/^Reason/), 'Console test');
     await user.click(screen.getByRole('button', { name: en['admin.new.submit'] }));
@@ -172,7 +166,7 @@ describe.each([
     const user = userEvent.setup();
     await screen.findByLabelText(catalogue['admin.new.business'], undefined, SLOW_WAIT);
     await user.click(screen.getByRole('button', { name: catalogue['admin.new.submit'] }));
-    const said = saidFor(catalogue['admin.new.ownerAr']);
+    const said = saidFor(catalogue['admin.new.owner']);
     expect(said).toBe(catalogue['names.problem.name_blank']);
     expect(said).not.toBe(en['names.problem.name_blank']);
     expect(document.documentElement.getAttribute('dir') ?? 'ltr').toBe(lang === 'ar' ? 'rtl' : 'ltr');
@@ -189,16 +183,26 @@ describe('the API\'s rules, mirrored', () => {
     expect(latinNameProblem('a'.repeat(161))).toBe('name_too_long');
     expect(latinNameProblem('Dar‮Phones')).toBe('name_forbidden_character');
     expect(arabicNameProblem('دار الهواتف 2')).toBeNull();
-    expect(arabicNameProblem('Dar')).toBe('name_ar_needs_arabic');
+    expect(arabicNameProblem('Dar')).toBeNull();
+    expect(arabicNameProblem('   ')).toBeNull();
   });
 
   it('every problem has its sentence in all three languages, never English in French or Arabic', () => {
-    for (const p of ['name_blank', 'name_too_long', 'name_forbidden_character', 'name_latin_has_arabic', 'name_latin_needs_letter', 'name_ar_needs_arabic']) {
+    for (const p of ['name_blank', 'name_too_long', 'name_forbidden_character', 'name_latin_has_arabic', 'name_latin_needs_letter']) {
       const key = `names.problem.${p}` as keyof typeof en;
       expect(fr[key]).toBeTruthy();
       expect(ar[key]).toBeTruthy();
       expect(fr[key]).not.toBe(en[key]);
       expect(ar[key]).not.toBe(en[key]);
     }
+  });
+});
+
+describe('an account in an administrator’s list (D227)', () => {
+  const t = (key: string, vars?: Record<string, string>) => (en as Record<string, string>)[key]!.replace('{count}', vars?.count ?? '');
+  it('owner and store, the count of the rest, or no stores', () => {
+    expect(adminAccountLine({ owner: 'Mariem', store: 'Centre', moreStores: 0 }, t as never)).toBe('Mariem — Centre');
+    expect(adminAccountLine({ owner: 'Mariem', store: 'Centre', moreStores: 2 }, t as never)).toBe('Mariem — Centre + 2 more');
+    expect(adminAccountLine({ owner: 'Mariem', store: null, moreStores: 0 }, t as never)).toBe('Mariem — No stores');
   });
 });

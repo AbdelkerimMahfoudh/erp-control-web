@@ -12,12 +12,12 @@ import { arabicNameProblem, latinNameProblem, nameProblemKey, normalizeName } fr
 type Form = typeof EMPTY;
 type FieldErrors = Partial<Record<keyof Form, Key>>;
 
-const EMPTY = { businessName: '', businessNameAr: '', ownerName: '', ownerNameAr: '', branchNameAr: '', phone: '', email: '', city: '', branchName: '', activity: 'electronics' as Activity, language: 'fr' as 'en' | 'fr' | 'ar', isTest: true, reason: '' };
+const EMPTY = { businessName: '', businessNameAr: '', ownerName: '', ownerNameAr: '', branchNameAr: '', phone: '', email: '', city: '', branchName: '', activity: 'electronics' as Activity, language: 'fr' as 'en' | 'fr' | 'ar', isTest: true, reason: '', accessKind: 'grant' as 'payment' | 'grant', amount: '', paidAt: '', reference: '', months: '1', days: '30', grantReason: '' };
 
 /**
  * What the API would refuse, said beside each field before anything is sent (D225, 2026-10-31). The rules are the API's
- * own: both of the business's and the Owner's names, each in its script; the first store's two names together or not at
- * all; a WhatsApp number and a reason.
+ * own (D227): the Owner's and the first store's names; any trading name and Arabic name are optional; a WhatsApp number,
+ * a reason, and why the account has access. The server enforces all of it again.
  */
 export function newBusinessErrors(form: Form): FieldErrors {
   const errors: FieldErrors = {};
@@ -29,15 +29,23 @@ export function newBusinessErrors(form: Form): FieldErrors {
     const p = arabicNameProblem(v);
     if (p) errors[k] = nameProblemKey(p);
   };
-  latin('businessName', form.businessName);
+  if (normalizeName(form.businessName)) latin('businessName', form.businessName);
   arabic('businessNameAr', form.businessNameAr);
   latin('ownerName', form.ownerName);
   arabic('ownerNameAr', form.ownerNameAr);
-  if (normalizeName(form.branchName)) {
-    latin('branchName', form.branchName);
-    arabic('branchNameAr', form.branchNameAr);
-  } else if (normalizeName(form.branchNameAr)) {
-    errors.branchName = 'admin.new.storeLatin.needed';
+  if (normalizeName(form.branchName)) latin('branchName', form.branchName);
+  else errors.branchName = 'admin.store.needed';
+  arabic('branchNameAr', form.branchNameAr);
+  const kind = form.isTest ? 'grant' : form.accessKind;
+  const whole = (v: string) => /^[1-9]\d*$/.test(v.trim());
+  if (kind === 'grant') {
+    if (!whole(form.days)) errors.days = 'form.required';
+    if (form.grantReason.trim().length < 3) errors.grantReason = 'form.required';
+  } else {
+    if (!(Number(form.amount) > 0)) errors.amount = 'form.required';
+    if (!form.paidAt) errors.paidAt = 'form.required';
+    if (form.reference.trim().length < 3) errors.reference = 'form.required';
+    if (!whole(form.months)) errors.months = 'form.required';
   }
   if (!form.phone.trim()) errors.phone = 'form.required';
   if (!form.reason.trim()) errors.reason = 'form.required';
@@ -77,16 +85,19 @@ export function NewBusiness() {
     setFieldErrors(problems);
     if (Object.keys(problems).length > 0) return;
     const payload = {
-      businessName: form.businessName.trim(),
-      businessNameAr: form.businessNameAr.trim(),
+      ...(form.businessName.trim() ? { businessName: form.businessName.trim(), businessNameAr: form.businessNameAr.trim() } : {}),
       ownerName: form.ownerName.trim(),
       ownerNameAr: form.ownerNameAr.trim(),
       phone: form.phone.trim() || undefined,
       email: form.email.trim() || undefined,
       city: form.city.trim() || undefined,
-      branchName: form.branchName.trim() || undefined,
-      // D225: the first store's Arabic name goes with its Latin one; neither means « Main Store » / « المتجر الرئيسي ».
-      branchNameAr: form.branchName.trim() ? form.branchNameAr.trim() : undefined,
+      branchName: form.branchName.trim(),
+      branchNameAr: form.branchNameAr.trim(),
+      // Never a silent trial or free access: the server refuses without this.
+      access:
+        form.isTest || form.accessKind === 'grant'
+          ? { kind: 'grant' as const, days: Number(form.days), reason: form.grantReason.trim() }
+          : { kind: 'payment' as const, amount: form.amount.trim(), paidAt: new Date(form.paidAt).toISOString(), reference: form.reference.trim(), months: Number(form.months) },
       activity: form.activity,
       language: form.language,
       isTest: form.isTest,
@@ -121,9 +132,10 @@ export function NewBusiness() {
       <div className="stack">
         {dialog}
         <h1>{t('admin.new.title')}</h1>
-        <Notice tone={result.invitationFailed ? 'warn' : 'ok'}>
+        <Notice tone={result.invitationFailed || result.accessFailed ? 'warn' : 'ok'}>
           {result.created ? t('admin.new.created') : t('admin.new.existing')}
           {result.invitationFailed ? <div>{t('admin.new.invitationFailed')}</div> : null}
+          {result.accessFailed ? <div>{t('admin.access.failed')}</div> : null}
         </Notice>
         {result.invitation && codeShown ? <SetupCode invitation={result.invitation} onDone={() => setCodeShown(false)} /> : null}
         {result.setupCode && codeShown ? <PersonSetupCode code={result.setupCode} name={form.ownerName.trim()} onDone={() => setCodeShown(false)} /> : null}
@@ -159,16 +171,16 @@ export function NewBusiness() {
         <p className="muted small">{t('admin.new.test.hint')}</p>
         <div className="grid">
           <Field label={t('admin.new.business')} error={err('businessName')}>
-            <input required maxLength={160} dir="ltr" value={form.businessName} onChange={set('businessName')} {...invalid('businessName')} />
+            <input maxLength={160} dir="ltr" value={form.businessName} onChange={set('businessName')} {...invalid('businessName')} />
           </Field>
           <Field label={t('admin.new.businessAr')} error={err('businessNameAr')}>
-            <input required maxLength={160} dir="rtl" lang="ar" value={form.businessNameAr} onChange={set('businessNameAr')} {...invalid('businessNameAr')} />
+            <input maxLength={160} dir="rtl" lang="ar" value={form.businessNameAr} onChange={set('businessNameAr')} {...invalid('businessNameAr')} />
           </Field>
           <Field label={t('admin.new.owner')} error={err('ownerName')}>
             <input required maxLength={160} dir="ltr" value={form.ownerName} onChange={set('ownerName')} {...invalid('ownerName')} />
           </Field>
           <Field label={t('admin.new.ownerAr')} error={err('ownerNameAr')}>
-            <input required maxLength={160} dir="rtl" lang="ar" value={form.ownerNameAr} onChange={set('ownerNameAr')} {...invalid('ownerNameAr')} />
+            <input maxLength={160} dir="rtl" lang="ar" value={form.ownerNameAr} onChange={set('ownerNameAr')} {...invalid('ownerNameAr')} />
           </Field>
           <Field label={t('admin.new.phone')} hint={t('admin.new.phone.hint')} error={err('phone')}>
             <input required inputMode="tel" maxLength={24} dir="ltr" value={form.phone} onChange={set('phone')} {...invalid('phone')} />
@@ -180,10 +192,10 @@ export function NewBusiness() {
             <input maxLength={120} value={form.city} onChange={set('city')} />
           </Field>
           <Field label={t('admin.new.store')} error={err('branchName')}>
-            <input maxLength={160} dir="ltr" value={form.branchName} onChange={set('branchName')} {...invalid('branchName')} />
+            <input required maxLength={160} dir="ltr" value={form.branchName} onChange={set('branchName')} {...invalid('branchName')} />
           </Field>
           <Field label={t('admin.new.storeAr')} error={err('branchNameAr')}>
-            <input required={form.branchName.trim() !== ''} maxLength={160} dir="rtl" lang="ar" value={form.branchNameAr} onChange={set('branchNameAr')} {...invalid('branchNameAr')} />
+            <input maxLength={160} dir="rtl" lang="ar" value={form.branchNameAr} onChange={set('branchNameAr')} {...invalid('branchNameAr')} />
           </Field>
           <Field label={t('admin.new.activity')}>
             <select value={form.activity} onChange={set('activity')}>
@@ -205,6 +217,44 @@ export function NewBusiness() {
         <Field label={t('admin.action.reason')} hint={t('admin.action.reason.required')} error={err('reason')}>
           <input required maxLength={500} value={form.reason} onChange={set('reason')} {...invalid('reason')} />
         </Field>
+        <fieldset className="stack">
+          <legend>{t('admin.access.title')}</legend>
+          {!form.isTest ? (
+            <div className="row">
+              {(['payment', 'grant'] as const).map((kind) => (
+                <label key={kind} className="row">
+                  <input type="radio" name="access-kind" className="checkbox-inline" checked={form.accessKind === kind} onChange={() => setForm({ ...form, accessKind: kind })} />
+                  {t(`admin.access.${kind}`)}
+                </label>
+              ))}
+            </div>
+          ) : null}
+          {form.isTest || form.accessKind === 'grant' ? (
+            <div className="grid">
+              <Field label={t('admin.access.days')} error={err('days')}>
+                <input inputMode="numeric" dir="ltr" value={form.days} onChange={set('days')} {...invalid('days')} />
+              </Field>
+              <Field label={t('admin.access.grantReason')} error={err('grantReason')}>
+                <input maxLength={255} value={form.grantReason} onChange={set('grantReason')} {...invalid('grantReason')} />
+              </Field>
+            </div>
+          ) : (
+            <div className="grid">
+              <Field label={t('admin.access.amount')} error={err('amount')}>
+                <input inputMode="decimal" dir="ltr" value={form.amount} onChange={set('amount')} {...invalid('amount')} />
+              </Field>
+              <Field label={t('admin.access.paidAt')} error={err('paidAt')}>
+                <input type="date" dir="ltr" value={form.paidAt} onChange={set('paidAt')} {...invalid('paidAt')} />
+              </Field>
+              <Field label={t('admin.access.reference')} error={err('reference')}>
+                <input maxLength={120} dir="ltr" value={form.reference} onChange={set('reference')} {...invalid('reference')} />
+              </Field>
+              <Field label={t('admin.access.months')} error={err('months')}>
+                <input inputMode="numeric" dir="ltr" value={form.months} onChange={set('months')} {...invalid('months')} />
+              </Field>
+            </div>
+          )}
+        </fieldset>
         {offerDeferral ? <VerificationChoice name="owner-verification" value={verification} onChange={setVerification} /> : null}
         {Object.values(fieldErrors).some(Boolean) ? <Notice tone="danger">{t('form.fix')}</Notice> : null}
         <ProvisioningRefusal error={error} />

@@ -1,3 +1,4 @@
+import { adminAccountLine } from '../../lib/names';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { BusinessList, BusinessRow, EntitlementState } from '../../api/types';
@@ -89,7 +90,7 @@ export function Businesses() {
                 render: (r) => (
                   <span className="row">
                     <Link to={`/admin/businesses/${r.id}`}>
-                      <strong>{r.name}</strong>
+                      <strong>{r.name || adminAccountLine(r.accountLabel, t)}</strong>
                     </Link>
                     {r.isTest ? <TestBadge /> : null}
                   </span>

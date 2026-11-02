@@ -254,7 +254,7 @@ describe('the console: a business’s trial, recorded', () => {
         return undefined;
       });
       mount('/admin/pending');
-      await screen.findByText(rows[0]!.businessName);
+      await screen.findByText(rows[0]!.businessName!);
       return (name: string) => screen.getByText(name).closest('tr')!;
     }
 

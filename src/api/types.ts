@@ -244,7 +244,7 @@ export interface NoticeRow {
   acceptedAt: string | null;
   completedAt: string | null;
   createdAt: string;
-  business?: { id: string; name: string; publicStoreId: string };
+  business?: { id: string; name: string | null; publicStoreId: string };
 }
 
 export interface NoticeLog {
@@ -264,7 +264,7 @@ export interface BusinessNotices {
 /** One paid period end's grace decision as recorded (0099): granted, or none because the allowance was used. */
 export interface GraceEpisodeRow {
   id: string;
-  business: { id: string; name: string; publicStoreId: string };
+  business: { id: string; name: string | null; publicStoreId: string };
   decision: 'granted' | 'refused';
   periodEnd: string;
   startedAt: string;
@@ -292,7 +292,7 @@ export interface GraceUsage {
 /** A free trial claimed on the portal, as the console lists it. */
 export interface TrialClaimRow {
   id: string;
-  business: { id: string; name: string; publicStoreId: string };
+  business: { id: string; name: string | null; publicStoreId: string };
   registrationMethod: 'email' | 'phone' | 'both' | null;
   status: 'active' | 'expired';
   claimedAt: string;
@@ -497,7 +497,7 @@ export interface SubscriptionBranch {
 }
 
 export interface MySubscription {
-  business: { name: string; city: string | null; createdAt: string; branches: SubscriptionBranch[] };
+  business: { name: string | null; city: string | null; createdAt: string; branches: SubscriptionBranch[] };
   owner: { name: string; email: string | null; phone: string | null; emailVerified: boolean; phoneVerified: boolean } | null;
   entitlement: Entitlement;
   pricing: Pricing;
@@ -570,7 +570,7 @@ export interface SeatRequest {
   activation: SeatActivation | null;
   version: number;
   providerVerified: false;
-  business?: { id: string; name: string; publicStoreId: string };
+  business?: { id: string; name: string | null; publicStoreId: string };
 }
 
 /** The answer to every Owner request (seat, store, activity): the row, and whether this call created it. */
@@ -623,7 +623,7 @@ export interface Dashboard {
 export interface PendingApplication {
   id: string;
   companyId: string | null;
-  businessName: string;
+  businessName: string | null;
   ownerName: string;
   city: string | null;
   email: string | null;
@@ -650,6 +650,8 @@ export interface TrialSummary {
 }
 
 export interface BusinessRow {
+  /** D227: for the list, when there is no trading name. Presentation only. */
+  accountLabel?: { owner: string | null; store: string | null; moreStores: number };
   id: string;
   name: string;
   publicStoreId: string;
@@ -763,6 +765,7 @@ export interface IssuedInvitation {
 
 /** POST platform/businesses: the business, and its Owner's invitation when this request made it. */
 export interface CreatedBusiness {
+  accessFailed?: boolean;
   companyId: string;
   publicStoreId: string;
   created: boolean;
@@ -810,7 +813,7 @@ export interface DeferredAccount {
 
 /** POST platform/businesses/:id/stores (D217): granted under a test business's grant, or a customer's priced request. */
 export interface ConsoleStoreResult {
-  mode: 'granted' | 'requested';
+  mode: 'granted' | 'requested' | 'opened';
   created: boolean;
   allocation: SeatRequest;
 }

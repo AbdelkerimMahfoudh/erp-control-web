@@ -1063,7 +1063,7 @@ describe('Apply ends at the portal’s sign-in', () => {
     mount('/apply');
     const user = userEvent.setup();
     await user.type(await screen.findByLabelText('Your name'), 'Aminetou');
-    await user.type(screen.getByLabelText('Business name'), 'Boutique Test');
+    await user.type(screen.getByLabelText('Registered or trading name (optional)'), 'Boutique Test');
     await user.type(screen.getByLabelText('First store name'), 'Centre');
     await user.type(screen.getByLabelText(/WhatsApp number/), '+22236000001');
     await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
@@ -1095,7 +1095,7 @@ describe('Apply ends at the portal’s sign-in', () => {
     mount('/apply');
     const user = userEvent.setup();
     await user.type(await screen.findByLabelText('Your name'), 'Aminetou');
-    await user.type(screen.getByLabelText('Business name'), 'Boutique Test');
+    await user.type(screen.getByLabelText('Registered or trading name (optional)'), 'Boutique Test');
     await user.type(screen.getByLabelText('First store name'), 'Centre');
     await user.type(screen.getByLabelText(/WhatsApp number/), '+22236000001');
     await user.type(screen.getByLabelText(/^Password/), 'a-long-password');

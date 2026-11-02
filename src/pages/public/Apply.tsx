@@ -95,7 +95,7 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
     try {
       const payload = {
         ownerName: form.ownerName.trim(),
-        businessName: form.businessName.trim(),
+        ...(form.businessName.trim() ? { businessName: form.businessName.trim() } : {}),
         branchName: form.branchName.trim(),
         activity,
         ...(form.city.trim() ? { city: form.city.trim() } : {}),
@@ -133,7 +133,7 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
           <input required maxLength={160} autoComplete="name" value={form.ownerName} onChange={set('ownerName')} />
         </Field>
         <Field label={t('apply.business')}>
-          <input required maxLength={160} autoComplete="organization" value={form.businessName} onChange={set('businessName')} />
+          <input maxLength={160} autoComplete="organization" value={form.businessName} onChange={set('businessName')} />
         </Field>
         <div className="grid">
           <Field label={t('apply.branch')}>

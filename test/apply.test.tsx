@@ -52,7 +52,7 @@ function apply(register: Handler) {
 async function fill(contacts: { email?: string; phone?: string } = {}) {
   const user = userEvent.setup();
   await user.type(await screen.findByLabelText('Your name', {}, SLOW_WAIT), 'Aminetou');
-  await user.type(screen.getByLabelText('Business name'), 'Boutique Test');
+  await user.type(screen.getByLabelText('Registered or trading name (optional)'), 'Boutique Test');
   await user.type(screen.getByLabelText('First store name'), 'Centre');
   await user.type(screen.getByLabelText(/WhatsApp number/), contacts.phone ?? '+22212345678');
   if (contacts.email) await user.type(screen.getByLabelText(/Email address/), contacts.email);
@@ -66,7 +66,7 @@ describe('Apply: the WhatsApp number is required, an email address optional (doc
     const registrations = apply(() => verifying);
     const user = userEvent.setup();
     await user.type(await screen.findByLabelText('Your name', {}, SLOW_WAIT), 'Aminetou');
-    await user.type(screen.getByLabelText('Business name'), 'Boutique Test');
+    await user.type(screen.getByLabelText('Registered or trading name (optional)'), 'Boutique Test');
     await user.type(screen.getByLabelText('First store name'), 'Centre');
     await user.type(screen.getByLabelText(/Email address/), 'owner@example.test');
     await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
@@ -113,7 +113,7 @@ describe('Apply: one attempt, one key (C11; the app’s R5-7)', () => {
     expect(await screen.findByText(en['error.network'], {}, SLOW_WAIT)).toBeTruthy();
     await user.click(screen.getByRole('button', { name: 'Send my application' }));
     expect(await screen.findByText(en['error.generic'], {}, SLOW_WAIT)).toBeTruthy();
-    await user.type(screen.getByLabelText('Business name'), ' Ksar');
+    await user.type(screen.getByLabelText('Registered or trading name (optional)'), ' Ksar');
     await user.click(screen.getByRole('button', { name: 'Send my application' }));
     expect(await screen.findByLabelText('Verification code', {}, SLOW_WAIT)).toBeTruthy();
     const keys = registrations().map((b) => b.idempotencyKey);
@@ -363,7 +363,7 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
       expect(document.body.textContent).not.toMatch(LIMITER);
       expect(screen.queryByText(en['error.generic'])).toBeNull();
       expect(screen.queryByLabelText('Verification code')).toBeNull();
-      expect((screen.getByLabelText('Business name') as HTMLInputElement).value).toBe('Boutique Test');
+      expect((screen.getByLabelText('Registered or trading name (optional)') as HTMLInputElement).value).toBe('Boutique Test');
       expect(registrations()).toHaveLength(1);
     }, FILLING);
   });
