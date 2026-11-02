@@ -1,0 +1,401 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:5:103). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:6:75). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./surface" without a file extension (src/config/schema.ts:10:40). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./surface" without a file extension (src/config/schema.ts:40:51). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./legal-choices" without a file extension (src/content/index.ts:10:32). Add the file extension
+  - import "./legal-notice" without a file extension (src/content/index.ts:11:29). Add the file extension
+  - import "./legal-security" without a file extension (src/content/index.ts:12:26). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/index.ts:13:31). Add the file extension
+  - import "./brand" without a file extension (src/content/index.ts:14:42). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:15:26). Add the file extension
+  - import "./dukan-demo" without a file extension (src/content/index.ts:16:27). Add the file extension
+  - import "./riyade" without a file extension (src/content/index.ts:17:24). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:18:40). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:19:38). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:20:72). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:21:30). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/index.ts:22:36). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:23:38). Add the file extension
+  - import "./prelaunch" without a file extension (src/content/index.ts:24:158). Add the file extension
+  - import "./legal-prelaunch" without a file extension (src/content/index.ts:25:142). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-overview.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/brand.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-demo.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/riyade.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-prelaunch.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/brand.ts:2:27). Add the file extension
+  - import "./types" without a file extension (src/content/prelaunch.ts:2:31). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/prelaunch.ts:3:36). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/prelaunch.ts:4:38). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 481[2mms[22m[39m
+ [32m✓[39m test/dukan-showcase.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1931[2mms[22m[39m
+   [32m✓[39m keyboard, languages and what it never does [2m(3)[22m
+     [33m[2m✓[22m[39m the tabs follow the arrow keys in the page’s direction; one tab stop; the hidden panel is out of reach[33m 549[2mms[22m[39m
+     [33m[2m✓[22m[39m asks nothing of the network, the storage, the camera or the reader[33m 339[2mms[22m[39m
+ [32m✓[39m test/trial-console.test.tsx [2m([22m[2m40 tests[22m[2m)[22m[33m 8207[2mms[22m[39m
+   [32m✓[39m the console: a business’s trial, recorded [2m(12)[22m
+     [33m[2m✓[22m[39m shows the eligibility and the claim with their exact instants, and that no decision creates or extends a trial[33m 444[2mms[22m[39m
+     [32m✓[39m an end date inside a running trial (R4-05) [2m(4)[22m
+       [33m[2m✓[22m[39m refused: a title of its own and the trial’s end in the business’s zone — not "something went wrong", not the server’s UTC sentence[33m 504[2mms[22m[39m
+       [33m[2m✓[22m[39m the end the server names in its refusal comes first, said in French in the business’s zone[33m 432[2mms[22m[39m
+   [32m✓[39m the console: a store or seat paid for during a trial (D176) [2m(25)[22m
+     [33m[2m✓[22m[39m confirmed during the trial: the outcome says when it starts — the server’s instant in the business’s zone — never that the store opened[33m 316[2mms[22m[39m
+     [33m[2m✓[22m[39m confirmed with a paid period in force: the server opened the store, and the outcome says so — and nothing of a start to come[33m 302[2mms[22m[39m
+     [33m[2m✓[22m[39m a confirmation that would be charged again by the first paid period is refused in words: nothing was recorded, the request still waits[33m 305[2mms[22m[39m
+ [32m✓[39m test/trial-account.test.tsx [2m([22m[2m65 tests[22m[2m)[22m[33m 9618[2mms[22m[39m
+   [32m✓[39m the Owner’s trial card on /subscription [2m(6)[22m
+     [33m[2m✓[22m[39m an Owner who may claim sees the terms, the end the server would set — in the business’s zone — and one button[33m 448[2mms[22m[39m
+     [33m[2m✓[22m[39m no offer and no trial, a paid business after its trial, another role (403), an older API (404): no card, no error[33m 319[2mms[22m[39m
+   [32m✓[39m the portal instructions on the card [2m(15)[22m
+     [33m[2m✓[22m[39m sent by email for a recorded reason: where, and why WhatsApp could not carry it[33m 717[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing carried them: said, with the recorded reason — and the claim stands, as delivery is never a condition[33m 434[2mms[22m[39m
+   [32m✓[39m Apply ends at the portal’s sign-in [2m(2)[22m
+     [33m[2m✓[22m[39m a confirmed application leads to the portal, where the Owner signs in with the password just chosen — no token is kept, Apply claims nothing[33m 1039[2mms[22m[39m
+     [33m[2m✓[22m[39m an application the server does not call eligible says what it always said[33m 579[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/promoters.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 3090[2mms[22m[39m
+   [32m✓[39m the promoters list [2m(2)[22m
+     [33m[2m✓[22m[39m shows each promoter with the number masked, the code, the state and finished registrations — and searches by code[33m 366[2mms[22m[39m
+     [33m[2m✓[22m[39m creates a promoter after a step-up — with no code: that is an explicit click on their page[33m 853[2mms[22m[39m
+   [32m✓[39m a promoter’s page [2m(5)[22m
+     [33m[2m✓[22m[39m generates the code and QR only on the explicit click and a step-up[33m 326[2mms[22m[39m
+     [33m[2m✓[22m[39m regenerating is confirmed twice — what it does, then the step-up[33m 360[2mms[22m[39m
+     [33m[2m✓[22m[39m deactivates after a step-up, and says the code no longer opens[33m 338[2mms[22m[39m
+ [32m✓[39m test/provisioning-console.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 4883[2mms[22m[39m
+   [32m✓[39m creating a business and its Owner [2m(2)[22m
+     [33m[2m✓[22m[39m sends a test business by default with its key and no password, and shows the setup code once[33m 1395[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps its key when the same answers are sent again after a lost answer, and says a customer cannot be created while activation is closed[33m 960[2mms[22m[39m
+   [32m✓[39m a test business’s page [2m(6)[22m
+     [33m[2m✓[22m[39m issues the Owner’s setup code after a step-up and shows it once[33m 303[2mms[22m[39m
+     [33m[2m✓[22m[39m opens a store under the grant, and a retry with the same name says nothing new was made[33m 747[2mms[22m[39m
+     [33m[2m✓[22m[39m a store its access does not cover: nothing opens until a reason is given for that exact request (D227)[33m 540[2mms[22m[39m
+     [33m[2m✓[22m[39m says a test status refusal in words[33m 309[2mms[22m[39m
+ [32m✓[39m test/riyade.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 1601[2mms[22m[39m
+ [32m✓[39m test/deferred-verification-console.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 6197[2mms[22m[39m
+   [32m✓[39m creating a business: WhatsApp verification [2m(4)[22m
+     [33m[2m✓[22m[39m is Required by default, and a Required request sends no deferral[33m 1215[2mms[22m[39m
+     [33m[2m✓[22m[39m Deferred asks for a reason and the controlled-test confirmation, shows the warning word for word, and shows the Owner’s setup code[33m 1066[2mms[22m[39m
+     [33m[2m✓[22m[39m while the switch is off, the choice never appears[33m 654[2mms[22m[39m
+     [33m[2m✓[22m[39m the server’s refusal is said in words[33m 939[2mms[22m[39m
+   [32m✓[39m a business’s page [2m(4)[22m
+     [33m[2m✓[22m[39m requires verification after a step-up, with a reason, and sends nothing to the number[33m 421[2mms[22m[39m
+     [33m[2m✓[22m[39m adds a deferred Employee with a store, and shows their setup code once[33m 556[2mms[22m[39m
+   [32m✓[39m an ordinary business [2m(2)[22m
+     [33m[2m✓[22m[39m offers the choice with the test-business box unticked, and sends no test or pilot field[33m 1015[2mms[22m[39m
+ [32m✓[39m test/console-oversight.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1053[2mms[22m[39m
+   [32m✓[39m the console: every subscription message [2m(3)[22m
+     [33m[2m✓[22m[39m lists which message, for which business, by which channel to which masked destination, what became of it and why[33m 316[2mms[22m[39m
+ [32m✓[39m test/apply.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 17361[2mms[22m[39m
+   [32m✓[39m Apply: the WhatsApp number is required, an email address optional (docs/101) [2m(2)[22m
+     [33m[2m✓[22m[39m without the WhatsApp number nothing is sent, and the page says what is missing[33m 839[2mms[22m[39m
+     [33m[2m✓[22m[39m the WhatsApp number alone is an application; an email address goes with it when given[33m 613[2mms[22m[39m
+   [32m✓[39m Apply: a contact whose code cannot be sent now (C10) [2m(4)[22m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: the WhatsApp number[33m 424[2mms[22m[39m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: the email[33m 492[2mms[22m[39m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: both[33m 538[2mms[22m[39m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: none named[33m 425[2mms[22m[39m
+   [32m✓[39m Apply: one attempt, one key (C11; the app’s R5-7) [2m(1)[22m
+     [33m[2m✓[22m[39m a retry of the same form keeps its key, so the server replays; a corrected field is a new attempt with a new key[33m 555[2mms[22m[39m
+   [32m✓[39m Apply: a code check that got no answer is never called a wrong code (R2-1 / C14 on the website) [2m(23)[22m
+     [33m[2m✓[22m[39m no answer (the network failed), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 587[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request was aborted), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 761[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request timed out), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 667[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 877[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 745[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 601[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 794[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 521[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 465[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 647[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 550[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 493[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got no answer from the API in time (504), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 506[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got an invalid one (502), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 550[2mms[22m[39m
+     [33m[2m✓[22m[39m a 503 is an answer — the request was not taken: an error, no account promised[33m 469[2mms[22m[39m
+     [33m[2m✓[22m[39m a lost answer, then the same code accepted after all: the application ends signed in, as it always does[33m 573[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer is an answer: a server error is said as one, and no account is promised[33m 538[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose body was cut off keeps its status — a refusal is still a refusal: the code is wrong, and no account is promised[33m 471[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose body was cut off keeps its status — a server error is still an error, and no account is promised[33m 462[2mms[22m[39m
+     [32m✓[39m a request the rate limit refused [2m(4)[22m
+       [33m[2m✓[22m[39m in English: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 520[2mms[22m[39m
+       [33m[2m✓[22m[39m in French: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 569[2mms[22m[39m
+       [33m[2m✓[22m[39m in Arabic: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 586[2mms[22m[39m
+       [33m[2m✓[22m[39m the application itself refused by the limit: wait a minute, the form kept as it was[33m 513[2mms[22m[39m
+ [32m✓[39m test/site-surface.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 2218[2mms[22m[39m
+   [32m✓[39m Account: a store’s activity and its change [2m(9)[22m
+     [33m[2m✓[22m[39m lists each store with its activity; a warehouse offers no change[33m 410[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade is explained by the server’s own answer, then shows the amount the server recorded[33m 373[2mms[22m[39m
+     [33m[2m✓[22m[39m asks the new store’s activity and sends it, priced as the server would charge it[33m 308[2mms[22m[39m
+ [32m✓[39m test/portal-status.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 2720[2mms[22m[39m
+   [32m✓[39m the access, in colour and words [2m(4)[22m
+     [33m[2m✓[22m[39m operational: its badge and what it means[33m 421[2mms[22m[39m
+   [32m✓[39m the Owner’s email address, verified on the portal [2m(2)[22m
+     [33m[2m✓[22m[39m a code to the address on the account — never one typed here — then the code back; the address is verified[32m 300[2mms[22m[39m
+ [32m✓[39m test/site-refinement.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 849[2mms[22m[39m
+ [32m✓[39m test/bilingual-names-console.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 3231[2mms[22m[39m
+   [32m✓[39m the form [2m(1)[22m
+     [33m[2m✓[22m[39m labels each name with its script; Arabic fields read right to left, Latin ones left to right[33m 332[2mms[22m[39m
+   [32m✓[39m creating a business with both names [2m(4)[22m
+     [33m[2m✓[22m[39m sends every Latin and Arabic name to its own field, the first store's two together[33m 1106[2mms[22m[39m
+     [33m[2m✓[22m[39m no trading name and no Arabic name: accepted, and neither is sent as anything invented (D227)[33m 651[2mms[22m[39m
+     [33m[2m✓[22m[39m a refusal from the API never shows its validation wording, and the form keeps every answer[33m 718[2mms[22m[39m
+ [32m✓[39m test/portal-session.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 2397[2mms[22m[39m
+   [32m✓[39m signing in on the portal [2m(9)[22m
+     [33m[2m✓[22m[39m signs in with the app’s identity on the portal’s own route; no bearer, nothing stored, no request carries a token[33m 627[2mms[22m[39m
+     [33m[2m✓[22m[39m every POST carries the session’s CSRF token; no GET does[33m 333[2mms[22m[39m
+ [32m✓[39m test/legal-pages.test.tsx [2m([22m[2m67 tests[22m[2m)[22m[33m 3475[2mms[22m[39m
+   [32m✓[39m the public legal and support pages [2m(44)[22m
+     [33m[2m✓[22m[39m names TSX-MR as the operator on the privacy policy, the terms and the legal notice[33m 378[2mms[22m[39m
+ [32m✓[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1922[2mms[22m[39m
+   [32m✓[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 847[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the confirmation’s result on screen after the paid request leaves the queue[33m 370[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 619[2mms[22m[39m
+ [32m✓[39m test/prelaunch-gates.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 73[2mms[22m[39m
+ [32m✓[39m test/site-routes.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/site-navigation.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 1494[2mms[22m[39m
+   [32m✓[39m the phone menu [2m(4)[22m
+     [33m[2m✓[22m[39m is an icon button with no visible word, that names its action and controls a panel hidden while closed[33m 357[2mms[22m[39m
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1181[2mms[22m[39m
+   [32m✓[39m Account: the platform grant and its own dates [2m(6)[22m
+     [33m[2m✓[22m[39m an active grant says its own end, never the billing period’s start[33m 365[2mms[22m[39m
+ [32m✓[39m test/portal-operator.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[32m 300[2mms[22m[39m
+ [32m✓[39m test/site-config.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m test/portal-surface.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m test/admin-mfa.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2133[2mms[22m[39m
+   [32m✓[39m signing in to the console [2m(3)[22m
+     [33m[2m✓[22m[39m a password leads to the code screen; the console opens only once the code is accepted[33m 777[2mms[22m[39m
+     [33m[2m✓[22m[39m a recovery code can stand in for the authenticator[33m 331[2mms[22m[39m
+     [33m[2m✓[22m[39m with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once[33m 522[2mms[22m[39m
+   [32m✓[39m a decision’s step-up [2m(1)[22m
+     [33m[2m✓[22m[39m a wrong password or code keeps the dialog open with the reason, and the decision is never sent[33m 500[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 216[2mms[22m[39m
+ [32m✓[39m test/not-found.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 498[2mms[22m[39m
+ [32m✓[39m test/deletion-docs.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 1912[2mms[22m[39m
+   [32m✓[39m account deletion on a public build [2m(16)[22m
+     [33m[2m✓[22m[39m the company’s pages in en: no deletion link in the navigation, the footer or the quick links[33m 448[2mms[22m[39m
+     [33m[2m✓[22m[39m the company’s pages in fr: no deletion link in the navigation, the footer or the quick links[33m 379[2mms[22m[39m
+ [32m✓[39m test/admin-invited-setup.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 3099[2mms[22m[39m
+   [32m✓[39m setting up an invited administrator [2m(4)[22m
+     [33m[2m✓[22m[39m spends the code with his own password, signs in, and opens his own authenticator with the token it was given[33m 833[2mms[22m[39m
+     [33m[2m✓[22m[39m one refusal, whatever the server says, never its words; and nothing typed is held after success only[33m 424[2mms[22m[39m
+     [33m[2m✓[22m[39m a throttled try says so, in the page’s words[33m 442[2mms[22m[39m
+   [32m✓[39m in fr [2m(1)[22m
+     [33m[2m✓[22m[39m the page, its field messages and its refusal are the visitor’s language[33m 577[2mms[22m[39m
+   [32m✓[39m in ar [2m(1)[22m
+     [33m[2m✓[22m[39m the page, its field messages and its refusal are the visitor’s language[33m 531[2mms[22m[39m
+ [32m✓[39m test/operator-identity.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1599[2mms[22m[39m
+   [32m✓[39m the name, only where a legal text needs it [2m(3)[22m
+     [33m[2m✓[22m[39m in en: the brand pages and the footer never name the person; each legal text names them as it must[33m 587[2mms[22m[39m
+     [33m[2m✓[22m[39m in fr: the brand pages and the footer never name the person; each legal text names them as it must[33m 430[2mms[22m[39m
+     [33m[2m✓[22m[39m in ar: the brand pages and the footer never name the person; each legal text names them as it must[33m 399[2mms[22m[39m
+ [32m✓[39m test/content-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 79[2mms[22m[39m
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 1776[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 1089[2mms[22m[39m
+   [32m✓[39m The Dukan ERP page: three prices and an estimate by activity (moved from the home page, docs/74) [2m(2)[22m
+     [33m[2m✓[22m[39m lists the three prices and sends one activity per store to the quote[33m 523[2mms[22m[39m
+ [32m✓[39m test/site-surface-render.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 1566[2mms[22m[39m
+   [32m✓[39m a public build, page by page [2m(14)[22m
+     [33m[2m✓[22m[39m the Dukan ERP page in en: no prices, no application or sign-in, a way to contact, and no request to any API[33m 489[2mms[22m[39m
+ [32m✓[39m test/portal-surface-render.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 882[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1586[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns (on the Dukan ERP page)[33m 929[2mms[22m[39m
+     [33m[2m✓[22m[39m moves to the same page in Arabic, mirrors the document and keeps the language across visits[33m 587[2mms[22m[39m
+ [32m✓[39m test/throttle.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1441[2mms[22m[39m
+   [32m✓[39m a request the API’s rate limit refused [2m(5)[22m
+     [33m[2m✓[22m[39m in English: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s[33m 530[2mms[22m[39m
+ [32m✓[39m test/caddy-release.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m test/dukan-brand.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m test/portal-operator-company.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 231[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m test/api-client.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m test/public-pages.test.tsx [2m([22m[2m56 tests[22m[2m)[22m[33m 4974[2mms[22m[39m
+   [32m✓[39m every public page in every language [2m(51)[22m
+     [33m[2m✓[22m[39m / renders in en[33m 402[2mms[22m[39m
+ [32m✓[39m test/portal-owner-only.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [31m❯[39m test/payment-proofs.test.tsx [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 7[2mms[22m[39m
+   [31m❯[39m payment proofs on the web (D227) [2m(3)[22m
+     [32m✓[39m are worded in all three languages, and the refusal carries its reason[32m 2[2mms[22m[39m
+[31m     [31m×[31m the portal only sends; nothing here may decide access[39m[32m 4[2mms[22m[39m
+     [32m✓[39m a file goes as a form with its own boundary, never as JSON[32m 0[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m test/payment-proofs.test.tsx[2m > [22mpayment proofs on the web (D227)[2m > [22mthe portal only sends; nothing here may decide access
+[31m[1mAssertionError[22m: expected 'import { useCallback, useEffect, useR…' not to match /approve|payment-proofs\/.*ref…/.*refuse[39m
+
+[32m- Expected:[39m
+/approve|payment-proofs\/.*refuse/
+
+[31m+ Received:[39m
+"import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import type { PaymentProof } from '../../api/types';
+import { ownerRequest } from '../../auth/owner';
+import { Badge, ErrorNotice, Field, Money, Notice } from '../../components/ui';
+import { useI18n, type Key } from '../../i18n';
+import { formatDate } from '../../lib/format';
+
+const MAX_BYTES = 5 * 1024 * 1024;
+const newKey = () => crypto.randomUUID();
+
+/**
+ * The Owner tells us a payment was made (D227): a private file with the amount and date. Sending changes nothing about
+ * access: an administrator checks it and records the real payment, and a refusal comes back with its reason to correct.
+ */
+export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<void> }) {
+  const { t, lang } = useI18n();
+  const [rows, setRows] = useState<PaymentProof[] | null>(null);
+  const [form, setForm] = useState({ amount: '', paidAt: '', reference: '' });
+  const [file, setFile] = useState<File | null>(null);
+  const [problem, setProblem] = useState<Key | null>(null);
+  const [error, setError] = useState<unknown>(null);
+  const [busy, setBusy] = useState(false);
+  // One attempt, one key: a retry of a lost answer is the same proof.
+  const key = useRef(newKey());
+  const input = useRef<HTMLInputElement>(null);
+
+  const load = useCallback(async () => {
+    try {
+      setRows(await ownerRequest<PaymentProof[]>('platform/my-subscription/payment-proofs'));
+    } catch (e) {
+      setError(e);
+    }
+  }, []);
+  useEffect(() => void load(), [load]);
+
+  const open = rows?.some((p) => p.status === 'submitted' || p.status === 'under_review') ?? false;
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setProblem(null);
+    if (!file) return setProblem('portal.proof.problem.file');
+    if (file.size > MAX_BYTES) return setProblem('portal.proof.problem.size');
+    const body = new FormData();
+    body.set('idempotencyKey', key.current);
+    body.set('amount', form.amount.trim());
+    body.set('paidAt', new Date(form.paidAt).toISOString());
+    if (form.reference.trim()) body.set('reference', form.reference.trim());
+    body.set('file', file);
+    setBusy(true);
+    try {
+      await ownerRequest('platform/my-subscription/payment-proofs', { method: 'POST', body });
+      key.current = newKey();
+      setForm({ amount: '', paidAt: '', reference: '' });
+      setFile(null);
+      if (input.current) input.current.value = '';
+      await load();
+      await onChanged();
+    } catch (err) {
+      setError(err);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <section className=\"card stack\" aria-labelledby=\"proofs-h\">
+      <h2 id=\"proofs-h\">{t('portal.proof.title')}</h2>
+      {rows?.map((p) => (
+        <div key={p.id} className=\"stack\">
+          <div className=\"row spread\">
+            <span>
+              <Money amount={p.amount} /> · {formatDate(p.paidAt, lang)}
+            </span>
+            <Badge tone={p.status === 'approved' ? 'ok' : p.status === 'refused' ? 'danger' : 'warn'}>{t(`portal.proof.status.${p.status}` as Key)}</Badge>
+          </div>
+          {p.status === 'refused' && p.refusalReason ? <Notice tone=\"danger\">{t('portal.proof.refused', { reason: p.refusalReason })}</Notice> : null}
+        </div>
+      ))}
+      {open ? (
+        <p className=\"muted small\">{t('portal.proof.waiting')}</p>
+      ) : (
+        <form className=\"stack\" onSubmit={submit}>
+          <p className=\"muted small\">{t('portal.proof.intro')}</p>
+          <div className=\"grid\">
+            <Field label={t('portal.proof.amount')}>
+              <input required inputMode=\"decimal\" dir=\"ltr\" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
+            </Field>
+            <Field label={t('portal.proof.date')}>
+              <input required type=\"date\" dir=\"ltr\" value={form.paidAt} onChange={(e) => setForm({ ...form, paidAt: e.target.value })} />
+            </Field>
+            <Field label={t('portal.proof.reference')}>
+              <input maxLength={120} dir=\"ltr\" value={form.reference} onChange={(e) => setForm({ ...form, reference: e.target.value })} />
+            </Field>
+          </div>
+          <Field label={t('portal.proof.file')}>
+            <input ref={input} type=\"file\" accept=\"application/pdf,image/png,image/jpeg\" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
+          </Field>
+          {problem ? <Notice tone=\"danger\">{t(problem)}</Notice> : null}
+          <ErrorNotice error={error} />
+          <div className=\"row\">
+            <button type=\"submit\" className=\"btn btn-primary\" disabled={busy}>
+              {t('portal.proof.send')}
+            </button>
+          </div>
+        </form>
+      )}
+    </section>
+  );
+}
+"
+
+[36m [2m❯[22m test/payment-proofs.test.tsx:[2m29:24[22m[39m
+    [90m 27|[39m     const portal = readFileSync('src/pages/portal/PaymentProofs.tsx', …
+    [90m 28|[39m     expect(portal).toContain('platform/my-subscription/payment-proofs'…
+    [90m 29|[39m     expect(portal).not.toMatch(/approve|payment-proofs\/.*refuse/);
+    [90m   |[39m                        [31m^[39m
+    [90m 30|[39m   });
+    [90m 31|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m44 passed[39m[22m[90m (45)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m670 passed[39m[22m[90m (671)[39m
+[2m   Start at [22m 10:46:57
+[2m   Duration [22m 49.10s[2m (tests 69%, environment 22%, import 6%, transform 2%)[22m
+
+[2m    Isolate [22m [33m45 workers spawned[39m[2m · ~818ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~11.46s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/payment-proofs.test.tsx,title=test/payment-proofs.test.tsx > payment proofs on the web (D227) > the portal only sends; nothing here may decide access,line=29,column=24::AssertionError: expected 'import { useCallback, useEffect, useR…' not to match /approve|payment-proofs\/.*ref…/.*refuse%0A%0A- Expected:%0A/approve|payment-proofs\/.*refuse/%0A%0A+ Received:%0A"import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';%0Aimport type { PaymentProof } from '../../api/types';%0Aimport { ownerRequest } from '../../auth/owner';%0Aimport { Badge, ErrorNotice, Field, Money, Notice } from '../../components/ui';%0Aimport { useI18n, type Key } from '../../i18n';%0Aimport { formatDate } from '../../lib/format';%0A%0Aconst MAX_BYTES = 5 * 1024 * 1024;%0Aconst newKey = () => crypto.randomUUID();%0A%0A/**%0A * The Owner tells us a payment was made (D227): a private file with the amount and date. Sending changes nothing about%0A * access: an administrator checks it and records the real payment, and a refusal comes back with its reason to correct.%0A */%0Aexport function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<void> }) {%0A  const { t, lang } = useI18n();%0A  const [rows, setRows] = useState<PaymentProof[] | null>(null);%0A  const [form, setForm] = useState({ amount: '', paidAt: '', reference: '' });%0A  const [file, setFile] = useState<File | null>(null);%0A  const [problem, setProblem] = useState<Key | null>(null);%0A  const [error, setError] = useState<unknown>(null);%0A  const [busy, setBusy] = useState(false);%0A  // One attempt, one key: a retry of a lost answer is the same proof.%0A  const key = useRef(newKey());%0A  const input = useRef<HTMLInputElement>(null);%0A%0A  const load = useCallback(async () => {%0A    try {%0A      setRows(await ownerRequest<PaymentProof[]>('platform/my-subscription/payment-proofs'));%0A    } catch (e) {%0A      setError(e);%0A    }%0A  }, []);%0A  useEffect(() => void load(), [load]);%0A%0A  const open = rows?.some((p) => p.status === 'submitted' || p.status === 'under_review') ?? false;%0A%0A  const submit = async (e: FormEvent) => {%0A    e.preventDefault();%0A    setError(null);%0A    setProblem(null);%0A    if (!file) return setProblem('portal.proof.problem.file');%0A    if (file.size > MAX_BYTES) return setProblem('portal.proof.problem.size');%0A    const body = new FormData();%0A    body.set('idempotencyKey', key.current);%0A    body.set('amount', form.amount.trim());%0A    body.set('paidAt', new Date(form.paidAt).toISOString());%0A    if (form.reference.trim()) body.set('reference', form.reference.trim());%0A    body.set('file', file);%0A    setBusy(true);%0A    try {%0A      await ownerRequest('platform/my-subscription/payment-proofs', { method: 'POST', body });%0A      key.current = newKey();%0A      setForm({ amount: '', paidAt: '', reference: '' });%0A      setFile(null);%0A      if (input.current) input.current.value = '';%0A      await load();%0A      await onChanged();%0A    } catch (err) {%0A      setError(err);%0A    } finally {%0A      setBusy(false);%0A    }%0A  };%0A%0A  return (%0A    <section className=\"card stack\" aria-labelledby=\"proofs-h\">%0A      <h2 id=\"proofs-h\">{t('portal.proof.title')}</h2>%0A      {rows?.map((p) => (%0A        <div key={p.id} className=\"stack\">%0A          <div className=\"row spread\">%0A            <span>%0A              <Money amount={p.amount} /> · {formatDate(p.paidAt, lang)}%0A            </span>%0A            <Badge tone={p.status === 'approved' ? 'ok' : p.status === 'refused' ? 'danger' : 'warn'}>{t(`portal.proof.status.${p.status}` as Key)}</Badge>%0A          </div>%0A          {p.status === 'refused' && p.refusalReason ? <Notice tone=\"danger\">{t('portal.proof.refused', { reason: p.refusalReason })}</Notice> : null}%0A        </div>%0A      ))}%0A      {open ? (%0A        <p className=\"muted small\">{t('portal.proof.waiting')}</p>%0A      ) : (%0A        <form className=\"stack\" onSubmit={submit}>%0A          <p className=\"muted small\">{t('portal.proof.intro')}</p>%0A          <div className=\"grid\">%0A            <Field label={t('portal.proof.amount')}>%0A              <input required inputMode=\"decimal\" dir=\"ltr\" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />%0A            </Field>%0A            <Field label={t('portal.proof.date')}>%0A              <input required type=\"date\" dir=\"ltr\" value={form.paidAt} onChange={(e) => setForm({ ...form, paidAt: e.target.value })} />%0A            </Field>%0A            <Field label={t('portal.proof.reference')}>%0A              <input maxLength={120} dir=\"ltr\" value={form.reference} onChange={(e) => setForm({ ...form, reference: e.target.value })} />%0A            </Field>%0A          </div>%0A          <Field label={t('portal.proof.file')}>%0A            <input ref={input} type=\"file\" accept=\"application/pdf,image/png,image/jpeg\" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />%0A          </Field>%0A          {problem ? <Notice tone=\"danger\">{t(problem)}</Notice> : null}%0A          <ErrorNotice error={error} />%0A          <div className=\"row\">%0A            <button type=\"submit\" className=\"btn btn-primary\" disabled={busy}>%0A              {t('portal.proof.send')}%0A            </button>%0A          </div>%0A        </form>%0A      )}%0A    </section>%0A  );%0A}%0A"%0A%0A ❯ test/payment-proofs.test.tsx:29:24%0A%0A
