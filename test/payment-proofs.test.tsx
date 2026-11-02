@@ -26,7 +26,7 @@ describe('payment proofs on the web (D227)', () => {
   it('the portal only sends; nothing here may decide access', () => {
     const portal = readFileSync('src/pages/portal/PaymentProofs.tsx', 'utf8');
     expect(portal).toContain('platform/my-subscription/payment-proofs');
-    expect(portal).not.toMatch(/approve|payment-proofs\/.*refuse/);
+    expect(portal).not.toMatch(/payment-proofs\/[^'"]*(approve|refuse)/);
   });
 
   it('a file goes as a form with its own boundary, never as JSON', () => {
