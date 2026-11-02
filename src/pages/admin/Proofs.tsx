@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiBase } from '../../api/client';
-import type { PaymentProof } from '../../api/types';
+import type { PaymentProof, ProofRecovery } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
 import { Empty, ErrorNotice, Field, Money, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
@@ -73,6 +73,8 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
       ) : (
         <Notice tone="warn">{t('admin.proofs.purged')}</Notice>
       )}
+      {proof.applying ? <Recovery proof={proof} ask={ask} onDone={onDone} /> : (
+      <>
       <form
         className="stack"
         onSubmit={(e) => {
@@ -121,7 +123,77 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
           {t('admin.proofs.refuse')}
         </button>
       </form>
+      </>
+      )}
       <ErrorNotice error={error} />
     </section>
+  );
+}
+
+/** A stopped approval: what the records say happened, and only the actions that fit it. The stored decision is finished, never a new one. */
+function Recovery({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
+  const { t, lang } = useI18n();
+  const [state, setState] = useState<ProofRecovery | null>(null);
+  const [reason, setReason] = useState('');
+  const [error, setError] = useState<unknown>(null);
+  const [busy, setBusy] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      setState(await adminRequest<ProofRecovery>(`platform/payment-proofs/${proof.id}/recovery`));
+    } catch (e) {
+      setError(e);
+    }
+  }, [proof.id]);
+  useEffect(() => void load(), [load]);
+
+  const act = async (path: 'complete' | 'release', extra: Record<string, unknown> = {}) => {
+    setError(null);
+    const confirmPassword = await ask();
+    if (!confirmPassword) return;
+    setBusy(true);
+    try {
+      await adminRequest(`platform/payment-proofs/${proof.id}/recovery/${path}`, { method: 'POST', body: { reason: reason.trim(), confirmPassword, ...extra } });
+      await onDone();
+    } catch (e) {
+      setError(e);
+      await load();
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (!state) return <ErrorNotice error={error} />;
+  const end = state.subscription?.currentPeriodEnd ?? state.subscription?.complimentaryUntil ?? null;
+  const ready = reason.trim().length > 0 && !busy;
+  return (
+    <div className="stack" data-testid="proof-recovery">
+      <Notice tone="warn">{t(state.mayStillBeRunning ? 'admin.proofs.recovery.running' : 'admin.proofs.recovery.stopped')}</Notice>
+      <ul>
+        {state.request ? <li><Money amount={state.request.amount} /> · {t('admin.proofs.months')}: {state.request.months}</li> : null}
+        <li>{t(state.paymentRecorded ? 'admin.proofs.recovery.paymentYes' : 'admin.proofs.recovery.paymentNo')}</li>
+        <li>{t(state.periodApplied ? 'admin.proofs.recovery.periodYes' : 'admin.proofs.recovery.periodNo')}</li>
+        <li>{t('admin.proofs.recovery.accessNow')}: {state.subscription?.status ?? '—'}{end ? ` · ${formatDate(end, lang)}` : ''}</li>
+      </ul>
+      <Field label={t('admin.proofs.recovery.reason')}>
+        <input maxLength={500} value={reason} onChange={(e) => setReason(e.target.value)} />
+      </Field>
+      {state.actions.complete ? (
+        <button type="button" className="btn btn-primary" disabled={!ready} onClick={() => void act('complete')}>
+          {t(state.periodApplied ? 'admin.proofs.recovery.finish' : 'admin.proofs.recovery.complete')}
+        </button>
+      ) : null}
+      {state.actions.closeWithoutPeriod ? (
+        <button type="button" className="btn" disabled={!ready} onClick={() => void act('complete', { closeWithoutPeriod: true })}>
+          {t('admin.proofs.recovery.closeWithoutPeriod')}
+        </button>
+      ) : null}
+      {state.actions.release ? (
+        <button type="button" className="btn" disabled={!ready} onClick={() => void act('release')}>
+          {t('admin.proofs.recovery.release')}
+        </button>
+      ) : null}
+      <ErrorNotice error={error} />
+    </div>
   );
 }

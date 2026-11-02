@@ -953,4 +953,18 @@ export interface PaymentProof {
   submittedAt: string;
   decidedAt: string | null;
   fileAvailable: boolean;
+  /** Administrator's list only: an approval started and did not finish. */
+  applying?: boolean;
+}
+
+/** What actually happened to a stopped approval (D227), read from the records. */
+export interface ProofRecovery {
+  stopped: boolean;
+  claimedAt: string | null;
+  mayStillBeRunning: boolean;
+  request: { amount: string; paidAt: string; months: number; reason: string } | null;
+  paymentRecorded: boolean;
+  periodApplied: boolean;
+  subscription: { status: string; currentPeriodEnd: string | null; complimentaryUntil: string | null } | null;
+  actions: { complete: boolean; closeWithoutPeriod: boolean; release: boolean };
 }

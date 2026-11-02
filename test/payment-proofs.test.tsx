@@ -23,6 +23,19 @@ describe('payment proofs on the web (D227)', () => {
     }
   });
 
+  it('a stopped approval is settled from what is recorded, and the amount cannot be changed there', () => {
+    for (const catalogue of [en, fr, ar]) {
+      for (const k of ['running', 'stopped', 'paymentYes', 'paymentNo', 'periodYes', 'periodNo', 'complete', 'finish', 'closeWithoutPeriod', 'release'] as const) {
+        expect(catalogue[`admin.proofs.recovery.${k}`]).toBeTruthy();
+      }
+    }
+    const page = readFileSync('src/pages/admin/Proofs.tsx', 'utf8');
+    expect(page).toContain('proof.applying ? <Recovery');
+    const recovery = page.slice(page.indexOf('function Recovery'));
+    expect(recovery).toContain('state.actions.release ?');
+    expect(recovery).not.toMatch(/amount:\s*form/);
+  });
+
   it('the portal only sends; nothing here may decide access', () => {
     const portal = readFileSync('src/pages/portal/PaymentProofs.tsx', 'utf8');
     expect(portal).toContain('platform/my-subscription/payment-proofs');
