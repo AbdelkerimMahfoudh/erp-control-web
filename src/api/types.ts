@@ -936,3 +936,21 @@ export type AcquisitionLookup =
   | { usable: false }
   | { usable: true; source: 'promoter'; promoterName: string; code: string }
   | { usable: true; source: 'user_invite' };
+
+/** D227: a payment proof from the Owner's portal, and where its review stands. */
+export interface PaymentProof {
+  id: string;
+  companyId: string;
+  status: 'submitted' | 'under_review' | 'approved' | 'refused';
+  amount: string;
+  paidAt: string;
+  reference: string | null;
+  note: string | null;
+  contentType: string;
+  byteSize: number;
+  refusalReason: string | null;
+  months: number | null;
+  submittedAt: string;
+  decidedAt: string | null;
+  fileAvailable: boolean;
+}

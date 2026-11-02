@@ -29,6 +29,7 @@ import { Badge, DatedPhrase, Empty, ErrorNotice, Field, Loading, Money, Notice, 
 import { useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, canWithdraw, isScheduledActivityChange, pricesAfter } from '../../lib/activity';
 import { formatDate, formatInstant, formatInt, formatMru } from '../../lib/format';
+import { PaymentProofs } from './PaymentProofs';
 import { TrialCard } from './TrialCard';
 
 type Session =
@@ -369,6 +370,8 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
       />
 
       <HowToPay version={data} />
+
+      <PaymentProofs onChanged={reload} />
 
       <section className="card stack">
         <h2>{t('account.payments')}</h2>

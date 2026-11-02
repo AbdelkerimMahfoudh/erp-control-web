@@ -7,6 +7,7 @@ import { ErrorNotice, Field, Loading, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { Dashboard } from './Dashboard';
 import { Pending } from './Pending';
+import { Proofs } from './Proofs';
 import { Businesses } from './Businesses';
 import { NewBusiness } from './NewBusiness';
 import { Business } from './Business';
@@ -75,6 +76,7 @@ export function Admin() {
             {t('admin.nav.dashboard')}
           </NavLink>
           <NavLink to="/admin/pending">{t('admin.nav.pending')}</NavLink>
+          <NavLink to="/admin/proofs">{t('admin.nav.proofs')}</NavLink>
           <NavLink to="/admin/businesses">{t('admin.nav.businesses')}</NavLink>
           <NavLink to="/admin/seat-requests">{t('admin.nav.seats')}</NavLink>
           <NavLink to="/admin/trials">{t('admin.trial.nav')}</NavLink>
@@ -102,6 +104,7 @@ export function Admin() {
       <Routes>
         <Route index element={<Dashboard />} />
         <Route path="pending" element={<Pending />} />
+        <Route path="proofs" element={<Proofs />} />
         <Route path="businesses" element={<Businesses />} />
         <Route path="businesses/new" element={<NewBusiness />} />
         <Route path="businesses/:id" element={<Business />} />
