@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState, type ReactNode } from 'react';
 import { en, type Catalogue, type Key } from './en';
 import { fr } from './fr';
 import { ar } from './ar';
@@ -63,6 +63,14 @@ interface I18n {
 const Ctx = createContext<I18n | null>(null);
 
 /**
+ * How many providers fixed to an address's language are mounted. While one is, it alone writes the document: the outer
+ * provider, still on the remembered or device language until it follows, would otherwise overwrite it for a commit
+ * (React runs the outer provider's effects last), and a French page said `lang="en"` until the next render (D227,
+ * console CI 41622232435).
+ */
+let fixedClaims = 0;
+
+/**
  * `fixed` is the language of the address (a public page under `/fr` is French whatever was chosen before); without
  * it — the account and console areas — the remembered choice, then the device's, applies. A fixed provider inside
  * another makes the outer one follow it: React runs the outer provider's effects last, and both write the document.
@@ -76,7 +84,17 @@ export function I18nProvider({ children, fixed }: { children: ReactNode; fixed?:
   useEffect(() => {
     if (fixed && parentFollow) parentFollow(fixed);
   }, [fixed, parentFollow]);
-  useEffect(() => applyDocumentLanguage(lang), [lang]);
+  // Registered before any effect runs (layout effects run first), so the outer provider sees the claim.
+  useLayoutEffect(() => {
+    if (!fixed) return;
+    fixedClaims += 1;
+    return () => {
+      fixedClaims -= 1;
+    };
+  }, [fixed]);
+  useEffect(() => {
+    if (fixed || fixedClaims === 0) applyDocumentLanguage(lang);
+  }, [lang, fixed]);
   const setLanguage = useCallback((next: Language) => {
     setFollowed(null);
     setChosen(next);

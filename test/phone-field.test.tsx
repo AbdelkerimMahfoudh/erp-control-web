@@ -45,7 +45,8 @@ describe('composing and splitting', () => {
   });
 
   it('the console uses the same country list as the mobile app', () => {
-    const list = (s: string) => s.slice(s.indexOf('PHONE_COUNTRIES'), s.indexOf('];'));
+    // Line endings aside: a Windows checkout writes CRLF.
+    const list = (s: string) => s.replace(/\r\n/g, '\n').slice(s.replace(/\r\n/g, '\n').indexOf('PHONE_COUNTRIES'), s.replace(/\r\n/g, '\n').indexOf('];'));
     const mobile = '../erp-mobile/lib/phone-input.ts';
     let mobileSource: string | null = null;
     try {
