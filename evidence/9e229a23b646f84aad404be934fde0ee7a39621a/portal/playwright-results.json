@@ -1,0 +1,174 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.4/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/playwright.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/9e229a23b646f84aad404be934fde0ee7a39621a",
+        "commitHash": "9e229a23b646f84aad404be934fde0ee7a39621a",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41725776721"
+      },
+      "gitCommit": {
+        "shortHash": "9e229a23",
+        "hash": "9e229a23b646f84aad404be934fde0ee7a39621a",
+        "subject": "console: reuse the step-up window, stage a business's deletion, the portal's /claim page",
+        "body": "console: reuse the step-up window, stage a business's deletion, the portal's /claim page\n\n- useStepUp: one shared window from the server (GET platform/admin/step-up); a decision\n  inside it goes ahead without the dialog; 'Verified for m:ss' in the header; no\n  decision sends the password any more; a step_up_required refusal asks again next time.\n- BusinessDeletion: prepare (consequences, no refund), then delete with the exact name,\n  the server's blockers shown; the completed record. Account-ready resend button.\n- /claim/:token (portal and full builds): the link leaves the address and goes in a\n  body once; invalid, expired and used links say so with the way on.\n- EN/FR/AR strings; tests for the window, the countdown and the claim page.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+        "author": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1793742771000
+        },
+        "committer": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1793742771000
+        },
+        "branch": "post-build4"
+      }
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/9e229a23b646f84aad404be934fde0ee7a39621a/portal/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/9e229a23b646f84aad404be934fde0ee7a39621a",
+            "commitHash": "9e229a23b646f84aad404be934fde0ee7a39621a",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41725776721"
+          },
+          "gitCommit": {
+            "shortHash": "9e229a23",
+            "hash": "9e229a23b646f84aad404be934fde0ee7a39621a",
+            "subject": "console: reuse the step-up window, stage a business's deletion, the portal's /claim page",
+            "body": "console: reuse the step-up window, stage a business's deletion, the portal's /claim page\n\n- useStepUp: one shared window from the server (GET platform/admin/step-up); a decision\n  inside it goes ahead without the dialog; 'Verified for m:ss' in the header; no\n  decision sends the password any more; a step_up_required refusal asks again next time.\n- BusinessDeletion: prepare (consequences, no refund), then delete with the exact name,\n  the server's blockers shown; the completed record. Account-ready resend button.\n- /claim/:token (portal and full builds): the link leaves the address and goes in a\n  body once; invalid, expired and used links say so with the way on.\n- EN/FR/AR strings; tests for the window, the countdown and the claim page.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793742771000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793742771000
+            },
+            "branch": "post-build4"
+          }
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/portal\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/9e229a23b646f84aad404be934fde0ee7a39621a/portal/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/9e229a23b646f84aad404be934fde0ee7a39621a",
+            "commitHash": "9e229a23b646f84aad404be934fde0ee7a39621a",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41725776721"
+          },
+          "gitCommit": {
+            "shortHash": "9e229a23",
+            "hash": "9e229a23b646f84aad404be934fde0ee7a39621a",
+            "subject": "console: reuse the step-up window, stage a business's deletion, the portal's /claim page",
+            "body": "console: reuse the step-up window, stage a business's deletion, the portal's /claim page\n\n- useStepUp: one shared window from the server (GET platform/admin/step-up); a decision\n  inside it goes ahead without the dialog; 'Verified for m:ss' in the header; no\n  decision sends the password any more; a step_up_required refusal asks again next time.\n- BusinessDeletion: prepare (consequences, no refund), then delete with the exact name,\n  the server's blockers shown; the completed record. Account-ready resend button.\n- /claim/:token (portal and full builds): the link leaves the address and goes in a\n  body once; invalid, expired and used links say so with the way on.\n- EN/FR/AR strings; tests for the window, the countdown and the claim page.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793742771000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793742771000
+            },
+            "branch": "post-build4"
+          }
+        },
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/9e229a23b646f84aad404be934fde0ee7a39621a/portal/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
+      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-11-03T22:17:13.767Z",
+    "duration": 187.187,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

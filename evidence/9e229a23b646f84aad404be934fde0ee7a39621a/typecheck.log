@@ -1,0 +1,5 @@
+
+> erp-control-web@0.1.0 typecheck
+> tsc -p tsconfig.json --noEmit
+
+test/step-up-window.test.tsx(100,12): error TS2532: Object is possibly 'undefined'.
