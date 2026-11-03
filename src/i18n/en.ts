@@ -907,6 +907,7 @@ export const en = {
   'admin.new.phone': 'Owner’s WhatsApp number',
   'admin.new.phone.hint': 'The Owner’s own number: choose the country, then type the number. It stays unverified: nothing is sent to it and no consent is recorded.',
   'phone.country': 'Country code',
+  'phone.country.search': 'Search a country or code',
   'admin.new.email': 'Owner’s email (optional)',
   'admin.new.city': 'City (optional)',
   'admin.new.activity': 'First store’s activity',

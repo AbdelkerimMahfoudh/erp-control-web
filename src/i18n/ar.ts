@@ -894,6 +894,7 @@ export const ar: Catalogue = {
   'admin.new.phone': 'رقم واتساب المالك',
   'admin.new.phone.hint': 'رقم المالك الشخصي: اختر البلد ثم اكتب الرقم. يبقى غير مُتحقَّق منه: لا يُرسَل إليه شيء ولا تُسجَّل أي موافقة.',
   'phone.country': 'رمز البلد',
+  'phone.country.search': 'ابحث عن بلد أو رمز',
   'admin.new.email': 'بريد المالك الإلكتروني (اختياري)',
   'admin.new.city': 'المدينة (اختياري)',
   'admin.new.activity': 'نشاط المتجر الأول',

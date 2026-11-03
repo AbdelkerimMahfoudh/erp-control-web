@@ -895,6 +895,7 @@ export const fr: Catalogue = {
   'admin.new.phone': 'Numéro WhatsApp du propriétaire',
   'admin.new.phone.hint': 'Le numéro personnel du propriétaire : choisissez le pays, puis saisissez le numéro. Il reste non vérifié : rien ne lui est envoyé et aucun consentement n’est enregistré.',
   'phone.country': 'Indicatif du pays',
+  'phone.country.search': 'Chercher un pays ou un indicatif',
   'admin.new.email': 'E-mail du propriétaire (facultatif)',
   'admin.new.city': 'Ville (facultatif)',
   'admin.new.activity': 'Activité du premier magasin',

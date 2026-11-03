@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useI18n } from '../i18n';
-import { composePhone, countryName, PHONE_COUNTRIES, splitPhone, typedInternational } from '../lib/phone-input';
+import { useMemo } from 'react';
+import { composePhone, countriesFor, countryName, searchCountries, splitPhone, typedInternational } from '../lib/phone-input';
 
 /**
  * The shared international phone input (D227): a country and the national digits, handed on as one international
@@ -24,6 +25,12 @@ export function PhoneField({
   const [initial] = useState(() => splitPhone(value));
   const [iso, setIso] = useState(initial.iso);
   const [national, setNational] = useState(initial.national);
+  const [query, setQuery] = useState('');
+  const sorted = useMemo(() => countriesFor(lang), [lang]);
+  const shown = useMemo(() => {
+    const found = searchCountries(sorted, query, lang);
+    return found.some((c) => c.iso === iso) ? found : [...sorted.filter((c) => c.iso === iso), ...found];
+  }, [sorted, query, lang, iso]);
   // A form that clears or replaces its value (after a save) is followed, not overridden.
   if (value !== composePhone(iso, national)) {
     const next = splitPhone(value, iso);
@@ -48,6 +55,15 @@ export function PhoneField({
           onChange(composePhone(iso, e.target.value));
         }}
       />
+      {/* Post-Build-4: every country and territory, in the reading language's order; the search narrows the list and keeps the chosen one. */}
+      <input
+        type="search"
+        aria-label={t('phone.country.search')}
+        placeholder={t('phone.country.search')}
+        value={query}
+        disabled={whole}
+        onChange={(e) => setQuery(e.target.value)}
+      />
       <select
         aria-label={t('phone.country')}
         value={iso}
@@ -57,7 +73,7 @@ export function PhoneField({
           onChange(composePhone(e.target.value, national));
         }}
       >
-        {PHONE_COUNTRIES.map((c) => (
+        {shown.map((c) => (
           <option key={c.iso} value={c.iso}>
             {`+${c.code} ${countryName(c, lang)}`}
           </option>
