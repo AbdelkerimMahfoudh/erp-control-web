@@ -25,7 +25,9 @@ const dist = resolve(process.argv[2] ?? 'dist');
 const preview = process.argv.includes('--preview');
 const publicSurface = process.argv.includes('--public');
 const adminSurface = process.argv.includes('--admin');
-const portalSurface = process.argv.includes('--portal') || adminSurface;
+const portalSurface = process.argv.includes('--portal');
+// Closed to crawlers and to the company site's pages alike.
+const closedSurface = portalSurface || adminSurface;
 const consoleFree = process.argv.includes('--no-console');
 // The only HTML files a portal build has: the shell, its root's copy of it, and its not-found page.
 const PORTAL_HTML = new Set(['app-shell.html', 'index.html', '404.html']);
@@ -71,14 +73,14 @@ for (const f of files) {
     for (const [what, re] of PROTECTED_ONLY) if (re.test(text)) findings.push({ file: rel, what: `${what} in a public build` });
   }
   // D227: a production portal is the customers'. The console's code must not reach it.
-  if (portalSurface && !adminSurface && !preview && /platform\/admin/.test(text)) findings.push({ file: rel, what: 'the console in a production portal build' });
+  if (portalSurface && !preview && /platform\/admin/.test(text)) findings.push({ file: rel, what: 'the console in a production portal build' });
   if (consoleFree) for (const re of [/platform\/admin/, /platform\/payment-proofs/]) if (re.test(text)) findings.push({ file: rel, what: `the console (${re.source}) in a customers' portal build` });
   if (adminSurface) {
     for (const re of [/platform\/my-subscription/, /platform\/portal/, /platform\/payment-instructions/]) if (re.test(text)) findings.push({ file: rel, what: `the customers' portal (${re.source}) in an admin build` });
     if (!preview) for (const re of [/dukan-test\.tsxmr/, /erp-test\.tsxmr/, /:3010\b/]) if (re.test(text)) findings.push({ file: rel, what: `${re.source} in a production admin build` });
     if (/platform\/admin/.test(text)) consolePresent = true;
   }
-  if (portalSurface) {
+  if (closedSurface) {
     if (rel.endsWith('.html') && !PORTAL_HTML.has(rel)) findings.push({ file: rel, what: 'a company-site page in a portal build' });
     if (rel === 'sitemap.xml') findings.push({ file: rel, what: 'a sitemap in a portal build' });
     if (rel === 'robots.txt' && text !== 'User-agent: *\nDisallow: /\n') findings.push({ file: rel, what: 'robots.txt lets a crawler in' });
@@ -103,7 +105,7 @@ for (const f of files) {
       if (re.test(text)) findings.push({ file: rel, what });
   }
 }
-if (portalSurface && !files.some((f) => relative(dist, f) === 'robots.txt')) findings.push({ file: 'robots.txt', what: 'missing from a portal build' });
+if (closedSurface && !files.some((f) => relative(dist, f) === 'robots.txt')) findings.push({ file: 'robots.txt', what: 'missing from a portal build' });
 if (adminSurface && !consolePresent) findings.push({ file: '*', what: 'no console in an admin build' });
 console.log(`files ${files.length}, bytes ${bytes}, mode ${preview ? 'preview' : 'production'}, surface ${publicSurface ? 'public' : adminSurface ? 'admin' : portalSurface ? 'portal' : 'full'}`);
 console.log(`marked test values found: ${testValues}${preview ? ' (expected in a preview build)' : ''}`);

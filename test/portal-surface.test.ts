@@ -129,7 +129,7 @@ describe('the build takes the portal’s stub, and its files carry none of the c
 
   it('the prerenderer writes the shell for the portal and no page of the company site; the bundle audit has a portal mode', () => {
     const prerender = read('scripts/prerender.mjs');
-    expect(prerender).toMatch(/const portal = ssr\.SURFACE === 'portal';/);
+    expect(prerender).toMatch(/const portal = ssr\.SURFACE === 'portal'(?: \|\| ssr\.SURFACE === 'admin')?;/);
     expect(prerender).toMatch(/for \(const lang of portal \? \[\] : ssr\.LANGUAGES\)/);
     expect(prerender).toMatch(/!portal\) write\('sitemap\.xml'/);
     const audit = read('scripts/audit-bundle.mjs');

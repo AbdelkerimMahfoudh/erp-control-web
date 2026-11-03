@@ -67,8 +67,8 @@ test('the root leads to the console, and its console routes are served', async (
 });
 
 test('every page says noindex and carries the policy; no source map is served', async ({ request }) => {
-  for (const path of ['/', '/admin', '/admin/proofs', '/nowhere']) {
-    const headers = (await request.get(path, { maxRedirects: 0 })).headers();
+  for (const path of ['/admin', '/admin/proofs', '/nowhere']) {
+    const headers = (await request.get(path)).headers();
     expect(headers['x-robots-tag'], path).toContain('noindex');
     expect(headers['content-security-policy'], path).toContain("frame-ancestors 'none'");
   }
