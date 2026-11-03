@@ -1,0 +1,174 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.4/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/playwright.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/f2e8b3a84450a657882073cf93f1002d3f0aff09",
+        "commitHash": "f2e8b3a84450a657882073cf93f1002d3f0aff09",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41550226347"
+      },
+      "gitCommit": {
+        "shortHash": "f2e8b3a8",
+        "hash": "f2e8b3a84450a657882073cf93f1002d3f0aff09",
+        "subject": "Admin surface for https://admin.tsxmr.com: its own gate, bundle, audits and release package",
+        "body": "Admin surface for https://admin.tsxmr.com: its own gate, bundle, audits and release package\n\nReuses the console code. The customers' portal build stays console-free, now audited in CI (--mode customer-audit).\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+        "author": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1793664290000
+        },
+        "committer": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1793664290000
+        },
+        "branch": "ops/admin-console-host"
+      }
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/f2e8b3a84450a657882073cf93f1002d3f0aff09/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/f2e8b3a84450a657882073cf93f1002d3f0aff09",
+            "commitHash": "f2e8b3a84450a657882073cf93f1002d3f0aff09",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41550226347"
+          },
+          "gitCommit": {
+            "shortHash": "f2e8b3a8",
+            "hash": "f2e8b3a84450a657882073cf93f1002d3f0aff09",
+            "subject": "Admin surface for https://admin.tsxmr.com: its own gate, bundle, audits and release package",
+            "body": "Admin surface for https://admin.tsxmr.com: its own gate, bundle, audits and release package\n\nReuses the console code. The customers' portal build stays console-free, now audited in CI (--mode customer-audit).\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793664290000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793664290000
+            },
+            "branch": "ops/admin-console-host"
+          }
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/(^|[\\\\/])site\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/f2e8b3a84450a657882073cf93f1002d3f0aff09/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/f2e8b3a84450a657882073cf93f1002d3f0aff09",
+            "commitHash": "f2e8b3a84450a657882073cf93f1002d3f0aff09",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41550226347"
+          },
+          "gitCommit": {
+            "shortHash": "f2e8b3a8",
+            "hash": "f2e8b3a84450a657882073cf93f1002d3f0aff09",
+            "subject": "Admin surface for https://admin.tsxmr.com: its own gate, bundle, audits and release package",
+            "body": "Admin surface for https://admin.tsxmr.com: its own gate, bundle, audits and release package\n\nReuses the console code. The customers' portal build stays console-free, now audited in CI (--mode customer-audit).\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793664290000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793664290000
+            },
+            "branch": "ops/admin-console-host"
+          }
+        },
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/f2e8b3a84450a657882073cf93f1002d3f0aff09/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Process from config.webServer was not able to start. Exit code: 1",
+      "stack": "Error: Process from config.webServer was not able to start. Exit code: 1"
+    }
+  ],
+  "stats": {
+    "startTime": "2026-11-03T00:16:34.328Z",
+    "duration": 162.08299999999997,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

@@ -1,0 +1,585 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:5:103). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:6:75). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./surface" without a file extension (src/config/schema.ts:10:40). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./surface" without a file extension (src/config/schema.ts:40:51). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./legal-choices" without a file extension (src/content/index.ts:10:32). Add the file extension
+  - import "./legal-notice" without a file extension (src/content/index.ts:11:29). Add the file extension
+  - import "./legal-security" without a file extension (src/content/index.ts:12:26). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/index.ts:13:31). Add the file extension
+  - import "./brand" without a file extension (src/content/index.ts:14:42). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:15:26). Add the file extension
+  - import "./dukan-demo" without a file extension (src/content/index.ts:16:27). Add the file extension
+  - import "./riyade" without a file extension (src/content/index.ts:17:24). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:18:40). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:19:38). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:20:72). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:21:30). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/index.ts:22:36). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:23:38). Add the file extension
+  - import "./prelaunch" without a file extension (src/content/index.ts:24:158). Add the file extension
+  - import "./legal-prelaunch" without a file extension (src/content/index.ts:25:142). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-demo.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/riyade.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-overview.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/brand.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-prelaunch.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/prelaunch.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/brand.ts:2:27). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/prelaunch.ts:3:36). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/prelaunch.ts:4:38). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m28 tests[22m[2m)[22m[33m 691[2mms[22m[39m
+   [32m✓[39m a scheduled store or seat starts on the server’s instant, told in the row’s own zone (D176) [2m(4)[22m
+     [33m[2m✓[22m[39m no source formats an activation’s start except with that same activation’s zone, and none formats `effectiveAt`[33m 412[2mms[22m[39m
+ [32m✓[39m test/dukan-showcase.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 2847[2mms[22m[39m
+   [32m✓[39m the two walkthroughs [2m(4)[22m
+     [33m[2m✓[22m[39m two tabs of one size, one panel shown; three steps each, one screen at a time[33m 304[2mms[22m[39m
+     [33m[2m✓[22m[39m the commission is typed by the operator and paid by the customer, shown apart, with no balance and no transfer[33m 307[2mms[22m[39m
+   [32m✓[39m keyboard, languages and what it never does [2m(3)[22m
+     [33m[2m✓[22m[39m the tabs follow the arrow keys in the page’s direction; one tab stop; the hidden panel is out of reach[33m 648[2mms[22m[39m
+     [33m[2m✓[22m[39m asks nothing of the network, the storage, the camera or the reader[33m 487[2mms[22m[39m
+ [32m✓[39m test/trial-console.test.tsx [2m([22m[2m40 tests[22m[2m)[22m[33m 11208[2mms[22m[39m
+   [32m✓[39m the console: a business’s trial, recorded [2m(12)[22m
+     [33m[2m✓[22m[39m shows the eligibility and the claim with their exact instants, and that no decision creates or extends a trial[33m 643[2mms[22m[39m
+     [32m✓[39m an end date inside a running trial (R4-05) [2m(4)[22m
+       [33m[2m✓[22m[39m refused: a title of its own and the trial’s end in the business’s zone — not "something went wrong", not the server’s UTC sentence[33m 637[2mms[22m[39m
+       [33m[2m✓[22m[39m the end the server names in its refusal comes first, said in French in the business’s zone[33m 584[2mms[22m[39m
+   [32m✓[39m the console: a store or seat paid for during a trial (D176) [2m(25)[22m
+     [33m[2m✓[22m[39m confirmed during the trial: the outcome says when it starts — the server’s instant in the business’s zone — never that the store opened[33m 404[2mms[22m[39m
+     [33m[2m✓[22m[39m with no paid access approved yet: it starts with the first paid month — no date; the seat’s person waits for it to start[33m 342[2mms[22m[39m
+     [33m[2m✓[22m[39m confirmed with a paid period in force: the server opened the store, and the outcome says so — and nothing of a start to come[33m 360[2mms[22m[39m
+     [33m[2m✓[22m[39m a confirmation that would be charged again by the first paid period is refused in words: nothing was recorded, the request still waits[33m 303[2mms[22m[39m
+     [32m✓[39m every state in English [2m(6)[22m
+       [33m[2m✓[22m[39m confirmed during the trial: when it starts, in the business’s zone — never that the store opened[33m 321[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with no paid access approved yet: the first paid month, no date — and the seat’s person waits for it to start[33m 358[2mms[22m[39m
+       [33m[2m✓[22m[39m the seat’s person proves their contacts and waits for the seat to start — its start is never a proof[33m 306[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with a paid period in force: the store was opened, and nothing of a start to come[33m 387[2mms[22m[39m
+       [33m[2m✓[22m[39m a confirmation the first paid period would charge again is refused in words: nothing recorded, the form kept[33m 307[2mms[22m[39m
+     [32m✓[39m every state in French [2m(6)[22m
+       [33m[2m✓[22m[39m confirmed during the trial: when it starts, in the business’s zone — never that the store opened[33m 320[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with no paid access approved yet: the first paid month, no date — and the seat’s person waits for it to start[33m 350[2mms[22m[39m
+       [33m[2m✓[22m[39m the seat’s person proves their contacts and waits for the seat to start — its start is never a proof[33m 356[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with a paid period in force: the store was opened, and nothing of a start to come[33m 305[2mms[22m[39m
+       [33m[2m✓[22m[39m a confirmation the first paid period would charge again is refused in words: nothing recorded, the form kept[33m 340[2mms[22m[39m
+     [32m✓[39m every state in Arabic [2m(6)[22m
+       [33m[2m✓[22m[39m confirmed during the trial: when it starts, in the business’s zone — never that the store opened[33m 309[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with no paid access approved yet: the first paid month, no date — and the seat’s person waits for it to start[33m 334[2mms[22m[39m
+       [33m[2m✓[22m[39m the seat’s person proves their contacts and waits for the seat to start — its start is never a proof[33m 338[2mms[22m[39m
+       [33m[2m✓[22m[39m confirmed with a paid period in force: the store was opened, and nothing of a start to come[33m 372[2mms[22m[39m
+       [33m[2m✓[22m[39m a confirmation the first paid period would charge again is refused in words: nothing recorded, the form kept[33m 394[2mms[22m[39m
+     [33m[2m✓[22m[39m the business page says, above its requests, that what was paid for during the trial is not collected again — while one is scheduled, and once one started[33m 387[2mms[22m[39m
+     [33m[2m✓[22m[39m on the business page a scheduled row says when it starts and offers no action; the note in French and Arabic[33m 301[2mms[22m[39m
+ [32m✓[39m test/trial-account.test.tsx [2m([22m[2m65 tests[22m[2m)[22m[33m 14140[2mms[22m[39m
+   [32m✓[39m the Owner’s trial card on /subscription [2m(6)[22m
+     [33m[2m✓[22m[39m an Owner who may claim sees the terms, the end the server would set — in the business’s zone — and one button[33m 564[2mms[22m[39m
+     [33m[2m✓[22m[39m no offer and no trial, a paid business after its trial, another role (403), an older API (404): no card, no error[33m 448[2mms[22m[39m
+   [32m✓[39m the portal instructions on the card [2m(15)[22m
+     [33m[2m✓[22m[39m sent by email for a recorded reason: where, and why WhatsApp could not carry it[33m 999[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing carried them: said, with the recorded reason — and the claim stands, as delivery is never a condition[33m 671[2mms[22m[39m
+     [33m[2m✓[22m[39m the requests in French and Arabic, and no list when nothing was ever asked for[33m 395[2mms[22m[39m
+     [33m[2m✓[22m[39m a refused send is said in words: too soon (with the server’s instant), nothing can be sent, no trial any more[33m 405[2mms[22m[39m
+   [32m✓[39m a store or seat paid for during the trial: "Paid · scheduled", and when it starts (D176) [2m(9)[22m
+     [33m[2m✓[22m[39m every status in its own words and colour, in English, French and Arabic — a paid add-on never reads as the renewal’s "scheduled"[33m 330[2mms[22m[39m
+     [33m[2m✓[22m[39m a list holding a store or seat paid for during the trial says it is paid for once; the note, in French and Arabic too[33m 301[2mms[22m[39m
+   [32m✓[39m Apply ends at the portal’s sign-in [2m(2)[22m
+     [33m[2m✓[22m[39m a confirmed application leads to the portal, where the Owner signs in with the password just chosen — no token is kept, Apply claims nothing[33m 1328[2mms[22m[39m
+     [33m[2m✓[22m[39m an application the server does not call eligible says what it always said[33m 595[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/promoters.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 3545[2mms[22m[39m
+   [32m✓[39m the promoters list [2m(2)[22m
+     [33m[2m✓[22m[39m shows each promoter with the number masked, the code, the state and finished registrations — and searches by code[33m 366[2mms[22m[39m
+     [33m[2m✓[22m[39m creates a promoter after a step-up — with no code: that is an explicit click on their page[33m 1000[2mms[22m[39m
+   [32m✓[39m a promoter’s page [2m(5)[22m
+     [33m[2m✓[22m[39m generates the code and QR only on the explicit click and a step-up[33m 346[2mms[22m[39m
+     [33m[2m✓[22m[39m regenerating is confirmed twice — what it does, then the step-up[33m 407[2mms[22m[39m
+     [33m[2m✓[22m[39m deactivates after a step-up, and says the code no longer opens[33m 366[2mms[22m[39m
+   [32m✓[39m the promo code on the application form [2m(3)[22m
+     [33m[2m✓[22m[39m typing moves on, Backspace moves back; an unavailable code says so and can be removed[33m 320[2mms[22m[39m
+ [32m✓[39m test/provisioning-console.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 5940[2mms[22m[39m
+   [32m✓[39m creating a business and its Owner [2m(2)[22m
+     [33m[2m✓[22m[39m sends a test business by default with its key and no password, and shows the setup code once[33m 1548[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps its key when the same answers are sent again after a lost answer, and says a customer cannot be created while activation is closed[33m 1213[2mms[22m[39m
+   [32m✓[39m a test business’s page [2m(6)[22m
+     [33m[2m✓[22m[39m issues the Owner’s setup code after a step-up and shows it once[33m 361[2mms[22m[39m
+     [33m[2m✓[22m[39m opens a store under the grant, and a retry with the same name says nothing new was made[33m 867[2mms[22m[39m
+     [33m[2m✓[22m[39m a store its access does not cover: nothing opens until a reason is given for that exact request (D227)[33m 654[2mms[22m[39m
+     [33m[2m✓[22m[39m an unfinished account says so, and is finished from its page with what it holds (D227)[33m 336[2mms[22m[39m
+     [33m[2m✓[22m[39m says a test status refusal in words[33m 372[2mms[22m[39m
+ [32m✓[39m test/riyade.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 2155[2mms[22m[39m
+   [32m✓[39m Riyade on a public build, page by page [2m(21)[22m
+     [33m[2m✓[22m[39m its page in en: the name as the one heading, its line, who makes it, coming soon — and nothing to do[33m 317[2mms[22m[39m
+ [32m✓[39m test/deferred-verification-console.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 8105[2mms[22m[39m
+   [32m✓[39m creating a business: WhatsApp verification [2m(4)[22m
+     [33m[2m✓[22m[39m is Required by default, and a Required request sends no deferral[33m 1572[2mms[22m[39m
+     [33m[2m✓[22m[39m Deferred asks for a reason and the controlled-test confirmation, shows the warning word for word, and shows the Owner’s setup code[33m 1370[2mms[22m[39m
+     [33m[2m✓[22m[39m while the switch is off, the choice never appears[33m 835[2mms[22m[39m
+     [33m[2m✓[22m[39m the server’s refusal is said in words[33m 1079[2mms[22m[39m
+   [32m✓[39m a business’s page [2m(4)[22m
+     [33m[2m✓[22m[39m requires verification after a step-up, with a reason, and sends nothing to the number[33m 528[2mms[22m[39m
+     [33m[2m✓[22m[39m adds a deferred Employee with a store, and shows their setup code once[33m 801[2mms[22m[39m
+   [32m✓[39m an ordinary business [2m(2)[22m
+     [33m[2m✓[22m[39m offers the choice with the test-business box unticked, and sends no test or pilot field[33m 1460[2mms[22m[39m
+ [32m✓[39m test/console-oversight.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1516[2mms[22m[39m
+   [32m✓[39m the console: every subscription message [2m(3)[22m
+     [33m[2m✓[22m[39m lists which message, for which business, by which channel to which masked destination, what became of it and why[33m 449[2mms[22m[39m
+ [32m✓[39m test/apply.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 23436[2mms[22m[39m
+   [32m✓[39m Apply: the WhatsApp number is required, an email address optional (docs/101) [2m(2)[22m
+     [33m[2m✓[22m[39m without the WhatsApp number nothing is sent, and the page says what is missing[33m 1185[2mms[22m[39m
+     [33m[2m✓[22m[39m the WhatsApp number alone is an application; an email address goes with it when given[33m 839[2mms[22m[39m
+   [32m✓[39m Apply: a contact whose code cannot be sent now (C10) [2m(4)[22m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: the WhatsApp number[33m 673[2mms[22m[39m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: the email[33m 894[2mms[22m[39m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: both[33m 817[2mms[22m[39m
+     [33m[2m✓[22m[39m the general refusal, nothing saved: none named[33m 739[2mms[22m[39m
+   [32m✓[39m Apply: one attempt, one key (C11; the app’s R5-7) [2m(1)[22m
+     [33m[2m✓[22m[39m a retry of the same form keeps its key, so the server replays; a corrected field is a new attempt with a new key[33m 1121[2mms[22m[39m
+   [32m✓[39m Apply: a code check that got no answer is never called a wrong code (R2-1 / C14 on the website) [2m(23)[22m
+     [33m[2m✓[22m[39m no answer (the network failed), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 850[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request was aborted), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 923[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request timed out), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 718[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 983[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 712[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 712[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 971[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 772[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 713[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 844[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 682[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a wrong code with every answer received is said in the page’s own words, never the server’s English, and promises no account[33m 621[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got no answer from the API in time (504), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 629[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got an invalid one (502), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 722[2mms[22m[39m
+     [33m[2m✓[22m[39m a 503 is an answer — the request was not taken: an error, no account promised[33m 693[2mms[22m[39m
+     [33m[2m✓[22m[39m a lost answer, then the same code accepted after all: the application ends signed in, as it always does[33m 637[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer is an answer: a server error is said as one, and no account is promised[33m 656[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose body was cut off keeps its status — a refusal is still a refusal: the code is wrong, and no account is promised[33m 657[2mms[22m[39m
+     [33m[2m✓[22m[39m an answer whose body was cut off keeps its status — a server error is still an error, and no account is promised[33m 612[2mms[22m[39m
+     [32m✓[39m a request the rate limit refused [2m(4)[22m
+       [33m[2m✓[22m[39m in English: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 750[2mms[22m[39m
+       [33m[2m✓[22m[39m in French: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 744[2mms[22m[39m
+       [33m[2m✓[22m[39m in Arabic: a new code and a code check refused by the limit say to wait a minute, in the page’s words — never the limiter’s[33m 788[2mms[22m[39m
+       [33m[2m✓[22m[39m the application itself refused by the limit: wait a minute, the form kept as it was[33m 777[2mms[22m[39m
+ [32m✓[39m test/site-surface.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 2930[2mms[22m[39m
+   [32m✓[39m Account: a store’s activity and its change [2m(9)[22m
+     [33m[2m✓[22m[39m lists each store with its activity; a warehouse offers no change[33m 587[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade is explained by the server’s own answer, then shows the amount the server recorded[33m 471[2mms[22m[39m
+     [33m[2m✓[22m[39m a downgrade waits for the renewal and asks nothing now[33m 330[2mms[22m[39m
+     [33m[2m✓[22m[39m an upgrade with no paid month running is explained and rendered as the server schedules it — never "due now"[33m 332[2mms[22m[39m
+     [33m[2m✓[22m[39m keeping today’s activity withdraws the scheduled change[33m 367[2mms[22m[39m
+     [33m[2m✓[22m[39m asks the new store’s activity and sends it, priced as the server would charge it[33m 347[2mms[22m[39m
+ [32m✓[39m test/site-refinement.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 1153[2mms[22m[39m
+ [32m✓[39m test/portal-status.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 3895[2mms[22m[39m
+   [32m✓[39m the access, in colour and words [2m(4)[22m
+     [33m[2m✓[22m[39m operational: its badge and what it means[33m 533[2mms[22m[39m
+   [32m✓[39m the grace, as the server decided it [2m(4)[22m
+     [33m[2m✓[22m[39m ahead: whether the next period end opens a grace is the server’s answer, never a guess[33m 411[2mms[22m[39m
+   [32m✓[39m where the messages stand [2m(3)[22m
+     [33m[2m✓[22m[39m by email for a recorded reason, and nothing sent with the reason why[33m 340[2mms[22m[39m
+   [32m✓[39m the Owner’s email address, verified on the portal [2m(2)[22m
+     [33m[2m✓[22m[39m a code to the address on the account — never one typed here — then the code back; the address is verified[33m 457[2mms[22m[39m
+ [32m✓[39m test/bilingual-names-console.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 4323[2mms[22m[39m
+   [32m✓[39m the form [2m(1)[22m
+     [33m[2m✓[22m[39m labels each name with its script; Arabic fields read right to left, Latin ones left to right[33m 436[2mms[22m[39m
+   [32m✓[39m creating a business with both names [2m(4)[22m
+     [33m[2m✓[22m[39m sends every Latin and Arabic name to its own field, the first store's two together[33m 1563[2mms[22m[39m
+     [33m[2m✓[22m[39m no trading name and no Arabic name: accepted, and neither is sent as anything invented (D227)[33m 833[2mms[22m[39m
+     [33m[2m✓[22m[39m a refusal from the API never shows its validation wording, and the form keeps every answer[33m 996[2mms[22m[39m
+ [32m✓[39m test/portal-session.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 2965[2mms[22m[39m
+   [32m✓[39m signing in on the portal [2m(9)[22m
+     [33m[2m✓[22m[39m signs in with the app’s identity on the portal’s own route; no bearer, nothing stored, no request carries a token[33m 755[2mms[22m[39m
+     [33m[2m✓[22m[39m every POST carries the session’s CSRF token; no GET does[33m 400[2mms[22m[39m
+     [33m[2m✓[22m[39m an access cookie that expired is refreshed once — for requests refused together — and each is sent again[33m 330[2mms[22m[39m
+     [33m[2m✓[22m[39m signing out ends the session on the server and forgets the CSRF token here[33m 354[2mms[22m[39m
+     [33m[2m✓[22m[39m nothing is claimed without the confirmation — not on load, at sign-in, at the button alone or as the page reads the trial again[33m 330[2mms[22m[39m
+ [32m✓[39m test/legal-pages.test.tsx [2m([22m[2m67 tests[22m[2m)[22m[33m 5112[2mms[22m[39m
+   [32m✓[39m the public legal and support pages [2m(44)[22m
+     [33m[2m✓[22m[39m /privacy renders with one heading, its language and direction, and asks the API nothing[33m 407[2mms[22m[39m
+     [33m[2m✓[22m[39m the public footer links to every legal and support page but account deletion; the portal’s footer keeps it in context[33m 389[2mms[22m[39m
+     [33m[2m✓[22m[39m names TSX-MR as the operator on the privacy policy, the terms and the legal notice[33m 595[2mms[22m[39m
+ [32m✓[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2593[2mms[22m[39m
+   [32m✓[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 1192[2mms[22m[39m
+     [33m[2m✓[22m[39m keeps the confirmation’s result on screen after the paid request leaves the queue[33m 545[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 737[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/prelaunch-gates.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 97[2mms[22m[39m
+ [32m✓[39m test/site-navigation.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 1911[2mms[22m[39m
+   [32m✓[39m the phone menu [2m(4)[22m
+     [33m[2m✓[22m[39m is an icon button with no visible word, that names its action and controls a panel hidden while closed[33m 442[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/site-routes.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m test/portal-operator.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 481[2mms[22m[39m
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 1534[2mms[22m[39m
+   [32m✓[39m Account: the platform grant and its own dates [2m(6)[22m
+     [33m[2m✓[22m[39m an active grant says its own end, never the billing period’s start[33m 468[2mms[22m[39m
+ [32m✓[39m test/site-config.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [31m❯[39m test/portal-surface.test.ts [2m([22m[2m12 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 17[2mms[22m[39m
+   [32m✓[39m the portal’s gate (PORTAL, a portal build) [2m(5)[22m
+     [32m✓[39m names the surface and its gate; a value it does not know is a full build[32m 2[2mms[22m[39m
+     [32m✓[39m opens on its three origins exactly: the portal’s, the company site’s and the API’s[32m 2[2mms[22m[39m
+     [32m✓[39m is published at https://dukan.tsxmr.com only — never portal.tsxmr.com — and needs its origin[32m 1[2mms[22m[39m
+     [32m✓[39m links its legal pages to https://tsxmr.com and calls the API at https://api.tsxmr.com only[32m 1[2mms[22m[39m
+     [32m✓[39m keeps every PORTAL rule: the legal texts approved, the support facts given[32m 0[2mms[22m[39m
+   [32m✓[39m what a portal build publishes [2m(5)[22m
+     [32m✓[39m no page of the company site; the Owner’s page and the console behind a sign-in, and the registration link’s landing[32m 0[2mms[22m[39m
+     [32m✓[39m robots: nothing is crawled, production or preview; no sitemap names anything[32m 0[2mms[22m[39m
+     [32m✓[39m headers: noindex on every address, no-store on the signed-in areas, the API allowed, framing refused; no page for the app[32m 1[2mms[22m[39m
+     [32m✓[39m rewrites: the root and the old address go to /subscription, the signed-in areas load the shell[32m 1[2mms[22m[39m
+     [32m✓[39m the manifest is the product’s and opens on the Owner’s page; security.txt names the portal as its own address[32m 0[2mms[22m[39m
+   [31m❯[39m the build takes the portal’s stub, and its files carry none of the company site [2m(2)[22m
+     [32m✓[39m vite aliases the company site’s pages to the stub in a portal build, and the stub imports no public page[32m 0[2mms[22m[39m
+[31m     [31m×[31m the prerenderer writes the shell for the portal and no page of the company site; the bundle audit has a portal mode[39m[32m 5[2mms[22m[39m
+ [32m✓[39m test/admin-mfa.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2694[2mms[22m[39m
+   [32m✓[39m signing in to the console [2m(3)[22m
+     [33m[2m✓[22m[39m a password leads to the code screen; the console opens only once the code is accepted[33m 954[2mms[22m[39m
+     [33m[2m✓[22m[39m a recovery code can stand in for the authenticator[33m 463[2mms[22m[39m
+     [33m[2m✓[22m[39m with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once[33m 556[2mms[22m[39m
+   [32m✓[39m a decision’s step-up [2m(1)[22m
+     [33m[2m✓[22m[39m a wrong password or code keeps the dialog open with the reason, and the decision is never sent[33m 715[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m8 tests[22m[2m)[22m[33m 323[2mms[22m[39m
+ [32m✓[39m test/not-found.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[33m 701[2mms[22m[39m
+ [32m✓[39m test/deletion-docs.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 2808[2mms[22m[39m
+   [32m✓[39m account deletion on a public build [2m(16)[22m
+     [33m[2m✓[22m[39m the company’s pages in en: no deletion link in the navigation, the footer or the quick links[33m 602[2mms[22m[39m
+     [33m[2m✓[22m[39m the company’s pages in fr: no deletion link in the navigation, the footer or the quick links[33m 525[2mms[22m[39m
+     [33m[2m✓[22m[39m the company’s pages in ar: no deletion link in the navigation, the footer or the quick links[33m 442[2mms[22m[39m
+ [32m✓[39m test/admin-invited-setup.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 4089[2mms[22m[39m
+   [32m✓[39m setting up an invited administrator [2m(4)[22m
+     [33m[2m✓[22m[39m spends the code with his own password, signs in, and opens his own authenticator with the token it was given[33m 1135[2mms[22m[39m
+     [33m[2m✓[22m[39m checks the form first: each problem beside its field, nothing sent[33m 368[2mms[22m[39m
+     [33m[2m✓[22m[39m one refusal, whatever the server says, never its words; and nothing typed is held after success only[33m 597[2mms[22m[39m
+     [33m[2m✓[22m[39m a throttled try says so, in the page’s words[33m 499[2mms[22m[39m
+   [32m✓[39m in fr [2m(1)[22m
+     [33m[2m✓[22m[39m the page, its field messages and its refusal are the visitor’s language[33m 782[2mms[22m[39m
+   [32m✓[39m in ar [2m(1)[22m
+     [33m[2m✓[22m[39m the page, its field messages and its refusal are the visitor’s language[33m 705[2mms[22m[39m
+ [32m✓[39m test/operator-identity.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 2420[2mms[22m[39m
+   [32m✓[39m the name, only where a legal text needs it [2m(3)[22m
+     [33m[2m✓[22m[39m in en: the brand pages and the footer never name the person; each legal text names them as it must[33m 864[2mms[22m[39m
+     [33m[2m✓[22m[39m in fr: the brand pages and the footer never name the person; each legal text names them as it must[33m 736[2mms[22m[39m
+     [33m[2m✓[22m[39m in ar: the brand pages and the footer never name the person; each legal text names them as it must[33m 564[2mms[22m[39m
+ [32m✓[39m test/content-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 103[2mms[22m[39m
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 2390[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 1443[2mms[22m[39m
+   [32m✓[39m The Dukan ERP page: three prices and an estimate by activity (moved from the home page, docs/74) [2m(2)[22m
+     [33m[2m✓[22m[39m lists the three prices and sends one activity per store to the quote[33m 733[2mms[22m[39m
+ [32m✓[39m test/site-surface-render.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 2146[2mms[22m[39m
+   [32m✓[39m a public build, page by page [2m(14)[22m
+     [33m[2m✓[22m[39m the Dukan ERP page in en: no prices, no application or sign-in, a way to contact, and no request to any API[33m 668[2mms[22m[39m
+     [33m[2m✓[22m[39m the Dukan ERP page in fr: no prices, no application or sign-in, a way to contact, and no request to any API[33m 311[2mms[22m[39m
+ [32m✓[39m test/portal-surface-render.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 1296[2mms[22m[39m
+   [32m✓[39m a portal build, address by address [2m(13)[22m
+     [33m[2m✓[22m[39m its root is the Owner’s page: sent to /subscription, where the Owner signs in[33m 311[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 2259[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns (on the Dukan ERP page)[33m 1189[2mms[22m[39m
+     [33m[2m✓[22m[39m moves to the same page in Arabic, mirrors the document and keeps the language across visits[33m 940[2mms[22m[39m
+ [32m✓[39m test/throttle.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 1805[2mms[22m[39m
+   [32m✓[39m a request the API’s rate limit refused [2m(5)[22m
+     [33m[2m✓[22m[39m in English: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s[33m 635[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s[33m 348[2mms[22m[39m
+ [32m✓[39m test/caddy-release.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m test/admin-surface.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m test/dukan-brand.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 69[2mms[22m[39m
+ [32m✓[39m test/portal-operator-company.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 292[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m test/public-pages.test.tsx [2m([22m[2m56 tests[22m[2m)[22m[33m 7247[2mms[22m[39m
+   [32m✓[39m every public page in every language [2m(51)[22m
+     [33m[2m✓[22m[39m / renders in en[33m 579[2mms[22m[39m
+     [33m[2m✓[22m[39m /products/dukan-erp renders in en[33m 388[2mms[22m[39m
+ [32m✓[39m test/payment-proofs.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m test/api-client.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [31m❯[39m test/portal-owner-only.test.tsx [2m([22m[2m3 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 9[2mms[22m[39m
+   [31m❯[39m the production portal has no console [2m(3)[22m
+     [32m✓[39m its routes import nothing of the console and name no /admin route[32m 2[2mms[22m[39m
+     [32m✓[39m a production portal build takes those routes; a preview build does not[32m 0[2mms[22m[39m
+[31m     [31m×[31m the bundle audit refuses a production portal build that carries the console[39m[32m 5[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 2 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m test/portal-owner-only.test.tsx[2m > [22mthe production portal has no console[2m > [22mthe bundle audit refuses a production portal build that carries the console
+[31m[1mAssertionError[22m: expected '// Exported-bundle audit (docs/74 §9)…' to match /portalSurface && !…/platform.{1,2}admin[39m
+
+[32m- Expected:[39m
+/portalSurface && !preview && \/platform.{1,2}admin/
+
+[31m+ Received:[39m
+"// Exported-bundle audit (docs/74 §9): what a visitor can download must hold no secret, no source map, no credential
+// and no private address beyond the preview's own mock API; the prerendered public pages must hold no protected data.
+// Prints every finding with its file; exits 1 on any. A preview build is expected to carry its marked test values —
+// they are counted and reported, never accepted in production (the build refuses them first).
+//
+// A public build (`VITE_SITE_SURFACE=public`, docs/95) is audited with `--public`: no file of it may hold the console's
+// or the business account's code or routes, nor the protected areas' shell — the areas are not on that origin at all —
+// nor any API route or address, even in a preview: the pre-launch website calls no API (docs/96).
+//
+// A portal build (`VITE_SITE_SURFACE=portal`, docs/101) is audited with `--portal`: no page of the company site, no
+// sitemap, nothing a crawler may index — robots refuses everything and every response says noindex.
+//
+// Every build: the portal is https://dukan.tsxmr.com, and the old setup link's landing (`/account/trial`, with a token
+// in its address) is gone — neither \"portal.tsxmr.com\" nor that landing may appear in any file.
+//
+// An admin build (`VITE_SITE_SURFACE=admin`) is audited with `--admin`: as closed to crawlers as a portal, nothing of the
+// customers' portal, the console present, and no address of a test site or of a local API. `--no-console` holds a portal
+// build made with `--mode customer-audit` to the production rule: no console code, its review of payment proofs included.
+//
+//   node scripts/audit-bundle.mjs [dist] [--preview] [--public | --portal [--no-console] | --admin]
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { join, relative, resolve } from 'node:path';
+
+const dist = resolve(process.argv[2] ?? 'dist');
+const preview = process.argv.includes('--preview');
+const publicSurface = process.argv.includes('--public');
+const adminSurface = process.argv.includes('--admin');
+const portalSurface = process.argv.includes('--portal') || adminSurface;
+const consoleFree = process.argv.includes('--no-console');
+// The only HTML files a portal build has: the shell, its root's copy of it, and its not-found page.
+const PORTAL_HTML = new Set(['app-shell.html', 'index.html', '404.html']);
+// What only the console or the business account contains: their API routes and the shell they load in.
+const PROTECTED_ONLY = [
+  ['console sign-in route', /platform\\/admin\\/(sign-in|mfa|step-up)/],
+  ['console data route', /platform\\/(dashboard|businesses|pending|audit)/],
+  ['account data route', /platform\\/my-subscription/],
+  // The pre-launch website calls no API at all: no price, quote, application or sign-in request.
+  ['API route', /platform\\/(plan|quote|register|portal-sign-out|seat-requests)\\b/],
+];
+const walk = (d) => readdirSync(d).flatMap((n) => (statSync(join(d, n)).isDirectory() ? walk(join(d, n)) : [join(d, n)]));
+const files = walk(dist);
+
+const SECRETS = [
+  ['private key', /-----BEGIN [A-Z ]*PRIVATE KEY-----/],
+  ['AWS access key', /\\bAKIA[0-9A-Z]{16}\\b/],
+  ['JSON web token', /\\beyJ[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,}/],
+  ['Bearer credential', /Bearer\\s+[A-Za-z0-9._-]{20,}/],
+  ['Stripe-style live key', /\\b(sk|rk)_live_[0-9a-zA-Z]{10,}/],
+  ['Meta access token', /\\bEAA[A-Za-z0-9]{30,}/],
+  ['password assignment', /\\b(password|passwd|secret|api[_-]?key)\\s*[:=]\\s*[\"'][^\"']{6,}[\"']/i],
+  ['database URL with credentials', /\\bmysql:\\/\\/[^\\s\"'@/]+:[^\\s\"'@/]+@/],
+];
+const PRIVATE = /\\b(10\\.\\d+\\.\\d+\\.\\d+|192\\.168\\.\\d+\\.\\d+|172\\.(1[6-9]|2\\d|3[01])\\.\\d+\\.\\d+|127\\.0\\.0\\.1|localhost)(:\\d+)?\\b/g;
+// A full preview talks to its mock API on this machine; a public build has no API to talk to, preview or not.
+const ALLOWED_PRIVATE = preview && !publicSurface ? new Set(['127.0.0.1:3999', '127.0.0.1:3010', '127.0.0.1']) : new Set();
+
+const findings = [];
+let consolePresent = false;
+let bytes = 0;
+let testValues = 0;
+for (const f of files) {
+  const rel = relative(dist, f);
+  const size = statSync(f).size;
+  bytes += size;
+  if (rel.endsWith('.map')) findings.push({ file: rel, what: 'source map published' });
+  if (!/\\.(html|js|css|txt|xml|json|webmanifest|svg)$/.test(rel) && !rel.startsWith('_')) continue;
+  const text = readFileSync(f, 'utf8');
+  if (/sourceMappingURL=/.test(text)) findings.push({ file: rel, what: 'sourceMappingURL reference' });
+  if (publicSurface) {
+    if (rel === 'app-shell.html') findings.push({ file: rel, what: 'protected-area shell in a public build' });
+    for (const [what, re] of PROTECTED_ONLY) if (re.test(text)) findings.push({ file: rel, what: `${what} in a public build` });
+  }
+  // D227: a production portal is the customers'. The console's code must not reach it.
+  if (portalSurface && !adminSurface && !preview && /platform\\/admin/.test(text)) findings.push({ file: rel, what: 'the console in a production portal build' });
+  if (consoleFree) for (const re of [/platform\\/admin/, /platform\\/payment-proofs/]) if (re.test(text)) findings.push({ file: rel, what: `the console (${re.source}) in a customers' portal build` });
+  if (adminSurface) {
+    for (const re of [/platform\\/my-subscription/, /platform\\/portal/, /platform\\/payment-instructions/]) if (re.test(text)) findings.push({ file: rel, what: `the customers' portal (${re.source}) in an admin build` });
+    if (!preview) for (const re of [/dukan-test\\.tsxmr/, /erp-test\\.tsxmr/, /:3010\\b/]) if (re.test(text)) findings.push({ file: rel, what: `${re.source} in a production admin build` });
+    if (/platform\\/admin/.test(text)) consolePresent = true;
+  }
+  if (portalSurface) {
+    if (rel.endsWith('.html') && !PORTAL_HTML.has(rel)) findings.push({ file: rel, what: 'a company-site page in a portal build' });
+    if (rel === 'sitemap.xml') findings.push({ file: rel, what: 'a sitemap in a portal build' });
+    if (rel === 'robots.txt' && text !== 'User-agent: *\\nDisallow: /\\n') findings.push({ file: rel, what: 'robots.txt lets a crawler in' });
+    if (rel === '_headers' && !/^\\/\\*\\n(?:  .*\\n)*  X-Robots-Tag: noindex, nofollow/.test(text)) findings.push({ file: rel, what: 'the portal is not noindex on every address' });
+  }
+  if (/\\bportal\\.tsxmr\\.com\\b/.test(text)) findings.push({ file: rel, what: 'the portal named portal.tsxmr.com (it is dukan.tsxmr.com)' });
+  if (/account\\/trial/.test(text)) findings.push({ file: rel, what: 'the retired setup-link landing' });
+  for (const [what, re] of SECRETS) if (re.test(text)) findings.push({ file: rel, what });
+  for (const m of text.matchAll(PRIVATE)) {
+    if (ALLOWED_PRIVATE.has(m[0])) continue;
+    // React and the router name \"localhost\" in development-only messages; a real address has a port or a dotted IP.
+    if (m[0] === 'localhost' && rel.endsWith('.js')) continue;
+    findings.push({ file: rel, what: `private address ${m[0]}` });
+  }
+  testValues += (text.match(/\\.invalid\\b|\\[TEST\\]/g) ?? []).length;
+  // The prerendered public pages carry no protected content: nothing of the console or the account's data.
+  if (rel.endsWith('.html') && rel !== 'app-shell.html') {
+    for (const [what, re] of [
+      ['console data route', /platform\\/(dashboard|businesses|pending|audit)/],
+      ['account data route', /platform\\/my-subscription/],
+    ])
+      if (re.test(text)) findings.push({ file: rel, what });
+  }
+}
+if (portalSurface && !files.some((f) => relative(dist, f) === 'robots.txt')) findings.push({ file: 'robots.txt', what: 'missing from a portal build' });
+if (adminSurface && !consolePresent) findings.push({ file: '*', what: 'no console in an admin build' });
+console.log(`files ${files.length}, bytes ${bytes}, mode ${preview ? 'preview' : 'production'}, surface ${publicSurface ? 'public' : adminSurface ? 'admin' : portalSurface ? 'portal' : 'full'}`);
+console.log(`marked test values found: ${testValues}${preview ? ' (expected in a preview build)' : ''}`);
+if (!preview && testValues > 0) findings.push({ file: '*', what: `${testValues} test values in a production build` });
+for (const x of findings) console.log(`FINDING ${x.file}: ${x.what}`);
+console.log(findings.length ? `FAIL: ${findings.length} findings` : 'PASS: no secret, source map, credential or stray private address');
+process.exit(findings.length ? 1 : 0);
+"
+
+[36m [2m❯[22m test/portal-owner-only.test.tsx:[2m26:83[22m[39m
+    [90m 24|[39m   it('the bundle audit refuses a production portal build that carries …
+    [90m 25|[39m     // Read whole: this script's patterns contain what the comment str…
+    [90m 26|[39m     expect(readFileSync(join(process.cwd(), 'scripts/audit-bundle.mjs'…
+    [90m   |[39m                                                                                   [31m^[39m
+    [90m 27|[39m   });
+    [90m 28|[39m });
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m test/portal-surface.test.ts[2m > [22mthe build takes the portal’s stub, and its files carry none of the company site[2m > [22mthe prerenderer writes the shell for the portal and no page of the company site; the bundle audit has a portal mode
+[31m[1mAssertionError[22m: expected '// Writes the public site as static f…' to match /const portal = ssr\.SURFACE === 'port…/[39m
+
+[32m- Expected:[39m
+/const portal = ssr\.SURFACE === 'portal';/
+
+[31m+ Received:[39m
+"// Writes the public site as static files (docs/74 §5), after `vite build` (the page) and `vite build --ssr` (this
+// renderer), both in the same mode. Every public page in every language becomes its own HTML file with its own
+// language, direction and head; the protected areas get an empty, never-indexed shell; robots, sitemap, the host's
+// headers and rewrites, security.txt and the manifest are generated from the same inputs. A portal build (docs/101)
+// publishes no public page: the shell answers every address it serves, and its not-found page is the shell too, so the
+// portal's own \"Page not found\" is rendered in the reader's language.
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { dirname, join, resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const root = resolve(import.meta.dirname, '..');
+const dist = join(root, 'dist');
+const ssr = await import(pathToFileURL(join(root, 'dist-ssr', 'entry-server.js')).href);
+const template = readFileSync(join(dist, 'index.html'), 'utf8');
+if (!template.includes('<!--app-->') || !template.includes('<!--head-->')) throw new Error('dist/index.html is not the unrendered template');
+
+const write = (rel, content) => {
+  const file = join(dist, rel);
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, content);
+};
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');
+const page = (lang, head, app) =>
+  template
+    .replace('<html lang=\"en\" dir=\"ltr\">', `<html lang=\"${lang}\" dir=\"${ssr.isRtl(lang) ? 'rtl' : 'ltr'}\">`)
+    .replace('<!--head-->', head)
+    .replace('<!--app-->', app);
+
+// An admin build publishes no public page either: the same shell, for the console's own site.
+const portal = ssr.SURFACE === 'portal' || ssr.SURFACE === 'admin';
+const shell = (title) => page('en', `<title>${esc(title)}</title>\\n    <meta name=\"robots\" content=\"noindex, nofollow\" />`, '');
+
+// 1. The shell of the protected areas: no content, never indexed (written before the home page replaces index.html).
+//    A public build (docs/95) has no protected area, so no shell.
+if (ssr.SURFACE !== 'public') write(ssr.APP_SHELL.slice(1), shell(portal ? 'Dukan ERP' : ssr.SITE.displayName));
+
+// 2. Every public page, in every language.
+let pages = 0;
+for (const lang of ssr.LANGUAGES) {
+  for (const route of ssr.ROUTES) {
+    const url = ssr.pathOf(route.id, lang);
+    write(ssr.fileForPath(url), page(lang, ssr.headOf(route.id, lang), ssr.render(url, lang)));
+    pages++;
+  }
+}
+
+// 2b. The legal and support pages as the mobile app opens them: same texts, no navigation, never indexed. Not on the
+//     portal: the app's pages are the company site's.
+for (const lang of portal ? [] : ssr.LANGUAGES) {
+  for (const id of ssr.IN_APP_ROUTE_IDS) {
+    const url = ssr.inAppPathOf(id, lang);
+    write(ssr.fileForPath(url), page(lang, ssr.headOf(id, lang, true), ssr.render(url, lang)));
+    pages++;
+  }
+}
+
+// 3. The page for any other address. Cloudflare Pages answers an address it has no file for with a 404 status and
+//    the NEAREST 404.html up the address's directories, so there is one per language directory (`/fr/…` → fr/404.html)
+//    and one per language for the app's pages (`/in-app/…` → in-app/404.html, which keeps their frame). Each is
+//    rendered at an address of its own directory, so the page that hydrates it at the real address renders the same.
+let notFound = 0;
+if (portal) {
+  // The portal's root is sent on to its Owner page (`_redirects`); its index is the shell all the same, never the
+  // unrendered template, for a host that serves the file first.
+  write('index.html', shell('Dukan ERP'));
+  write('404.html', shell(`${ssr.translate('en', 'notFound.title')} — Dukan ERP`));
+  notFound++;
+}
+for (const lang of portal ? [] : ssr.LANGUAGES) {
+  const prefix = lang === 'en' ? '' : `/${lang}`;
+  const head = `<title>${esc(`${ssr.translate(lang, 'notFound.title')} — ${ssr.SITE.displayName}`)}</title>\\n    <meta name=\"robots\" content=\"noindex, nofollow\" />`;
+  for (const dir of [prefix, `${prefix}/in-app`]) {
+    write(`${dir.slice(1)}${dir ? '/' : ''}404.html`, page(lang, head, ssr.render(`${dir}/404`, lang)));
+    notFound++;
+  }
+}
+
+// 4. The generated files.
+const builtAt = new Date();
+write('robots.txt', ssr.robotsTxt(ssr.SITE, ssr.IS_PREVIEW));
+if (ssr.SITE.publicSiteOrigin && !portal) write('sitemap.xml', ssr.sitemapXml(ssr.SITE, builtAt.toISOString().slice(0, 10)));
+write('_headers', ssr.headersFile(ssr.SITE, ssr.IS_PREVIEW));
+write('_redirects', ssr.redirectsFile(ssr.SITE));
+const security = ssr.securityTxt(ssr.SITE, builtAt);
+if (security && ssr.SURFACE !== 'admin') write('.well-known/security.txt', security);
+// The manifest's colours are the light theme's background and text (theme/tokens.css).
+write('site.webmanifest', ssr.webManifest(ssr.SITE, '#172033', '#f7f8fb'));
+
+console.log(`prerendered ${pages} pages and ${notFound} not-found pages (${ssr.LANGUAGES.length} languages), mode ${ssr.BUILD_MODE}, surface ${ssr.SURFACE}${ssr.IS_PREVIEW ? ' — PREVIEW: test values, noindex' : ''}`);
+"
+
+[36m [2m❯[22m test/portal-surface.test.ts:[2m132:23[22m[39m
+    [90m130|[39m   it('the prerenderer writes the shell for the portal and no page of t…
+    [90m131|[39m     const prerender = read('scripts/prerender.mjs');
+    [90m132|[39m     expect(prerender).toMatch(/const portal = ssr\.SURFACE === 'portal…
+    [90m   |[39m                       [31m^[39m
+    [90m133|[39m     expect(prerender).toMatch(/for \(const lang of portal \? \[\] : ss…
+    [90m134|[39m     expect(prerender).toMatch(/!portal\) write\('sitemap\.xml'/);
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m44 passed[39m[22m[90m (46)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m685 passed[39m[22m[90m (687)[39m
+[2m   Start at [22m 00:05:28
+[2m   Duration [22m 66.41s[2m (tests 69%, environment 22%, import 6%, transform 2%)[22m
+
+[2m    Isolate [22m [33m46 workers spawned[39m[2m · ~1.09s startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~15.60s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/portal-owner-only.test.tsx,title=test/portal-owner-only.test.tsx > the production portal has no console > the bundle audit refuses a production portal build that carries the console,line=26,column=83::AssertionError: expected '// Exported-bundle audit (docs/74 §9)…' to match /portalSurface && !…/platform.{1,2}admin%0A%0A- Expected:%0A/portalSurface && !preview && \/platform.{1,2}admin/%0A%0A+ Received:%0A"// Exported-bundle audit (docs/74 §9): what a visitor can download must hold no secret, no source map, no credential%0A// and no private address beyond the preview's own mock API; the prerendered public pages must hold no protected data.%0A// Prints every finding with its file; exits 1 on any. A preview build is expected to carry its marked test values —%0A// they are counted and reported, never accepted in production (the build refuses them first).%0A//%0A// A public build (`VITE_SITE_SURFACE=public`, docs/95) is audited with `--public`: no file of it may hold the console's%0A// or the business account's code or routes, nor the protected areas' shell — the areas are not on that origin at all —%0A// nor any API route or address, even in a preview: the pre-launch website calls no API (docs/96).%0A//%0A// A portal build (`VITE_SITE_SURFACE=portal`, docs/101) is audited with `--portal`: no page of the company site, no%0A// sitemap, nothing a crawler may index — robots refuses everything and every response says noindex.%0A//%0A// Every build: the portal is https://dukan.tsxmr.com, and the old setup link's landing (`/account/trial`, with a token%0A// in its address) is gone — neither \"portal.tsxmr.com\" nor that landing may appear in any file.%0A//%0A// An admin build (`VITE_SITE_SURFACE=admin`) is audited with `--admin`: as closed to crawlers as a portal, nothing of the%0A// customers' portal, the console present, and no address of a test site or of a local API. `--no-console` holds a portal%0A// build made with `--mode customer-audit` to the production rule: no console code, its review of payment proofs included.%0A//%0A//   node scripts/audit-bundle.mjs [dist] [--preview] [--public | --portal [--no-console] | --admin]%0Aimport { readdirSync, readFileSync, statSync } from 'node:fs';%0Aimport { join, relative, resolve } from 'node:path';%0A%0Aconst dist = resolve(process.argv[2] ?? 'dist');%0Aconst preview = process.argv.includes('--preview');%0Aconst publicSurface = process.argv.includes('--public');%0Aconst adminSurface = process.argv.includes('--admin');%0Aconst portalSurface = process.argv.includes('--portal') || adminSurface;%0Aconst consoleFree = process.argv.includes('--no-console');%0A// The only HTML files a portal build has: the shell, its root's copy of it, and its not-found page.%0Aconst PORTAL_HTML = new Set(['app-shell.html', 'index.html', '404.html']);%0A// What only the console or the business account contains: their API routes and the shell they load in.%0Aconst PROTECTED_ONLY = [%0A  ['console sign-in route', /platform\\/admin\\/(sign-in|mfa|step-up)/],%0A  ['console data route', /platform\\/(dashboard|businesses|pending|audit)/],%0A  ['account data route', /platform\\/my-subscription/],%0A  // The pre-launch website calls no API at all: no price, quote, application or sign-in request.%0A  ['API route', /platform\\/(plan|quote|register|portal-sign-out|seat-requests)\\b/],%0A];%0Aconst walk = (d) => readdirSync(d).flatMap((n) => (statSync(join(d, n)).isDirectory() ? walk(join(d, n)) : [join(d, n)]));%0Aconst files = walk(dist);%0A%0Aconst SECRETS = [%0A  ['private key', /-----BEGIN [A-Z ]*PRIVATE KEY-----/],%0A  ['AWS access key', /\\bAKIA[0-9A-Z]{16}\\b/],%0A  ['JSON web token', /\\beyJ[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,}\\.[A-Za-z0-9_-]{10,}/],%0A  ['Bearer credential', /Bearer\\s+[A-Za-z0-9._-]{20,}/],%0A  ['Stripe-style live key', /\\b(sk|rk)_live_[0-9a-zA-Z]{10,}/],%0A  ['Meta access token', /\\bEAA[A-Za-z0-9]{30,}/],%0A  ['password assignment', /\\b(password|passwd|secret|api[_-]?key)\\s*[:=]\\s*[\"'][^\"']{6,}[\"']/i],%0A  ['database URL with credentials', /\\bmysql:\\/\\/[^\\s\"'@/]+:[^\\s\"'@/]+@/],%0A];%0Aconst PRIVATE = /\\b(10\\.\\d+\\.\\d+\\.\\d+|192\\.168\\.\\d+\\.\\d+|172\\.(1[6-9]|2\\d|3[01])\\.\\d+\\.\\d+|127\\.0\\.0\\.1|localhost)(:\\d+)?\\b/g;%0A// A full preview talks to its mock API on this machine; a public build has no API to talk to, preview or not.%0Aconst ALLOWED_PRIVATE = preview && !publicSurface ? new Set(['127.0.0.1:3999', '127.0.0.1:3010', '127.0.0.1']) : new Set();%0A%0Aconst findings = [];%0Alet consolePresent = false;%0Alet bytes = 0;%0Alet testValues = 0;%0Afor (const f of files) {%0A  const rel = relative(dist, f);%0A  const size = statSync(f).size;%0A  bytes += size;%0A  if (rel.endsWith('.map')) findings.push({ file: rel, what: 'source map published' });%0A  if (!/\\.(html|js|css|txt|xml|json|webmanifest|svg)$/.test(rel) && !rel.startsWith('_')) continue;%0A  const text = readFileSync(f, 'utf8');%0A  if (/sourceMappingURL=/.test(text)) findings.push({ file: rel, what: 'sourceMappingURL reference' });%0A  if (publicSurface) {%0A    if (rel === 'app-shell.html') findings.push({ file: rel, what: 'protected-area shell in a public build' });%0A    for (const [what, re] of PROTECTED_ONLY) if (re.test(text)) findings.push({ file: rel, what: `${what} in a public build` });%0A  }%0A  // D227: a production portal is the customers'. The console's code must not reach it.%0A  if (portalSurface && !adminSurface && !preview && /platform\\/admin/.test(text)) findings.push({ file: rel, what: 'the console in a production portal build' });%0A  if (consoleFree) for (const re of [/platform\\/admin/, /platform\\/payment-proofs/]) if (re.test(text)) findings.push({ file: rel, what: `the console (${re.source}) in a customers' portal build` });%0A  if (adminSurface) {%0A    for (const re of [/platform\\/my-subscription/, /platform\\/portal/, /platform\\/payment-instructions/]) if (re.test(text)) findings.push({ file: rel, what: `the customers' portal (${re.source}) in an admin build` });%0A    if (!preview) for (const re of [/dukan-test\\.tsxmr/, /erp-test\\.tsxmr/, /:3010\\b/]) if (re.test(text)) findings.push({ file: rel, what: `${re.source} in a production admin build` });%0A    if (/platform\\/admin/.test(text)) consolePresent = true;%0A  }%0A  if (portalSurface) {%0A    if (rel.endsWith('.html') && !PORTAL_HTML.has(rel)) findings.push({ file: rel, what: 'a company-site page in a portal build' });%0A    if (rel === 'sitemap.xml') findings.push({ file: rel, what: 'a sitemap in a portal build' });%0A    if (rel === 'robots.txt' && text !== 'User-agent: *\\nDisallow: /\\n') findings.push({ file: rel, what: 'robots.txt lets a crawler in' });%0A    if (rel === '_headers' && !/^\\/\\*\\n(?:  .*\\n)*  X-Robots-Tag: noindex, nofollow/.test(text)) findings.push({ file: rel, what: 'the portal is not noindex on every address' });%0A  }%0A  if (/\\bportal\\.tsxmr\\.com\\b/.test(text)) findings.push({ file: rel, what: 'the portal named portal.tsxmr.com (it is dukan.tsxmr.com)' });%0A  if (/account\\/trial/.test(text)) findings.push({ file: rel, what: 'the retired setup-link landing' });%0A  for (const [what, re] of SECRETS) if (re.test(text)) findings.push({ file: rel, what });%0A  for (const m of text.matchAll(PRIVATE)) {%0A    if (ALLOWED_PRIVATE.has(m[0])) continue;%0A    // React and the router name \"localhost\" in development-only messages; a real address has a port or a dotted IP.%0A    if (m[0] === 'localhost' && rel.endsWith('.js')) continue;%0A    findings.push({ file: rel, what: `private address ${m[0]}` });%0A  }%0A  testValues += (text.match(/\\.invalid\\b|\\[TEST\\]/g) ?? []).length;%0A  // The prerendered public pages carry no protected content: nothing of the console or the account's data.%0A  if (rel.endsWith('.html') && rel !== 'app-shell.html') {%0A    for (const [what, re] of [%0A      ['console data route', /platform\\/(dashboard|businesses|pending|audit)/],%0A      ['account data route', /platform\\/my-subscription/],%0A    ])%0A      if (re.test(text)) findings.push({ file: rel, what });%0A  }%0A}%0Aif (portalSurface && !files.some((f) => relative(dist, f) === 'robots.txt')) findings.push({ file: 'robots.txt', what: 'missing from a portal build' });%0Aif (adminSurface && !consolePresent) findings.push({ file: '*', what: 'no console in an admin build' });%0Aconsole.log(`files ${files.length}, bytes ${bytes}, mode ${preview ? 'preview' : 'production'}, surface ${publicSurface ? 'public' : adminSurface ? 'admin' : portalSurface ? 'portal' : 'full'}`);%0Aconsole.log(`marked test values found: ${testValues}${preview ? ' (expected in a preview build)' : ''}`);%0Aif (!preview && testValues > 0) findings.push({ file: '*', what: `${testValues} test values in a production build` });%0Afor (const x of findings) console.log(`FINDING ${x.file}: ${x.what}`);%0Aconsole.log(findings.length ? `FAIL: ${findings.length} findings` : 'PASS: no secret, source map, credential or stray private address');%0Aprocess.exit(findings.length ? 1 : 0);%0A"%0A%0A ❯ test/portal-owner-only.test.tsx:26:83%0A%0A
+
+::error file=/home/runner/work/erp-control-web/erp-control-web/test/portal-surface.test.ts,title=test/portal-surface.test.ts > the build takes the portal’s stub%2C and its files carry none of the company site > the prerenderer writes the shell for the portal and no page of the company site; the bundle audit has a portal mode,line=132,column=23::AssertionError: expected '// Writes the public site as static f…' to match /const portal = ssr\.SURFACE === 'port…/%0A%0A- Expected:%0A/const portal = ssr\.SURFACE === 'portal';/%0A%0A+ Received:%0A"// Writes the public site as static files (docs/74 §5), after `vite build` (the page) and `vite build --ssr` (this%0A// renderer), both in the same mode. Every public page in every language becomes its own HTML file with its own%0A// language, direction and head; the protected areas get an empty, never-indexed shell; robots, sitemap, the host's%0A// headers and rewrites, security.txt and the manifest are generated from the same inputs. A portal build (docs/101)%0A// publishes no public page: the shell answers every address it serves, and its not-found page is the shell too, so the%0A// portal's own \"Page not found\" is rendered in the reader's language.%0Aimport { mkdirSync, readFileSync, writeFileSync } from 'node:fs';%0Aimport { dirname, join, resolve } from 'node:path';%0Aimport { pathToFileURL } from 'node:url';%0A%0Aconst root = resolve(import.meta.dirname, '..');%0Aconst dist = join(root, 'dist');%0Aconst ssr = await import(pathToFileURL(join(root, 'dist-ssr', 'entry-server.js')).href);%0Aconst template = readFileSync(join(dist, 'index.html'), 'utf8');%0Aif (!template.includes('<!--app-->') || !template.includes('<!--head-->')) throw new Error('dist/index.html is not the unrendered template');%0A%0Aconst write = (rel, content) => {%0A  const file = join(dist, rel);%0A  mkdirSync(dirname(file), { recursive: true });%0A  writeFileSync(file, content);%0A};%0Aconst esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;');%0Aconst page = (lang, head, app) =>%0A  template%0A    .replace('<html lang=\"en\" dir=\"ltr\">', `<html lang=\"${lang}\" dir=\"${ssr.isRtl(lang) ? 'rtl' : 'ltr'}\">`)%0A    .replace('<!--head-->', head)%0A    .replace('<!--app-->', app);%0A%0A// An admin build publishes no public page either: the same shell, for the console's own site.%0Aconst portal = ssr.SURFACE === 'portal' || ssr.SURFACE === 'admin';%0Aconst shell = (title) => page('en', `<title>${esc(title)}</title>\\n    <meta name=\"robots\" content=\"noindex, nofollow\" />`, '');%0A%0A// 1. The shell of the protected areas: no content, never indexed (written before the home page replaces index.html).%0A//    A public build (docs/95) has no protected area, so no shell.%0Aif (ssr.SURFACE !== 'public') write(ssr.APP_SHELL.slice(1), shell(portal ? 'Dukan ERP' : ssr.SITE.displayName));%0A%0A// 2. Every public page, in every language.%0Alet pages = 0;%0Afor (const lang of ssr.LANGUAGES) {%0A  for (const route of ssr.ROUTES) {%0A    const url = ssr.pathOf(route.id, lang);%0A    write(ssr.fileForPath(url), page(lang, ssr.headOf(route.id, lang), ssr.render(url, lang)));%0A    pages++;%0A  }%0A}%0A%0A// 2b. The legal and support pages as the mobile app opens them: same texts, no navigation, never indexed. Not on the%0A//     portal: the app's pages are the company site's.%0Afor (const lang of portal ? [] : ssr.LANGUAGES) {%0A  for (const id of ssr.IN_APP_ROUTE_IDS) {%0A    const url = ssr.inAppPathOf(id, lang);%0A    write(ssr.fileForPath(url), page(lang, ssr.headOf(id, lang, true), ssr.render(url, lang)));%0A    pages++;%0A  }%0A}%0A%0A// 3. The page for any other address. Cloudflare Pages answers an address it has no file for with a 404 status and%0A//    the NEAREST 404.html up the address's directories, so there is one per language directory (`/fr/…` → fr/404.html)%0A//    and one per language for the app's pages (`/in-app/…` → in-app/404.html, which keeps their frame). Each is%0A//    rendered at an address of its own directory, so the page that hydrates it at the real address renders the same.%0Alet notFound = 0;%0Aif (portal) {%0A  // The portal's root is sent on to its Owner page (`_redirects`); its index is the shell all the same, never the%0A  // unrendered template, for a host that serves the file first.%0A  write('index.html', shell('Dukan ERP'));%0A  write('404.html', shell(`${ssr.translate('en', 'notFound.title')} — Dukan ERP`));%0A  notFound++;%0A}%0Afor (const lang of portal ? [] : ssr.LANGUAGES) {%0A  const prefix = lang === 'en' ? '' : `/${lang}`;%0A  const head = `<title>${esc(`${ssr.translate(lang, 'notFound.title')} — ${ssr.SITE.displayName}`)}</title>\\n    <meta name=\"robots\" content=\"noindex, nofollow\" />`;%0A  for (const dir of [prefix, `${prefix}/in-app`]) {%0A    write(`${dir.slice(1)}${dir ? '/' : ''}404.html`, page(lang, head, ssr.render(`${dir}/404`, lang)));%0A    notFound++;%0A  }%0A}%0A%0A// 4. The generated files.%0Aconst builtAt = new Date();%0Awrite('robots.txt', ssr.robotsTxt(ssr.SITE, ssr.IS_PREVIEW));%0Aif (ssr.SITE.publicSiteOrigin && !portal) write('sitemap.xml', ssr.sitemapXml(ssr.SITE, builtAt.toISOString().slice(0, 10)));%0Awrite('_headers', ssr.headersFile(ssr.SITE, ssr.IS_PREVIEW));%0Awrite('_redirects', ssr.redirectsFile(ssr.SITE));%0Aconst security = ssr.securityTxt(ssr.SITE, builtAt);%0Aif (security && ssr.SURFACE !== 'admin') write('.well-known/security.txt', security);%0A// The manifest's colours are the light theme's background and text (theme/tokens.css).%0Awrite('site.webmanifest', ssr.webManifest(ssr.SITE, '#172033', '#f7f8fb'));%0A%0Aconsole.log(`prerendered ${pages} pages and ${notFound} not-found pages (${ssr.LANGUAGES.length} languages), mode ${ssr.BUILD_MODE}, surface ${ssr.SURFACE}${ssr.IS_PREVIEW ? ' — PREVIEW: test values, noindex' : ''}`);%0A"%0A%0A ❯ test/portal-surface.test.ts:132:23%0A%0A

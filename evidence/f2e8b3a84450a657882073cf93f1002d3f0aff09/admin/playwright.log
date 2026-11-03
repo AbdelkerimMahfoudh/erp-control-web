@@ -1,0 +1,38 @@
+
+Running 11 tests using 4 workers
+
+  ✓   2 e2e/admin.spec.ts:49:3 › an address of the customers is an unknown page here, en (1.6s)
+  ✓   1 e2e/admin.spec.ts:32:5 › sign-in, fr, 375 px: direction, one heading, no sideways scroll, WCAG AA (2.1s)
+  ✓   3 e2e/admin.spec.ts:32:5 › sign-in, en, 1280 px: direction, one heading, no sideways scroll, WCAG AA (1.9s)
+  ✓   4 e2e/admin.spec.ts:32:5 › sign-in, en, 375 px: direction, one heading, no sideways scroll, WCAG AA (2.0s)
+  ✓   6 e2e/admin.spec.ts:49:3 › an address of the customers is an unknown page here, fr (1.4s)
+  ✓   5 e2e/admin.spec.ts:32:5 › sign-in, fr, 1280 px: direction, one heading, no sideways scroll, WCAG AA (2.1s)
+  ✓   7 e2e/admin.spec.ts:32:5 › sign-in, ar, 375 px: direction, one heading, no sideways scroll, WCAG AA (1.6s)
+  ✘  11 e2e/admin.spec.ts:69:1 › every page says noindex and carries the policy; no source map is served (58ms)
+  ✓   8 e2e/admin.spec.ts:32:5 › sign-in, ar, 1280 px: direction, one heading, no sideways scroll, WCAG AA (2.0s)
+  ✓  10 e2e/admin.spec.ts:61:1 › the root leads to the console, and its console routes are served (595ms)
+  ✓   9 e2e/admin.spec.ts:49:3 › an address of the customers is an unknown page here, ar (1.1s)
+
+
+  1) e2e/admin.spec.ts:69:1 › every page says noindex and carries the policy; no source map is served 
+
+    Error: expect(received).toContain(expected) // indexOf
+
+    Matcher error: received value must not be null nor undefined
+
+    Received has value: undefined
+
+      70 |   for (const path of ['/', '/admin', '/admin/proofs', '/nowhere']) {
+      71 |     const headers = (await request.get(path, { maxRedirects: 0 })).headers();
+    > 72 |     expect(headers['x-robots-tag'], path).toContain('noindex');
+         |                                           ^
+      73 |     expect(headers['content-security-policy'], path).toContain("frame-ancestors 'none'");
+      74 |   }
+      75 |   expect(await (await request.get('/robots.txt')).text()).toBe('User-agent: *\nDisallow: /\n');
+        at /home/runner/work/erp-control-web/erp-control-web/e2e/admin.spec.ts:72:43
+
+    Error Context: evidence/f2e8b3a84450a657882073cf93f1002d3f0aff09/admin/playwright-output/admin-every-page-says-noin-d7ac4-icy-no-source-map-is-served/error-context.md
+
+  1 failed
+    e2e/admin.spec.ts:69:1 › every page says noindex and carries the policy; no source map is served 
+  10 passed (6.2s)
