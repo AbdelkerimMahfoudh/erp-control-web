@@ -34,8 +34,7 @@ export function Plans() {
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setError(null);
     try {
       await adminRequest('platform/plans', {
@@ -48,7 +47,6 @@ export function Plans() {
           extraStaffMonthly: Number(form.extraStaffMonthly),
           effectiveFrom: new Date(form.effectiveFrom).toISOString(),
           reason: form.reason.trim(),
-          confirmPassword,
         },
       });
       setDone(true);

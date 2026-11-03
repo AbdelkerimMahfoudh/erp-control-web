@@ -105,7 +105,7 @@ describe('the promoters list', () => {
     await stepUp(user);
     expect(await screen.findByRole('button', { name: en['admin.promoter.generate'] }, SLOW_WAIT)).toBeTruthy();
     const post = sent.find((r) => r.url.endsWith('/platform/promoters') && r.method === 'POST')!;
-    expect(post.body).toEqual({ displayName: 'Sidi Mohamed', whatsappNumber: '36 00 11 22', note: NOTE, confirmPassword: 'step-up-password' });
+    expect(post.body).toEqual({ displayName: 'Sidi Mohamed', whatsappNumber: '36 00 11 22', note: NOTE });
     expect(sent.some((r) => r.url.endsWith('/code'))).toBe(false);
   });
 });
@@ -129,7 +129,7 @@ describe('a promoter’s page', () => {
     await user.click(await screen.findByRole('button', { name: en['admin.promoter.generate'] }, SLOW_WAIT));
     await stepUp(user);
     expect(await screen.findByTestId('promoter-card', undefined, SLOW_WAIT)).toBeTruthy();
-    expect(sent.find((r) => r.url.endsWith('/code'))!.body).toEqual({ regenerate: false, confirmPassword: 'step-up-password' });
+    expect(sent.find((r) => r.url.endsWith('/code'))!.body).toEqual({ regenerate: false });
   });
 
   it('the card carries the brand, the display name, the code, the QR and one instruction — never the number or the note', async () => {
@@ -171,7 +171,7 @@ describe('a promoter’s page', () => {
     expect(sent.some((r) => r.url.endsWith('/code'))).toBe(false);
     await user.click(within(confirm).getByRole('button', { name: en['admin.promoter.regenerate.confirm'], hidden: true }));
     await stepUp(user);
-    await waitFor(() => expect(sent.find((r) => r.url.endsWith('/code'))?.body).toEqual({ regenerate: true, confirmPassword: 'step-up-password' }));
+    await waitFor(() => expect(sent.find((r) => r.url.endsWith('/code'))?.body).toEqual({ regenerate: true }));
     expect(await screen.findAllByText('771903', undefined, SLOW_WAIT)).not.toHaveLength(0);
   });
 
@@ -182,7 +182,7 @@ describe('a promoter’s page', () => {
     await user.click(await screen.findByRole('button', { name: en['admin.promoter.deactivate'] }, SLOW_WAIT));
     await stepUp(user);
     expect(await screen.findByText(en['admin.promoter.inactive.notice'], undefined, SLOW_WAIT)).toBeTruthy();
-    expect(sent.find((r) => r.url.endsWith('/deactivate'))!.body).toEqual({ confirmPassword: 'step-up-password' });
+    expect(sent.find((r) => r.url.endsWith('/deactivate'))!.body).toEqual({});
   });
 });
 

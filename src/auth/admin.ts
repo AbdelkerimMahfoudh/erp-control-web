@@ -1,3 +1,4 @@
+import { ApiError } from '../api/error';
 import { request } from '../api/client';
 import type { AdminIdentity } from '../api/types';
 
@@ -44,6 +45,11 @@ export function adminStepUp(password: string, code: string): Promise<{ expiresAt
   return request('platform/admin/step-up', { method: 'POST', body: { password, code }, admin: true });
 }
 
+/** The open step-up window's end on this session, or null (post-Build-4): what the console's countdown reads. */
+export function adminStepUpWindow(): Promise<{ expiresAt: string | null }> {
+  return request('platform/admin/step-up', { admin: true });
+}
+
 export function adminMe(): Promise<AdminIdentity> {
   return request<AdminIdentity>('platform/admin/me', { admin: true });
 }
@@ -52,8 +58,14 @@ export async function adminSignOut(): Promise<void> {
   await request('platform/admin/sign-out', { method: 'POST', admin: true });
 }
 
+/** Told when the server refused for want of a step-up window — it ended there first — so the next decision asks again. */
+export const stepUpEvents = { required: () => {} };
+
 export function adminRequest<T>(path: string, options: { method?: 'GET' | 'POST' | 'PATCH'; body?: unknown } = {}): Promise<T> {
-  return request<T>(path, { ...options, admin: true });
+  return request<T>(path, { ...options, admin: true }).catch((e: unknown) => {
+    if (e instanceof ApiError && e.code === 'step_up_required') stepUpEvents.required();
+    throw e;
+  });
 }
 
 /**

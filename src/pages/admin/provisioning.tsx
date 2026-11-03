@@ -100,7 +100,7 @@ export function SetupCode({ invitation, onDone }: { invitation: IssuedInvitation
 }
 
 /** Where the business stands: its setup and its access, separately (D217), with the Owner's contacts as they are. */
-export function SetupPanel({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
+export function SetupPanel({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<boolean>; onDone: () => Promise<void> }) {
   const { t, lang } = useI18n();
   const setup = business.setup;
   const [issued, setIssued] = useState<IssuedInvitation | null>(null);
@@ -110,11 +110,10 @@ export function SetupPanel({ business, ask, onDone }: { business: BusinessDetail
 
   const issue = async () => {
     setError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
-      setIssued(await adminRequest<IssuedInvitation>(`platform/businesses/${business.id}/owner-invitation`, { method: 'POST', body: { reason: 'Owner setup', confirmPassword } }));
+      setIssued(await adminRequest<IssuedInvitation>(`platform/businesses/${business.id}/owner-invitation`, { method: 'POST', body: { reason: 'Owner setup' } }));
       await onDone();
     } catch (e) {
       setError(e);
@@ -187,7 +186,7 @@ export function SetupPanel({ business, ask, onDone }: { business: BusinessDetail
 }
 
 /** Set or clear the test status (D217): a decision with a reason and a step-up, refused where it would mix test and real. */
-export function TestStatus({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
+export function TestStatus({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<boolean>; onDone: () => Promise<void> }) {
   const { t, lang } = useI18n();
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState('');
@@ -199,11 +198,10 @@ export function TestStatus({ business, ask, onDone }: { business: BusinessDetail
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
-      await adminRequest(`platform/businesses/${business.id}/test-status`, { method: 'POST', body: { isTest: !isTest, reason: reason.trim(), confirmPassword } });
+      await adminRequest(`platform/businesses/${business.id}/test-status`, { method: 'POST', body: { isTest: !isTest, reason: reason.trim() } });
       setOpen(false);
       setReason('');
       await onDone();
@@ -256,7 +254,7 @@ export function TestStatus({ business, ask, onDone }: { business: BusinessDetail
  * no charge, under that grant; a customer's business gets the store request its Owner would file, at its price, opened
  * by a real payment. The server decides which; the form says which it will be. The same name again opens nothing new.
  */
-export function ConsoleStore({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
+export function ConsoleStore({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<boolean>; onDone: () => Promise<void> }) {
   const { t } = useI18n();
   const [form, setForm] = useState({ name: '', nameAr: '', activity: 'electronics' as Activity, reason: '' });
   // D227: what the server said this store still needs: the exact priced request, and why it should open.
@@ -272,8 +270,7 @@ export function ConsoleStore({ business, ask, onDone }: { business: BusinessDeta
     e.preventDefault();
     setError(null);
     setDone(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
       const r = await adminRequest<ConsoleStoreResult>(`platform/businesses/${business.id}/stores`, {
@@ -284,7 +281,7 @@ export function ConsoleStore({ business, ask, onDone }: { business: BusinessDeta
               basis.kind === 'grant'
                 ? { kind: 'grant', reason: basis.grantReason.trim() }
                 : { kind: 'payment', amount: basis.amount.trim(), paidAt: new Date(basis.paidAt).toISOString(), reference: basis.reference.trim(), months: 1 },
-          } : {}), confirmPassword },
+          } : {}) },
       });
       setDone(!r.created ? t('admin.store.same') : r.mode === 'opened' ? t('admin.store.opened', { name: form.name.trim() }) : r.mode === 'granted' ? t('admin.store.granted', { name: form.name.trim() }) : t('admin.store.requested', { name: form.name.trim() }));
       setForm({ ...form, name: '', nameAr: '', reason: '' });
@@ -377,7 +374,7 @@ export function ConsoleStore({ business, ask, onDone }: { business: BusinessDeta
  * An account whose provisioning stopped part-way (D227): plainly not an ordinary account, and finished from here with the
  * request it already holds. Resuming recognises work already done, so it cannot pay or grant twice.
  */
-export function ProvisioningDraft({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<string | null>; onDone: () => Promise<void> | void }) {
+export function ProvisioningDraft({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<boolean>; onDone: () => Promise<void> | void }) {
   const { t } = useI18n();
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -387,13 +384,12 @@ export function ProvisioningDraft({ business, ask, onDone }: { business: Busines
   const resume = async () => {
     setError(null);
     setFailed(false);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
       const r = await adminRequest<{ provisioningDraft?: boolean }>(`platform/businesses/${business.id}/resume-provisioning`, {
         method: 'POST',
-        body: { confirmPassword, reason: t('admin.draft.reason') },
+        body: { reason: t('admin.draft.reason') },
       });
       if (r.provisioningDraft) setFailed(true);
       else await onDone();

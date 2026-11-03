@@ -3,9 +3,9 @@ import { useI18n } from '../i18n';
 import { ErrorNotice } from './ui';
 
 /**
- * Step-up for administrator decisions (0094): the password and a fresh code from the authenticator, asked for
- * each decision. Neither is kept: the pair is checked by the server, which records the step-up on the session for
- * five minutes, and the password goes on with that one request.
+ * Step-up for administrator decisions (0094): the password and a fresh code from the authenticator. Neither is kept:
+ * the pair is checked by the server, which opens five absolute minutes on this session; while they run, no decision
+ * asks again (post-Build-4, `useStepUp`), and the password is never sent with a decision.
  */
 export function StepUpDialog({
   open,

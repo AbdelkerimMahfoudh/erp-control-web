@@ -94,7 +94,7 @@ export function SeatRequestActions({
 }: {
   companyId: string;
   request: SeatRequest;
-  ask: () => Promise<string | null>;
+  ask: () => Promise<boolean>;
   onDone: () => Promise<void>;
   onOutcome?: (lines: ReactNode[]) => void;
 }) {
@@ -119,14 +119,13 @@ export function SeatRequestActions({
   const run = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
       if (mode === 'confirm') {
         const r = await adminRequest<ConfirmResult>(`${base}/confirm-payment`, {
           method: 'POST',
-          body: { amount, paidAt: new Date(paidAt).toISOString(), channel, reference: reference.trim(), note: note.trim() || undefined, expectedVersion: request.version, confirmPassword },
+          body: { amount, paidAt: new Date(paidAt).toISOString(), channel, reference: reference.trim(), note: note.trim() || undefined, expectedVersion: request.version },
         });
         const now = r.allocation;
         const lines: ReactNode[] = [r.applied ? t('admin.seats.confirmed', { reference: reference.trim() }) : t('admin.action.noop')];
@@ -138,7 +137,7 @@ export function SeatRequestActions({
       } else {
         const r = await adminRequest<{ applied: boolean }>(`${base}/${mode === 'refuse' ? 'refuse' : 'release'}`, {
           method: 'POST',
-          body: { reason: reason.trim(), expectedVersion: request.version, confirmPassword },
+          body: { reason: reason.trim(), expectedVersion: request.version },
         });
         report([r.applied ? t('admin.action.applied') : t('admin.action.noop')]);
       }

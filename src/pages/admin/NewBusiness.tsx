@@ -107,11 +107,10 @@ export function NewBusiness() {
     };
     const sent = JSON.stringify(payload);
     if (attempt.current?.payload !== sent) attempt.current = { key: crypto.randomUUID(), payload: sent };
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
-      const r = await adminRequest<CreatedBusiness>('platform/businesses', { method: 'POST', body: { idempotencyKey: attempt.current.key, ...payload, confirmPassword } });
+      const r = await adminRequest<CreatedBusiness>('platform/businesses', { method: 'POST', body: { idempotencyKey: attempt.current.key, ...payload } });
       setResult(r);
       setCodeShown(true);
     } catch (err) {

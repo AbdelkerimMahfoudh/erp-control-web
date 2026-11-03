@@ -5,7 +5,7 @@ import { Badge, ErrorNotice, Field, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { arabicNameProblem, latinNameProblem, nameProblemKey, normalizeName } from '../../lib/names';
 
-type Ask = () => Promise<string | null>;
+type Ask = () => Promise<boolean>;
 type Target = { kind: 'business' | 'store' | 'person'; id: string; name: string | null; nameAr: string | null };
 
 /**
@@ -68,11 +68,10 @@ function NameRow({ business, target, ask, onDone }: { business: BusinessDetail; 
     if (name.trim() !== target.name) body.name = name.trim();
     if (nameAr.trim() && nameAr.trim() !== (target.nameAr ?? '')) body.nameAr = nameAr.trim();
     if (!body.name && !body.nameAr) return;
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
-      await adminRequest(path, { method: 'PATCH', body: { ...body, confirmPassword } });
+      await adminRequest(path, { method: 'PATCH', body: { ...body } });
       setSaved(true);
       setReason('');
       await onDone();

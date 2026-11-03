@@ -20,6 +20,7 @@ import { Plans } from './Plans';
 import { Promoters } from './Promoters';
 import { Promoter } from './Promoter';
 import { RegistrationSources } from './RegistrationSources';
+import { StepUpIndicator } from './useStepUp';
 
 type Session =
   | { kind: 'checking' }
@@ -88,6 +89,7 @@ export function Admin() {
           <NavLink to="/admin/sources">{t('admin.nav.sources')}</NavLink>
         </nav>
         <div className="row">
+          <StepUpIndicator />
           <span className="muted small">{session.admin.email}</span>
           <button
             type="button"

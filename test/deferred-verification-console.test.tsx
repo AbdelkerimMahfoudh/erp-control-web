@@ -210,7 +210,7 @@ describe('a business’s page', () => {
     await user.click(within(card).getByRole('button', { name: en['action.confirm'] }));
     await stepUp(user);
     await screen.findByRole('heading', { name: en['admin.deferred.title'] });
-    expect(sent.find((r) => r.url.endsWith('/require-verification'))!.body).toEqual({ reason: 'WhatsApp API is live', confirmPassword: 'step-up-password' });
+    expect(sent.find((r) => r.url.endsWith('/require-verification'))!.body).toEqual({ reason: 'WhatsApp API is live' });
   });
 
   it('adds a deferred Employee with a store, and shows their setup code once', async () => {

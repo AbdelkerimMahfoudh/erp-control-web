@@ -500,7 +500,7 @@ describe('the console: a store or seat paid for during a trial (D176)', () => {
     expect([...outcome.querySelectorAll('bdi')].map((b) => b.textContent)).toEqual([AT_END]);
     expect(outcome.textContent).not.toContain(en['admin.seats.storeOpened']);
     expect(outcome.textContent).not.toMatch(/09:30/);
-    expect(sent.find((r) => r.url.endsWith('/confirm-payment'))!.body).toMatchObject({ reference: 'BK-1', expectedVersion: 1, confirmPassword: 'step-up-password' });
+    expect(sent.find((r) => r.url.endsWith('/confirm-payment'))!.body).toMatchObject({ reference: 'BK-1', expectedVersion: 1 });
   }, CONFIRMING);
 
   it('with no paid access approved yet: it starts with the first paid month — no date; the seat’s person waits for it to start', async () => {

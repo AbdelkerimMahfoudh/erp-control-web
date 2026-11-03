@@ -48,9 +48,9 @@ describe('the platform console', () => {
     await user.click(within(screen.getByRole('dialog', { hidden: true })).getByRole('button', { name: 'Confirm', hidden: true }));
     expect(await screen.findByText('The store’s activity was changed.')).toBeTruthy();
     const confirm = sent.find((r) => r.url.endsWith('/confirm-payment'))!;
-    expect(confirm.body).toMatchObject({ amount: '400', reference: 'BK-2026-1009', expectedVersion: 1, confirmPassword: 'step-up-password' });
+    expect(confirm.body).toMatchObject({ amount: '400', reference: 'BK-2026-1009', expectedVersion: 1 });
     // The step-up went first, with the password and the code (0094).
-    const stepUp = sent.findIndex((r) => r.url.endsWith('/platform/admin/step-up'));
+    const stepUp = sent.findIndex((r) => r.method === 'POST' && r.url.endsWith('/platform/admin/step-up'));
     expect(sent[stepUp]!.body).toEqual({ password: 'step-up-password', code: '123456' });
     expect(stepUp).toBeLessThan(sent.findIndex((r) => r.url.endsWith('/confirm-payment')));
 

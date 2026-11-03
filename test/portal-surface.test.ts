@@ -69,7 +69,7 @@ describe('the portal’s gate (PORTAL, a portal build)', () => {
 describe('what a portal build publishes', () => {
   it('no page of the company site; the Owner’s page and the console behind a sign-in, and the registration link’s landing', () => {
     expect(publicRoutesFor('portal')).toEqual([]);
-    expect(protectedPrefixesFor('portal')).toEqual([PORTAL_HOME, '/admin', '/join']);
+    expect(protectedPrefixesFor('portal')).toEqual([PORTAL_HOME, '/admin', '/join', '/claim']);
     expect(PORTAL_HOME).toBe('/subscription');
   });
 
@@ -105,6 +105,8 @@ describe('what a portal build publishes', () => {
         '/admin/* /app-shell.html 200',
         '/join /app-shell.html 200',
         '/join/* /app-shell.html 200',
+        '/claim /app-shell.html 200',
+        '/claim/* /app-shell.html 200',
         '',
       ].join('\n'),
     );

@@ -110,7 +110,7 @@ describe('creating a business and its Owner', () => {
     expect(code.textContent).toBe(TOKEN);
     expect(screen.getByText(en['admin.new.created'])).toBeTruthy();
     const post = sent.find((r) => r.url.endsWith('/platform/businesses'))!;
-    expect(post.body).toMatchObject({ businessName: 'Labo Test', businessNameAr: 'متجر', ownerName: 'Mariem', ownerNameAr: 'مالك', phone: '+22200000001', isTest: true, reason: 'Phone-browser test', confirmPassword: 'step-up-password' });
+    expect(post.body).toMatchObject({ businessName: 'Labo Test', businessNameAr: 'متجر', ownerName: 'Mariem', ownerNameAr: 'مالك', phone: '+22200000001', isTest: true, reason: 'Phone-browser test' });
     expect(typeof (post.body as { idempotencyKey: string }).idempotencyKey).toBe('string');
     expect(JSON.stringify(post.body)).not.toMatch(/"password"/);
 
@@ -184,7 +184,7 @@ describe('a test business’s page', () => {
     await user.click(await screen.findByRole('button', { name: en['admin.setup.issue'] }, SLOW_WAIT));
     await stepUp(user);
     expect((await screen.findByTestId('setup-code')).textContent).toBe(TOKEN);
-    expect(sent.find((r) => r.url.endsWith('/owner-invitation'))!.body).toMatchObject({ confirmPassword: 'step-up-password' });
+    expect(sent.find((r) => r.url.endsWith('/owner-invitation'))!.body).not.toHaveProperty('confirmPassword');
   });
 
   it('opens a store under the grant, and a retry with the same name says nothing new was made', async () => {
@@ -258,7 +258,7 @@ describe('a test business’s page', () => {
     await stepUp(user);
     expect(await screen.findByText(en['admin.draft.failed'])).toBeTruthy();
     const body = sent.find((r) => r.url.endsWith('/resume-provisioning'))!.body;
-    expect(body).toMatchObject({ confirmPassword: 'step-up-password' });
+    expect(body).not.toHaveProperty('confirmPassword');
     expect(body).not.toHaveProperty('access');
   });
 

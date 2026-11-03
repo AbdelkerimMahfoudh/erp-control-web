@@ -47,13 +47,12 @@ export function Promoters() {
   const create = async (e: FormEvent) => {
     e.preventDefault();
     setCreateError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
       const created = await adminRequest<PromoterDetail>('platform/promoters', {
         method: 'POST',
-        body: { displayName: form.displayName.trim(), whatsappNumber: form.whatsappNumber.trim(), note: form.note.trim() || undefined, confirmPassword },
+        body: { displayName: form.displayName.trim(), whatsappNumber: form.whatsappNumber.trim(), note: form.note.trim() || undefined },
       });
       setForm(EMPTY);
       navigate(`/admin/promoters/${created.id}`);

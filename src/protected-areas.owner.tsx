@@ -8,7 +8,8 @@ import { Subscription } from './pages/portal/Subscription';
 import { PortalChrome } from './components/PortalChrome';
 import { PortalNotFound } from './pages/portal/PortalNotFound';
 import { Join } from './pages/join/Join';
-import { JOIN_PATH, PORTAL_HOME } from './site/routes';
+import { Claim } from './pages/portal/Claim';
+import { CLAIM_PATH, JOIN_PATH, PORTAL_HOME } from './site/routes';
 
 export const PROTECTED_AREAS_BUILT = true;
 
@@ -18,6 +19,7 @@ export function ProtectedRoutes() {
       <Route path={`${PORTAL_HOME}/*`} element={<Subscription />} />
       <Route path="/account/*" element={<Navigate to={PORTAL_HOME} replace />} />
       <Route path={JOIN_PATH} element={<Join />} />
+      <Route path={`${CLAIM_PATH}/:token`} element={<Claim />} />
       <Route
         path="*"
         element={

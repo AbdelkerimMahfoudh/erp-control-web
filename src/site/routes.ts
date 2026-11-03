@@ -73,7 +73,9 @@ export const PORTAL_HOME = '/subscription';
 export const JOIN_PATH = '/join';
 
 /** The areas the application shell serves — behind a sign-in, and the registration link's landing: never prerendered, never indexed. */
-export const PROTECTED_PREFIXES = [PORTAL_HOME, '/admin', JOIN_PATH] as const;
+/** Post-Build-4: where the account-ready message's button lands, its single-use link as the last segment. Never indexed, never logged by the edge. */
+export const CLAIM_PATH = '/claim';
+export const PROTECTED_PREFIXES = [PORTAL_HOME, '/admin', JOIN_PATH, CLAIM_PATH] as const;
 
 /**
  * Where the Owner's page was before the portal (`/account`, `/account/trial`): sent on to {@link PORTAL_HOME}, never

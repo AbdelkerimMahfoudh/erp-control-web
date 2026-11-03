@@ -160,7 +160,7 @@ export function PhoneVerificationBadge({ state, verified }: { state?: 'required'
   return <Badge tone={verified ? 'ok' : 'warn'}>{verified ? t('admin.business.verified') : t('admin.business.unverified')}</Badge>;
 }
 
-type Ask = () => Promise<string | null>;
+type Ask = () => Promise<boolean>;
 
 /** Managers and Employees, provisioned by the administrator, each taking one of the business's own seats. */
 export function ProvisionStaff({ business, ask, onDone }: { business: BusinessDetail; ask: Ask; onDone: () => Promise<void> }) {
@@ -178,13 +178,12 @@ export function ProvisionStaff({ business, ask, onDone }: { business: BusinessDe
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
       const r = await adminRequest<TestStaffResult>(`platform/businesses/${business.id}/provisioned-staff`, {
         method: 'POST',
-        body: { name: form.name.trim(), nameAr: form.nameAr.trim(), phone: form.phone.trim(), ...(form.email.trim() ? { email: form.email.trim() } : {}), role: form.role, branchIds: form.branchIds, ...verificationBody(verification), confirmPassword },
+        body: { name: form.name.trim(), nameAr: form.nameAr.trim(), phone: form.phone.trim(), ...(form.email.trim() ? { email: form.email.trim() } : {}), role: form.role, branchIds: form.branchIds, ...verificationBody(verification) },
       });
       setMade(r);
       setForm(empty);
@@ -272,20 +271,19 @@ export function DeferredAccounts({ business, ask, onDone }: { business: Business
 
   const run = async (row: DeferredAccount, action: Action) => {
     setError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     const base = `platform/businesses/${business.id}/accounts/${row.userId}`;
     try {
-      if (action === 'require') await adminRequest(`${base}/require-verification`, { method: 'POST', body: { reason: reason.trim(), confirmPassword } });
+      if (action === 'require') await adminRequest(`${base}/require-verification`, { method: 'POST', body: { reason: reason.trim() } });
       if (action === 'update')
-        await adminRequest(`${base}/deferral`, { method: 'POST', body: { ...(reason.trim() ? { reason: reason.trim() } : {}), ...(reviewAt ? { reviewAt: new Date(`${reviewAt}T23:59:00`).toISOString() } : {}), confirmPassword } });
+        await adminRequest(`${base}/deferral`, { method: 'POST', body: { ...(reason.trim() ? { reason: reason.trim() } : {}), ...(reviewAt ? { reviewAt: new Date(`${reviewAt}T23:59:00`).toISOString() } : {}) } });
       if (action === 'code') {
-        const r = await adminRequest<{ setupCode: IssuedSetupCode }>(`${base}/setup-code`, { method: 'POST', body: { confirmPassword } });
+        const r = await adminRequest<{ setupCode: IssuedSetupCode }>(`${base}/setup-code`, { method: 'POST', body: {} });
         setCode({ code: r.setupCode, name: row.name });
       }
-      if (action === 'revoke') await adminRequest(`${base}/setup-code/revoke`, { method: 'POST', body: { confirmPassword } });
-      if (action === 'cancel') await adminRequest(`${base}/cancel`, { method: 'POST', body: { reason: reason.trim(), confirmPassword } });
+      if (action === 'revoke') await adminRequest(`${base}/setup-code/revoke`, { method: 'POST', body: {} });
+      if (action === 'cancel') await adminRequest(`${base}/cancel`, { method: 'POST', body: { reason: reason.trim() } });
       setOpen(null);
       setReason('');
       setReviewAt('');

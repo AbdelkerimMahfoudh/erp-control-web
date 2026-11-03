@@ -42,11 +42,10 @@ export function Promoter() {
   /** One decision: the step-up, the request, and the promoter as the server now has it. */
   const decide = async (path: string, body: Record<string, unknown> = {}) => {
     setActionError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
-      setPromoter(await adminRequest<PromoterDetail>(`platform/promoters/${encodeURIComponent(id)}${path}`, { method: 'POST', body: { ...body, confirmPassword } }));
+      setPromoter(await adminRequest<PromoterDetail>(`platform/promoters/${encodeURIComponent(id)}${path}`, { method: 'POST', body: { ...body } }));
     } catch (e) {
       setActionError(e);
     } finally {
@@ -159,7 +158,7 @@ export function Promoter() {
   );
 }
 
-function Details({ promoter, onSaved, ask }: { promoter: PromoterDetail; onSaved: (p: PromoterDetail) => void; ask: () => Promise<string | null> }) {
+function Details({ promoter, onSaved, ask }: { promoter: PromoterDetail; onSaved: (p: PromoterDetail) => void; ask: () => Promise<boolean> }) {
   const { t, lang } = useI18n();
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState({ displayName: promoter.displayName, whatsappNumber: promoter.whatsappNumber, note: promoter.note ?? '' });
@@ -170,14 +169,13 @@ function Details({ promoter, onSaved, ask }: { promoter: PromoterDetail; onSaved
   const save = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
       onSaved(
         await adminRequest<PromoterDetail>(`platform/promoters/${encodeURIComponent(promoter.id)}`, {
           method: 'POST',
-          body: { displayName: form.displayName.trim(), whatsappNumber: form.whatsappNumber.trim(), note: form.note.trim(), confirmPassword },
+          body: { displayName: form.displayName.trim(), whatsappNumber: form.whatsappNumber.trim(), note: form.note.trim() },
         }),
       );
       setEditing(false);

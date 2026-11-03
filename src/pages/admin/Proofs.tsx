@@ -35,7 +35,7 @@ export function Proofs() {
   );
 }
 
-function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
+function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Promise<boolean>; onDone: () => Promise<void> }) {
   const { t, lang } = useI18n();
   const [form, setForm] = useState({ amount: proof.amount, paidAt: proof.paidAt.slice(0, 10), months: '1', channel: 'manual', reason: '' });
   const [refusal, setRefusal] = useState('');
@@ -44,11 +44,10 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
 
   const act = async (path: 'approve' | 'refuse', body: Record<string, unknown>) => {
     setError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
-      await adminRequest(`platform/payment-proofs/${proof.id}/${path}`, { method: 'POST', body: { ...body, confirmPassword } });
+      await adminRequest(`platform/payment-proofs/${proof.id}/${path}`, { method: 'POST', body: { ...body } });
       await onDone();
     } catch (e) {
       setError(e);
@@ -131,7 +130,7 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
 }
 
 /** A stopped approval: what the records say happened, and only the actions that fit it. The stored decision is finished, never a new one. */
-function Recovery({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
+function Recovery({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Promise<boolean>; onDone: () => Promise<void> }) {
   const { t, lang } = useI18n();
   const [state, setState] = useState<ProofRecovery | null>(null);
   const [reason, setReason] = useState('');
@@ -149,11 +148,10 @@ function Recovery({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
 
   const act = async (path: 'complete' | 'release', extra: Record<string, unknown> = {}) => {
     setError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
-      await adminRequest(`platform/payment-proofs/${proof.id}/recovery/${path}`, { method: 'POST', body: { reason: reason.trim(), confirmPassword, ...extra } });
+      await adminRequest(`platform/payment-proofs/${proof.id}/recovery/${path}`, { method: 'POST', body: { reason: reason.trim(), ...extra } });
       await onDone();
     } catch (e) {
       setError(e);

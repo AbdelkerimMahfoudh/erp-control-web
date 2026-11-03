@@ -169,7 +169,7 @@ describe('the generated files (docs/74 §5–§6)', () => {
 
   it('rewrites: the Owner page’s old address goes to /subscription for good, only the protected areas load the shell; other unknown addresses stay 404', () => {
     expect(redirectsFile()).toBe(
-      '/account /subscription 301\n/account/* /subscription 301\n/subscription /app-shell.html 200\n/subscription/* /app-shell.html 200\n/admin /app-shell.html 200\n/admin/* /app-shell.html 200\n/join /app-shell.html 200\n/join/* /app-shell.html 200\n',
+      '/account /subscription 301\n/account/* /subscription 301\n/subscription /app-shell.html 200\n/subscription/* /app-shell.html 200\n/admin /app-shell.html 200\n/admin/* /app-shell.html 200\n/join /app-shell.html 200\n/join/* /app-shell.html 200\n/claim /app-shell.html 200\n/claim/* /app-shell.html 200\n',
     );
   });
 

@@ -60,6 +60,14 @@ export async function portalSignIn(identifier: string, password: string): Promis
   return { status: 'signed_in', session: opened(result) };
 }
 
+/**
+ * The account-ready message's link (post-Build-4): its token, taken from the page's address, spent once for the Owner's
+ * normal portal session. In the body, never in a URL the API could log.
+ */
+export async function portalClaimLink(token: string): Promise<PortalSession> {
+  return opened(await request<RawSignIn>('platform/portal/claim-link', { method: 'POST', body: { token } }));
+}
+
 /** The same contact and password at more than one business: continue as the one chosen. */
 export async function portalChooseAccount(continuationToken: string, accountRef: string): Promise<PortalSession> {
   return opened(await request<RawSignIn>('platform/portal/choose-account', { method: 'POST', body: { continuationToken, accountRef } }));

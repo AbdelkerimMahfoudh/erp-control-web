@@ -18,6 +18,7 @@ import { ConsoleStore, ProvisioningDraft, SetupPanel, TestBadge, TestBanner, Tes
 import { DeferredAccounts, PhoneVerificationBadge, ProvisionStaff } from './deferral';
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
+import { AccountReadyResend, BusinessDeletion } from './BusinessDeletion';
 
 type Decision = 'approve' | 'reject' | 'period' | 'extend' | 'suspend' | 'reinstate' | 'cancel' | 'grant' | 'payment';
 
@@ -128,6 +129,10 @@ export function Business() {
       <DeferredAccounts business={data} ask={ask} onDone={load} />
 
       <ProvisionStaff business={data} ask={ask} onDone={load} />
+
+      <AccountReadyResend businessId={id} ask={ask} />
+
+      <BusinessDeletion businessId={id} ask={ask} onDone={load} />
 
       <section className="grid">
         <div className="card stack">
@@ -336,7 +341,7 @@ function DecisionRefusal({ error, business }: { error: unknown; business: Busine
   );
 }
 
-function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<string | null>; onDone: () => Promise<void> }) {
+function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<boolean>; onDone: () => Promise<void> }) {
   const { t, lang } = useI18n();
   const [open, setOpen] = useState<Decision | null>(null);
   const [form, setForm] = useState({ months: '1', periodEnd: '', days: '14', reason: '', amount: '', paidAt: new Date().toISOString().slice(0, 10), channel: 'bank_transfer', reference: '', note: '', confirm: true });
@@ -349,12 +354,11 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
     e.preventDefault();
     if (!open) return;
     setError(null);
-    const confirmPassword = await ask();
-    if (!confirmPassword) return;
+    if (!(await ask())) return;
     setBusy(true);
     try {
       const reason = form.reason.trim() || undefined;
-      const common = { expectedVersion: business.version, confirmPassword };
+      const common = { expectedVersion: business.version };
       let body: Record<string, unknown>;
       switch (open) {
         case 'approve':
@@ -377,7 +381,6 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
             reference: form.reference.trim() || undefined,
             note: form.note.trim() || undefined,
             confirm: form.confirm,
-            confirmPassword,
           };
           break;
         default:

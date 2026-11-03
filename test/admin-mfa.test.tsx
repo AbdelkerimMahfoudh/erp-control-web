@@ -137,7 +137,7 @@ describe('a decision’s step-up', () => {
     await user.click(within(dialog).getByRole('button', { name: 'Confirm', hidden: true }));
     expect(await within(dialog).findByText(/That password or code did not match/)).toBeTruthy();
     expect(dialog.hasAttribute('open')).toBe(true);
-    expect(sent.find((r) => r.url.endsWith('/platform/admin/step-up'))!.body).toEqual({ password: 'step-up-password', code: '123456' });
+    expect(sent.find((r) => r.method === 'POST' && r.url.endsWith('/platform/admin/step-up'))!.body).toEqual({ password: 'step-up-password', code: '123456' });
     expect(sent.some((r) => r.method === 'POST' && r.url.endsWith('/platform/plans'))).toBe(false);
   });
 });
