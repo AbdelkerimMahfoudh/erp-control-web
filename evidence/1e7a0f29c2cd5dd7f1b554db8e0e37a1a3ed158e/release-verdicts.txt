@@ -1,0 +1,14 @@
+node:fs:440
+    return binding.readFileUtf8(path, stringToFlags(options.flag));
+                   ^
+
+Error: ENOENT: no such file or directory, open 'evidence/1e7a0f29c2cd5dd7f1b554db8e0e37a1a3ed158e/public-audit-links.txt'
+    at readFileSync (node:fs:440:20)
+    at file:///home/runner/work/erp-control-web/erp-control-web/scripts/release-verdicts.mjs:51:13 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'evidence/1e7a0f29c2cd5dd7f1b554db8e0e37a1a3ed158e/public-audit-links.txt'
+}
+
+Node.js v22.23.4
