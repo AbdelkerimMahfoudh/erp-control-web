@@ -13,8 +13,8 @@
   - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
   - import "./surface" without a file extension (src/config/schema.ts:10:40). Add the file extension
   - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
-  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
   - import "./surface" without a file extension (src/config/schema.ts:40:51). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
   - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
   - import "./legal-choices" without a file extension (src/content/index.ts:10:32). Add the file extension
   - import "./legal-notice" without a file extension (src/content/index.ts:11:29). Add the file extension
@@ -73,7 +73,7 @@ dist/assets/index-oyu8EwT5.js   1,022.43 kB │ gzip: 276.84 kB
 - Using dynamic import() to code-split the application
 - Use build.rolldownOptions.output.codeSplitting to improve chunking: https://rolldown.rs/reference/OutputOptions.codeSplitting
 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
-[32m✓ built in 446ms[39m
+[32m✓ built in 359ms[39m
 [33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
   - import "./src/config/schema" without a file extension (vite.config.ts:5:103). Add the file extension
   - import "./src/content" resolves to a directory index (vite.config.ts:6:75). Import the index file directly
@@ -134,5 +134,5 @@ rendering chunks...
 computing gzip size...
 dist-ssr/entry-server.js  1,074.39 kB │ gzip: 255.40 kB
 
-[32m✓ built in 161ms[39m
+[32m✓ built in 137ms[39m
 prerendered 72 pages and 6 not-found pages (3 languages), mode preview, surface full — PREVIEW: test values, noindex

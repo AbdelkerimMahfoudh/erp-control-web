@@ -2,10 +2,10 @@
   - import "./src/config/schema" without a file extension (vite.config.ts:5:103). Add the file extension
   - import "./src/content" resolves to a directory index (vite.config.ts:6:75). Import the index file directly
   - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
-  - import "./surface" without a file extension (src/config/schema.ts:10:40). Add the file extension
   - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
-  - import "./surface" without a file extension (src/config/schema.ts:40:51). Add the file extension
+  - import "./surface" without a file extension (src/config/schema.ts:10:40). Add the file extension
   - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./surface" without a file extension (src/config/schema.ts:40:51). Add the file extension
   - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
   - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
   - import "./legal-choices" without a file extension (src/content/index.ts:10:32). Add the file extension
@@ -79,7 +79,7 @@ Error: This website cannot be built for production yet (gate PORTAL). Nothing wa
   - [legal_draft] security: still marked DRAFT — REQUIRES TSX-MR APPROVAL
   - [legal_draft] terms: still marked DRAFT — REQUIRES TSX-MR APPROVAL
 Set the values in the hosting provider’s environment (docs/74 §3) or resolve the legal blockers (docs/74 §7); use `npm run build:preview` for a test build.
-    at BasicMinimalPluginContext.configResolved (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/.vite-temp/vite.config.ts.timestamp-1793711053442-e8395c40b8ef5.mjs:6402:35)
+    at BasicMinimalPluginContext.configResolved (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/.vite-temp/vite.config.ts.timestamp-1793740079742-f0390f52fa55.mjs:6402:35)
     at file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/chunks/node.js:37632:87
     at Array.map (<anonymous>)
     at resolveConfig (file:///home/runner/work/erp-control-web/erp-control-web/node_modules/vite/dist/node/chunks/node.js:37632:68)
