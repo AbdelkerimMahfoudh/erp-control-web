@@ -174,6 +174,55 @@ jobs:
         run: |
           if [ -d "$EV/portal/screenshots" ]; then node scripts/contact-sheets.mjs "$EV/portal" || true; fi
           rm -rf "$EV/portal/playwright-output"
+      # The console alone, for https://admin.tsxmr.com. A real production build: its gate needs no customers' legal decision.
+      - name: Admin build (VITE_SITE_SURFACE=admin) — refusals, production build, audits, release package
+        if: ${{ !cancelled() }}
+        env:
+          VITE_SITE_SURFACE: admin
+          VITE_ADMIN_SITE_ORIGIN: https://admin.tsxmr.com
+          VITE_PUBLIC_SITE_ORIGIN: https://tsxmr.com
+        run: |
+          rm -rf dist dist-ssr
+          for api in "" https://dukan-test.tsxmr.com/api/v1 http://127.0.0.1:3010/api/v1; do
+            set +e
+            VITE_API_BASE="$api" npx vite build --mode production >> "$EV/admin-production-refusal.log" 2>&1
+            code=$?
+            set -e
+            if [ "$code" -eq 0 ]; then echo "FAIL: an admin build was made for API '$api'"; exit 1; fi
+          done
+          grep -q "(gate ADMIN)" "$EV/admin-production-refusal.log"
+          rm -rf dist dist-ssr
+          set -o pipefail
+          VITE_API_BASE=https://api.tsxmr.com/api/v1 npm run build 2>&1 | tee "$EV/admin-build.log"
+          (cd dist && find . -type f | sort) > "$EV/admin-dist-files.txt"
+          node scripts/audit-bundle.mjs dist --admin 2>&1 | tee "$EV/admin-audit-bundle.txt"
+          node scripts/caddy-admin-release.mjs dist /tmp/admin-release "$GITHUB_SHA" 2>&1 | tee "$EV/admin-release.txt"
+          docker run --rm -v "$PWD/dist:/dist" zricethezav/gitleaks:latest dir /dist --redact --no-banner 2>&1 | tail -2 | tee "$EV/admin-gitleaks.txt"
+          (cd /tmp/admin-release && tar czf - .) > "$EV/admin-release.tar.gz"
+      - name: Admin site in a browser (E2E_SURFACE=admin) — EN/FR/AR, RTL, axe, headers, no customers' address
+        if: ${{ !cancelled() }}
+        env:
+          VITE_SITE_SURFACE: admin
+          E2E_SURFACE: admin
+        run: |
+          rm -rf dist dist-ssr
+          mkdir -p "$EV/admin"
+          set -o pipefail
+          VITE_API_BASE=http://127.0.0.1:3999/api/v1 npm run build:preview 2>&1 | tee "$EV/admin-preview-build.log"
+          node scripts/audit-bundle.mjs dist --preview --admin 2>&1 | tee "$EV/admin-preview-audit.txt"
+          EV="$EV/admin" npx playwright test 2>&1 | tee "$EV/admin/playwright.log"
+          rm -rf "$EV/admin/playwright-output"
+      - name: The customers' portal holds no console (production aliases, --mode customer-audit)
+        if: ${{ !cancelled() }}
+        env:
+          VITE_SITE_SURFACE: portal
+        run: |
+          rm -rf dist dist-ssr
+          set -o pipefail
+          VITE_API_BASE=https://api.tsxmr.com/api/v1 npx vite build --mode customer-audit 2>&1 | tee "$EV/customer-audit-build.log"
+          npx vite build --ssr src/entry-server.tsx --outDir dist-ssr --mode customer-audit > /dev/null
+          node scripts/prerender.mjs > /dev/null
+          node scripts/audit-bundle.mjs dist --preview --portal --no-console 2>&1 | tee "$EV/customer-audit.txt"
       - name: Keep the evidence
         if: always()
         env:

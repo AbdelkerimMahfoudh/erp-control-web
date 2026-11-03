@@ -89,12 +89,13 @@ export const API_ROUTE_IDS: readonly PublicRouteId[] = ['apply', 'applicationSta
  * API; a portal build has none at all — the company site's pages live on the company site.
  */
 export function publicRoutesFor(surface: Surface): readonly PublicRoute[] {
-  if (surface === 'portal') return [];
+  if (surface === 'portal' || surface === 'admin') return [];
   return surface === 'public' ? PUBLIC_ROUTES.filter((r) => !API_ROUTE_IDS.includes(r.id)) : PUBLIC_ROUTES;
 }
 
 /** The protected areas a build of this surface serves: none in a public build. */
 export function protectedPrefixesFor(surface: Surface): readonly string[] {
+  if (surface === 'admin') return ['/admin'];
   return surface === 'public' ? [] : PROTECTED_PREFIXES;
 }
 

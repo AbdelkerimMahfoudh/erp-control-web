@@ -26,7 +26,8 @@ const page = (lang, head, app) =>
     .replace('<!--head-->', head)
     .replace('<!--app-->', app);
 
-const portal = ssr.SURFACE === 'portal';
+// An admin build publishes no public page either: the same shell, for the console's own site.
+const portal = ssr.SURFACE === 'portal' || ssr.SURFACE === 'admin';
 const shell = (title) => page('en', `<title>${esc(title)}</title>\n    <meta name="robots" content="noindex, nofollow" />`, '');
 
 // 1. The shell of the protected areas: no content, never indexed (written before the home page replaces index.html).
@@ -81,7 +82,7 @@ if (ssr.SITE.publicSiteOrigin && !portal) write('sitemap.xml', ssr.sitemapXml(ss
 write('_headers', ssr.headersFile(ssr.SITE, ssr.IS_PREVIEW));
 write('_redirects', ssr.redirectsFile(ssr.SITE));
 const security = ssr.securityTxt(ssr.SITE, builtAt);
-if (security) write('.well-known/security.txt', security);
+if (security && ssr.SURFACE !== 'admin') write('.well-known/security.txt', security);
 // The manifest's colours are the light theme's background and text (theme/tokens.css).
 write('site.webmanifest', ssr.webManifest(ssr.SITE, '#172033', '#f7f8fb'));
 

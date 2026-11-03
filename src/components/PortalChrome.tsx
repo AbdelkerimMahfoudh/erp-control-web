@@ -13,7 +13,7 @@ import { PreviewBanner, ProductMark } from './public/blocks';
 export function PublicLink({ id, children }: { id: PublicRouteId; children: ReactNode }) {
   const { lang } = useI18n();
   const path = pathOf(id, lang);
-  if (SURFACE !== 'portal') {
+  if (SURFACE !== 'portal' && SURFACE !== 'admin') {
     return (
       <Link className="related-link" to={path}>
         {children}
@@ -34,7 +34,8 @@ export function PublicLink({ id, children }: { id: PublicRouteId; children: Reac
  */
 export function PortalChrome({ children }: { children: ReactNode }) {
   const { t } = useI18n();
-  const admin = useLocation().pathname.startsWith('/admin');
+  const pathname = useLocation().pathname;
+  const admin = SURFACE === 'admin' || pathname.startsWith('/admin');
   return (
     <>
       <a className="skip-link" href="#main">

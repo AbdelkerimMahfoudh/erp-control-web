@@ -13,7 +13,7 @@ type WithSurface = Partial<Pick<SiteInputs, 'siteSurface'>>;
 const surfaceOf = (site: WithSurface) => namedSurface(site.siteSurface);
 
 /** The addresses that send on to the Owner's page, in a build that has it (`routes.ts` RETIRED_PREFIXES). */
-const retiredFor = (site: WithSurface) => (surfaceOf(site) === 'public' ? [] : RETIRED_PREFIXES);
+const retiredFor = (site: WithSurface) => (surfaceOf(site) === 'public' || surfaceOf(site) === 'admin' ? [] : RETIRED_PREFIXES);
 
 /** The shell the protected areas load: no prerendered content, never indexed. */
 export const APP_SHELL = '/app-shell.html';
@@ -25,7 +25,7 @@ export function fileForPath(path: string): string {
 
 /** Nothing of a preview, and nothing of the portal, is crawled: the portal is a signed-in service, never a page to find. */
 export function robotsTxt(site: Pick<SiteInputs, 'publicSiteOrigin'> & WithSurface, preview: boolean): string {
-  if (preview || surfaceOf(site) === 'portal') return 'User-agent: *\nDisallow: /\n';
+  if (preview || surfaceOf(site) === 'portal' || surfaceOf(site) === 'admin') return 'User-agent: *\nDisallow: /\n';
   return [
     'User-agent: *',
     ...[...protectedPrefixesFor(surfaceOf(site)), ...retiredFor(site)].map((p) => `Disallow: ${p}`),
@@ -87,7 +87,7 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, pre
     'Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()',
     'Cross-Origin-Opener-Policy: same-origin',
     // Nothing of a preview is indexed, and nothing of the portal ever is (the owner's brief of 2026-10-18).
-    ...(preview || surface === 'portal' ? ['X-Robots-Tag: noindex, nofollow'] : []),
+    ...(preview || surface === 'portal' || surface === 'admin' ? ['X-Robots-Tag: noindex, nofollow'] : []),
   ];
   const blocks = [`/*\n${common.map((h) => `  ${h}`).join('\n')}`];
   for (const p of [...protectedPrefixesFor(surface), ...retiredFor(site)]) {
@@ -96,9 +96,9 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, pre
   }
   if (surface !== 'public') blocks.push(`${APP_SHELL}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
   // A registration link carries its token in the address: nothing it leads to is told where it came from (0103).
-  if (surface !== 'public') blocks.push(`${JOIN_PATH}\n  Referrer-Policy: no-referrer`);
+  if (surface !== 'public' && surface !== 'admin') blocks.push(`${JOIN_PATH}\n  Referrer-Policy: no-referrer`);
   // The pages the mobile app opens: public texts, never indexed (their public pages are). Not on the portal.
-  if (surface !== 'portal') for (const prefix of Object.values(LANGUAGE_PREFIX)) blocks.push(`${prefix}${IN_APP_PREFIX}/*\n  X-Robots-Tag: noindex, nofollow`);
+  if (surface !== 'portal' && surface !== 'admin') for (const prefix of Object.values(LANGUAGE_PREFIX)) blocks.push(`${prefix}${IN_APP_PREFIX}/*\n  X-Robots-Tag: noindex, nofollow`);
   // Hashed assets never change; everything else is revalidated.
   blocks.push('/assets/*\n  Cache-Control: public, max-age=31536000, immutable');
   // The self-hosted fonts (theme/fonts.css): named by family, subset and weight, and renamed when they change.
@@ -115,6 +115,7 @@ export function redirectsFile(site: WithSurface = {}): string {
   const surface = surfaceOf(site);
   const rules = [
     ...(surface === 'portal' ? [`/ ${PORTAL_HOME} 302`] : []),
+    ...(surface === 'admin' ? ['/ /admin 302'] : []),
     ...retiredFor(site).flatMap((p) => [`${p} ${PORTAL_HOME} 301`, `${p}/* ${PORTAL_HOME} 301`]),
     ...protectedPrefixesFor(surface).flatMap((p) => [`${p} ${APP_SHELL} 200`, `${p}/* ${APP_SHELL} 200`]),
   ];
@@ -140,13 +141,14 @@ export function securityTxt(site: Pick<SiteInputs, 'securityEmail' | 'publicSite
 
 /** The portal is the product's, and opens on the Owner's page; the company site is the company's, and opens on its home. */
 export function webManifest(site: Pick<SiteInputs, 'displayName'> & WithSurface, themeColor: string, background: string): string {
-  const portal = surfaceOf(site) === 'portal';
+  const admin = surfaceOf(site) === 'admin';
+  const portal = surfaceOf(site) === 'portal' || admin;
   const name = portal ? 'Dukan ERP' : site.displayName;
   return `${JSON.stringify(
     {
       name,
       short_name: name,
-      start_url: portal ? PORTAL_HOME : '/',
+      start_url: admin ? '/admin' : portal ? PORTAL_HOME : '/',
       display: 'browser',
       background_color: background,
       theme_color: themeColor,

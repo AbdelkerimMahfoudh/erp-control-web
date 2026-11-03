@@ -36,7 +36,8 @@ function releaseGuard(): Plugin {
  * A portal build is the product's (docs/101): its tab and home-screen icons are the Dukan ledger mark, not the company's.
  */
 function portalIcons(mode: string): Plugin {
-  const portal = surfaceOf(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_SURFACE) === 'portal';
+  const surface = surfaceOf(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_SURFACE);
+  const portal = surface === 'portal' || surface === 'admin';
   return {
     name: 'dukan-portal-icons',
     transformIndexHtml: {
@@ -65,10 +66,19 @@ if (process.env.VITEST) process.env.TZ = 'UTC';
 function surfaceAliases(mode: string) {
   const surface = surfaceOf(loadEnv(mode, process.cwd(), 'VITE_').VITE_SITE_SURFACE);
   const stub = (path: string) => fileURLToPath(new URL(path, import.meta.url));
+  // The console alone, in every mode, for https://admin.tsxmr.com: nothing of the customers' portal or the company site.
+  if (surface === 'admin') {
+    return [
+      { find: /^\.\/public-areas$/, replacement: stub('./src/public-areas.admin.tsx') },
+      { find: /^(\.{1,2}\/)+protected-areas$/, replacement: stub('./src/protected-areas.admin.tsx') },
+    ];
+  }
   if (surface === 'portal') {
     const areas = [{ find: /^\.\/public-areas$/, replacement: stub('./src/public-areas.portal.tsx') }];
     // D227: the customers' portal holds no console. The password-protected test site is a preview build and keeps it.
-    if (mode === 'production') {
+    // `customer-audit` is that same exclusion with the marked test values, so CI can audit it while the PORTAL gate
+    // still refuses a production build.
+    if (mode === 'production' || mode === 'customer-audit') {
       areas.push({ find: /^(\.{1,2}\/)+protected-areas$/, replacement: stub('./src/protected-areas.owner.tsx') });
     }
     return areas;
@@ -95,7 +105,8 @@ function siteInputs(mode: string) {
 export default defineConfig(({ mode }) => ({
   plugins: [react(), releaseGuard(), portalIcons(mode)],
   resolve: { alias: surfaceAliases(mode) },
-  define: siteInputs(mode),
+  // A production build has no local address to fall back on (`api/client.ts`); its gate has already required the API's.
+  define: { ...siteInputs(mode), __LOCAL_API_FALLBACK__: JSON.stringify(mode !== 'production') },
   server: { port: 5173, host: '127.0.0.1' },
   preview: { port: 4173, host: '127.0.0.1' },
   build: { sourcemap: false, target: 'es2022' },

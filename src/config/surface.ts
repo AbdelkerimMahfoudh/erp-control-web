@@ -8,8 +8,10 @@
  * - `portal` — the Dukan ERP portal alone, for `https://dukan.tsxmr.com`: the Owner's `/subscription` with its own
  *   sign-in, and the platform console at `/admin` — no public page of the company site, nothing indexed. Its legal and
  *   support pages are the company site's, linked at `VITE_PUBLIC_SITE_ORIGIN`.
+ * - `admin` — the platform console alone, for `https://admin.tsxmr.com`: `/admin`, no page of the company site and nothing
+ *   of the customers' portal, nothing indexed. Its own gate (`schema.ts`).
  */
-export const SURFACES = ['full', 'public', 'portal'] as const;
+export const SURFACES = ['full', 'public', 'portal', 'admin'] as const;
 
 export type Surface = (typeof SURFACES)[number];
 
