@@ -96,8 +96,8 @@ describe('the portal’s /claim/ page', () => {
     expect(replaced).toContain('/claim');
     const claims = sent.filter((r) => r.url.endsWith('/platform/portal/claim-link'));
     expect(claims).toHaveLength(1);
-    expect(claims[0]).toMatchObject({ method: 'POST', body: { token: TOKEN } });
-    expect(claims[0].url).not.toContain(TOKEN);
+    expect(claims[0]!).toMatchObject({ method: 'POST', body: { token: TOKEN } });
+    expect(claims[0]!.url).not.toContain(TOKEN);
     expect(screen.getByRole('link', { name: 'Sign in' })).toBeTruthy();
   });
 
