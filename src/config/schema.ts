@@ -77,6 +77,9 @@ export const PORTAL_WEBSITE_ORIGIN = 'https://dukan.tsxmr.com';
 /** The only API origin a portal build may call (the owner's brief of 2026-10-18). */
 export const PORTAL_API_ORIGIN = 'https://api.tsxmr.com';
 
+/** The only origin the platform console may be published at (the owner's decision of 2026-11-02). */
+export const ADMIN_WEBSITE_ORIGIN = 'https://admin.tsxmr.com';
+
 /**
  * The release gates (docs/96), each with its own verdict:
  * - `PUBLIC_WEBSITE` — a public build: the pre-launch corporate website. Needs the real TSX-MR identity and contacts,
@@ -84,12 +87,15 @@ export const PORTAL_API_ORIGIN = 'https://api.tsxmr.com';
  * - `PORTAL` — a full or a portal build: the business account and the console. Needs everything, the API and the
  *   service's approved texts with no legal blocker left — a portal build its exact origin besides; and, outside this
  *   repository, a running backend with its channels.
+ * - `ADMIN` — an admin build: the platform console. It publishes no text and sells nothing, so it asks for no legal
+ *   decision of the customers' service: only its exact origin, the API's and the company site's for its footer links.
  * - `APP_STORE` — not a website build: the service texts approved, WhatsApp deletion working end to end, and every
  *   App Store gate (`gates.ts`, docs/94).
  */
-export type Gate = 'PUBLIC_WEBSITE' | 'PORTAL' | 'APP_STORE';
+export type Gate = 'PUBLIC_WEBSITE' | 'PORTAL' | 'ADMIN' | 'APP_STORE';
 
-export function gateOfSurface(surface: string): 'PUBLIC_WEBSITE' | 'PORTAL' {
+export function gateOfSurface(surface: string): 'PUBLIC_WEBSITE' | 'PORTAL' | 'ADMIN' {
+  if (surface === 'admin') return 'ADMIN';
   return surface === 'public' ? 'PUBLIC_WEBSITE' : 'PORTAL';
 }
 export type DeletionChannel = (typeof DELETION_CHANNELS)[number];
@@ -97,7 +103,7 @@ export type DeletionChannel = (typeof DELETION_CHANNELS)[number];
 export const INPUTS = {
   publicSiteOrigin: { env: 'VITE_PUBLIC_SITE_ORIGIN', kind: 'https-origin', required: true, publicSite: 'required', preview: 'https://preview.invalid', label: 'Public website origin, e.g. https://<domain>' },
   adminSiteOrigin: { env: 'VITE_ADMIN_SITE_ORIGIN', kind: 'https-origin', required: false, publicSite: 'forbidden', preview: '', label: 'Separate Super Admin origin, if one is chosen' },
-  siteSurface: { env: 'VITE_SITE_SURFACE', kind: 'surface', required: true, fallback: 'full', preview: 'full', label: 'What this build publishes: full (one origin), public (the public pages only) or portal (the Dukan ERP portal only)' },
+  siteSurface: { env: 'VITE_SITE_SURFACE', kind: 'surface', required: true, fallback: 'full', preview: 'full', label: 'What this build publishes: full (one origin), public (the public pages only), portal (the Dukan ERP portal only) or admin (the platform console only)' },
   apiBase: { env: 'VITE_API_BASE', kind: 'https-url', required: true, publicSite: 'forbidden', preview: '', label: 'API base URL including /api/v1, e.g. https://api.<domain>/api/v1 (not used by a public build)' },
   portalOrigin: { env: 'VITE_PORTAL_ORIGIN', kind: 'https-origin', required: false, publicSite: 'forbidden', preview: '', label: 'The business account origin when it is separate, e.g. https://dukan.<domain> (a public build links to it)' },
   appWebOrigin: { env: 'VITE_APP_WEB_ORIGIN', kind: 'https-origin', required: false, publicSite: 'forbidden', preview: '', label: 'The Dukan ERP app in a browser, where a registration link continues once it is published (blank: the link asks for the phone app)' },
@@ -260,6 +266,19 @@ export interface ContentState {
   placeholders: readonly string[];
 }
 
+/** The ADMIN gate: exactly these three addresses, and none of the customers' portal. */
+function adminProblems(inputs: SiteInputs): ReleaseProblem[] {
+  const problems: ReleaseProblem[] = [];
+  const exact = (name: InputName, value: string) => {
+    if (inputs[name] !== value) problems.push({ input: name, env: INPUTS[name].env, problem: inputs[name] ? 'wrong_origin' : 'missing', detail: `an admin build needs exactly ${value}` });
+  };
+  exact('adminSiteOrigin', ADMIN_WEBSITE_ORIGIN);
+  exact('publicSiteOrigin', PUBLIC_WEBSITE_ORIGIN);
+  exact('apiBase', `${PORTAL_API_ORIGIN}/api/v1`);
+  if (inputs.portalOrigin) problems.push({ input: 'portalOrigin', env: INPUTS.portalOrigin.env, problem: 'forbidden', detail: "an admin build names nothing of the customers' portal" });
+  return problems;
+}
+
 /**
  * Why a production build must not be published. Empty means every required input is present, well formed and real,
  * no legal blocker is left in the published texts, no legal document is still a draft and no text is a placeholder.
@@ -272,6 +291,7 @@ export function releaseProblems(
   const problems: ReleaseProblem[] = [];
   const { inputs } = readInputs(env, 'production');
   const gate = gateOfSurface(inputs.siteSurface);
+  if (gate === 'ADMIN') return adminProblems(inputs);
   for (const [name, spec] of Object.entries(INPUTS) as [InputName, InputSpec][]) {
     const value = inputs[name];
     if (gate === 'PUBLIC_WEBSITE' && spec.publicSite === 'forbidden') {

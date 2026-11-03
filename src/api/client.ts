@@ -19,8 +19,11 @@ export { ApiError, isUnauthorized, type RequestOptions };
 
 const configured = (import.meta.env.VITE_API_BASE as string | undefined)?.trim().replace(/\/+$/, '');
 
+declare const __LOCAL_API_FALLBACK__: boolean;
+
 export function apiBase(): string {
   if (configured) return configured;
+  if (!__LOCAL_API_FALLBACK__) return '';
   if (typeof window === 'undefined') return 'http://127.0.0.1:3010/api/v1';
   return `${window.location.protocol}//${window.location.hostname}:3010/api/v1`;
 }

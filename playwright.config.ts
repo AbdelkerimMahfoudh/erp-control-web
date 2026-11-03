@@ -9,7 +9,7 @@ const EV = process.env.EV ?? 'e2e-output';
 // `E2E_SURFACE=public`: the pre-launch public website (e2e/public-site.spec.ts) against a public build;
 // `E2E_SURFACE=portal`: the Dukan ERP portal (e2e/portal.spec.ts) against a portal build; otherwise the full site
 // (e2e/site.spec.ts). Each against the `dist/` of its own build (docs/96, docs/101).
-const SPECS: Record<string, RegExp> = { public: /public-site\.spec\.ts$/, portal: /portal\.spec\.ts$/ };
+const SPECS: Record<string, RegExp> = { public: /public-site\.spec\.ts$/, portal: /portal\.spec\.ts$/, admin: /admin\.spec\.ts$/ };
 
 export default defineConfig({
   testDir: 'e2e',
