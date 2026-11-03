@@ -1,0 +1,555 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.4/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/playwright.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/bb620d03a1128f8784a366b226d0fa82c2f57e4f",
+        "commitHash": "bb620d03a1128f8784a366b226d0fa82c2f57e4f",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41640574120"
+      },
+      "gitCommit": {
+        "shortHash": "bb620d03",
+        "hash": "bb620d03a1128f8784a366b226d0fa82c2f57e4f",
+        "subject": "i18n: a page fixed to its address's language is never overwritten by the outer provider",
+        "body": "i18n: a page fixed to its address's language is never overwritten by the outer provider\n\nConsole CI 41622232435 read lang=\"en\" on /fr (twice) and /ar/products/dukan-erp: React runs the outer provider's\neffects last, so the outer provider, still on the device's English until it followed, wrote the document for one\ncommit after the page had written its own language. A fixed provider now claims the document in a layout effect and\nthe outer one writes only when no page claims it. The new test records every value the lang attribute takes: it fails\non the old code and passes on this. The phone list comparison ignores line endings.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+        "author": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1793709608000
+        },
+        "committer": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1793709608000
+        },
+        "branch": "post-testflight-feedback"
+      },
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/bb620d03a1128f8784a366b226d0fa82c2f57e4f/admin/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/bb620d03a1128f8784a366b226d0fa82c2f57e4f",
+            "commitHash": "bb620d03a1128f8784a366b226d0fa82c2f57e4f",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41640574120"
+          },
+          "gitCommit": {
+            "shortHash": "bb620d03",
+            "hash": "bb620d03a1128f8784a366b226d0fa82c2f57e4f",
+            "subject": "i18n: a page fixed to its address's language is never overwritten by the outer provider",
+            "body": "i18n: a page fixed to its address's language is never overwritten by the outer provider\n\nConsole CI 41622232435 read lang=\"en\" on /fr (twice) and /ar/products/dukan-erp: React runs the outer provider's\neffects last, so the outer provider, still on the device's English until it followed, wrote the document for one\ncommit after the page had written its own language. A fixed provider now claims the document in a layout effect and\nthe outer one writes only when no page claims it. The new test records every value the lang attribute takes: it fails\non the old code and passes on this. The phone list comparison ignores line endings.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793709608000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793709608000
+            },
+            "branch": "post-testflight-feedback"
+          },
+          "actualWorkers": 4
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/admin\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/bb620d03a1128f8784a366b226d0fa82c2f57e4f/admin/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/bb620d03a1128f8784a366b226d0fa82c2f57e4f",
+            "commitHash": "bb620d03a1128f8784a366b226d0fa82c2f57e4f",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41640574120"
+          },
+          "gitCommit": {
+            "shortHash": "bb620d03",
+            "hash": "bb620d03a1128f8784a366b226d0fa82c2f57e4f",
+            "subject": "i18n: a page fixed to its address's language is never overwritten by the outer provider",
+            "body": "i18n: a page fixed to its address's language is never overwritten by the outer provider\n\nConsole CI 41622232435 read lang=\"en\" on /fr (twice) and /ar/products/dukan-erp: React runs the outer provider's\neffects last, so the outer provider, still on the device's English until it followed, wrote the document for one\ncommit after the page had written its own language. A fixed provider now claims the document in a layout effect and\nthe outer one writes only when no page claims it. The new test records every value the lang attribute takes: it fails\non the old code and passes on this. The phone list comparison ignores line endings.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793709608000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1793709608000
+            },
+            "branch": "post-testflight-feedback"
+          },
+          "actualWorkers": 4
+        },
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/bb620d03a1128f8784a366b226d0fa82c2f57e4f/admin/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "admin.spec.ts",
+      "file": "admin.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "sign-in, en, 375 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4700,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:11.527Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-833feeb5374f0c543ebd",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "sign-in, en, 1280 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 5002,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:11.479Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-c78925780b5c4068bdb0",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "an address of the customers is an unknown page here, en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 3548,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:11.395Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-3f7f922d076e567272c6",
+          "file": "admin.spec.ts",
+          "line": 49,
+          "column": 3
+        },
+        {
+          "title": "sign-in, fr, 375 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 4017,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:11.459Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-404a6019361a01f3b387",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "sign-in, fr, 1280 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 4457,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:15.330Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-a18877f5e8f1da827256",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "an address of the customers is an unknown page here, fr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 3067,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:15.999Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-e50bc20128f1d8f371e0",
+          "file": "admin.spec.ts",
+          "line": 49,
+          "column": 3
+        },
+        {
+          "title": "sign-in, ar, 375 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 4419,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:17.020Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-c44f4aa2c100e3a8c529",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "sign-in, ar, 1280 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 3605,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:17.087Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-ed9f95df5b7fead3e021",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "an address of the customers is an unknown page here, ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 2604,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:19.137Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-5134f985fffea7ca6f43",
+          "file": "admin.spec.ts",
+          "line": 49,
+          "column": 3
+        },
+        {
+          "title": "the root leads to the console, and its console routes are served",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1579,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:19.893Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-aaf5a17b32e3a9181a38",
+          "file": "admin.spec.ts",
+          "line": 61,
+          "column": 1
+        },
+        {
+          "title": "every page says noindex and carries the policy; no source map is served",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 121,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-03T13:34:20.789Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-a4845b6bc641366c9aab",
+          "file": "admin.spec.ts",
+          "line": 69,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-03T13:34:08.859Z",
+    "duration": 13016.968,
+    "expected": 11,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
