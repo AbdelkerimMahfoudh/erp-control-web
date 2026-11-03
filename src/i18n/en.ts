@@ -446,7 +446,7 @@ export const en = {
   'admin.accountReady.resend': 'Send a new account-ready link',
   'admin.accountReady.resent': 'A new link is on its way. Earlier links no longer work.',
   'portal.claim.title': 'Open your Dukan account',
-  'portal.claim.invalid': 'This link is not valid. Sign in with your Dukan account instead.',
+  'portal.claim.notValid': 'This link is not valid. Sign in with your Dukan account instead.',
   'portal.claim.expired': 'This link has expired. Sign in with your Dukan account; you can ask for a new link from there or from support.',
   'portal.claim.used': 'This link was already used. Sign in with your Dukan account.',
   'portal.claim.unavailable': 'Dukan could not be reached. Check your connection and open the link again.',

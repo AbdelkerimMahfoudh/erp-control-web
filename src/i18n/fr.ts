@@ -437,7 +437,7 @@ export const fr: Catalogue = {
   'admin.accountReady.resend': 'Envoyer un nouveau lien « compte prêt »',
   'admin.accountReady.resent': 'Un nouveau lien est en route. Les liens précédents ne fonctionnent plus.',
   'portal.claim.title': 'Ouvrir votre compte Dukan',
-  'portal.claim.invalid': 'Ce lien n’est pas valide. Connectez-vous plutôt avec votre compte Dukan.',
+  'portal.claim.notValid': 'Ce lien n’est pas valide. Connectez-vous plutôt avec votre compte Dukan.',
   'portal.claim.expired': 'Ce lien a expiré. Connectez-vous avec votre compte Dukan ; vous pourrez y demander un nouveau lien, ou auprès du support.',
   'portal.claim.used': 'Ce lien a déjà été utilisé. Connectez-vous avec votre compte Dukan.',
   'portal.claim.unavailable': 'Dukan est injoignable. Vérifiez votre connexion et rouvrez le lien.',

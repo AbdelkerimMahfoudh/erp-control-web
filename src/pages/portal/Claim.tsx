@@ -15,7 +15,7 @@ import { PORTAL_HOME } from '../../site/routes';
 type Refusal = 'invalid' | 'expired' | 'used' | 'unavailable';
 
 const REFUSAL: Record<Refusal, Key> = {
-  invalid: 'portal.claim.invalid',
+  invalid: 'portal.claim.notValid',
   expired: 'portal.claim.expired',
   used: 'portal.claim.used',
   unavailable: 'portal.claim.unavailable',
