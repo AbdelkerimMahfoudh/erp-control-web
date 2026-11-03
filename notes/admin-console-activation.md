@@ -27,12 +27,12 @@ ahead of the D227 API, and never build it from an older console commit.
 ## Activation (each step: owner's go)
 
 1. **Backup.** The fresh, verified off-host backup the API deployment already requires.
-2. **Decide the preview's console** (below): `ADMIN_ORIGINS` with or without `https://dukan-test.tsxmr.com`.
+2. **The preview's console is decided** (below): it stays usable only until step 8 passes, then step 9 removes it.
 3. **DNS, Cloudflare.** One record: `A admin` → the same IPv4 as `api`, **DNS only**, TTL Auto, no AAAA. Change nothing else.
    Confirm it from 1.1.1.1 and 8.8.8.8 before going on. The edge needs it to obtain the certificate.
 4. **`stack.env`.** `ADMIN_CONSOLE_HOST=admin.tsxmr.com`.
-5. **`api.env`.** Append `https://admin.tsxmr.com` to `CORS_ORIGINS`, and set `ADMIN_ORIGINS=https://admin.tsxmr.com`, plus the
-   preview if so decided. Preflight and the production guard refuse an entry CORS does not allow, or the customers' portal.
+5. **`api.env`.** Append `https://admin.tsxmr.com` to `CORS_ORIGINS`, and set `ADMIN_ORIGINS=https://admin.tsxmr.com,https://dukan-test.tsxmr.com`
+   for this transition only. Preflight and the production guard refuse an entry CORS does not allow, or the customers' portal.
    Recreate the API. Record the fingerprints of both files before and after, as the deployment does.
 6. **Build, on CI's Linux runner** (Smart App Control blocks Vite on the owner's PC):
    `VITE_SITE_SURFACE=admin VITE_ADMIN_SITE_ORIGIN=https://admin.tsxmr.com VITE_PUBLIC_SITE_ORIGIN=https://tsxmr.com VITE_API_BASE=https://api.tsxmr.com/api/v1 npm run build`,
@@ -44,8 +44,11 @@ ahead of the D227 API, and never build it from an older console commit.
    granting this origin; 401 with no session; 403 from the customers' portal's origin.
 8. **By hand, a real browser, the existing administrator only.** Sign-in, second factor, step-up, sign-out, in EN, FR and AR
    (Arabic reads right to left). Check the cookie in the browser's tools: host-only on `api.tsxmr.com`, HttpOnly, Secure,
-   SameSite=Lax. Open a payment proof's file. Then `https://dukan-test.tsxmr.com/admin`, as decided in step 2.
-9. **Record** the commits, release name, and results in the handoff. Remind the owner: `ssh-add -D`, `Stop-Service ssh-agent`.
+   SameSite=Lax. Open a payment proof's file.
+9. **Remove the preview's console.** Set `ADMIN_ORIGINS=https://admin.tsxmr.com` and recreate the API. Check that the API answers
+   403 on `platform/admin/me` from `https://dukan-test.tsxmr.com` and 401 from `https://admin.tsxmr.com`, and that the preview's
+   `/subscription` still works. Leave `dukan-test` in `CORS_ORIGINS` for those portal pages.
+10. **Record** the commits, release name, and results in the handoff. Remind the owner: `ssh-add -D`, `Stop-Service ssh-agent`.
 
 ## Rollback, narrowest first
 
@@ -61,9 +64,9 @@ The preview site is untouched by all of these: its release, password and file ar
 
 ## Decisions for the owner
 
-- **The preview's console.** Recommended: leave `dukan-test` **out** of `ADMIN_ORIGINS` once `admin.tsxmr.com` is verified. It
-  shares the production API and the one administrator cookie; keeping it leaves a second page that can drive every business.
-  Its portal pages keep working, but its `/admin` then answers 403.
+- **The preview's console: decided by the owner, 2026-11-03.** `dukan-test` leaves `ADMIN_ORIGINS` once `admin.tsxmr.com` is
+  verified (step 9). It shares the production API and the one administrator cookie; keeping it would leave a second page that can
+  drive every business. Its portal pages keep working; its `/admin` then answers 403.
 - **Why the ADMIN gate skips the legal blocker.** The PORTAL gate's `operator_registration` still blocks the customers' portal.
   The console sells nothing and publishes no service text, so its gate does not carry it.
 
