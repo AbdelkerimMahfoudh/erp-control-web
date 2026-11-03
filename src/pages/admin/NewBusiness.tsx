@@ -2,6 +2,7 @@ import { useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import type { Activity, CreatedBusiness } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
+import { PhoneField } from '../../components/PhoneField';
 import { Field, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { ACTIVITY_CHOICES, ProvisioningRefusal, SetupCode, TestBadge } from './provisioning';
@@ -183,7 +184,7 @@ export function NewBusiness() {
             <input maxLength={160} dir="rtl" lang="ar" value={form.ownerNameAr} onChange={set('ownerNameAr')} {...invalid('ownerNameAr')} />
           </Field>
           <Field label={t('admin.new.phone')} hint={t('admin.new.phone.hint')} error={err('phone')}>
-            <input required inputMode="tel" maxLength={24} dir="ltr" value={form.phone} onChange={set('phone')} {...invalid('phone')} />
+            <PhoneField required value={form.phone} onChange={(phone) => set('phone')({ target: { value: phone } })} invalid={Boolean(fieldErrors.phone)} />
           </Field>
           <Field label={t('admin.new.email')}>
             <input type="email" maxLength={160} dir="ltr" value={form.email} onChange={set('email')} />

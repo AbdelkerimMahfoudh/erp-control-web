@@ -312,12 +312,29 @@ label.field {
 .field-wrap > span.field-error {
   font-weight: 500;
   font-size: 0.85rem;
-  color: var(--danger-text, var(--danger-bg));
+  /* The danger tone's text colour: the wash colour (`--danger-bg`) read as pale pink on white and near-black on the dark
+     theme (D227). */
+  color: var(--danger-fg);
 }
 label.field-invalid input,
 label.field-invalid select,
 label.field-invalid textarea {
-  border-color: var(--danger-bg);
+  border-color: var(--danger-fg);
+}
+/* A phone number: country code, then the national digits, left to right in every language. The number comes first in
+   the markup so the field's label names it; `order` puts the country before it on screen. */
+.phone-field {
+  display: flex;
+  gap: 8px;
+}
+.phone-field select {
+  order: -1;
+  flex: 0 0 auto;
+  max-width: 11rem;
+}
+.phone-field input {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 /* An Arabic name reads from the right, whatever the page's direction. */
 input[dir="rtl"] {

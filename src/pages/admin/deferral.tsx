@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { ApiError } from '../../api/client';
 import type { BusinessDetail, DeferredAccount, IssuedSetupCode, TestStaffResult, VerificationPolicy } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
+import { PhoneField } from '../../components/PhoneField';
 import { Badge, ErrorNotice, Field, Notice, Phrase } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatDateTime } from '../../lib/format';
@@ -210,7 +211,7 @@ export function ProvisionStaff({ business, ask, onDone }: { business: BusinessDe
             <input required maxLength={160} dir="rtl" lang="ar" value={form.nameAr} onChange={(e) => setForm({ ...form, nameAr: e.target.value })} />
           </Field>
           <Field label={t('admin.testStaff.phone')} hint={t('admin.testStaff.phone.hint')}>
-            <input required inputMode="tel" dir="ltr" maxLength={24} value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+            <PhoneField required value={form.phone} onChange={(phone) => setForm({ ...form, phone })} />
           </Field>
           <Field label={t('admin.testStaff.email')}>
             <input type="email" dir="ltr" maxLength={160} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
