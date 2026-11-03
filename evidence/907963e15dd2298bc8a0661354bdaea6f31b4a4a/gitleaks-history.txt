@@ -4,6 +4,7 @@ d49a2dee86fb: Pulling fs layer
 d92b655ae8e2: Pulling fs layer
 61fdfd7c0175: Pulling fs layer
 a43ab0c74cc4: Pulling fs layer
+a43ab0c74cc4: Waiting
 d49a2dee86fb: Verifying Checksum
 d49a2dee86fb: Download complete
 d92b655ae8e2: Verifying Checksum
@@ -18,7 +19,7 @@ d92b655ae8e2: Pull complete
 a43ab0c74cc4: Pull complete
 Digest: sha256:c00b6bd0aeb3071cbcb79009cb16a60dd9e0a7c60e2be9ab65d25e6bc8abbb7f
 Status: Downloaded newer image for zricethezav/gitleaks:latest
-[90m8:03AM[0m [32mINF[0m [1m344 commits scanned.[0m
-[90m8:03AM[0m [32mINF[0m [1mscanned ~387985534 bytes (387.99 MB) in 8m21s[0m
-[90m8:03AM[0m [32mINF[0m [1mno leaks found[0m
+[90m11:11AM[0m [32mINF[0m [1m346 commits scanned.[0m
+[90m11:11AM[0m [32mINF[0m [1mscanned ~399871651 bytes (399.87 MB) in 20m8s[0m
+[90m11:11AM[0m [32mINF[0m [1mno leaks found[0m
 history exit 0

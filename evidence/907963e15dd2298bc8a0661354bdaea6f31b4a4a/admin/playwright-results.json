@@ -20,7 +20,7 @@
       "ci": {
         "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/907963e15dd2298bc8a0661354bdaea6f31b4a4a",
         "commitHash": "907963e15dd2298bc8a0661354bdaea6f31b4a4a",
-        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41599301712"
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41622232435"
       },
       "gitCommit": {
         "shortHash": "907963e1",
@@ -37,7 +37,7 @@
           "email": "abdelkerim.mahfoudh@gmail.com",
           "time": 1793692383000
         },
-        "branch": "d227/console-integration-candidate"
+        "branch": "post-testflight-feedback"
       },
       "actualWorkers": 4
     },
@@ -51,7 +51,7 @@
           "ci": {
             "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/907963e15dd2298bc8a0661354bdaea6f31b4a4a",
             "commitHash": "907963e15dd2298bc8a0661354bdaea6f31b4a4a",
-            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41599301712"
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41622232435"
           },
           "gitCommit": {
             "shortHash": "907963e1",
@@ -68,7 +68,7 @@
               "email": "abdelkerim.mahfoudh@gmail.com",
               "time": 1793692383000
             },
-            "branch": "d227/console-integration-candidate"
+            "branch": "post-testflight-feedback"
           },
           "actualWorkers": 4
         },
@@ -93,7 +93,7 @@
           "ci": {
             "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/907963e15dd2298bc8a0661354bdaea6f31b4a4a",
             "commitHash": "907963e15dd2298bc8a0661354bdaea6f31b4a4a",
-            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41599301712"
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/41622232435"
           },
           "gitCommit": {
             "shortHash": "907963e1",
@@ -110,7 +110,7 @@
               "email": "abdelkerim.mahfoudh@gmail.com",
               "time": 1793692383000
             },
-            "branch": "d227/console-integration-candidate"
+            "branch": "post-testflight-feedback"
           },
           "actualWorkers": 4
         },
@@ -182,12 +182,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1571,
+                  "duration": 3982,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:16.656Z",
+                  "startTime": "2026-11-03T11:20:03.450Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -216,12 +216,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 2011,
+                  "duration": 4265,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:16.591Z",
+                  "startTime": "2026-11-03T11:20:03.627Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -250,12 +250,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 2,
                   "status": "passed",
-                  "duration": 1456,
+                  "duration": 3007,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:16.559Z",
+                  "startTime": "2026-11-03T11:20:03.686Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -284,12 +284,12 @@
                   "workerIndex": 3,
                   "parallelIndex": 3,
                   "status": "passed",
-                  "duration": 1905,
+                  "duration": 3836,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:16.565Z",
+                  "startTime": "2026-11-03T11:20:03.371Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -318,12 +318,12 @@
                   "workerIndex": 2,
                   "parallelIndex": 2,
                   "status": "passed",
-                  "duration": 1966,
+                  "duration": 3591,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:18.208Z",
+                  "startTime": "2026-11-03T11:20:07.322Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -349,15 +349,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
                   "status": "passed",
-                  "duration": 1269,
+                  "duration": 2519,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:18.461Z",
+                  "startTime": "2026-11-03T11:20:07.492Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -383,15 +383,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 1410,
+                  "duration": 4137,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:18.693Z",
+                  "startTime": "2026-11-03T11:20:07.951Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -420,12 +420,12 @@
                   "workerIndex": 1,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 1409,
+                  "duration": 4210,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:18.855Z",
+                  "startTime": "2026-11-03T11:20:08.516Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -451,15 +451,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 0,
-                  "parallelIndex": 0,
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
                   "status": "passed",
-                  "duration": 1037,
+                  "duration": 2496,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:19.763Z",
+                  "startTime": "2026-11-03T11:20:10.116Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -485,15 +485,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 3,
-                  "parallelIndex": 3,
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
                   "status": "passed",
-                  "duration": 511,
+                  "duration": 1304,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:20.146Z",
+                  "startTime": "2026-11-03T11:20:10.997Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -519,15 +519,15 @@
               "projectName": "",
               "results": [
                 {
-                  "workerIndex": 2,
-                  "parallelIndex": 2,
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 103,
+                  "duration": 186,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2026-11-03T08:08:20.202Z",
+                  "startTime": "2026-11-03T11:20:12.168Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -545,8 +545,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-03T08:08:15.347Z",
-    "duration": 5513.886,
+    "startTime": "2026-11-03T11:20:01.024Z",
+    "duration": 11859.737000000001,
     "expected": 11,
     "skipped": 0,
     "unexpected": 0,

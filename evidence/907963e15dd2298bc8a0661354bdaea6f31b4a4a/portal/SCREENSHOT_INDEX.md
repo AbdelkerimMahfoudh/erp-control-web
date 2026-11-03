@@ -1,6 +1,6 @@
 # Screenshot index
 
-Generated 2026-11-03T08:08:06.105Z from the CI run; JPEG, full page unless noted.
+Generated 2026-11-03T11:19:46.858Z from the CI run; JPEG, full page unless noted.
 
 ## portal (33)
 
