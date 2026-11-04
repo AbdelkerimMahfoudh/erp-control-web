@@ -8,6 +8,8 @@ import { AdminNotFound } from './pages/admin/AdminNotFound';
 import { Admin } from './pages/admin/Admin';
 
 export const PROTECTED_AREAS_BUILT = true;
+/** Whether this build holds the platform console (post-Build-4): a portal without it routes no /admin. */
+export const CONSOLE_BUILT = true;
 
 export function ProtectedRoutes() {
   return (

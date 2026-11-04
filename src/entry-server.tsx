@@ -17,6 +17,8 @@ import { metaFor } from './site/meta';
 import { publicRoutesFor, type PublicRouteId } from './site/routes';
 
 export { BUILD_MODE, IS_PREVIEW, SITE, FILLED_INPUTS, SURFACE };
+// The area variant this build was made with (vite.config.ts aliases): whether the console is in it.
+export { CONSOLE_BUILT } from './protected-areas';
 export { LANGUAGES, isRtl } from './i18n/languages';
 export { IN_APP_ROUTE_IDS, inAppPathOf, pathOf } from './site/routes';
 

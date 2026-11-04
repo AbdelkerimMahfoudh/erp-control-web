@@ -12,6 +12,8 @@ import { Claim } from './pages/portal/Claim';
 import { CLAIM_PATH, JOIN_PATH, PORTAL_HOME } from './site/routes';
 
 export const PROTECTED_AREAS_BUILT = true;
+/** Whether this build holds the platform console (post-Build-4): a portal without it routes no /admin. */
+export const CONSOLE_BUILT = true;
 
 export function ProtectedRoutes() {
   return (
