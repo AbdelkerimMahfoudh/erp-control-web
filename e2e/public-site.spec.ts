@@ -684,7 +684,7 @@ for (const lang of LANGS) {
     }));
     expect(new URL(head.canonical).pathname).toBe(own);
     expect(head.alternates).toEqual([...LANGS.map((l) => [l, pathOf('riyade', l)]), ['x-default', pathOf('riyade', 'en')]]);
-    expect([head.title, head.og]).toEqual(['Riyade — TSX-MR', 'Riyade — TSX-MR']);
+    expect([head.title, head.og]).toEqual(['Riyade — TSXMR', 'Riyade — TSXMR']);
     expect(head.jsonLd).not.toMatch(/SoftwareApplication|Riyade|offers|price/);
 
     // The Products page: Dukan ERP first and the larger card, then Riyade, each saying its own status.
@@ -941,7 +941,7 @@ test('public site: not found — after a link inside the site the router shows t
     canonical: document.querySelectorAll('link[rel="canonical"]').length,
     alternates: document.querySelectorAll('link[rel="alternate"][hreflang]').length,
   }));
-  expect(head).toEqual({ title: `${fr['notFound.title']} — TSX-MR`, robots: 'noindex, nofollow', canonical: 0, alternates: 0 });
+  expect(head).toEqual({ title: `${fr['notFound.title']} — TSXMR`, robots: 'noindex, nofollow', canonical: 0, alternates: 0 });
   // Back to the home page in the same language, by the router.
   await page.locator('.nf-copy .btn-primary').click();
   await expect(page).toHaveURL(/\/fr$/);
