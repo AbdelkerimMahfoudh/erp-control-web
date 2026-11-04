@@ -1,0 +1,154 @@
+
+> erp-control-web@0.1.0 test
+> vitest run
+
+[33m(!) Your Vite config uses features that are unsupported by `configLoader: 'native'`, which is planned to become the default in a future major version of Vite:
+  - import "./src/config/schema" without a file extension (vite.config.ts:5:92). Add the file extension
+  - import "./src/content" resolves to a directory index (vite.config.ts:6:75). Import the index file directly
+  - import "../i18n/languages" without a file extension (src/content/index.ts:5:31). Add the file extension
+  - import "./pages" without a file extension (src/content/index.ts:6:77). Add the file extension
+  - import "./legal-deletion" without a file extension (src/content/index.ts:7:33). Add the file extension
+  - import "./legal-privacy" without a file extension (src/content/index.ts:8:25). Add the file extension
+  - import "./legal-terms" without a file extension (src/content/index.ts:9:23). Add the file extension
+  - import "./legal-choices" without a file extension (src/content/index.ts:10:32). Add the file extension
+  - import "./legal-notice" without a file extension (src/content/index.ts:11:29). Add the file extension
+  - import "./legal-security" without a file extension (src/content/index.ts:12:26). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/index.ts:13:31). Add the file extension
+  - import "./brand" without a file extension (src/content/index.ts:14:42). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:15:26). Add the file extension
+  - import "./dukan-demo" without a file extension (src/content/index.ts:16:27). Add the file extension
+  - import "./riyade" without a file extension (src/content/index.ts:17:24). Add the file extension
+  - import "./blockers" without a file extension (src/content/index.ts:18:40). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:19:38). Add the file extension
+  - import "./types" without a file extension (src/content/index.ts:20:72). Add the file extension
+  - import "../config/schema" without a file extension (src/content/index.ts:21:30). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/index.ts:22:36). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/index.ts:23:38). Add the file extension
+  - import "./prelaunch" without a file extension (src/content/index.ts:24:158). Add the file extension
+  - import "./legal-prelaunch" without a file extension (src/content/index.ts:25:142). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-privacy.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-terms.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-notice.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-security.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-overview.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/brand.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-erp.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/dukan-demo.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/riyade.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/prelaunch.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/pages.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-deletion.ts:1:31). Add the file extension
+  - import "../i18n/languages" without a file extension (src/content/legal-choices.ts:1:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-privacy.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-terms.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-notice.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-security.ts:2:36). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/brand.ts:2:27). Add the file extension
+  - import "./types" without a file extension (src/content/legal-prelaunch.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/prelaunch.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/pages.ts:2:31). Add the file extension
+  - import "./types" without a file extension (src/content/legal-deletion.ts:2:36). Add the file extension
+  - import "./types" without a file extension (src/content/legal-choices.ts:2:36). Add the file extension
+  - import "./dukan-overview" without a file extension (src/content/prelaunch.ts:3:36). Add the file extension
+  - import "./dukan-erp" without a file extension (src/content/prelaunch.ts:4:38). Add the file extension
+Set `VITE_CONFIG_NATIVE_IGNORE_WARNING=true` to suppress this warning.[39m
+
+[1m[30m[46m RUN [49m[39m[22m [36mv5.0.3 [39m[90m/home/runner/work/erp-control-web/erp-control-web[39m
+
+ [32m✓[39m test/trial-account.test.tsx [2m([22m[2m81 tests[22m[2m)[22m[33m 9527[2mms[22m[39m
+   [32m✓[39m the setup instructions on the card [2m(21)[22m
+     [33m[2m✓[22m[39m a message that went out, then no longer counted, in French and Arabic: the same sentences, each date isolated in the business’s zone[33m 308[2mms[22m[39m
+   [32m✓[39m the setup link’s landing (/account/trial) [2m(12)[22m
+     [33m[2m✓[22m[39m says what a link is worth when it no longer works, and offers the claim without it while the business can still claim[33m 667[2mms[22m[39m
+     [33m[2m✓[22m[39m a link the server could not check (its error, too many attempts, no network): the ordinary claim, without the link, and a word why (R4-07)[33m 367[2mms[22m[39m
+     [32m✓[39m sign-in without the link (the owner’s clarification) [2m(3)[22m
+       [33m[2m✓[22m[39m nothing is claimed without the button — not on load, at sign-in or as the page reads the trial again — in every path[33m 670[2mms[22m[39m
+   [32m✓[39m Apply ends signed in [2m(2)[22m
+     [33m[2m✓[22m[39m keeps the session the confirmation opens and leads to the account, where the eligible Owner sees the trial — Apply claims nothing[33m 348[2mms[22m[39m
+ [32m✓[39m test/trial-console.test.tsx [2m([22m[2m40 tests[22m[2m)[22m[33m 5013[2mms[22m[39m
+ [32m✓[39m test/dukan-showcase.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[33m 1053[2mms[22m[39m
+   [32m✓[39m keyboard, languages and what it never does [2m(3)[22m
+     [33m[2m✓[22m[39m the tabs follow the arrow keys in the page’s direction; one tab stop; the hidden panel is out of reach[33m 313[2mms[22m[39m
+ [32m✓[39m test/apply.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[33m 8651[2mms[22m[39m
+   [32m✓[39m Apply: a contact whose code cannot be sent now (C10) [2m(5)[22m
+     [33m[2m✓[22m[39m only the WhatsApp number, beside an email address: remove the number or try later — and without it, a new attempt goes through[33m 641[2mms[22m[39m
+     [33m[2m✓[22m[39m every other case keeps the general refusal: a WhatsApp number alone[33m 310[2mms[22m[39m
+   [32m✓[39m Apply: a code check that got no answer is never called a wrong code (R2-1 / C14 on the website) [2m(23)[22m
+     [33m[2m✓[22m[39m no answer (the network failed), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 331[2mms[22m[39m
+     [33m[2m✓[22m[39m no answer (the request was aborted), then the same code refused: never "That code did not match." — the account may be ready, sign in[33m 322[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 390[2mms[22m[39m
+     [33m[2m✓[22m[39m in English: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 314[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 373[2mms[22m[39m
+     [33m[2m✓[22m[39m in French: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 324[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: after a lost answer that code is never wrong, another code refused is — in the page’s own words — and sign-in stays offered[33m 376[2mms[22m[39m
+     [33m[2m✓[22m[39m in Arabic: a success that came back without its body is an answer lost — the account may be ready, sign in — and that code refused again is never wrong[33m 310[2mms[22m[39m
+     [33m[2m✓[22m[39m a gateway got an invalid one (502), then the same code refused: no answer — the account may be ready, sign in, never wrong[33m 304[2mms[22m[39m
+ [32m✓[39m test/source-rules.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 197[2mms[22m[39m
+ [32m✓[39m test/riyade.test.tsx [2m([22m[2m30 tests[22m[2m)[22m[33m 979[2mms[22m[39m
+ [32m✓[39m test/activity-account.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 1095[2mms[22m[39m
+ [32m✓[39m test/site-surface.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m test/site-refinement.test.tsx [2m([22m[2m13 tests[22m[2m)[22m[33m 464[2mms[22m[39m
+[90mstderr[2m | test/legal-pages.test.tsx[2m > [22m[2mthe public legal and support pages[2m > [22m[2mthe footer links to every legal and support page but account deletion, on public and signed-in pages alike
+[22m[39mAn update to Account inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m test/legal-pages.test.tsx [2m([22m[2m67 tests[22m[2m)[22m[33m 1775[2mms[22m[39m
+ [32m✓[39m test/activity-console.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1063[2mms[22m[39m
+   [32m✓[39m the platform console [2m(4)[22m
+     [33m[2m✓[22m[39m shows an activity request in the queue — from → to, when, the store and the amount — with the payment actions[33m 483[2mms[22m[39m
+     [33m[2m✓[22m[39m lists and schedules the three activity prices[33m 326[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/site-navigation.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 732[2mms[22m[39m
+ [32m✓[39m test/site-routes.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m test/prelaunch-gates.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m test/complimentary-account.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[33m 679[2mms[22m[39m
+ [32m✓[39m test/admin-mfa.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1261[2mms[22m[39m
+   [32m✓[39m signing in to the console [2m(3)[22m
+     [33m[2m✓[22m[39m a password leads to the code screen; the console opens only once the code is accepted[33m 436[2mms[22m[39m
+     [33m[2m✓[22m[39m with no authenticator yet: the server’s token, the key, the first code, then the recovery codes — shown once[33m 312[2mms[22m[39m
+ [32m✓[39m test/portal-operator.test.tsx [2m([22m[2m12 tests[22m[2m)[22m[32m 164[2mms[22m[39m
+ [32m✓[39m test/site-config.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m test/i18n-parity.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 78[2mms[22m[39m
+ [32m✓[39m test/not-found.test.tsx [2m([22m[2m15 tests[22m[2m)[22m[32m 255[2mms[22m[39m
+ [32m✓[39m test/deletion-docs.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 1008[2mms[22m[39m
+ [32m✓[39m test/operator-identity.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 961[2mms[22m[39m
+   [32m✓[39m the name, only where a legal text needs it [2m(3)[22m
+     [33m[2m✓[22m[39m in en: the brand pages and the footer never name the person; each legal text names them as it must[33m 455[2mms[22m[39m
+ [32m✓[39m test/activity-public.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 947[2mms[22m[39m
+   [32m✓[39m Apply: the first store’s activity [2m(1)[22m
+     [33m[2m✓[22m[39m offers three cards with the server’s prices, requires a choice, and sends it[33m 596[2mms[22m[39m
+ [32m✓[39m test/site-surface-render.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 857[2mms[22m[39m
+ [32m✓[39m test/content-parity.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+ [32m✓[39m test/public-pages.test.tsx [2m([22m[2m56 tests[22m[2m)[22m[33m 2396[2mms[22m[39m
+Not implemented: Window's scrollTo() method
+Not implemented: Window's scrollTo() method
+ [32m✓[39m test/render.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 924[2mms[22m[39m
+   [32m✓[39m the public site [2m(4)[22m
+     [33m[2m✓[22m[39m renders the price list from the server and the estimate the server returns (on the Dukan ERP page)[33m 524[2mms[22m[39m
+     [33m[2m✓[22m[39m moves to the same page in Arabic, mirrors the document and keeps the language across visits[33m 333[2mms[22m[39m
+ [32m✓[39m test/throttle.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 874[2mms[22m[39m
+   [32m✓[39m a request the API’s rate limit refused [2m(5)[22m
+     [33m[2m✓[22m[39m in English: the Owner’s sign-in says to wait a minute, in the page’s words — never the limiter’s[33m 306[2mms[22m[39m
+ [32m✓[39m test/portal-operator-company.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 120[2mms[22m[39m
+ [32m✓[39m test/activity-rules.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m test/document-language.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m test/api-client.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m32 passed[39m[22m[90m (32)[39m
+[2m      Tests [22m [1m[32m555 passed[39m[22m[90m (555)[39m
+[2m   Start at [22m 22:23:45
+[2m   Duration [22m 60.99s[2m (tests 71%, environment 21%, import 6%, transform 3%)[22m
+
+[2m    Isolate [22m [33m32 workers spawned[39m[2m · ~452ms startup each (spawn + environment, per file)[22m
+[2m            [22m [2mat least ~14.02s faster with [22m[33misolate: false[39m[2m — reuses workers across files instead of one per file[22m
+
