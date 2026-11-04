@@ -111,13 +111,16 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, pre
  * for good; every other unknown address gets the 404 page (the host's default). The portal's own root is its Owner's
  * page — sent there, not served. A public build serves no protected area, so its file rewrites nothing.
  */
-export function redirectsFile(site: WithSurface = {}): string {
+export function redirectsFile(site: WithSurface = {}, consoleAbsent = false): string {
   const surface = surfaceOf(site);
+  // A portal build without the console (production, customer-audit; post-Build-4): /admin is not even routed to the
+  // shell, so the edge answers it 404. The password-protected preview keeps its console and its route.
+  const prefixes = protectedPrefixesFor(surface).filter((p) => !(consoleAbsent && surface === 'portal' && p === '/admin'));
   const rules = [
     ...(surface === 'portal' ? [`/ ${PORTAL_HOME} 302`] : []),
     ...(surface === 'admin' ? ['/ /admin 302'] : []),
     ...retiredFor(site).flatMap((p) => [`${p} ${PORTAL_HOME} 301`, `${p}/* ${PORTAL_HOME} 301`]),
-    ...protectedPrefixesFor(surface).flatMap((p) => [`${p} ${APP_SHELL} 200`, `${p}/* ${APP_SHELL} 200`]),
+    ...prefixes.flatMap((p) => [`${p} ${APP_SHELL} 200`, `${p}/* ${APP_SHELL} 200`]),
   ];
   return rules.length ? `${rules.join('\n')}\n` : '';
 }

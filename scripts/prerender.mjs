@@ -80,7 +80,8 @@ const builtAt = new Date();
 write('robots.txt', ssr.robotsTxt(ssr.SITE, ssr.IS_PREVIEW));
 if (ssr.SITE.publicSiteOrigin && !portal) write('sitemap.xml', ssr.sitemapXml(ssr.SITE, builtAt.toISOString().slice(0, 10)));
 write('_headers', ssr.headersFile(ssr.SITE, ssr.IS_PREVIEW));
-write('_redirects', ssr.redirectsFile(ssr.SITE));
+// The portal's production and customer-audit builds hold no console (vite.config.ts): /admin is not routed there.
+write('_redirects', ssr.redirectsFile(ssr.SITE, ssr.BUILD_MODE === 'production' || ssr.BUILD_MODE === 'customer-audit'));
 const security = ssr.securityTxt(ssr.SITE, builtAt);
 if (security && ssr.SURFACE !== 'admin') write('.well-known/security.txt', security);
 // The manifest's colours are the light theme's background and text (theme/tokens.css).
