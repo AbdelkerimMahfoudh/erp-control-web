@@ -145,7 +145,7 @@ for (const lang of LANGS) {
       expect(f.text).not.toContain(CATALOGUE[lang]['home.pricing.loading']);
       expect(f.text).not.toMatch(/\b7-day\b|essai gratuit|تجربة مجانية/);
       const p = await priceFacts(page);
-      // A whole word: the footer's "TSX-MR" runs into the next line's first letter in `textContent`.
+      // A whole word: the footer's "TSXMR" runs into the next line's first letter in `textContent`.
       expect(p.rest).not.toMatch(/\bMRU\b/);
       expect({ id, amounts: p.amounts, isolated: p.isolated, note: p.note }).toEqual({ id, amounts: demoAmounts(lang), isolated: true, note: dukanDemo[lang].note });
     }
@@ -154,7 +154,7 @@ for (const lang of LANGS) {
   test(`public site: who operates it, said plainly in ${lang} — an individual, no company, nothing invented`, async ({ page }) => {
     const c = CATALOGUE[lang];
     const NAME = 'Abdel Kerim Taleb Ould Sidi';
-    // The legal notice says who operates TSX-MR and who is responsible for publication — the only page that names the
+    // The legal notice says who operates TSXMR and who is responsible for publication — the only page that names the
     // person twice; every other legal text names them once, and the brand's own pages not at all.
     await page.goto(pathOf('legalNotice', lang));
     const notice = (await facts(page)).text;
