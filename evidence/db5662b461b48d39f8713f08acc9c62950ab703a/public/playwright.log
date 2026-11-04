@@ -1,0 +1,217 @@
+
+Running 172 tests using 4 workers
+
+  ✓    2 e2e/public-site.spec.ts:108:7 › public site /services at desktop (6.1s)
+  ✓    3 e2e/public-site.spec.ts:108:7 › public site / at desktop (6.5s)
+  ✓    4 e2e/public-site.spec.ts:108:7 › public site /services at 375 (6.2s)
+  ✓    1 e2e/public-site.spec.ts:108:7 › public site / at 375 (7.2s)
+  ✓    5 e2e/public-site.spec.ts:108:7 › public site /about at 375 (4.3s)
+  ✓    6 e2e/public-site.spec.ts:108:7 › public site /about at desktop (4.5s)
+  ✓    7 e2e/public-site.spec.ts:108:7 › public site /products at 375 (4.3s)
+  ✓    8 e2e/public-site.spec.ts:108:7 › public site /products at desktop (4.4s)
+  ✓   11 e2e/public-site.spec.ts:108:7 › public site /products/riyade at 375 (4.7s)
+  ✓   12 e2e/public-site.spec.ts:108:7 › public site /products/riyade at desktop (4.6s)
+  ✓   10 e2e/public-site.spec.ts:108:7 › public site /products/dukan-erp at desktop (6.9s)
+  ✓    9 e2e/public-site.spec.ts:108:7 › public site /products/dukan-erp at 375 (7.7s)
+  ✓   13 e2e/public-site.spec.ts:108:7 › public site /contact at 375 (4.2s)
+  ✓   14 e2e/public-site.spec.ts:108:7 › public site /contact at desktop (4.4s)
+  ✓   15 e2e/public-site.spec.ts:108:7 › public site /support at 375 (4.7s)
+  ✓   16 e2e/public-site.spec.ts:108:7 › public site /support at desktop (4.8s)
+  ✓   17 e2e/public-site.spec.ts:108:7 › public site /privacy at 375 (4.0s)
+  ✓   18 e2e/public-site.spec.ts:108:7 › public site /privacy at desktop (4.8s)
+  ✓   19 e2e/public-site.spec.ts:108:7 › public site /terms at 375 (4.2s)
+  ✓   20 e2e/public-site.spec.ts:108:7 › public site /terms at desktop (4.9s)
+  ✓   21 e2e/public-site.spec.ts:108:7 › public site /account-deletion at 375 (4.3s)
+  ✓   22 e2e/public-site.spec.ts:108:7 › public site /account-deletion at desktop (3.7s)
+  ✓   23 e2e/public-site.spec.ts:108:7 › public site /privacy-choices at 375 (4.6s)
+  ✓   24 e2e/public-site.spec.ts:108:7 › public site /privacy-choices at desktop (4.8s)
+  ✓   25 e2e/public-site.spec.ts:108:7 › public site /legal at 375 (4.6s)
+  ✓   26 e2e/public-site.spec.ts:108:7 › public site /legal at desktop (4.5s)
+  ✓   29 e2e/public-site.spec.ts:140:3 › public site: Dukan ERP is presented as coming soon in en, with no price and no trial (1.6s)
+  ✓   27 e2e/public-site.spec.ts:108:7 › public site /security at 375 (4.2s)
+  ✓   30 e2e/public-site.spec.ts:154:3 › public site: who operates it, said plainly in en — an individual, no company, nothing invented (3.2s)
+  ✓   31 e2e/public-site.spec.ts:190:3 › public site: the contact methods are cards with real mail and call links in en, whole at 320 px (2.4s)
+  ✓   28 e2e/public-site.spec.ts:108:7 › public site /security at desktop (6.3s)
+  ✓   32 e2e/public-site.spec.ts:240:3 › public site: the theme is a header toggle in en, named for its action, kept across pages and reloads (3.4s)
+  ✓   34 e2e/public-site.spec.ts:297:3 › public site: the phone menu is an icon button in en — opens, closes, keeps focus, shows EN FR AR (3.6s)
+  ✓   35 e2e/public-site.spec.ts:355:3 › public site: choosing a language from the phone menu keeps the page and the appearance (en) (2.1s)
+  ✓   33 e2e/public-site.spec.ts:272:3 › public site: the Launch cards share the card elevation and rise on hover, not under reduced motion (en) (6.2s)
+  ✓   36 e2e/public-site.spec.ts:375:3 › public site: every link looks like what it does in en — none is a raw template anchor (6.3s)
+  ✓   39 e2e/public-site.spec.ts:498:3 › public site: every link stays a real link — a new tab, and a page without a script (en) (3.4s)
+  ✓   37 e2e/public-site.spec.ts:396:3 › public site: the contents are rows that land each section below the sticky header (en) (6.7s)
+  ✓   41 e2e/public-site.spec.ts:566:3 › public site: one group of quick links per page, the current page shown as text (en) (3.3s)
+  ✓   38 e2e/public-site.spec.ts:425:3 › public site: a link opens its page at the top, focus in its content; Back and Forward return (en) (9.3s)
+  ✓   40 e2e/public-site.spec.ts:516:3 › public site: the language control is three equal segments everywhere, each filled the same way (en) (6.6s)
+  ✓   43 e2e/public-site.spec.ts:611:3 › public site: the Dukan ERP documentation opens the deletion page at its top, which fits 320 and 375 px (en) (4.5s)
+  ✓   42 e2e/public-site.spec.ts:597:3 › public site: the brand pages fit 320 and 375 px, in light and dark (en) (7.2s)
+  ✓   46 e2e/public-site.spec.ts:802:3 › public site: the showcase by keyboard in en — arrows in the page's direction, focus always visible, never in the hidden panel (2.4s)
+  ✓   47 e2e/public-site.spec.ts:831:3 › public site: the pages the app opens answer in en, without the site's navigation (2.3s)
+  ✓   44 e2e/public-site.spec.ts:641:3 › public site: Riyade in en — after Dukan ERP, coming soon in words, a small page of its own with nothing to do (8.3s)
+  ✓   49 e2e/public-site.spec.ts:108:7 › public site /fr at desktop (5.7s)
+  ✓   48 e2e/public-site.spec.ts:108:7 › public site /fr at 375 (6.4s)
+  ✓   50 e2e/public-site.spec.ts:108:7 › public site /fr/services at 375 (4.8s)
+  ✓   51 e2e/public-site.spec.ts:108:7 › public site /fr/services at desktop (4.8s)
+  ✓   52 e2e/public-site.spec.ts:108:7 › public site /fr/about at 375 (4.7s)
+  ✓   53 e2e/public-site.spec.ts:108:7 › public site /fr/about at desktop (4.7s)
+  ✓   54 e2e/public-site.spec.ts:108:7 › public site /fr/products at 375 (4.7s)
+  ✓   55 e2e/public-site.spec.ts:108:7 › public site /fr/products at desktop (4.6s)
+  ✓   56 e2e/public-site.spec.ts:108:7 › public site /fr/products/dukan-erp at 375 (6.3s)
+  ✓   58 e2e/public-site.spec.ts:108:7 › public site /fr/products/riyade at 375 (4.7s)
+  ✓   59 e2e/public-site.spec.ts:108:7 › public site /fr/products/riyade at desktop (4.1s)
+  ✓   57 e2e/public-site.spec.ts:108:7 › public site /fr/products/dukan-erp at desktop (7.7s)
+  ✓   60 e2e/public-site.spec.ts:108:7 › public site /fr/contact at 375 (4.7s)
+  ✓   61 e2e/public-site.spec.ts:108:7 › public site /fr/contact at desktop (4.5s)
+  ✓   62 e2e/public-site.spec.ts:108:7 › public site /fr/support at 375 (4.9s)
+  ✓   63 e2e/public-site.spec.ts:108:7 › public site /fr/support at desktop (5.0s)
+  ✓   45 e2e/public-site.spec.ts:751:3 › public site: the Dukan showcase in en — two equal tabs, six steps, one height, whole from 320 px, nothing sent or kept (36.7s)
+  ✓   64 e2e/public-site.spec.ts:108:7 › public site /fr/privacy at 375 (5.4s)
+  ✓   65 e2e/public-site.spec.ts:108:7 › public site /fr/privacy at desktop (5.3s)
+  ✓   66 e2e/public-site.spec.ts:108:7 › public site /fr/terms at 375 (4.8s)
+  ✓   67 e2e/public-site.spec.ts:108:7 › public site /fr/terms at desktop (4.6s)
+  ✓   68 e2e/public-site.spec.ts:108:7 › public site /fr/account-deletion at 375 (4.4s)
+  ✓   69 e2e/public-site.spec.ts:108:7 › public site /fr/account-deletion at desktop (3.9s)
+  ✓   70 e2e/public-site.spec.ts:108:7 › public site /fr/privacy-choices at 375 (4.9s)
+  ✓   72 e2e/public-site.spec.ts:108:7 › public site /fr/legal at 375 (4.9s)
+  ✓   71 e2e/public-site.spec.ts:108:7 › public site /fr/privacy-choices at desktop (5.1s)
+  ✓   73 e2e/public-site.spec.ts:108:7 › public site /fr/legal at desktop (4.8s)
+  ✓   76 e2e/public-site.spec.ts:140:3 › public site: Dukan ERP is presented as coming soon in fr, with no price and no trial (1.9s)
+  ✓   78 e2e/public-site.spec.ts:190:3 › public site: the contact methods are cards with real mail and call links in fr, whole at 320 px (1.9s)
+  ✓   74 e2e/public-site.spec.ts:108:7 › public site /fr/security at 375 (5.6s)
+  ✓   77 e2e/public-site.spec.ts:154:3 › public site: who operates it, said plainly in fr — an individual, no company, nothing invented (4.2s)
+  ✓   75 e2e/public-site.spec.ts:108:7 › public site /fr/security at desktop (6.3s)
+  ✓   79 e2e/public-site.spec.ts:240:3 › public site: the theme is a header toggle in fr, named for its action, kept across pages and reloads (4.0s)
+  ✓   82 e2e/public-site.spec.ts:355:3 › public site: choosing a language from the phone menu keeps the page and the appearance (fr) (2.2s)
+  ✓   81 e2e/public-site.spec.ts:297:3 › public site: the phone menu is an icon button in fr — opens, closes, keeps focus, shows EN FR AR (3.9s)
+  ✓   80 e2e/public-site.spec.ts:272:3 › public site: the Launch cards share the card elevation and rise on hover, not under reduced motion (fr) (6.9s)
+  ✓   86 e2e/public-site.spec.ts:498:3 › public site: every link stays a real link — a new tab, and a page without a script (fr) (2.8s)
+  ✓   83 e2e/public-site.spec.ts:375:3 › public site: every link looks like what it does in fr — none is a raw template anchor (8.0s)
+  ✓   84 e2e/public-site.spec.ts:396:3 › public site: the contents are rows that land each section below the sticky header (fr) (7.3s)
+  ✓   85 e2e/public-site.spec.ts:425:3 › public site: a link opens its page at the top, focus in its content; Back and Forward return (fr) (10.5s)
+  ✓   88 e2e/public-site.spec.ts:566:3 › public site: one group of quick links per page, the current page shown as text (fr) (4.1s)
+  ✓   87 e2e/public-site.spec.ts:516:3 › public site: the language control is three equal segments everywhere, each filled the same way (fr) (7.5s)
+  ✓   89 e2e/public-site.spec.ts:597:3 › public site: the brand pages fit 320 and 375 px, in light and dark (fr) (7.9s)
+  ✓   90 e2e/public-site.spec.ts:611:3 › public site: the Dukan ERP documentation opens the deletion page at its top, which fits 320 and 375 px (fr) (4.4s)
+  ✓   93 e2e/public-site.spec.ts:802:3 › public site: the showcase by keyboard in fr — arrows in the page's direction, focus always visible, never in the hidden panel (2.3s)
+  ✓   94 e2e/public-site.spec.ts:831:3 › public site: the pages the app opens answer in fr, without the site's navigation (2.7s)
+  ✓   91 e2e/public-site.spec.ts:641:3 › public site: Riyade in fr — after Dukan ERP, coming soon in words, a small page of its own with nothing to do (8.7s)
+  ✘   95 e2e/public-site.spec.ts:108:7 › public site /ar at 375 (6.3s)
+  ✓   96 e2e/public-site.spec.ts:108:7 › public site /ar at desktop (5.9s)
+  ✓   97 e2e/public-site.spec.ts:108:7 › public site /ar/services at 375 (4.6s)
+  ✓   98 e2e/public-site.spec.ts:108:7 › public site /ar/about at 375 (5.2s)
+  ✓   99 e2e/public-site.spec.ts:108:7 › public site /ar/about at desktop (5.0s)
+  ✓  100 e2e/public-site.spec.ts:108:7 › public site /ar/services at desktop (4.0s)
+  ✓  101 e2e/public-site.spec.ts:108:7 › public site /ar/products at 375 (4.7s)
+  ✓  102 e2e/public-site.spec.ts:108:7 › public site /ar/products at desktop (4.7s)
+  ✓  103 e2e/public-site.spec.ts:108:7 › public site /ar/products/dukan-erp at 375 (6.3s)
+  ✓  105 e2e/public-site.spec.ts:108:7 › public site /ar/products/riyade at 375 (4.9s)
+  ✓  106 e2e/public-site.spec.ts:108:7 › public site /ar/products/riyade at desktop (3.7s)
+  ✘  104 e2e/public-site.spec.ts:108:7 › public site /ar/products/dukan-erp at desktop (7.7s)
+  ✓  107 e2e/public-site.spec.ts:108:7 › public site /ar/contact at 375 (4.5s)
+  ✓  108 e2e/public-site.spec.ts:108:7 › public site /ar/contact at desktop (5.4s)
+  ✓  110 e2e/public-site.spec.ts:108:7 › public site /ar/support at desktop (5.5s)
+  ✓  109 e2e/public-site.spec.ts:108:7 › public site /ar/support at 375 (5.8s)
+  ✓  111 e2e/public-site.spec.ts:108:7 › public site /ar/privacy at 375 (4.7s)
+  ✓   92 e2e/public-site.spec.ts:751:3 › public site: the Dukan showcase in fr — two equal tabs, six steps, one height, whole from 320 px, nothing sent or kept (38.4s)
+  ✓  112 e2e/public-site.spec.ts:108:7 › public site /ar/privacy at desktop (5.6s)
+  ✓  113 e2e/public-site.spec.ts:108:7 › public site /ar/terms at 375 (5.4s)
+  ✓  115 e2e/public-site.spec.ts:108:7 › public site /ar/account-deletion at 375 (4.6s)
+  ✓  114 e2e/public-site.spec.ts:108:7 › public site /ar/terms at desktop (5.1s)
+  ✓  116 e2e/public-site.spec.ts:108:7 › public site /ar/account-deletion at desktop (4.8s)
+  ✓  117 e2e/public-site.spec.ts:108:7 › public site /ar/privacy-choices at 375 (5.0s)
+  ✓  118 e2e/public-site.spec.ts:108:7 › public site /ar/privacy-choices at desktop (5.1s)
+  ✓  119 e2e/public-site.spec.ts:108:7 › public site /ar/legal at 375 (5.0s)
+  ✓  123 e2e/public-site.spec.ts:140:3 › public site: Dukan ERP is presented as coming soon in ar, with no price and no trial (2.0s)
+  ✓  124 e2e/public-site.spec.ts:154:3 › public site: who operates it, said plainly in ar — an individual, no company, nothing invented (2.7s)
+  ✓  120 e2e/public-site.spec.ts:108:7 › public site /ar/legal at desktop (6.1s)
+  ✓  121 e2e/public-site.spec.ts:108:7 › public site /ar/security at 375 (5.5s)
+  ✓  122 e2e/public-site.spec.ts:108:7 › public site /ar/security at desktop (5.8s)
+  ✓  125 e2e/public-site.spec.ts:190:3 › public site: the contact methods are cards with real mail and call links in ar, whole at 320 px (2.9s)
+  ✓  126 e2e/public-site.spec.ts:240:3 › public site: the theme is a header toggle in ar, named for its action, kept across pages and reloads (4.2s)
+  ✓  129 e2e/public-site.spec.ts:355:3 › public site: choosing a language from the phone menu keeps the page and the appearance (ar) (2.1s)
+  ✓  128 e2e/public-site.spec.ts:297:3 › public site: the phone menu is an icon button in ar — opens, closes, keeps focus, shows EN FR AR (4.1s)
+  ✓  127 e2e/public-site.spec.ts:272:3 › public site: the Launch cards share the card elevation and rise on hover, not under reduced motion (ar) (7.4s)
+  ✓  133 e2e/public-site.spec.ts:498:3 › public site: every link stays a real link — a new tab, and a page without a script (ar) (3.6s)
+  ✓  131 e2e/public-site.spec.ts:396:3 › public site: the contents are rows that land each section below the sticky header (ar) (7.3s)
+  ✓  130 e2e/public-site.spec.ts:375:3 › public site: every link looks like what it does in ar — none is a raw template anchor (8.5s)
+  ✓  132 e2e/public-site.spec.ts:425:3 › public site: a link opens its page at the top, focus in its content; Back and Forward return (ar) (11.7s)
+  ✓  135 e2e/public-site.spec.ts:566:3 › public site: one group of quick links per page, the current page shown as text (ar) (4.4s)
+  ✓  134 e2e/public-site.spec.ts:516:3 › public site: the language control is three equal segments everywhere, each filled the same way (ar) (7.3s)
+  ✓  136 e2e/public-site.spec.ts:597:3 › public site: the brand pages fit 320 and 375 px, in light and dark (ar) (8.4s)
+  ✓  137 e2e/public-site.spec.ts:611:3 › public site: the Dukan ERP documentation opens the deletion page at its top, which fits 320 and 375 px (ar) (4.9s)
+  ✓  141 e2e/public-site.spec.ts:831:3 › public site: the pages the app opens answer in ar, without the site's navigation (2.3s)
+  ✓  140 e2e/public-site.spec.ts:802:3 › public site: the showcase by keyboard in ar — arrows in the page's direction, focus always visible, never in the hidden panel (2.9s)
+  ✓  138 e2e/public-site.spec.ts:641:3 › public site: Riyade in ar — after Dukan ERP, coming soon in words, a small page of its own with nothing to do (8.8s)
+  ✓  142 e2e/public-site.spec.ts:862:5 › public site: not found /qx7-missing at 375 (3.5s)
+  ✓  143 e2e/public-site.spec.ts:862:5 › public site: not found /qx7-missing at desktop (4.1s)
+  ✓  144 e2e/public-site.spec.ts:862:5 › public site: not found /a/b/c/d/e/missing-deep at 375 (3.5s)
+  ✓  145 e2e/public-site.spec.ts:862:5 › public site: not found /a/b/c/d/e/missing-deep at desktop (3.8s)
+  ✓  146 e2e/public-site.spec.ts:862:5 › public site: not found /fr/inexistante at 375 (3.6s)
+  ✓  147 e2e/public-site.spec.ts:862:5 › public site: not found /fr/inexistante at desktop (3.9s)
+  ✓  148 e2e/public-site.spec.ts:862:5 › public site: not found /fr/a/b/c at 375 (3.5s)
+  ✓  149 e2e/public-site.spec.ts:862:5 › public site: not found /fr/a/b/c at desktop (3.7s)
+  ✓  150 e2e/public-site.spec.ts:862:5 › public site: not found /ar/x/y/z at 375 (3.3s)
+  ✓  151 e2e/public-site.spec.ts:862:5 › public site: not found /ar/x/y/z at desktop (3.6s)
+  ✓  152 e2e/public-site.spec.ts:862:5 › public site: not found /account at 375 (3.4s)
+  ✓  153 e2e/public-site.spec.ts:862:5 › public site: not found /account at desktop (3.7s)
+  ✓  154 e2e/public-site.spec.ts:862:5 › public site: not found /admin/businesses at 375 (3.3s)
+  ✓  155 e2e/public-site.spec.ts:862:5 › public site: not found /admin/businesses at desktop (3.8s)
+  ✓  156 e2e/public-site.spec.ts:862:5 › public site: not found /in-app/nope at 375 (3.1s)
+  ✓  157 e2e/public-site.spec.ts:862:5 › public site: not found /in-app/nope at desktop (2.9s)
+  ✓  158 e2e/public-site.spec.ts:862:5 › public site: not found /fr/in-app/nope at 375 (3.2s)
+  ✓  159 e2e/public-site.spec.ts:862:5 › public site: not found /fr/in-app/nope at desktop (3.7s)
+  ✓  162 e2e/public-site.spec.ts:920:1 › public site: not found — nothing from the address is shown back, and it is not in the sitemap (833ms)
+  ✓  160 e2e/public-site.spec.ts:862:5 › public site: not found /ar/in-app/a/b at 375 (3.1s)
+  ✓  163 e2e/public-site.spec.ts:930:1 › public site: not found — after a link inside the site the router shows the same page, never indexed (1.9s)
+  ✓  161 e2e/public-site.spec.ts:862:5 › public site: not found /ar/in-app/a/b at desktop (4.1s)
+  ✓  164 e2e/public-site.spec.ts:950:1 › public site: not found — a language choice leads to that language’s home once, and a stored choice never redirects a 404 (2.6s)
+  ✓  166 e2e/public-site.spec.ts:975:1 › public site: the host files and the security headers; no account, console or application address (261ms)
+  ✓  165 e2e/public-site.spec.ts:963:1 › public site: not found — the chosen theme carries over, and the page reads in both (4.0s)
+  ✓  168 e2e/public-site.spec.ts:1062:1 › public site: cards appear once as they are reached, in the Balanced values; they rise on hover and focus (5.7s)
+  ✓  170 e2e/public-site.spec.ts:1172:1 › public site: without a script, every card and the first walkthrough are there, at rest (2.3s)
+  ✓  169 e2e/public-site.spec.ts:1128:1 › public site: reduced motion, read from the built stylesheet — at load, and switched on while the page is open (6.6s)
+  ✓  139 e2e/public-site.spec.ts:751:3 › public site: the Dukan showcase in ar — two equal tabs, six steps, one height, whole from 320 px, nothing sent or kept (43.9s)
+  ✓  172 e2e/public-site.spec.ts:1209:1 › public site: legal pages, the pages the app opens and the 404 have no entrance and no showcase (2.6s)
+  ✓  171 e2e/public-site.spec.ts:1192:1 › public site: at 200 % zoom the showcase and its pages still fit (6.0s)
+  ✓  167 e2e/public-site.spec.ts:996:1 › public site: the walkthrough plays once when asked, about 2.8 s a step, and pauses off screen or in a hidden tab (27.0s)
+
+
+  1) e2e/public-site.spec.ts:108:7 › public site /ar at 375 ────────────────────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "ar"
+    Received: "en"
+
+      123 |         }
+      124 |         record(`${lang}-${w.name}-${route.id}`, { path, lang, width: w.width, overflow: f.overflow, overflow320, foreign: seen.foreign, errors: seen.errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
+    > 125 |         expect(f.lang).toBe(lang);
+          |                        ^
+      126 |         expect(f.dir).toBe(lang === 'ar' ? 'rtl' : 'ltr');
+      127 |         expect(f.h1).toBe(1);
+      128 |         expect(f.overflow, 'no sideways scroll').toBeLessThanOrEqual(0);
+        at /home/runner/work/erp-control-web/erp-control-web/e2e/public-site.spec.ts:125:24
+
+    Error Context: evidence/db5662b461b48d39f8713f08acc9c62950ab703a/public/playwright-output/public-site-public-site-ar-at-375/error-context.md
+
+  2) e2e/public-site.spec.ts:108:7 › public site /ar/products/dukan-erp at desktop ─────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "ar"
+    Received: "en"
+
+      123 |         }
+      124 |         record(`${lang}-${w.name}-${route.id}`, { path, lang, width: w.width, overflow: f.overflow, overflow320, foreign: seen.foreign, errors: seen.errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
+    > 125 |         expect(f.lang).toBe(lang);
+          |                        ^
+      126 |         expect(f.dir).toBe(lang === 'ar' ? 'rtl' : 'ltr');
+      127 |         expect(f.h1).toBe(1);
+      128 |         expect(f.overflow, 'no sideways scroll').toBeLessThanOrEqual(0);
+        at /home/runner/work/erp-control-web/erp-control-web/e2e/public-site.spec.ts:125:24
+
+    Error Context: evidence/db5662b461b48d39f8713f08acc9c62950ab703a/public/playwright-output/public-site-public-site-ar-products-dukan-erp-at-desktop/error-context.md
+
+  2 failed
+    e2e/public-site.spec.ts:108:7 › public site /ar at 375 ─────────────────────────────────────────
+    e2e/public-site.spec.ts:108:7 › public site /ar/products/dukan-erp at desktop ──────────────────
+  170 passed (4.3m)
