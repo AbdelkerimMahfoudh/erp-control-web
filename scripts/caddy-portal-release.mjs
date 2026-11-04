@@ -54,5 +54,5 @@ for (const file of files(dist).filter((f) => /\.(js|html|css)$/.test(f))) {
 mkdirSync(releaseDir, { recursive: true });
 cpSync(dist, join(releaseDir, 'site'), { recursive: true, filter: (src) => !/[\\/]_(headers|redirects)$/.test(src) });
 writeFileSync(join(releaseDir, 'routes.caddy'), caddyRoutes(headers, redirects));
-writeFileSync(join(releaseDir, 'portal-release.txt'), `commit ${commit}\napi ${API}\n`);
+writeFileSync(join(releaseDir, 'portal-release.txt'), `commit ${commit}\napi ${API}\n${audit ? 'audit build: never install\n' : ''}`);
 console.log(`caddy-portal-release: ${headers.length} header rules, ${redirects.length} redirect rules, commit ${commit} → ${releaseDir}`);

@@ -79,7 +79,7 @@ for (const lang of portal ? [] : ssr.LANGUAGES) {
 const builtAt = new Date();
 write('robots.txt', ssr.robotsTxt(ssr.SITE, ssr.IS_PREVIEW));
 if (ssr.SITE.publicSiteOrigin && !portal) write('sitemap.xml', ssr.sitemapXml(ssr.SITE, builtAt.toISOString().slice(0, 10)));
-write('_headers', ssr.headersFile(ssr.SITE, ssr.IS_PREVIEW));
+write('_headers', ssr.headersFile(ssr.SITE, ssr.IS_PREVIEW, !ssr.CONSOLE_BUILT));
 // A build without the console (the portal's production and customer-audit builds) routes no /admin.
 write('_redirects', ssr.redirectsFile(ssr.SITE, !ssr.CONSOLE_BUILT));
 const security = ssr.securityTxt(ssr.SITE, builtAt);

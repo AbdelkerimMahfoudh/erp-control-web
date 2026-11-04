@@ -75,7 +75,7 @@ export function contentSecurityPolicy(site: Pick<SiteInputs, 'apiBase'> & WithSu
   ].join('; ');
 }
 
-export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, preview: boolean): string {
+export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, preview: boolean, consoleAbsent = false): string {
   const surface = surfaceOf(site);
   const common = [
     `Content-Security-Policy: ${contentSecurityPolicy(site)}`,
@@ -90,7 +90,8 @@ export function headersFile(site: Pick<SiteInputs, 'apiBase'> & WithSurface, pre
     ...(preview || surface === 'portal' || surface === 'admin' ? ['X-Robots-Tag: noindex, nofollow'] : []),
   ];
   const blocks = [`/*\n${common.map((h) => `  ${h}`).join('\n')}`];
-  for (const p of [...protectedPrefixesFor(surface), ...retiredFor(site)]) {
+  // A portal without the console names no /admin at all, not even for its headers (post-Build-4).
+  for (const p of [...protectedPrefixesFor(surface).filter((x) => !(consoleAbsent && surface === 'portal' && x === '/admin')), ...retiredFor(site)]) {
     blocks.push(`${p}\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
     blocks.push(`${p}/*\n  X-Robots-Tag: noindex, nofollow\n  Cache-Control: no-store`);
   }

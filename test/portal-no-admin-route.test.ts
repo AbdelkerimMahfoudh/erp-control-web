@@ -14,3 +14,10 @@ describe('the portal’s routes', () => {
     expect(redirectsFile({ siteSurface: 'portal' } as never, false)).toMatch(/^\/admin\/\* \S+ 200$/m);
   });
 });
+
+describe('the portal’s headers', () => {
+  it('a console-less portal build names no /admin in its headers either', async () => {
+    const { headersFile } = await import('../src/site/generated');
+    expect(headersFile({ siteSurface: 'portal', apiBase: 'https://api.tsxmr.com/api/v1' } as never, false, true)).not.toMatch(/^\/admin/m);
+  });
+});
