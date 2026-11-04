@@ -1,0 +1,23 @@
+[
+ {
+  "RuleID": "generic-api-key",
+  "Description": "Detected a Generic API Key, potentially exposing access to various services and sensitive operations.",
+  "StartLine": 778,
+  "EndLine": 778,
+  "StartColumn": 8,
+  "EndColumn": 72,
+  "Match": "JOIN_TOKEN = 'REDACTED'",
+  "Secret": "REDACTED",
+  "File": "e2e/site.spec.ts",
+  "SymlinkFile": "",
+  "Commit": "b35c6e8ec4bc9d629570826b44acf839b75fd8ba",
+  "Link": "https://github.com/AbdelkerimMahfoudh/erp-control-web/blob/b35c6e8ec4bc9d629570826b44acf839b75fd8ba/e2e/site.spec.ts#L778",
+  "Entropy": 3.7039819,
+  "Author": "Claude",
+  "Email": "noreply@anthropic.com",
+  "Date": "2026-10-25T14:00:48Z",
+  "Message": "Promo code and promoter card hold up at 320 px, in the dark theme, in a browser (0103)\n\n- The promo code's fieldset is a grid: its column is now minmax(0, 1fr), so at 320 px the\n  six boxes shrink instead of pushing /apply sideways by 21 px (the site's own browser\n  check caught it in EN, FR and AR).\n- The promoter card's text takes the card's own ink: `.card p` (public.css) had given it the\n  dark theme's light paragraph colour on the white card — contrast 1.88.\n- Browser checks for the new pages: the promoters list, a promoter's page and card, the\n  registration sources and /join in EN/FR/AR, light and dark, at 375, 320 px and desktop —\n  axe, no sideways scroll, noindex, the token out of the address, no number or note on the\n  card or the list; and the promo code typed in Arabic digits on /apply at 320 px, left to\n  right.\n\nCo-Authored-By: Claude Opus 5.5 \u003cnoreply@anthropic.com\u003e\nClaude-Session: https://claude.ai/code/session_01H7TfZHzwCoXvkvJ7ZuSzA9",
+  "Tags": [],
+  "Fingerprint": "b35c6e8ec4bc9d629570826b44acf839b75fd8ba:e2e/site.spec.ts:generic-api-key:778"
+ }
+]
