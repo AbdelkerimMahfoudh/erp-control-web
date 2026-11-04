@@ -6,7 +6,7 @@ import { formatProblems, gateOfSurface, readInputs, releaseProblems, type BuildM
 import { publishedBlockers, publishedDrafts, publishedPlaceholders } from './src/content';
 
 /**
- * The control website: the TSX-MR public site, the Owner account area and the Super Admin console (docs/68, docs/74).
+ * The control website: the TSXMR public site, the Owner account area and the Super Admin console (docs/68, docs/74).
  *
  * `VITE_API_BASE` points a build at the API; without it (a preview) the site talks to the API on its own hostname,
  * port 3010 — the administrator session cookie is `SameSite=Lax`, so a page on `localhost` talking to `127.0.0.1`
