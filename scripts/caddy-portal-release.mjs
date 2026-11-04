@@ -36,7 +36,8 @@ const headers = parseHeaders(readFileSync(join(dist, '_headers'), 'utf8'));
 const redirects = parseRedirects(readFileSync(join(dist, '_redirects'), 'utf8'));
 const everyPage = headers.find((r) => r.path === '/*');
 const value = (/** @type {string} */ name) => everyPage?.set.find(([n]) => n === name)?.[1] ?? '';
-if (!value('Content-Security-Policy').includes(`connect-src 'self' ${API};`)) fail(`the build's API is not ${API}`);
+// An audit package carries the audit build's own API; it is never installed (portal-site.sh), so only a release is held to it.
+if (!audit && !value('Content-Security-Policy').includes(`connect-src 'self' ${API};`)) fail(`the build's API is not ${API}`);
 if (!/noindex/.test(value('X-Robots-Tag'))) fail('the build does not say noindex on every page');
 if (!redirects.some((r) => r.from === '/subscription/*' && r.status === 200)) fail("the build has no Owner's page");
 if (!redirects.some((r) => r.from === '/claim/*' && r.status === 200)) fail('the build has no claim page');
