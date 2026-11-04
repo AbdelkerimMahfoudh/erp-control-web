@@ -14,15 +14,16 @@ import type { SiteInputs } from '../config/schema';
  */
 const STATUS: Record<Language, Record<'individual' | 'company', (s: Pick<SiteInputs, 'displayName' | 'legalName'>) => string>> = {
   en: {
-    individual: (s) => `${s.displayName} is a project and trading name. It is not a separately incorporated company: it is operated by ${s.legalName}, an individual (“the operator”).`,
+    // The owner's wording (2026-11-04): an individual developer, the product and project names, no incorporated company.
+    individual: (s) => `Dukan ERP is an independently developed digital service operated in Mauritania by ${s.legalName}, an individual developer, under the Dukan ERP product name and the ${s.displayName} project name. Dukan ERP and ${s.displayName} are not incorporated companies.`,
     company: (s) => `${s.displayName} is a trading name of ${s.legalName} (“the operator”).`,
   },
   fr: {
-    individual: (s) => `${s.displayName} est un nom de projet et un nom commercial. Ce n’est pas une société distincte : il est exploité par ${s.legalName}, personne physique (ci-après « l’exploitant »).`,
+    individual: (s) => `Dukan ERP est un service numérique développé de manière indépendante et exploité en Mauritanie par ${s.legalName}, développeur individuel, sous le nom de produit Dukan ERP et le nom de projet ${s.displayName}. Dukan ERP et ${s.displayName} ne sont pas des sociétés constituées.`,
     company: (s) => `${s.displayName} est un nom commercial de ${s.legalName} (ci-après « l’exploitant »).`,
   },
   ar: {
-    individual: (s) => `${s.displayName} اسم مشروع واسم تجاري، وليس شركة مستقلة مسجَّلة؛ ويتولى تشغيلَه شخصٌ طبيعي هو ${s.legalName}، ويُشار إليه فيما يلي بـ«المشغّل».`,
+    individual: (s) => `Dukan ERP خدمة رقمية مطوّرة بصورة مستقلة ويشغّلها في موريتانيا ${s.legalName} بصفته مطوّرًا فرديًا، تحت اسم المنتج Dukan ERP واسم المشروع ${s.displayName}. ولا يُعدّ Dukan ERP أو ${s.displayName} شركةً مسجّلة.`,
     company: (s) => `${s.displayName} اسم تجاري لـ${s.legalName}، ويُشار إلى هذه الجهة فيما يلي بـ«المشغّل».`,
   },
 };

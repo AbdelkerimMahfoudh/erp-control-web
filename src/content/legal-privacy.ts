@@ -18,7 +18,7 @@ export const privacy: Record<Language, LegalDocument> = {
         heading: 'Who is responsible',
         blocks: [
           { kind: 'p', text: 'Dukan ERP is developed and operated under the {displayName} name. {operatorStatus} The operator is responsible for the personal information Dukan ERP processes. Correspondence address: {postalAddress}.' },
-          { kind: 'p', text: 'A business that uses Dukan ERP decides what it records about its own customers, suppliers and staff; {displayName} processes that information to provide the service. [[blocker:legal_review]]' },
+          { kind: 'p', text: 'A business that uses Dukan ERP decides what it records about its own customers, suppliers and staff; {displayName} processes that information to provide the service.' },
           { kind: 'p', text: 'Questions about this policy or about your personal information: {privacyEmail}.' },
         ],
       },
@@ -101,14 +101,14 @@ export const privacy: Record<Language, LegalDocument> = {
           { kind: 'p', text: 'Inside a business, each person sees what their role and the owner’s permission choices allow.' },
           { kind: 'p', text: 'The {displayName} platform team sees businesses, their stores, the names and contact details of their accounts, their subscriptions and the payments recorded for those subscriptions.' },
           { kind: 'p', text: 'When WhatsApp delivery is turned on, verification codes and service messages are sent through Meta’s WhatsApp Business Platform, which receives the destination number and the message.' },
-          { kind: 'p', text: 'When email delivery is turned on, verification codes and service messages are sent through an email delivery provider, which receives the destination address and the message. [[blocker:processors]]' },
-          { kind: 'p', text: 'Hosting and other service providers: [[blocker:processors]]' },
+          { kind: 'p', text: 'Email delivery is turned off: codes and service messages go by WhatsApp. If email is turned on later, its provider will be named here first.' },
+          { kind: 'p', text: 'Hosting and other service providers: Hetzner Online GmbH (Germany) runs the server in Nuremberg and keeps the encrypted backups in Falkenstein; Meta’s WhatsApp Business Platform carries WhatsApp messages and receives the number and the message; Cloudflare answers for the domain’s name service and receives no app data.' },
         ],
       },
       {
         id: 'location',
         heading: 'Where information is stored',
-        blocks: [{ kind: 'p', text: 'Information is stored in a database operated for {displayName}. [[blocker:international_transfer]]' }],
+        blocks: [{ kind: 'p', text: 'Information is stored in a database on {displayName}’s server in Germany, outside Mauritania, and its backups also in Germany; WhatsApp messages pass through Meta. Using Dukan ERP means this processing abroad.' }],
       },
       {
         id: 'security',
@@ -131,9 +131,9 @@ export const privacy: Record<Language, LegalDocument> = {
         id: 'retention',
         heading: 'How long information is kept',
         blocks: [
-          { kind: 'p', text: 'Business and accounting records — sales, purchases, payments, returns, daily closings, the audit trail and subscription records — are kept for [[blocker:retention_period]].' },
+          { kind: 'p', text: 'Business and accounting records — sales, purchases, payments, returns, daily closings, the audit trail and subscription records — are kept while the business’s account exists; after a deletion they stay, de-identified, for as long as accounting law requires.' },
           { kind: 'p', text: 'Verification codes expire after a few minutes. Signed-in sessions expire, and can be ended at any time.' },
-          { kind: 'p', text: 'Nothing is yet removed automatically after a set time: expired codes, ended sessions, request logs and imported files are kept until a retention schedule is decided. [[blocker:retention_period]]' },
+          { kind: 'p', text: 'Request logs rotate by size and are overwritten within about 50 MB per service; expired codes and ended sessions are kept as security records; imported files stay until the business deletes them. Off-site backups are kept 7 days daily, then 4 weekly and 6 monthly, so about six months at most; 14 copies on the server rotate.' },
         ],
       },
       {
@@ -141,13 +141,13 @@ export const privacy: Record<Language, LegalDocument> = {
         heading: 'Deleting an account',
         blocks: [
           { kind: 'p', text: 'You can delete your account in the app; the deletion is confirmed with a code sent to your verified {deletionChannelName} number. The account deletion page explains how, and what is removed and kept.' },
-          { kind: 'p', text: 'Deletion removes the person’s identity and contact details from the records in use, and every copy the app made of them that can be edited. The sealed audit trail and subscription history, and backups until they expire, are not edited, nor are notifications already shown to other people of the business. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
+          { kind: 'p', text: 'Deletion removes the person’s identity and contact details from the records in use, and every copy the app made of them that can be edited. The sealed audit trail and subscription history, and backups until they expire, are not edited, nor are notifications already shown to other people of the business. Backups expire on the schedule above. Mandatory legal rights are not limited by this.' },
         ],
       },
       {
         id: 'rights',
         heading: 'Your choices and requests',
-        blocks: [{ kind: 'p', text: 'You can see your account details in the app, end your sessions and delete your account. For a copy of your personal information, a correction or any other request, write to {privacyEmail}; requests are answered by the {displayName} team. [[blocker:legal_review]]' }],
+        blocks: [{ kind: 'p', text: 'You can see your account details in the app, end your sessions and delete your account. For a copy of your personal information, a correction or any other request, write to {privacyEmail}; requests are answered by the {displayName} team.' }],
       },
       {
         id: 'children',
@@ -179,7 +179,7 @@ export const privacy: Record<Language, LegalDocument> = {
         heading: 'Qui est responsable',
         blocks: [
           { kind: 'p', text: 'Dukan ERP est développé et exploité sous le nom {displayName}. {operatorStatus} L’exploitant est responsable des informations personnelles traitées par Dukan ERP. Adresse de correspondance : {postalAddress}.' },
-          { kind: 'p', text: 'Une entreprise qui utilise Dukan ERP décide de ce qu’elle enregistre sur ses propres clients, fournisseurs et employés ; {displayName} traite ces informations pour fournir le service. [[blocker:legal_review]]' },
+          { kind: 'p', text: 'Une entreprise qui utilise Dukan ERP décide de ce qu’elle enregistre sur ses propres clients, fournisseurs et employés ; {displayName} traite ces informations pour fournir le service.' },
           { kind: 'p', text: 'Questions sur cette politique ou sur vos informations personnelles : {privacyEmail}.' },
         ],
       },
@@ -262,14 +262,14 @@ export const privacy: Record<Language, LegalDocument> = {
           { kind: 'p', text: 'Au sein d’une entreprise, chacun voit ce que permettent son rôle et les autorisations choisies par le propriétaire.' },
           { kind: 'p', text: 'L’équipe de la plateforme {displayName} voit les entreprises, leurs magasins, les noms et coordonnées de leurs comptes, leurs abonnements et les paiements enregistrés pour ces abonnements.' },
           { kind: 'p', text: 'Lorsque l’envoi par WhatsApp est activé, les codes de vérification et les messages de service passent par la plateforme WhatsApp Business de Meta, qui reçoit le numéro de destination et le message.' },
-          { kind: 'p', text: 'Lorsque l’envoi par e-mail est activé, les codes de vérification et les messages de service passent par un prestataire d’envoi d’e-mails, qui reçoit l’adresse de destination et le message. [[blocker:processors]]' },
-          { kind: 'p', text: 'Hébergement et autres prestataires : [[blocker:processors]]' },
+          { kind: 'p', text: 'L’envoi par e-mail est désactivé : les codes et les messages de service passent par WhatsApp. Si l’e-mail est activé plus tard, son prestataire sera d’abord indiqué ici.' },
+          { kind: 'p', text: 'Hébergement et autres prestataires : Hetzner Online GmbH (Allemagne) exploite le serveur à Nuremberg et conserve les sauvegardes chiffrées à Falkenstein ; la plateforme WhatsApp Business de Meta transmet les messages WhatsApp et reçoit le numéro et le message ; Cloudflare fournit le service de noms du domaine et ne reçoit aucune donnée de l’application.' },
         ],
       },
       {
         id: 'location',
         heading: 'Où les informations sont conservées',
-        blocks: [{ kind: 'p', text: 'Les informations sont conservées dans une base de données exploitée pour le compte de {displayName}. [[blocker:international_transfer]]' }],
+        blocks: [{ kind: 'p', text: 'Les informations sont conservées dans une base de données sur le serveur de {displayName} en Allemagne, hors de Mauritanie, et ses sauvegardes aussi en Allemagne ; les messages WhatsApp passent par Meta. Utiliser Dukan ERP implique ce traitement à l’étranger.' }],
       },
       {
         id: 'security',
@@ -292,9 +292,9 @@ export const privacy: Record<Language, LegalDocument> = {
         id: 'retention',
         heading: 'Durée de conservation',
         blocks: [
-          { kind: 'p', text: 'Les données de l’entreprise et les données comptables — ventes, achats, paiements, retours, clôtures quotidiennes, journal d’audit et données d’abonnement — sont conservées pendant [[blocker:retention_period]].' },
+          { kind: 'p', text: 'Les données de l’entreprise et les données comptables — ventes, achats, paiements, retours, clôtures quotidiennes, journal d’audit et données d’abonnement — sont conservées tant que le compte de l’entreprise existe ; après une suppression, elles restent, anonymisées, aussi longtemps que la loi comptable l’exige.' },
           { kind: 'p', text: 'Les codes de vérification expirent au bout de quelques minutes. Les sessions ouvertes expirent et peuvent être fermées à tout moment.' },
-          { kind: 'p', text: 'Rien n’est encore supprimé automatiquement après un délai fixé : les codes expirés, les sessions fermées, les journaux de requêtes et les fichiers importés sont conservés jusqu’à ce qu’une durée de conservation soit décidée. [[blocker:retention_period]]' },
+          { kind: 'p', text: 'Les journaux de requêtes tournent selon leur taille et sont écrasés au-delà d’environ 50 Mo par service ; les codes expirés et les sessions fermées sont gardés comme traces de sécurité ; les fichiers importés restent jusqu’à ce que l’entreprise les supprime. Les sauvegardes hors site sont gardées 7 jours en quotidien, puis 4 hebdomadaires et 6 mensuelles, soit environ six mois au plus ; 14 copies sur le serveur tournent.' },
         ],
       },
       {
@@ -302,13 +302,13 @@ export const privacy: Record<Language, LegalDocument> = {
         heading: 'Supprimer un compte',
         blocks: [
           { kind: 'p', text: 'Vous pouvez supprimer votre compte dans l’application ; la suppression est confirmée par un code envoyé à votre numéro {deletionChannelName} vérifié. La page sur la suppression de compte explique comment, et ce qui est supprimé ou conservé.' },
-          { kind: 'p', text: 'La suppression retire l’identité et les coordonnées de la personne des données en service, et de toutes les copies modifiables que l’application en a faites. Le journal d’audit et l’historique de l’abonnement scellés, ainsi que les sauvegardes jusqu’à leur expiration, ne sont pas modifiés, pas plus que les notifications déjà affichées à d’autres personnes de l’entreprise. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
+          { kind: 'p', text: 'La suppression retire l’identité et les coordonnées de la personne des données en service, et de toutes les copies modifiables que l’application en a faites. Le journal d’audit et l’historique de l’abonnement scellés, ainsi que les sauvegardes jusqu’à leur expiration, ne sont pas modifiés, pas plus que les notifications déjà affichées à d’autres personnes de l’entreprise. Les sauvegardes expirent selon le calendrier ci-dessus. Cela ne limite aucun droit légal impératif.' },
         ],
       },
       {
         id: 'rights',
         heading: 'Vos choix et vos demandes',
-        blocks: [{ kind: 'p', text: 'Vous pouvez consulter les informations de votre compte dans l’application, fermer vos sessions et supprimer votre compte. Pour obtenir une copie de vos informations personnelles, une correction ou toute autre demande, écrivez à {privacyEmail} ; l’équipe de {displayName} répond aux demandes. [[blocker:legal_review]]' }],
+        blocks: [{ kind: 'p', text: 'Vous pouvez consulter les informations de votre compte dans l’application, fermer vos sessions et supprimer votre compte. Pour obtenir une copie de vos informations personnelles, une correction ou toute autre demande, écrivez à {privacyEmail} ; l’équipe de {displayName} répond aux demandes.' }],
       },
       {
         id: 'children',
@@ -340,7 +340,7 @@ export const privacy: Record<Language, LegalDocument> = {
         heading: 'الجهة المسؤولة',
         blocks: [
           { kind: 'p', text: 'يُطوَّر Dukan ERP ويُشغَّل تحت اسم {displayName}. {operatorStatus} وتقع المسؤولية عن المعلومات الشخصية التي يعالجها Dukan ERP على المشغّل. عنوان المراسلة: {postalAddress}.' },
-          { kind: 'p', text: 'تقرّر الشركة التي تستخدم Dukan ERP ما تسجّله عن عملائها ومورّديها وموظفيها، وتعالج {displayName} هذه المعلومات لتقديم الخدمة. [[blocker:legal_review]]' },
+          { kind: 'p', text: 'تقرّر الشركة التي تستخدم Dukan ERP ما تسجّله عن عملائها ومورّديها وموظفيها، وتعالج {displayName} هذه المعلومات لتقديم الخدمة.' },
           { kind: 'p', text: 'للأسئلة عن هذه السياسة أو عن معلوماتك الشخصية: {privacyEmail}.' },
         ],
       },
@@ -423,14 +423,14 @@ export const privacy: Record<Language, LegalDocument> = {
           { kind: 'p', text: 'داخل الشركة، يرى كل شخص ما يسمح به دوره وخيارات الصلاحيات التي يحدّدها المالك.' },
           { kind: 'p', text: 'يرى فريق منصة {displayName} الشركاتِ ومتاجرها، وأسماء حساباتها وبيانات الاتصال بها، واشتراكاتها، والمدفوعات المسجّلة لتلك الاشتراكات.' },
           { kind: 'p', text: 'عند تفعيل الإرسال عبر واتساب، تُرسَل رموز التحقق ورسائل الخدمة عبر منصة WhatsApp Business التابعة لشركة Meta، التي تتلقّى الرقم المرسَل إليه والرسالة.' },
-          { kind: 'p', text: 'عند تفعيل الإرسال عبر البريد الإلكتروني، تُرسَل رموز التحقق ورسائل الخدمة عبر مقدّم خدمة لإرسال البريد الإلكتروني، يتلقّى العنوان المرسَل إليه والرسالة. [[blocker:processors]]' },
-          { kind: 'p', text: 'الاستضافة ومقدّمو الخدمات الآخرون: [[blocker:processors]]' },
+          { kind: 'p', text: 'الإرسال عبر البريد الإلكتروني معطَّل: تُرسَل الرموز ورسائل الخدمة عبر واتساب. وإذا فُعِّل البريد الإلكتروني لاحقًا، فسيُذكر مقدّم خدمته هنا أولًا.' },
+          { kind: 'p', text: 'الاستضافة ومقدّمو الخدمات الآخرون: تشغّل شركة Hetzner Online GmbH (ألمانيا) الخادم في نورنبرغ وتحفظ النسخ الاحتياطية المشفّرة في فالكنشتاين؛ وتنقل منصة واتساب للأعمال التابعة لـMeta رسائل واتساب وتتلقى الرقم والرسالة؛ وتوفّر Cloudflare خدمة أسماء النطاق ولا تتلقى أي بيانات من التطبيق.' },
         ],
       },
       {
         id: 'location',
         heading: 'أين تُحفظ المعلومات',
-        blocks: [{ kind: 'p', text: 'تُحفظ المعلومات في قاعدة بيانات تُشغَّل لحساب {displayName}. [[blocker:international_transfer]]' }],
+        blocks: [{ kind: 'p', text: 'تُحفظ المعلومات في قاعدة بيانات على خادم {displayName} في ألمانيا، خارج موريتانيا، وتُحفظ نسخها الاحتياطية في ألمانيا أيضًا؛ وتمرّ رسائل واتساب عبر Meta. ويعني استخدام Dukan ERP هذه المعالجة في الخارج.' }],
       },
       {
         id: 'security',
@@ -453,9 +453,9 @@ export const privacy: Record<Language, LegalDocument> = {
         id: 'retention',
         heading: 'مدة الاحتفاظ بالمعلومات',
         blocks: [
-          { kind: 'p', text: 'يُحتفَظ بسجلات الشركة والسجلات المحاسبية — المبيعات والمشتريات والمدفوعات والمرتجعات والإغلاقات اليومية وسجل التدقيق وسجلات الاشتراك — لمدة [[blocker:retention_period]].' },
+          { kind: 'p', text: 'يُحتفَظ بسجلات الشركة والسجلات المحاسبية — المبيعات والمشتريات والمدفوعات والمرتجعات والإغلاقات اليومية وسجل التدقيق وسجلات الاشتراك — ما دام حساب المؤسسة قائمًا؛ وبعد الحذف تبقى مجهَّلة الهوية طوال المدة التي يقتضيها قانون المحاسبة.' },
           { kind: 'p', text: 'تنتهي صلاحية رموز التحقق بعد بضع دقائق. وتنتهي الجلسات المفتوحة، ويمكن إنهاؤها في أي وقت.' },
-          { kind: 'p', text: 'لا يُحذف شيء تلقائيًا بعد مدة محددة حتى الآن: تُحفَظ الرموز المنتهية والجلسات المنتهية وسجلات الطلبات والملفات المستوردة إلى أن تُحدَّد مدة الاحتفاظ. [[blocker:retention_period]]' },
+          { kind: 'p', text: 'تدور سجلات الطلبات حسب حجمها وتُستبدل بعد نحو 50 ميغابايت لكل خدمة؛ وتُحفظ الرموز المنتهية والجلسات المنتهية سجلاتٍ أمنية؛ وتبقى الملفات المستوردة إلى أن تحذفها المؤسسة. وتُحفظ النسخ الاحتياطية خارج الخادم 7 أيام يوميًا، ثم 4 أسبوعية و6 شهرية، أي نحو ستة أشهر على الأكثر؛ وتدور 14 نسخة على الخادم.' },
         ],
       },
       {
@@ -463,13 +463,13 @@ export const privacy: Record<Language, LegalDocument> = {
         heading: 'حذف الحساب',
         blocks: [
           { kind: 'p', text: 'يمكنك حذف حسابك من التطبيق؛ ويُؤكَّد الحذف برمز يُرسَل إلى رقم {deletionChannelName} المتحقَّق منه. وتشرح صفحة حذف الحساب الطريقة، وما يُحذف وما يُحتفَظ به.' },
-          { kind: 'p', text: 'يزيل الحذف هوية الشخص وبيانات الاتصال به من السجلات المستعملة، ومن كل نسخة قابلة للتعديل صنعها التطبيق منها. ولا يُعدَّل سجل التدقيق وسجل الاشتراك المختومان، ولا النسخ الاحتياطية حتى تنتهي صلاحيتها، ولا الإشعارات التي عُرضت بالفعل على أشخاص آخرين في المؤسسة. [[blocker:sealed_history]] [[blocker:backup_retention]]' },
+          { kind: 'p', text: 'يزيل الحذف هوية الشخص وبيانات الاتصال به من السجلات المستعملة، ومن كل نسخة قابلة للتعديل صنعها التطبيق منها. ولا يُعدَّل سجل التدقيق وسجل الاشتراك المختومان، ولا النسخ الاحتياطية حتى تنتهي صلاحيتها، ولا الإشعارات التي عُرضت بالفعل على أشخاص آخرين في المؤسسة. تنتهي صلاحية النسخ الاحتياطية وفق الجدول أعلاه. ولا يحدّ ذلك من أي حق قانوني آمر.' },
         ],
       },
       {
         id: 'rights',
         heading: 'خياراتك وطلباتك',
-        blocks: [{ kind: 'p', text: 'يمكنك الاطلاع على بيانات حسابك في التطبيق، وإنهاء جلساتك، وحذف حسابك. وللحصول على نسخة من معلوماتك الشخصية أو تصحيحها أو لأي طلب آخر، راسل {privacyEmail}، ويتولّى فريق {displayName} الرد على الطلبات. [[blocker:legal_review]]' }],
+        blocks: [{ kind: 'p', text: 'يمكنك الاطلاع على بيانات حسابك في التطبيق، وإنهاء جلساتك، وحذف حسابك. وللحصول على نسخة من معلوماتك الشخصية أو تصحيحها أو لأي طلب آخر، راسل {privacyEmail}، ويتولّى فريق {displayName} الرد على الطلبات.' }],
       },
       {
         id: 'children',

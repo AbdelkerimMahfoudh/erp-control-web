@@ -80,7 +80,8 @@ describe('the pre-launch texts', () => {
   });
 
   it('leave the service texts — the portal and the app — exactly as strict as before', () => {
-    expect(publishedBlockers('full').length).toBeGreaterThan(0);
+    // The owner's decisions of 2026-11-04 settled every legal marker; the six texts stay DRAFT until the owner approves them.
+    expect(publishedBlockers('full')).toEqual([]);
     expect(publishedDrafts('full')).toEqual(['accountDeletion', 'legalNotice', 'privacy', 'privacyChoices', 'security', 'terms']);
   });
 });
@@ -123,12 +124,13 @@ describe('the three release verdicts', () => {
     const [, portal, app] = releaseVerdicts({ ...REAL_PUBLIC, VITE_API_BASE: 'https://api.tsxmr.com/api/v1', VITE_ACCOUNT_DELETION_CHANNEL: 'whatsapp' });
     expect(portal!.go).toBe(false);
     expect(app!.go).toBe(false);
-    for (const detail of EXTERNAL_CONDITIONS.PORTAL) expect(portal!.problems.map((p) => p.detail)).toContain(`not proven here: ${detail}`);
+    // The portal: closed until its pinned launch configuration is given (owner, 2026-11-04; portal-launch-gate.test.ts).
+    for (const env of ['VITE_PORTAL_BACKEND_RELEASE', 'VITE_PORTAL_LAUNCH_CHANNEL', 'VITE_PORTAL_EMAIL_CHANNEL']) expect(portal!.problems.map((p) => p.env)).toContain(env);
     for (const detail of EXTERNAL_CONDITIONS.APP_STORE) expect(app!.problems.map((p) => p.detail)).toContain(`not proven here: ${detail}`);
     expect(EXTERNAL_CONDITIONS.APP_STORE.join(' ')).toMatch(/WhatsApp/);
     // The service's texts are still drafts with blockers: the app's gate lists them.
     expect(app!.problems.some((p) => p.problem === 'legal_draft')).toBe(true);
-    expect(app!.problems.some((p) => p.problem === 'legal_blocker')).toBe(true);
+    expect(app!.problems.some((p) => p.problem === 'legal_blocker')).toBe(false);
   });
 
   it('the App Store gate asks for the WhatsApp deletion channel', () => {

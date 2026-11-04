@@ -32,6 +32,19 @@ export const EXTERNAL_CONDITIONS: Record<'PORTAL' | 'APP_STORE', readonly string
   ],
 };
 
+/**
+ * The portal's launch configuration, pinned (owner, 2026-11-04): the backend release it talks to, named by its full commit
+ * and already deployed (`VITE_PORTAL_BACKEND_RELEASE`), and its one proven onboarding channel, WhatsApp, with email
+ * explicitly disabled. Not "any delivery available": exactly this configuration, or the gate stays closed.
+ */
+export function portalLaunch(env: Record<string, string | undefined>): ReleaseProblem[] {
+  const problems: ReleaseProblem[] = [];
+  if (!/^[0-9a-f]{40}$/.test(env.VITE_PORTAL_BACKEND_RELEASE ?? '')) problems.push({ env: 'VITE_PORTAL_BACKEND_RELEASE', problem: 'missing', detail: 'the full commit of the backend release deployed at VITE_API_BASE, with its migrations' });
+  if (env.VITE_PORTAL_LAUNCH_CHANNEL !== 'whatsapp') problems.push({ env: 'VITE_PORTAL_LAUNCH_CHANNEL', problem: env.VITE_PORTAL_LAUNCH_CHANNEL ? 'malformed' : 'missing', detail: 'the proven onboarding channel for this launch: whatsapp' });
+  if (env.VITE_PORTAL_EMAIL_CHANNEL !== 'disabled') problems.push({ env: 'VITE_PORTAL_EMAIL_CHANNEL', problem: env.VITE_PORTAL_EMAIL_CHANNEL ? 'malformed' : 'missing', detail: 'email stays disabled for this launch: disabled' });
+  return problems;
+}
+
 const external = (gate: 'PORTAL' | 'APP_STORE'): ReleaseProblem[] => EXTERNAL_CONDITIONS[gate].map((detail) => ({ problem: 'external', detail: `not proven here: ${detail}` }));
 
 function contentState(surface: 'public' | 'full') {
@@ -42,7 +55,7 @@ export function releaseVerdicts(env: Record<string, string | undefined>): Verdic
   const pub = contentState('public');
   const svc = contentState('full');
   const publicProblems = releaseProblems({ ...env, VITE_SITE_SURFACE: 'public' }, pub.blockers, pub);
-  const portalProblems = [...releaseProblems({ ...env, VITE_SITE_SURFACE: 'full' }, svc.blockers, svc), ...external('PORTAL')];
+  const portalProblems = [...releaseProblems({ ...env, VITE_SITE_SURFACE: 'full' }, svc.blockers, svc), ...portalLaunch(env)];
 
   const app: ReleaseProblem[] = [];
   for (const b of svc.blockers) app.push({ problem: 'legal_blocker', detail: `${b.id}: ${b.summary}` });
@@ -54,7 +67,7 @@ export function releaseVerdicts(env: Record<string, string | undefined>): Verdic
 
   return [
     { gate: 'PUBLIC_WEBSITE', go: publicProblems.length === 0, problems: publicProblems },
-    { gate: 'PORTAL', go: false, problems: portalProblems },
+    { gate: 'PORTAL', go: portalProblems.length === 0, problems: portalProblems },
     { gate: 'APP_STORE', go: false, problems: app },
   ];
 }

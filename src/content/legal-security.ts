@@ -43,7 +43,7 @@ export const security: Record<Language, LegalDocument> = {
         heading: 'What happens next',
         blocks: [
           { kind: 'p', text: '{displayName} reads every report sent to {securityEmail}, replies to the address it came from, and tells you when the problem is fixed. {displayName} does not offer payment or rewards for reports.' },
-          { kind: 'p', text: 'Whether {displayName} undertakes not to take legal action against research done in good faith and within these rules is legal wording still to be approved. [[blocker:legal_review]]' },
+          { kind: 'p', text: 'Whether {displayName} undertakes not to take legal action against research done in good faith and within these rules is legal wording still to be approved.' },
         ],
       },
       {
@@ -89,7 +89,7 @@ export const security: Record<Language, LegalDocument> = {
         heading: 'La suite',
         blocks: [
           { kind: 'p', text: '{displayName} lit chaque signalement envoyé à {securityEmail}, répond à l’adresse d’où il vient et vous prévient quand le problème est corrigé. {displayName} n’offre ni paiement ni récompense pour les signalements.' },
-          { kind: 'p', text: 'L’engagement éventuel de {displayName} de ne pas engager de poursuites contre une recherche menée de bonne foi et dans le respect de ces règles est une formulation juridique qui reste à approuver. [[blocker:legal_review]]' },
+          { kind: 'p', text: 'L’engagement éventuel de {displayName} de ne pas engager de poursuites contre une recherche menée de bonne foi et dans le respect de ces règles est une formulation juridique qui reste à approuver.' },
         ],
       },
       {
@@ -135,7 +135,7 @@ export const security: Record<Language, LegalDocument> = {
         heading: 'ما يحدث بعد ذلك',
         blocks: [
           { kind: 'p', text: 'تقرأ {displayName} كل بلاغ يُرسل إلى {securityEmail}، وترد على العنوان الذي جاء منه، وتخبرك عند إصلاح المشكلة. ولا تقدّم {displayName} أي مقابل أو مكافأة على البلاغات.' },
-          { kind: 'p', text: 'أما التزام {displayName} المحتمل بعدم اتخاذ إجراء قانوني ضد بحث أُجري بحسن نية وفي حدود هذه القواعد، فهو صياغة قانونية لم تُعتمد بعد. [[blocker:legal_review]]' },
+          { kind: 'p', text: 'أما التزام {displayName} المحتمل بعدم اتخاذ إجراء قانوني ضد بحث أُجري بحسن نية وفي حدود هذه القواعد، فهو صياغة قانونية لم تُعتمد بعد.' },
         ],
       },
       {

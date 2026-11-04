@@ -31,7 +31,7 @@ export const legalNotice: Record<Language, LegalDocument> = {
       {
         id: 'hosting',
         heading: 'Hosting',
-        blocks: [{ kind: 'p', text: 'The providers that host this website and the Dukan ERP service are named here once {displayName} has contracted them. [[blocker:processors]]' }],
+        blocks: [{ kind: 'p', text: 'This website and the Dukan ERP service are hosted by Hetzner Online GmbH in Germany: the application server in Nuremberg, the encrypted backups in Falkenstein. WhatsApp messages are carried by Meta’s WhatsApp Business Platform. Cloudflare provides the domain’s name service.' }],
       },
       {
         id: 'contact',
@@ -70,7 +70,7 @@ export const legalNotice: Record<Language, LegalDocument> = {
       {
         id: 'hosting',
         heading: 'Hébergement',
-        blocks: [{ kind: 'p', text: 'Les prestataires qui hébergent ce site et le service Dukan ERP seront indiqués ici dès que {displayName} aura conclu un contrat avec eux. [[blocker:processors]]' }],
+        blocks: [{ kind: 'p', text: 'Ce site et le service Dukan ERP sont hébergés par Hetzner Online GmbH en Allemagne : le serveur d’application à Nuremberg, les sauvegardes chiffrées à Falkenstein. Les messages WhatsApp passent par la plateforme WhatsApp Business de Meta. Cloudflare fournit le service de noms du domaine.' }],
       },
       {
         id: 'contact',
@@ -109,7 +109,7 @@ export const legalNotice: Record<Language, LegalDocument> = {
       {
         id: 'hosting',
         heading: 'الاستضافة',
-        blocks: [{ kind: 'p', text: 'ستُذكر هنا الجهات التي تستضيف هذا الموقع وخدمة Dukan ERP بمجرد أن تتعاقد معها {displayName}. [[blocker:processors]]' }],
+        blocks: [{ kind: 'p', text: 'تستضيف شركة Hetzner Online GmbH في ألمانيا هذا الموقع وخدمة Dukan ERP: خادم التطبيق في نورنبرغ، والنسخ الاحتياطية المشفّرة في فالكنشتاين. وتُنقل رسائل واتساب عبر منصة واتساب للأعمال التابعة لشركة Meta. وتوفّر Cloudflare خدمة أسماء النطاق.' }],
       },
       {
         id: 'contact',

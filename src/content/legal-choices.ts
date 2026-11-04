@@ -50,7 +50,7 @@ export const privacyChoices: Record<Language, LegalDocument> = {
         heading: 'If you are a customer of a shop',
         blocks: [
           { kind: 'p', text: 'A shop decides what it records about its customers, such as a name or a telephone number used for a sale or a money exchange. Ask the shop first.' },
-          { kind: 'p', text: 'The app has no way today for a shop to correct or delete one customer’s record on its own. A shop, or a customer who cannot reach the shop, can write to {privacyEmail}; what {displayName} can then do depends on the records a shop must keep and on the law that applies. [[blocker:privacy_law]]' },
+          { kind: 'p', text: 'The app has no way today for a shop to correct or delete one customer’s record on its own. A shop, or a customer who cannot reach the shop, can write to {privacyEmail}; what {displayName} can then do depends on the records a shop must keep and on the law that applies.' },
         ],
       },
       {
@@ -68,7 +68,7 @@ export const privacyChoices: Record<Language, LegalDocument> = {
         heading: 'Ask {displayName}',
         blocks: [
           { kind: 'p', text: 'For anything not listed here — a copy of your information, a correction you cannot make yourself, or an objection — write to {privacyEmail} from an address or number on your account, so that {displayName} can check it is you.' },
-          { kind: 'p', text: 'The rights the law gives you, how quickly {displayName} must answer, and where you may complain are being confirmed with legal counsel. [[blocker:privacy_law]]' },
+          { kind: 'p', text: 'Under Mauritania’s personal-data law you may ask to see, correct or delete information about you, or object to its use. Write to {privacyEmail}: you get an answer within 30 days. You may also complain to Mauritania’s personal-data protection authority.' },
         ],
       },
     ],
@@ -116,7 +116,7 @@ export const privacyChoices: Record<Language, LegalDocument> = {
         heading: 'Si vous êtes client d’une boutique',
         blocks: [
           { kind: 'p', text: 'Une boutique décide de ce qu’elle enregistre sur ses clients, par exemple un nom ou un numéro de téléphone utilisé pour une vente ou un échange d’argent. Adressez-vous d’abord à la boutique.' },
-          { kind: 'p', text: 'L’application ne permet pas aujourd’hui à une boutique de corriger ou de supprimer seule la fiche d’un client. Une boutique, ou un client qui ne peut pas joindre la boutique, peut écrire à {privacyEmail} ; ce que {displayName} peut alors faire dépend des registres qu’une boutique doit conserver et de la loi applicable. [[blocker:privacy_law]]' },
+          { kind: 'p', text: 'L’application ne permet pas aujourd’hui à une boutique de corriger ou de supprimer seule la fiche d’un client. Une boutique, ou un client qui ne peut pas joindre la boutique, peut écrire à {privacyEmail} ; ce que {displayName} peut alors faire dépend des registres qu’une boutique doit conserver et de la loi applicable.' },
         ],
       },
       {
@@ -134,7 +134,7 @@ export const privacyChoices: Record<Language, LegalDocument> = {
         heading: 'Demander à {displayName}',
         blocks: [
           { kind: 'p', text: 'Pour tout ce qui n’est pas listé ici — une copie de vos informations, une correction que vous ne pouvez pas faire vous-même, ou une opposition — écrivez à {privacyEmail} depuis une adresse ou un numéro de votre compte, afin que {displayName} puisse vérifier qu’il s’agit bien de vous.' },
-          { kind: 'p', text: 'Les droits que la loi vous accorde, le délai dans lequel {displayName} doit répondre et l’autorité auprès de laquelle vous pouvez vous plaindre sont en cours de confirmation avec un conseil juridique. [[blocker:privacy_law]]' },
+          { kind: 'p', text: 'En vertu de la loi mauritanienne sur les données personnelles, vous pouvez demander à consulter, corriger ou supprimer les informations qui vous concernent, ou vous opposer à leur usage. Écrivez à {privacyEmail} : vous recevez une réponse sous 30 jours. Vous pouvez aussi saisir l’autorité mauritanienne de protection des données personnelles.' },
         ],
       },
     ],
@@ -182,7 +182,7 @@ export const privacyChoices: Record<Language, LegalDocument> = {
         heading: 'إذا كنت عميلًا لدى متجر',
         blocks: [
           { kind: 'p', text: 'يقرّر المتجر ما يسجّله عن عملائه، مثل اسم أو رقم هاتف استُخدم في عملية بيع أو صرف. توجّه إلى المتجر أولًا.' },
-          { kind: 'p', text: 'لا يتيح التطبيق اليوم للمتجر تصحيح سجل عميل واحد أو حذفه بنفسه. ويمكن للمتجر، أو للعميل الذي يتعذّر عليه الوصول إلى المتجر، مراسلة {privacyEmail}؛ وما يمكن لـ{displayName} فعله عندئذ يتوقف على السجلات التي يجب على المتجر الاحتفاظ بها وعلى القانون المطبَّق. [[blocker:privacy_law]]' },
+          { kind: 'p', text: 'لا يتيح التطبيق اليوم للمتجر تصحيح سجل عميل واحد أو حذفه بنفسه. ويمكن للمتجر، أو للعميل الذي يتعذّر عليه الوصول إلى المتجر، مراسلة {privacyEmail}؛ وما يمكن لـ{displayName} فعله عندئذ يتوقف على السجلات التي يجب على المتجر الاحتفاظ بها وعلى القانون المطبَّق.' },
         ],
       },
       {
@@ -200,7 +200,7 @@ export const privacyChoices: Record<Language, LegalDocument> = {
         heading: 'اطلب من {displayName}',
         blocks: [
           { kind: 'p', text: 'لكل ما لم يُذكر هنا — نسخة من معلوماتك، أو تصحيح لا يمكنك إجراؤه بنفسك، أو اعتراض — راسل {privacyEmail} من عنوان أو رقم مسجّل في حسابك، حتى تتمكن {displayName} من التحقق من هويتك.' },
-          { kind: 'p', text: 'يجري التأكد مع مستشار قانوني من الحقوق التي يمنحك إياها القانون، والمهلة التي يجب أن ترد فيها {displayName}، والجهة التي يمكنك تقديم شكوى إليها. [[blocker:privacy_law]]' },
+          { kind: 'p', text: 'بموجب القانون الموريتاني لحماية البيانات الشخصية، يمكنك طلب الاطلاع على المعلومات المتعلقة بك أو تصحيحها أو حذفها، أو الاعتراض على استخدامها. راسل {privacyEmail}: تتلقى ردًا خلال 30 يومًا. ويمكنك أيضًا تقديم شكوى إلى السلطة الموريتانية لحماية البيانات الشخصية.' },
         ],
       },
     ],
