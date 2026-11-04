@@ -11,7 +11,7 @@ const GOOD = {
   VITE_ADMIN_SITE_ORIGIN: 'https://admin.tsxmr.com',
   VITE_PUBLIC_SITE_ORIGIN: 'https://tsxmr.com',
 };
-const site = { apiBase: GOOD.VITE_API_BASE, siteSurface: 'admin', publicSiteOrigin: GOOD.VITE_PUBLIC_SITE_ORIGIN, displayName: 'TSX-MR' };
+const site = { apiBase: GOOD.VITE_API_BASE, siteSurface: 'admin', publicSiteOrigin: GOOD.VITE_PUBLIC_SITE_ORIGIN, displayName: 'TSXMR' };
 
 describe('the admin gate', () => {
   it('is its own, and asks only what the console needs', () => {

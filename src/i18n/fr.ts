@@ -595,7 +595,7 @@ export const fr: Catalogue = {
   'event.grace_unavailable.note.undated': 'La période payée s’est terminée, les 3 périodes de grâce des 12 derniers mois étant déjà utilisées : lecture seule.',
   'event.unknown': 'Modification enregistrée',
 
-  // ── public site (TSX-MR / Dukan ERP, docs/74) ──
+  // ── public site (TSXMR / Dukan ERP, docs/74) ──
   'skip.toMain': 'Aller au contenu principal',
   'nav.main': 'Navigation principale',
   'nav.openMenu': 'Ouvrir le menu',
@@ -633,7 +633,7 @@ export const fr: Catalogue = {
   'org.whatsapp': 'WhatsApp',
   'org.tradingName': "Nom commercial et de projet",
   'org.status': "Statut",
-  'org.statusIndividual': "Exploitant personne physique. TSX-MR n’est pas constitué en société distincte : il n’a donc ni forme juridique ni numéro d’immatriculation au registre du commerce (RCCM).",
+  'org.statusIndividual': "Exploitant personne physique. TSXMR n’est pas constitué en société distincte : il n’a donc ni forme juridique ni numéro d’immatriculation au registre du commerce (RCCM).",
   'org.correspondenceAddress': "Adresse de correspondance",
   'org.contactEmail': "Renseignements généraux",
   'footer.address': "Adresse de correspondance : {address}.",
@@ -645,8 +645,8 @@ export const fr: Catalogue = {
   'legal.effective': 'En vigueur depuis le {date}',
   'legal.effectivePending': 'Date d’effet non renseignée',
   'legal.contents': 'Sur cette page',
-  'legal.draft': 'PROJET — DOIT ÊTRE APPROUVÉ PAR TSX-MR. Ce texte décrit le fonctionnement actuel du logiciel ; ce n’est pas un avis juridique et il n’est pas encore en vigueur.',
-  'legal.draftPrelaunch': 'PROJET — DOIT ÊTRE APPROUVÉ PAR TSX-MR. Ce texte de pré-lancement ne décrit que ce site ; ce n’est pas un avis juridique et il n’est pas encore en vigueur.',
+  'legal.draft': 'PROJET — DOIT ÊTRE APPROUVÉ PAR TSXMR. Ce texte décrit le fonctionnement actuel du logiciel ; ce n’est pas un avis juridique et il n’est pas encore en vigueur.',
+  'legal.draftPrelaunch': 'PROJET — DOIT ÊTRE APPROUVÉ PAR TSXMR. Ce texte de pré-lancement ne décrit que ce site ; ce n’est pas un avis juridique et il n’est pas encore en vigueur.',
   'prelaunch.badge': 'Bientôt disponible — Dukan ERP n’est pas encore ouvert aux inscriptions.',
   'legal.related': 'Pages liées',
   'footer.privacyChoices': 'Vos choix de confidentialité',

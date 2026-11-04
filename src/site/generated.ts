@@ -127,7 +127,7 @@ export function redirectsFile(site: WithSurface = {}, consoleAbsent = false): st
 }
 
 /**
- * RFC 9116, only when TSX-MR supplied a security contact; it expires a year after the build. Its canonical address is
+ * RFC 9116, only when TSXMR supplied a security contact; it expires a year after the build. Its canonical address is
  * the origin it is published at: the portal's own on the portal.
  */
 export function securityTxt(site: Pick<SiteInputs, 'securityEmail' | 'publicSiteOrigin'> & Partial<Pick<SiteInputs, 'portalOrigin'>> & WithSurface, builtAt: Date): string | null {

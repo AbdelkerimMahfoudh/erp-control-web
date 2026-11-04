@@ -8,8 +8,8 @@ import type { LegalDocument } from './types';
  */
 export const privacy: Record<Language, LegalDocument> = {
   en: {
-    version: '1.0 (draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Dukan ERP privacy policy',
     summary: 'How {displayName} collects, uses, shares and keeps personal information in Dukan ERP and on this website.',
     sections: [
@@ -169,8 +169,8 @@ export const privacy: Record<Language, LegalDocument> = {
     ],
   },
   fr: {
-    version: '1.0 (projet)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Politique de confidentialité de Dukan ERP',
     summary: 'Comment {displayName} collecte, utilise, partage et conserve les informations personnelles dans Dukan ERP et sur ce site.',
     sections: [
@@ -330,8 +330,8 @@ export const privacy: Record<Language, LegalDocument> = {
     ],
   },
   ar: {
-    version: '1.0 (مسودة)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'سياسة الخصوصية في Dukan ERP',
     summary: 'كيف تجمع {displayName} المعلومات الشخصية وتستخدمها وتشاركها وتحتفظ بها في Dukan ERP وعلى هذا الموقع.',
     sections: [

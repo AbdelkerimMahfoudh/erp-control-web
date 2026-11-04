@@ -12,7 +12,7 @@ import { ThemeProvider } from '../src/theme/theme';
 
 /**
  * The public legal and support pages (the owner's brief of 2026-10-16, docs/85): each exists at its stable address in
- * three languages, needs no sign-in and no API, says who operates the service, is labelled a draft until TSX-MR approves
+ * three languages, needs no sign-in and no API, says who operates the service, is labelled a draft until TSXMR approves
  * it, and links to every other one. Rendered through the real router, as a visitor arrives.
  */
 
@@ -75,14 +75,15 @@ describe('the public legal and support pages', () => {
 
   for (const lang of LANGS) {
     for (const name of Object.keys(LEGAL_DOCUMENTS) as (keyof typeof LEGAL_DOCUMENTS)[]) {
-      it(`${name} (${lang}) shows its version, its draft label and every other legal page`, () => {
+      it(`${name} (${lang}) shows its version 1.0, no draft label, and every other legal page`, () => {
         const id = name as PublicRouteId;
         mount(pathOf(id, lang));
         const main = screen.getByRole('main');
         const doc = LEGAL_DOCUMENTS[name][lang];
         expect(within(main).getByText(new RegExp(doc.version.replace(/[()]/g, '\\$&')))).toBeTruthy();
-        // Drafts say so at the top, in the page's language.
-        expect(main.querySelector('.legal-draft')?.textContent).toMatch(/TSX-MR/);
+        // Approved (owner, 2026-11-04): version 1.0 and no draft label.
+        expect(doc.version).toBe('1.0');
+        expect(main.querySelector('.legal-draft')).toBeNull();
         // One group of related pages (the brief of 2026-10-17, fourth): every other page a link, this one plain text
         // marked current — never a link back to itself.
         expect(main.querySelectorAll('.legal-related')).toHaveLength(1);
@@ -116,11 +117,11 @@ describe('the public legal and support pages', () => {
     for (const [id] of LEGAL) expect({ area: 'subscription', id, linked: hrefs.has(pathOf(id, 'en')) }).toEqual({ area: 'subscription', id, linked: true });
   });
 
-  it('names TSX-MR as the operator on the privacy policy, the terms and the legal notice', () => {
+  it('names TSXMR as the operator on the privacy policy, the terms and the legal notice', () => {
     for (const id of ['privacy', 'terms', 'legalNotice'] as const) {
       for (const lang of LANGS) {
         mount(pathOf(id, lang));
-        expect({ id, lang, operator: screen.getByRole('main').textContent?.includes('TSX-MR') }).toEqual({ id, lang, operator: true });
+        expect({ id, lang, operator: screen.getByRole('main').textContent?.includes('TSXMR') }).toEqual({ id, lang, operator: true });
         cleanup();
       }
     }
@@ -188,7 +189,7 @@ describe('the legal pages as the mobile app opens them (/in-app/…)', () => {
   }
 
   it('are never indexed and name their public page as canonical; the sitemap lists only the public pages', () => {
-    const site = { publicSiteOrigin: 'https://www.company-domain.mr', displayName: 'TSX-MR', legalName: '', operatorType: 'individual', country: '', city: '', address: '', supportEmail: '', contactEmail: '' };
+    const site = { publicSiteOrigin: 'https://www.company-domain.mr', displayName: 'TSXMR', legalName: '', operatorType: 'individual', country: '', city: '', address: '', supportEmail: '', contactEmail: '' };
     const head = headFor({ id: 'privacy', lang: 'fr', title: 't', description: 'd', site, filled: [], preview: false, productName: 'Dukan ERP', inApp: true });
     expect(head.robots).toBe('noindex, nofollow');
     expect(head.canonical).toBe('https://www.company-domain.mr/fr/privacy');

@@ -10,8 +10,8 @@ import type { LegalDocument } from './types';
  */
 export const accountDeletion: Record<Language, LegalDocument> = {
   en: {
-    version: '1.0 (draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Deleting a Dukan ERP account',
     summary: 'How to delete a Dukan ERP account, what is removed, what is kept, and why.',
     sections: [
@@ -55,8 +55,8 @@ export const accountDeletion: Record<Language, LegalDocument> = {
     ],
   },
   fr: {
-    version: '1.0 (projet)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Supprimer un compte Dukan ERP',
     summary: 'Comment supprimer un compte Dukan ERP, ce qui est supprimé, ce qui est conservé, et pourquoi.',
     sections: [
@@ -100,8 +100,8 @@ export const accountDeletion: Record<Language, LegalDocument> = {
     ],
   },
   ar: {
-    version: '1.0 (مسودة)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'حذف حساب Dukan ERP',
     summary: 'كيف تحذف حساب Dukan ERP، وما الذي يُحذف، وما الذي يُحتفَظ به، ولماذا.',
     sections: [

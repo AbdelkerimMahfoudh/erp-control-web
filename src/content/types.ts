@@ -29,9 +29,9 @@ export interface Document {
 }
 
 /**
- * A legal text names what it is, since when, and whether TSX-MR has approved it (the brief: version and effective date
- * on every legal page; every text labelled DRAFT — REQUIRES TSX-MR APPROVAL until its facts are supplied and approved).
- * Only TSX-MR, with its legal adviser, turns `draft` into `approved` — a production build refuses a draft.
+ * A legal text names what it is, since when, and whether TSXMR has approved it (the brief: version and effective date
+ * on every legal page; every text labelled DRAFT — REQUIRES TSXMR APPROVAL until its facts are supplied and approved).
+ * Only TSXMR, with its legal adviser, turns `draft` into `approved` — a production build refuses a draft.
  */
 export interface LegalDocument extends Document {
   version: string;

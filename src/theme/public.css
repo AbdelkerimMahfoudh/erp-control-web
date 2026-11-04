@@ -1,4 +1,4 @@
-/* The public site (TSX-MR / Dukan ERP, docs/74 §4; redesigned 2026-10-17), loaded after global.css.
+/* The public site (TSXMR / Dukan ERP, docs/74 §4; redesigned 2026-10-17), loaded after global.css.
  *
  * One system for every page: a navy header and footer, full-width bands in three tones (navy, white, tinted) with
  * their content constrained inside, one card, one radius scale, one shadow scale. Logical properties only
@@ -2304,7 +2304,7 @@ html[lang='ar'] .contact-group-title {
   }
 }
 
-/* ── TSX-MR itself: the home page's services, featured product and process, and the Services page ─────────────── */
+/* ── TSXMR itself: the home page's services, featured product and process, and the Services page ─────────────── */
 .how-steps-light h3 {
   color: var(--text);
 }
@@ -2372,7 +2372,7 @@ html[lang='ar'] .contact-group-title {
 .client-work-list strong {
   color: var(--text);
 }
-/* The one product TSX-MR owns, told apart from the services by its own mark, colour and label. */
+/* The one product TSXMR owns, told apart from the services by its own mark, colour and label. */
 .featured-product {
   display: grid;
   gap: 28px;
@@ -2818,7 +2818,7 @@ html[lang='ar'] .riyade-card .riyade-card-tagline {
   }
 }
 
-/* A legal text TSX-MR has not approved says so above everything else (brief of 2026-10-16) */
+/* A legal text TSXMR has not approved says so above everything else (brief of 2026-10-16) */
 .legal-draft {
   margin: 16px 0 0;
 }

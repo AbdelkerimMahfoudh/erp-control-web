@@ -1,5 +1,5 @@
 /**
- * The website's production inputs (docs/74 §3): who publishes it, where it lives, and how people reach TSX-MR.
+ * The website's production inputs (docs/74 §3): who publishes it, where it lives, and how people reach TSXMR.
  *
  * Nothing here is invented. Every value comes from the build environment (`VITE_*`, the project's convention —
  * Vite exposes only that prefix to the page). A production build refuses to start while a value the law or the
@@ -42,7 +42,7 @@ export { SURFACES, surfaceOf, type Surface } from './surface';
 /**
  * Who operates the website (the owner's brief of 2026-10-17, third): `individual` — a natural person operating under a
  * trading or project name, with no separate company, so no legal form and no trade-register number exist; `company` —
- * an incorporated entity, which has both. TSX-MR is today an unincorporated project operated by one individual.
+ * an incorporated entity, which has both. TSXMR is today an unincorporated project operated by one individual.
  */
 export const OPERATOR_TYPES = ['individual', 'company'] as const;
 export type OperatorType = (typeof OPERATOR_TYPES)[number];
@@ -82,7 +82,7 @@ export const ADMIN_WEBSITE_ORIGIN = 'https://admin.tsxmr.com';
 
 /**
  * The release gates (docs/96), each with its own verdict:
- * - `PUBLIC_WEBSITE` — a public build: the pre-launch corporate website. Needs the real TSX-MR identity and contacts,
+ * - `PUBLIC_WEBSITE` — a public build: the pre-launch corporate website. Needs the real TSXMR identity and contacts,
  *   the approved pre-launch texts and the exact origin; refuses any portal, API, console or app-store address.
  * - `PORTAL` — a full or a portal build: the business account and the console. Needs everything, the API and the
  *   service's approved texts with no legal blocker left — a portal build its exact origin besides; and, outside this
@@ -107,7 +107,7 @@ export const INPUTS = {
   apiBase: { env: 'VITE_API_BASE', kind: 'https-url', required: true, publicSite: 'forbidden', preview: '', label: 'API base URL including /api/v1, e.g. https://api.<domain>/api/v1 (not used by a public build)' },
   portalOrigin: { env: 'VITE_PORTAL_ORIGIN', kind: 'https-origin', required: false, publicSite: 'forbidden', preview: '', label: 'The business account origin when it is separate, e.g. https://dukan.<domain> (a public build links to it)' },
   appWebOrigin: { env: 'VITE_APP_WEB_ORIGIN', kind: 'https-origin', required: false, publicSite: 'forbidden', preview: '', label: 'The Dukan ERP app in a browser, where a registration link continues once it is published (blank: the link asks for the phone app)' },
-  displayName: { env: 'VITE_ORGANIZATION_DISPLAY_NAME', kind: 'text', required: true, publicSite: 'required', fallback: 'TSX-MR', preview: 'TSX-MR', label: 'Public trading or project name' },
+  displayName: { env: 'VITE_ORGANIZATION_DISPLAY_NAME', kind: 'text', required: true, publicSite: 'required', fallback: 'TSXMR', preview: 'TSXMR', label: 'Public trading or project name' },
   operatorType: { env: 'VITE_OPERATOR_TYPE', kind: 'operator-type', required: true, publicSite: 'required', fallback: 'individual', preview: 'individual', label: 'Who operates the website: individual (a natural person, no company) or company' },
   legalName: { env: 'VITE_ORGANIZATION_LEGAL_NAME', kind: 'text', required: true, publicSite: 'required', fallback: OPERATOR_NAME, preview: '[TEST] Legal operator name', label: 'The legal operator: the individual’s full name, or the company’s registered name' },
   publicationDirector: { env: 'VITE_PUBLICATION_DIRECTOR', kind: 'text', required: true, publicSite: 'required', fallback: OPERATOR_NAME, preview: '[TEST] Person responsible for publication', label: 'The person responsible for publication' },
@@ -123,9 +123,9 @@ export const INPUTS = {
   privacyEmail: { env: 'VITE_PRIVACY_EMAIL', kind: 'email', required: true, publicSite: 'required', fallback: 'privacy@tsxmr.com', preview: 'privacy@preview.invalid', label: 'Privacy email' },
   commercialEmail: { env: 'VITE_COMMERCIAL_EMAIL', kind: 'email', required: false, preview: '', label: 'Commercial email (optional; none given)' },
   securityEmail: { env: 'VITE_SECURITY_EMAIL', kind: 'email', required: true, publicSite: 'required', fallback: 'security@tsxmr.com', preview: 'security@preview.invalid', label: 'Security contact email: the /security page and security.txt' },
-  supportHours: { env: 'VITE_SUPPORT_HOURS', kind: 'text', required: true, preview: '[TEST] Support hours', label: 'When support answers, in words (days, hours and time zone), as TSX-MR commits to them' },
-  supportLanguages: { env: 'VITE_SUPPORT_LANGUAGES', kind: 'text', required: true, preview: '[TEST] Support languages', label: 'The languages support answers in, in words, as TSX-MR commits to them' },
-  supportResponseTime: { env: 'VITE_SUPPORT_RESPONSE_TIME', kind: 'text', required: true, preview: '[TEST] Response time', label: 'How soon support replies, in words, as TSX-MR commits to it' },
+  supportHours: { env: 'VITE_SUPPORT_HOURS', kind: 'text', required: true, preview: '[TEST] Support hours', label: 'When support answers, in words (days, hours and time zone), as TSXMR commits to them' },
+  supportLanguages: { env: 'VITE_SUPPORT_LANGUAGES', kind: 'text', required: true, preview: '[TEST] Support languages', label: 'The languages support answers in, in words, as TSXMR commits to them' },
+  supportResponseTime: { env: 'VITE_SUPPORT_RESPONSE_TIME', kind: 'text', required: true, preview: '[TEST] Response time', label: 'How soon support replies, in words, as TSXMR commits to it' },
   supportWhatsapp: { env: 'VITE_SUPPORT_WHATSAPP', kind: 'phone', required: false, preview: '', label: 'Support WhatsApp number' },
   appleAppStoreUrl: { env: 'VITE_APPLE_APP_STORE_URL', kind: 'https-url', required: false, publicSite: 'forbidden', preview: '', label: 'App Store listing, once the app is published there' },
   googlePlayUrl: { env: 'VITE_GOOGLE_PLAY_URL', kind: 'https-url', required: false, publicSite: 'forbidden', preview: '', label: 'Google Play listing, once the app is published there' },
@@ -241,14 +241,14 @@ export function readInputs(env: Record<string, string | undefined>, mode: BuildM
 /**
  * What an individual operator cannot settle alone before the portal sells access (the owner's brief "Final Legal,
  * Identity, Portal and Website Production Preparation"). The portal takes applications, trials and subscriptions paid to
- * TSX-MR. Dropping the company fields does not answer whether that paid activity needs the operator registered first,
+ * TSXMR. Dropping the company fields does not answer whether that paid activity needs the operator registered first,
  * so the PORTAL gate keeps this blocker in individual mode. Only counsel's answer, or a registration, lifts it. Company
  * mode does not carry it: there, the legal form and the RCCM number are required instead.
  */
 export const OPERATOR_REGISTRATION = {
   id: 'operator_registration',
   summary:
-    'TSX-MR is operated by an individual with no trade registration. Mauritanian counsel must confirm whether the paid Dukan ERP service may be sold before the operator registers (for example as an individual trader at the RCCM, with a tax identification number), and what invoices and receipts must then show. The portal stays closed until then.',
+    'TSXMR is operated by an individual with no trade registration. Mauritanian counsel must confirm whether the paid Dukan ERP service may be sold before the operator registers (for example as an individual trader at the RCCM, with a tax identification number), and what invoices and receipts must then show. The portal stays closed until then.',
 } as const;
 
 export interface ReleaseProblem {
@@ -346,7 +346,7 @@ export function releaseProblems(
   // blocker. Registration and formal tax invoicing are a business-compliance task (docs/118), and the portal claims
   // neither: no RCCM, no NIF and no tax invoice is ever shown or invented for an individual operator.
   for (const b of legalBlockers) problems.push({ problem: 'legal_blocker', detail: `${b.id}: ${b.summary}` });
-  for (const d of content.drafts) problems.push({ problem: 'legal_draft', detail: `${d}: still marked DRAFT — REQUIRES TSX-MR APPROVAL` });
+  for (const d of content.drafts) problems.push({ problem: 'legal_draft', detail: `${d}: still marked DRAFT — REQUIRES TSXMR APPROVAL` });
   for (const t of content.placeholders) problems.push({ problem: 'placeholder', detail: `a published text is a placeholder: “${t.slice(0, 80)}”` });
   return problems;
 }

@@ -11,7 +11,7 @@ import { Icon } from '../../components/public/icons';
 import { RichText } from '../../components/public/RichText';
 
 /**
- * The TSX-MR home page (the owner's brief of 2026-10-17, fourth): the brand first — an independent development brand
+ * The TSXMR home page (the owner's brief of 2026-10-17, fourth): the brand first — an independent development brand
  * and what it builds for clients — then its own product, Dukan ERP, as a featured card that leads to the product's
  * page, with the phone showcase of its two activities (2026-10-18), Riyade under it as a coming-soon row (2026-10-20),
  * how a project runs, and one invitation to get in touch. The product's detail lives on its own page. Every sentence
@@ -106,7 +106,7 @@ export function Home() {
           <DukanShowcase />
         </article>
       </Band>
-      {/* TSX-MR's second own product, coming soon: one quiet row under the featured one (2026-10-20). */}
+      {/* TSXMR's second own product, coming soon: one quiet row under the featured one (2026-10-20). */}
       <RiyadeRow />
 
       <Band tone="light" aria-labelledby="process-h">

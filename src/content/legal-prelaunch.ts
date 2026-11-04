@@ -7,10 +7,10 @@ import type { LegalDocument } from './types';
  * own, the language and display choice kept in the browser (`erp.web.language`, `erp.web.theme`), delivery by
  * Cloudflare. A process that does not work yet (registration, payment, trial, account deletion) is described as
  * pre-launch information, never as working. The service's own texts (`legal-*.ts`) stay for the portal and the app,
- * whose gates remain closed. Approved by TSX-MR on 2026-10-17 (docs/97); not legal advice, and counsel review stays
+ * whose gates remain closed. Approved by TSXMR on 2026-10-17 (docs/97); not legal advice, and counsel review stays
  * recommended (docs/97 §4).
  *
- * Who publishes the website (the owner's brief of 2026-10-17, third): TSX-MR is a project and trading name, not a
+ * Who publishes the website (the owner's brief of 2026-10-17, third): TSXMR is a project and trading name, not a
  * separately incorporated company, operated by one individual. `{operatorStatus}` says so in each language, and no
  * text names a legal form, a registration number or anything else the owner did not give.
  *
@@ -19,7 +19,7 @@ import type { LegalDocument } from './types';
  * no commitment changes. Published on 2026-10-18, its own effective date (`effective`); the three unchanged texts keep
  * the site's.
  *
- * Version 1.0: the six texts of version 0.3 (docs/97), approved as they are by TSX-MR on 2026-10-17 with the
+ * Version 1.0: the six texts of version 0.3 (docs/97), approved as they are by TSXMR on 2026-10-17 with the
  * commitments of docs/97 §3 confirmed — the only change here is each document's `status` and `version`, as docs/97 §1
  * instructs. The effective date is the deployment day, set as `VITE_LEGAL_EFFECTIVE_DATE` in the host's environment.
  *

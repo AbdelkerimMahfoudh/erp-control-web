@@ -8,8 +8,8 @@ import type { LegalDocument } from './types';
  */
 export const privacyChoices: Record<Language, LegalDocument> = {
   en: {
-    version: '1.0 (draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Your privacy choices',
     summary: 'What you can see, correct, export or delete in Dukan ERP yourself, and how to ask {displayName} for the rest.',
     sections: [
@@ -68,14 +68,14 @@ export const privacyChoices: Record<Language, LegalDocument> = {
         heading: 'Ask {displayName}',
         blocks: [
           { kind: 'p', text: 'For anything not listed here — a copy of your information, a correction you cannot make yourself, or an objection — write to {privacyEmail} from an address or number on your account, so that {displayName} can check it is you.' },
-          { kind: 'p', text: 'Under Mauritania’s personal-data law you may ask to see, correct or delete information about you, or object to its use. Write to {privacyEmail}: you get an answer within 30 days. You may also complain to Mauritania’s personal-data protection authority.' },
+          { kind: 'p', text: 'Under Mauritania’s personal-data law you may ask to see, correct or delete information about you, or object to its use. Write to {privacyEmail}: your request is acknowledged promptly and, once your identity is verified, completed within 30 days; if a complex request lawfully needs longer, you are told why and when. You may also complain to Mauritania’s personal-data protection authority.' },
         ],
       },
     ],
   },
   fr: {
-    version: '1.0 (projet)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Vos choix de confidentialité',
     summary: 'Ce que vous pouvez consulter, corriger, exporter ou supprimer vous-même dans Dukan ERP, et comment demander le reste à {displayName}.',
     sections: [
@@ -134,14 +134,14 @@ export const privacyChoices: Record<Language, LegalDocument> = {
         heading: 'Demander à {displayName}',
         blocks: [
           { kind: 'p', text: 'Pour tout ce qui n’est pas listé ici — une copie de vos informations, une correction que vous ne pouvez pas faire vous-même, ou une opposition — écrivez à {privacyEmail} depuis une adresse ou un numéro de votre compte, afin que {displayName} puisse vérifier qu’il s’agit bien de vous.' },
-          { kind: 'p', text: 'En vertu de la loi mauritanienne sur les données personnelles, vous pouvez demander à consulter, corriger ou supprimer les informations qui vous concernent, ou vous opposer à leur usage. Écrivez à {privacyEmail} : vous recevez une réponse sous 30 jours. Vous pouvez aussi saisir l’autorité mauritanienne de protection des données personnelles.' },
+          { kind: 'p', text: 'En vertu de la loi mauritanienne sur les données personnelles, vous pouvez demander à consulter, corriger ou supprimer les informations qui vous concernent, ou vous opposer à leur usage. Écrivez à {privacyEmail} : votre demande est accusée rapidement et, une fois votre identité vérifiée, traitée sous 30 jours ; si une demande complexe exige légalement plus de temps, vous en êtes informé, avec la raison et le délai. Vous pouvez aussi saisir l’autorité mauritanienne de protection des données personnelles.' },
         ],
       },
     ],
   },
   ar: {
-    version: '1.0 (مسودة)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'خيارات الخصوصية',
     summary: 'ما يمكنك الاطلاع عليه أو تصحيحه أو تصديره أو حذفه بنفسك في Dukan ERP، وكيف تطلب الباقي من {displayName}.',
     sections: [
@@ -200,7 +200,7 @@ export const privacyChoices: Record<Language, LegalDocument> = {
         heading: 'اطلب من {displayName}',
         blocks: [
           { kind: 'p', text: 'لكل ما لم يُذكر هنا — نسخة من معلوماتك، أو تصحيح لا يمكنك إجراؤه بنفسك، أو اعتراض — راسل {privacyEmail} من عنوان أو رقم مسجّل في حسابك، حتى تتمكن {displayName} من التحقق من هويتك.' },
-          { kind: 'p', text: 'بموجب القانون الموريتاني لحماية البيانات الشخصية، يمكنك طلب الاطلاع على المعلومات المتعلقة بك أو تصحيحها أو حذفها، أو الاعتراض على استخدامها. راسل {privacyEmail}: تتلقى ردًا خلال 30 يومًا. ويمكنك أيضًا تقديم شكوى إلى السلطة الموريتانية لحماية البيانات الشخصية.' },
+          { kind: 'p', text: 'بموجب القانون الموريتاني لحماية البيانات الشخصية، يمكنك طلب الاطلاع على المعلومات المتعلقة بك أو تصحيحها أو حذفها، أو الاعتراض على استخدامها. راسل {privacyEmail}: يُؤكَّد استلام طلبك فورًا، ويُنجَز خلال 30 يومًا بعد التحقق من هويتك؛ وإذا تطلّب طلب معقّد قانونًا مدة أطول، تُبلَّغ بالسبب والموعد. ويمكنك أيضًا تقديم شكوى إلى السلطة الموريتانية لحماية البيانات الشخصية.' },
         ],
       },
     ],

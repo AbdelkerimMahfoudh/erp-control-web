@@ -65,7 +65,7 @@ const hrefs = () => [...document.querySelectorAll('a')].map((a) => a.getAttribut
 function expectNoPriceOutsideTheShowcase(lang: (typeof LANGUAGES)[number]) {
   const rest = document.body.cloneNode(true) as HTMLElement;
   rest.querySelectorAll('.showcase').forEach((el) => el.remove());
-  // A whole word: the footer's "TSX-MR" runs into the next line's first letter in `textContent` ("TSX-MRUne …").
+  // A whole word: the footer's "TSXMR" runs into the next line's first letter in `textContent` ("TSXMRUne …").
   expect(rest.textContent).not.toMatch(/\bMRU\b|7-day|essai gratuit|تجربة مجانية/);
   const showcase = document.querySelector('.showcase')!;
   expect(showcase.querySelector('.sc-note')?.textContent).toBe(dukanDemo[lang].note);

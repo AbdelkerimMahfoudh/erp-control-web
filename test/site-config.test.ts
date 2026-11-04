@@ -37,7 +37,7 @@ describe('the production refusal (docs/74 §3)', () => {
     // A company is asked for both, and for its own registered name and address: it never inherits the person's.
     const companyMissing = releaseProblems({ VITE_OPERATOR_TYPE: 'company' }, []).filter((p) => p.problem === 'missing').map((p) => p.env);
     for (const env of [...companyOnly, INPUTS.legalName.env, INPUTS.address.env]) expect(companyMissing).toContain(env);
-    // TSX-MR and Mauritania were given in the brief: they default, and are never reported missing.
+    // TSXMR and Mauritania were given in the brief: they default, and are never reported missing.
     expect(missing).not.toContain('VITE_ORGANIZATION_DISPLAY_NAME');
     expect(missing).not.toContain('VITE_ORGANIZATION_COUNTRY');
     expect(formatProblems(problems)).toMatch(/Nothing was published/);
@@ -88,7 +88,7 @@ describe('the production refusal (docs/74 §3)', () => {
     const given = Object.entries(INPUTS).filter(([, spec]) => 'fallback' in spec).map(([name, spec]) => [name, (spec as { fallback: string }).fallback]);
     expect(Object.fromEntries(given)).toEqual({
       siteSurface: 'full',
-      displayName: 'TSX-MR',
+      displayName: 'TSXMR',
       operatorType: 'individual',
       legalName: 'Abdel Kerim Taleb Ould Sidi',
       publicationDirector: 'Abdel Kerim Taleb Ould Sidi',
@@ -106,18 +106,17 @@ describe('the production refusal (docs/74 §3)', () => {
   it('refuses a legal document still marked draft, by name', () => {
     const problems = releaseProblems(COMPLETE, [], { drafts: ['privacy', 'terms'], placeholders: [] });
     expect(problems.map((p) => `${p.problem}:${p.detail.split(':')[0]}`)).toEqual(['legal_draft:privacy', 'legal_draft:terms']);
-    expect(problems[0]!.detail).toMatch(/DRAFT — REQUIRES TSX-MR APPROVAL/);
+    expect(problems[0]!.detail).toMatch(/DRAFT — REQUIRES TSXMR APPROVAL/);
   });
 
-  it('every legal document is a draft today, so production is refused until TSX-MR approves each', () => {
-    expect(publishedDrafts()).toEqual(['accountDeletion', 'legalNotice', 'privacy', 'privacyChoices', 'security', 'terms']);
+  it('every legal document is approved (owner, 2026-11-04), so none refuses production', () => {
+    expect(publishedDrafts()).toEqual([]);
     expect(publishedPlaceholders()).toEqual([]);
   });
 
-  it('the published texts carry blockers today, so a production build is refused until they are decided', () => {
-    const ids = publishedBlockers().map((b) => b.id);
-    expect(ids.length).toBeGreaterThan(0);
-    for (const id of ids) expect(BLOCKERS.map((b) => b.id)).toContain(id);
+  it('the published texts carry no blocker: every one was decided (owner, 2026-11-04)', () => {
+    expect(publishedBlockers().map((b) => b.id)).toEqual([]);
+    expect(BLOCKERS.length).toBeGreaterThan(0);
   });
 });
 

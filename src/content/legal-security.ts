@@ -3,13 +3,13 @@ import type { LegalDocument } from './types';
 
 /**
  * Reporting a security problem (`/security`). Says how to report and what not to do — never how the system is built,
- * never a reward. The contact is TSX-MR's security address (a required input); the promise not to pursue good-faith
+ * never a reward. The contact is TSXMR's security address (a required input); the promise not to pursue good-faith
  * research is legal wording and waits for review. A DRAFT, not legal advice.
  */
 export const security: Record<Language, LegalDocument> = {
   en: {
-    version: '1.0 (draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Reporting a security problem',
     summary: 'How to tell {displayName} about a weakness in Dukan ERP or this website, and what we ask of you while you look.',
     sections: [
@@ -43,7 +43,7 @@ export const security: Record<Language, LegalDocument> = {
         heading: 'What happens next',
         blocks: [
           { kind: 'p', text: '{displayName} reads every report sent to {securityEmail}, replies to the address it came from, and tells you when the problem is fixed. {displayName} does not offer payment or rewards for reports.' },
-          { kind: 'p', text: 'Whether {displayName} undertakes not to take legal action against research done in good faith and within these rules is legal wording still to be approved.' },
+          { kind: 'p', text: '{displayName} will not take legal action against research done in good faith and within these rules, as far as the law allows. This never authorises access to another person’s or business’s data.' },
         ],
       },
       {
@@ -54,8 +54,8 @@ export const security: Record<Language, LegalDocument> = {
     ],
   },
   fr: {
-    version: '1.0 (projet)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Signaler un problème de sécurité',
     summary: 'Comment signaler à {displayName} une faiblesse de Dukan ERP ou de ce site, et ce que nous vous demandons pendant vos recherches.',
     sections: [
@@ -89,7 +89,7 @@ export const security: Record<Language, LegalDocument> = {
         heading: 'La suite',
         blocks: [
           { kind: 'p', text: '{displayName} lit chaque signalement envoyé à {securityEmail}, répond à l’adresse d’où il vient et vous prévient quand le problème est corrigé. {displayName} n’offre ni paiement ni récompense pour les signalements.' },
-          { kind: 'p', text: 'L’engagement éventuel de {displayName} de ne pas engager de poursuites contre une recherche menée de bonne foi et dans le respect de ces règles est une formulation juridique qui reste à approuver.' },
+          { kind: 'p', text: '{displayName} n’engagera pas de poursuites contre une recherche menée de bonne foi et dans le respect de ces règles, dans la mesure permise par la loi. Cela n’autorise jamais l’accès aux données d’une autre personne ou d’une autre entreprise.' },
         ],
       },
       {
@@ -100,8 +100,8 @@ export const security: Record<Language, LegalDocument> = {
     ],
   },
   ar: {
-    version: '1.0 (مسودة)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'الإبلاغ عن مشكلة أمنية',
     summary: 'كيف تُبلغ {displayName} عن ثغرة في Dukan ERP أو في هذا الموقع، وما نطلبه منك أثناء البحث.',
     sections: [
@@ -135,7 +135,7 @@ export const security: Record<Language, LegalDocument> = {
         heading: 'ما يحدث بعد ذلك',
         blocks: [
           { kind: 'p', text: 'تقرأ {displayName} كل بلاغ يُرسل إلى {securityEmail}، وترد على العنوان الذي جاء منه، وتخبرك عند إصلاح المشكلة. ولا تقدّم {displayName} أي مقابل أو مكافأة على البلاغات.' },
-          { kind: 'p', text: 'أما التزام {displayName} المحتمل بعدم اتخاذ إجراء قانوني ضد بحث أُجري بحسن نية وفي حدود هذه القواعد، فهو صياغة قانونية لم تُعتمد بعد.' },
+          { kind: 'p', text: 'لن تتخذ {displayName} أي إجراء قانوني ضد بحث أُجري بحسن نية وفي حدود هذه القواعد، في الحدود التي يسمح بها القانون. ولا يجيز ذلك أبدًا الوصول إلى بيانات شخص آخر أو مؤسسة أخرى.' },
         ],
       },
       {

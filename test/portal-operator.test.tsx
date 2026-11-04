@@ -10,7 +10,7 @@ import { pathOf } from '../src/site/routes';
 
 /**
  * The portal (a full build) under an individual operator (the brief "Final Legal, Identity, Portal and Website
- * Production Preparation", 2026-10-17). TSX-MR is a trading name operated by one person, with no company. The portal's
+ * Production Preparation", 2026-10-17). TSXMR is a trading name operated by one person, with no company. The portal's
  * texts say so, and its gate asks for no legal form or RCCM. It keeps the question an individual cannot settle alone:
  * whether paid access may be sold before the operator registers. Company mode stays as strict as before.
  */
@@ -37,8 +37,8 @@ const COMPANY = {
 const codes = (env: Record<string, string>) => releaseProblems(env, []).map((p) => `${p.env ?? p.detail.split(':')[0]}:${p.problem}`);
 
 describe('the PORTAL gate, by operator type', () => {
-  it('an individual: no legal form or RCCM is asked for, and the registration question stays open', () => {
-    expect(codes(SERVICE)).toEqual([`${OPERATOR_REGISTRATION.id}:legal_blocker`]);
+  it('an individual: no legal form or RCCM is asked for, and an individual operator is the portal’s supported model (owner, 2026-11-04)', () => {
+    expect(codes(SERVICE)).toEqual([]);
     expect(OPERATOR_REGISTRATION.summary).toMatch(/counsel/);
   });
 
@@ -46,7 +46,6 @@ describe('the PORTAL gate, by operator type', () => {
     expect(codes({ ...SERVICE, VITE_ORGANIZATION_LEGAL_FORM: 'SARL', VITE_ORGANIZATION_REGISTRATION_NUMBER: 'RC 0000' })).toEqual([
       'VITE_ORGANIZATION_LEGAL_FORM:forbidden',
       'VITE_ORGANIZATION_REGISTRATION_NUMBER:forbidden',
-      `${OPERATOR_REGISTRATION.id}:legal_blocker`,
     ]);
   });
 
@@ -119,7 +118,7 @@ describe('the portal’s own texts under the individual operator', () => {
   it('the legal notice names the operator as an individual and the person responsible for publication — no pending mark, no company detail', () => {
     const { container } = mount(pathOf('legalNotice', 'en'));
     const text = container.textContent ?? '';
-    expect(text).toContain(`it is operated by ${NAME}, an individual (“the operator”).`);
+    expect(text).toContain(`operated in Mauritania by ${NAME}, an individual developer`);
     expect(text).toContain(`The person responsible for publication is ${NAME}.`);
     expect(container.querySelector('[data-blocker="publisher"]')).toBeNull();
     expect(text).not.toMatch(/Legal form|Registration number|trading as/);

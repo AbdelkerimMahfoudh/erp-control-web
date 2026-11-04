@@ -66,7 +66,7 @@ describe('the pre-launch texts', () => {
     }
   });
 
-  it('are approved by TSX-MR (2026-10-17, docs/97 §1; the name references of 1.1, the brief of 2026-10-17, fourth), and none is a placeholder', () => {
+  it('are approved by TSXMR (2026-10-17, docs/97 §1; the name references of 1.1, the brief of 2026-10-17, fourth), and none is a placeholder', () => {
     // Version 1.1: privacy, terms and the legal notice name the operator once and then say "the operator"; account
     // deletion is retitled "Delete a Dukan ERP account" with its scope stated (the owner's approval of 2026-10-19).
     const VERSION: Record<string, string> = { privacy: '1.1', terms: '1.1', legalNotice: '1.1', accountDeletion: '1.1', privacyChoices: '1.0', security: '1.0' };
@@ -82,12 +82,12 @@ describe('the pre-launch texts', () => {
   it('leave the service texts — the portal and the app — exactly as strict as before', () => {
     // The owner's decisions of 2026-11-04 settled every legal marker; the six texts stay DRAFT until the owner approves them.
     expect(publishedBlockers('full')).toEqual([]);
-    expect(publishedDrafts('full')).toEqual(['accountDeletion', 'legalNotice', 'privacy', 'privacyChoices', 'security', 'terms']);
+    expect(publishedDrafts('full')).toEqual([]);
   });
 });
 
 describe('the three release verdicts', () => {
-  /** TSX-MR as a company would be (the PORTAL fixtures elsewhere use the same shape). */
+  /** TSXMR as a company would be (the PORTAL fixtures elsewhere use the same shape). */
   const REAL_PUBLIC = {
     VITE_PUBLIC_SITE_ORIGIN: 'https://tsxmr.com',
     VITE_OPERATOR_TYPE: 'company',
@@ -102,7 +102,7 @@ describe('the three release verdicts', () => {
     VITE_LEGAL_EFFECTIVE_DATE: '2026-11-01',
   };
 
-  it('TSX-MR as it is today — an individual operator, address and phones given, the six texts approved — waits on exactly one thing: the effective date, the deployment day', () => {
+  it('TSXMR as it is today — an individual operator, address and phones given, the six texts approved — waits on exactly one thing: the effective date, the deployment day', () => {
     const [pub] = releaseVerdicts({ VITE_PUBLIC_SITE_ORIGIN: 'https://tsxmr.com', VITE_ORGANIZATION_PHONE: '+222 36 96 38 39, +222 37 67 68 27' });
     expect(pub!.problems.map((p) => `${p.problem}:${p.env ?? p.detail.split(':')[0]}`)).toEqual(['missing:VITE_LEGAL_EFFECTIVE_DATE']);
   });
@@ -114,7 +114,7 @@ describe('the three release verdicts', () => {
     expect(pub!.problems.some((p) => p.env === 'VITE_API_BASE' || p.env === 'VITE_ACCOUNT_DELETION_CHANNEL')).toBe(false);
   });
 
-  it('with the TSX-MR facts given and the six texts approved, the public website is GO', () => {
+  it('with the TSXMR facts given and the six texts approved, the public website is GO', () => {
     const [pub] = releaseVerdicts(REAL_PUBLIC);
     expect(pub!.problems).toEqual([]);
     expect(pub!.go).toBe(true);
@@ -128,8 +128,8 @@ describe('the three release verdicts', () => {
     for (const env of ['VITE_PORTAL_BACKEND_RELEASE', 'VITE_PORTAL_LAUNCH_CHANNEL', 'VITE_PORTAL_EMAIL_CHANNEL']) expect(portal!.problems.map((p) => p.env)).toContain(env);
     for (const detail of EXTERNAL_CONDITIONS.APP_STORE) expect(app!.problems.map((p) => p.detail)).toContain(`not proven here: ${detail}`);
     expect(EXTERNAL_CONDITIONS.APP_STORE.join(' ')).toMatch(/WhatsApp/);
-    // The service's texts are still drafts with blockers: the app's gate lists them.
-    expect(app!.problems.some((p) => p.problem === 'legal_draft')).toBe(true);
+    // The service's texts are approved (owner, 2026-11-04): the app's gate waits only on its own outside proofs.
+    expect(app!.problems.some((p) => p.problem === 'legal_draft')).toBe(false);
     expect(app!.problems.some((p) => p.problem === 'legal_blocker')).toBe(false);
   });
 
@@ -140,7 +140,7 @@ describe('the three release verdicts', () => {
 });
 
 describe('client work', () => {
-  it('names Blemhader.com as a site TSX-MR built for a client — no figure, no link, no claim of ownership (D199)', () => {
+  it('names Blemhader.com as a site TSXMR built for a client — no figure, no link, no claim of ownership (D199)', () => {
     for (const lang of LANGS) {
       const work = brandFor(lang).work;
       expect(work.items.map((w) => w.name)).toEqual(['Blemhader.com']);

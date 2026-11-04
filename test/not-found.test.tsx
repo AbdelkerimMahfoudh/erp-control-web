@@ -121,8 +121,8 @@ describe('the head of the not-found page after a link inside the site', () => {
   it('drops the previous page’s canonical, alternates and description, and is never indexed', () => {
     document.head.innerHTML =
       '<meta name="description" content="x"><meta name="robots" content="index, follow"><link rel="canonical" href="https://tsxmr.com/about"><link rel="alternate" hreflang="fr" href="https://tsxmr.com/fr/about"><meta property="og:title" content="x">';
-    applyNotFoundHead('Page not found — TSX-MR');
-    expect(document.title).toBe('Page not found — TSX-MR');
+    applyNotFoundHead('Page not found — TSXMR');
+    expect(document.title).toBe('Page not found — TSXMR');
     expect([...document.head.querySelectorAll('meta[name="robots"]')].map((m) => m.getAttribute('content'))).toEqual(['noindex, nofollow']);
     expect(document.head.querySelectorAll('link[rel="canonical"], link[rel="alternate"], meta[name="description"], meta[property^="og:"]').length).toBe(0);
   });

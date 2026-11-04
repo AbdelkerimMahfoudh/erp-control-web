@@ -3,7 +3,7 @@ import type { SiteInputs } from '../config/schema';
 
 /**
  * Who stands behind the name, in one sentence a legal text names as `{operatorStatus}` (the owner's brief of
- * 2026-10-17, third). TSX-MR is today a project and trading name operated by one individual, with no separate company:
+ * 2026-10-17, third). TSXMR is today a project and trading name operated by one individual, with no separate company:
  * the sentence says so, and says nothing about a legal form or a registration that does not exist. Should a company be
  * formed, `VITE_OPERATOR_TYPE=company` makes the same texts name it instead.
  *

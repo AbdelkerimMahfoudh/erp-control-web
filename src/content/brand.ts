@@ -2,16 +2,16 @@ import type { Language } from '../i18n/languages';
 import type { Card } from './dukan-overview';
 
 /**
- * TSX-MR itself (the owner's brief of 2026-10-17, fourth): an independent development brand managed by a Mauritanian
+ * TSXMR itself (the owner's brief of 2026-10-17, fourth): an independent development brand managed by a Mauritanian
  * developer, offering websites, mobile applications and business tools to clients, with Dukan ERP as its first own
  * product. The home page introduces the brand and its services; the Services page describes them; the product's
  * detail stays on its own page (`dukan-overview.ts`, `dukan-erp.ts`).
  *
  * What these texts never say, because none of it is true or confirmed: a team, a number of clients or projects, a
  * qualification, an award, a guarantee, a price or a delay. Client work is named only with its owner's permission, and
- * only as far as that permission goes: Blemhader.com's owner confirmed on 2026-10-18 that TSX-MR may say it developed
+ * only as far as that permission goes: Blemhader.com's owner confirmed on 2026-10-18 that TSXMR may say it developed
  * the site, with no figure or detail of it (docs/21 D199) — so its name and that sentence, no logo, screenshot or link.
- * Services, offered to clients, and Dukan ERP, owned by TSX-MR, are always told apart.
+ * Services, offered to clients, and Dukan ERP, owned by TSXMR, are always told apart.
  *
  * `services.items` are websites, mobile applications and business tools, in that order (each page draws its icon by
  * position).
@@ -22,7 +22,7 @@ export interface ServiceCard {
   points: string[];
 }
 
-/** Work done for a client, shown with the client's permission: the site's name and what TSX-MR did — never its figures. */
+/** Work done for a client, shown with the client's permission: the site's name and what TSXMR did — never its figures. */
 export interface ClientWork {
   name: string;
   body: string;

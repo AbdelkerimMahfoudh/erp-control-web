@@ -104,7 +104,7 @@ describe('a portal build, address by address', () => {
         expect(links).toContain(`https://tsxmr.com${prefix}${path}`);
       }
       expect(links.every((h) => h!.startsWith('https://tsxmr.com/') || h === `https://tsxmr.com${prefix}`)).toBe(true);
-      expect(footer.textContent).toContain(cat['portal.footer.operator'].replace('{name}', 'TSX-MR'));
+      expect(footer.textContent).toContain(cat['portal.footer.operator'].replace('{name}', 'TSXMR'));
       expect(document.documentElement.dir).toBe(lang === 'ar' ? 'rtl' : 'ltr');
       // The product's own mark leads back to the Owner's page; never "portal.tsxmr.com" anywhere.
       expect(screen.getByRole('link', { name: cat['portal.home'] }).getAttribute('href')).toBe('/subscription');

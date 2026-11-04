@@ -77,11 +77,10 @@ describe('every public page in every language', () => {
 describe('the legal pages', () => {
   it('name their version and effective date, and show every pending decision visibly in a preview', async () => {
     mount('/privacy');
-    expect(await screen.findByText(/Version 1\.0 \(draft\)/)).toBeTruthy();
+    // Approved (owner, 2026-11-04): version 1.0, and no pending decision left on the page.
+    expect(await screen.findByText(/Version 1\.0/)).toBeTruthy();
     expect(screen.getByText('Effective date not set')).toBeTruthy();
-    const pending = [...document.querySelectorAll('mark.pending[data-blocker]')].map((m) => m.getAttribute('data-blocker'));
-    expect(pending).toContain('retention_period');
-    expect(pending).toContain('processors');
+    expect(document.querySelectorAll('mark.pending[data-blocker]')).toHaveLength(0);
   });
 
   it('the deletion page names no channel while none is configured', async () => {

@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { operatorStatus } from '../src/content/operator';
 
 /**
- * Who operates the public website (the owner's brief of 2026-10-17, third): TSX-MR is a project and trading name, not a
+ * Who operates the public website (the owner's brief of 2026-10-17, third): TSXMR is a project and trading name, not a
  * company, operated by one individual. The sentence that says so, in three languages, and the pages that show it.
  */
 vi.mock('../src/config/site', async (original) => {
@@ -23,7 +23,7 @@ const { ThemeProvider } = await import('../src/theme/theme');
 const { pathOf } = await import('../src/site/routes');
 
 const NAME = 'Abdel Kerim Taleb Ould Sidi';
-const site = { displayName: 'TSX-MR', legalName: NAME, operatorType: 'individual' };
+const site = { displayName: 'TSXMR', legalName: NAME, operatorType: 'individual' };
 
 function mount(path: string) {
   return render(
@@ -43,10 +43,11 @@ afterEach(() => {
 });
 
 describe('the operator sentence', () => {
-  it('says, in each language, that TSX-MR is a name and not a company, operated by the individual the owner named', () => {
-    expect(operatorStatus('en', site)).toBe(`TSX-MR is a project and trading name. It is not a separately incorporated company: it is operated by ${NAME}, an individual (“the operator”).`);
-    expect(operatorStatus('fr', site)).toContain(`exploité par ${NAME}, personne physique (ci-après « l’exploitant »)`);
-    expect(operatorStatus('ar', site)).toContain(`شخصٌ طبيعي هو ${NAME}، ويُشار إليه فيما يلي بـ«المشغّل»`);
+  it('says, in each language, that TSXMR is a name and not a company, operated by the individual the owner named', () => {
+    // The owner's wording (2026-11-04).
+    expect(operatorStatus('en', site)).toBe(`Dukan ERP is an independently developed digital service operated in Mauritania by ${NAME}, an individual developer, under the Dukan ERP product name and the TSXMR project name. Dukan ERP and TSXMR are not incorporated companies.`);
+    expect(operatorStatus('fr', site)).toContain(`exploité en Mauritanie par ${NAME}, développeur individuel`);
+    expect(operatorStatus('ar', site)).toContain(`ويشغّلها في موريتانيا ${NAME} بصفته مطوّرًا فرديًا`);
   });
 
   it('assumes nothing about the person: no gendered pronoun in English or French', () => {
@@ -55,7 +56,7 @@ describe('the operator sentence', () => {
   });
 
   it('names a company only when one is configured, and says nothing when no operator is known', () => {
-    expect(operatorStatus('en', { ...site, operatorType: 'company', legalName: 'Example SARL' })).toBe('TSX-MR is a trading name of Example SARL (“the operator”).');
+    expect(operatorStatus('en', { ...site, operatorType: 'company', legalName: 'Example SARL' })).toBe('TSXMR is a trading name of Example SARL (“the operator”).');
     expect(operatorStatus('en', { ...site, legalName: '' })).toBe('');
   });
 });
@@ -78,7 +79,7 @@ describe('the public pages', () => {
     const { container } = mount(pathOf('legalNotice', 'ar'));
     const publisher = container.querySelector('#entity p');
     expect(publisher?.textContent).toContain(operatorStatus('ar', site));
-    // The sentence is not inside a <bdi>: one would lay "TSX-MR …" out left to right inside Arabic.
+    // The sentence is not inside a <bdi>: one would lay "TSXMR …" out left to right inside Arabic.
     expect([...(publisher?.querySelectorAll('bdi') ?? [])].map((b) => b.textContent)).not.toContain(operatorStatus('ar', site));
     // Phone numbers keep their reading order inside Arabic.
     expect(container.querySelector('a[href^="tel:"] bdi')?.getAttribute('dir')).toBe('ltr');

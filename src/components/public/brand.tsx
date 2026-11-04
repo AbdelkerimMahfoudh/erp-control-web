@@ -12,7 +12,7 @@ export const SERVICE_ICONS: IconName[] = ['globe', 'phone', 'file'];
 /**
  * The home page's hero drawing (the owner's brief of 2026-10-17, fourth): the three kinds of work side by side — a
  * browser window, a phone and a small dashboard — sketched in the site's own styles with no text, figure or client in
- * them, so it reads as "what TSX-MR builds" rather than one product's screen. Decorative for assistive technology: the
+ * them, so it reads as "what TSXMR builds" rather than one product's screen. Decorative for assistive technology: the
  * page's text says everything it shows.
  */
 export function BrandVisual() {
@@ -64,7 +64,7 @@ export function BrandVisual() {
 }
 
 /**
- * Client work, under the services on the home and Services pages: each site by name with what TSX-MR did, shown with
+ * Client work, under the services on the home and Services pages: each site by name with what TSXMR did, shown with
  * its owner's permission (D199) — no logo, screenshot, figure or link. The name is a value, kept in its own direction.
  */
 export function ClientWork() {

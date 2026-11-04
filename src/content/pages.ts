@@ -2,7 +2,7 @@ import type { Language } from '../i18n/languages';
 import type { Document } from './types';
 
 /**
- * The shorter public pages (docs/74 §4). About states only what TSX-MR is and does — an independent development brand,
+ * The shorter public pages (docs/74 §4). About states only what TSXMR is and does — an independent development brand,
  * its services for clients and its own product (the owner's brief of 2026-10-17, fourth) — and leaves who operates it
  * to the legal notice; the contact addresses are rendered from the production inputs.
  */

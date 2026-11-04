@@ -36,9 +36,9 @@ describe('the product mark', () => {
 
 describe('icons', () => {
   it('the portal manifest is Dukan’s; the company site keeps its own', () => {
-    const portal = JSON.parse(webManifest({ displayName: 'TSX-MR', siteSurface: 'portal' } as never, '#000', '#fff'));
+    const portal = JSON.parse(webManifest({ displayName: 'TSXMR', siteSurface: 'portal' } as never, '#000', '#fff'));
     expect(portal.icons.map((i: { src: string }) => i.src)).toEqual(['/icons/dukan-icon.svg', '/icons/dukan-icon-192.png', '/icons/dukan-icon-512.png']);
-    const site = JSON.parse(webManifest({ displayName: 'TSX-MR', siteSurface: 'public' } as never, '#000', '#fff'));
+    const site = JSON.parse(webManifest({ displayName: 'TSXMR', siteSurface: 'public' } as never, '#000', '#fff'));
     expect(site.icons[0].src).toBe('/icons/icon.svg');
   });
 

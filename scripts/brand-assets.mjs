@@ -22,7 +22,7 @@ const social = `<!doctype html><html><head><style>
   .product{display:flex;align-items:center;gap:16px;font-size:34px;font-weight:700;color:#3f35b8}
   .product i{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#5146d9,#7a52e0);color:#fff;display:grid;place-items:center;font-style:normal;font-weight:800;font-size:28px}
 </style></head><body>
-  <div class="org"><i>T</i>TSX-MR</div>
+  <div class="org"><i>T</i>TSXMR</div>
   <h1>Practical digital tools for businesses</h1>
   <div class="product"><i>D</i>Dukan ERP</div>
 </body></html>`;

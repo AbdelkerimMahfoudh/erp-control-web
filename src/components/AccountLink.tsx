@@ -9,7 +9,7 @@ export type AccountPageId = 'apply' | 'login' | 'applicationStatus';
 
 /**
  * Where a link into the business account goes (docs/95, docs/101): on this origin in a full build; in a public build,
- * the sign-in leads to the Dukan ERP portal's Owner page once TSX-MR has given the portal's origin
+ * the sign-in leads to the Dukan ERP portal's Owner page once TSXMR has given the portal's origin
  * (`VITE_PORTAL_ORIGIN`), and nothing else leads there — the portal has no application or status page. Nowhere before
  * that: a public page never offers something its origin cannot do.
  */

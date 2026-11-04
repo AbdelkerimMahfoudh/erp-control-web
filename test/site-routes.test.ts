@@ -9,7 +9,7 @@ const ORIGIN = 'https://www.company-domain.mr';
 const SITE = {
   publicSiteOrigin: ORIGIN,
   apiBase: 'https://api.company-domain.mr/api/v1',
-  displayName: 'TSX-MR',
+  displayName: 'TSXMR',
   legalName: 'Registered Name SARL',
   operatorType: 'company',
   contactEmail: '',
@@ -64,7 +64,7 @@ describe('the public routes (docs/74 §2)', () => {
 
 describe('the head (docs/74 §5)', () => {
   const input = (over: Partial<Parameters<typeof headFor>[0]> = {}) =>
-    headFor({ id: 'dukanErp', lang: 'fr', title: 'Dukan ERP — TSX-MR', description: 'A description of the page.', site: SITE, filled: [], preview: false, productName: 'Dukan ERP', ...over });
+    headFor({ id: 'dukanErp', lang: 'fr', title: 'Dukan ERP — TSXMR', description: 'A description of the page.', site: SITE, filled: [], preview: false, productName: 'Dukan ERP', ...over });
 
   it('names its canonical address and the three language alternates', () => {
     const h = input();

@@ -8,8 +8,8 @@ import type { LegalDocument } from './types';
  */
 export const terms: Record<Language, LegalDocument> = {
   en: {
-    version: '1.2 (draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Dukan ERP terms of service',
     summary: 'The terms on which {displayName} provides Dukan ERP to businesses.',
     sections: [
@@ -100,7 +100,7 @@ export const terms: Record<Language, LegalDocument> = {
               'A store or a seat added during a paid month is charged for that month. A removal, or a change to a lower-priced activity, takes effect at the next renewal. A change to a higher-priced activity is charged for the difference when it is confirmed.',
               'A store or a seat requested during the free trial may be paid during it, and starts when the trial ends, with the first paid period — charged once and never started during the trial. If no paid access has been approved by then, it waits for the first paid period.',
               'A month is never charged twice, and nothing renews by itself: each period starts only when {displayName} confirms its payment.',
-              'Refunds: paid access is not refunded. This does not limit any right that mandatory Mauritanian law gives a business.',
+              'Refunds: paid access is not refunded at TSXMR’s discretion or pro rata. A duplicate or erroneous payment is corrected. This does not limit any right that mandatory Mauritanian law gives a business.',
             ],
           },
         ],
@@ -132,7 +132,7 @@ export const terms: Record<Language, LegalDocument> = {
         heading: 'Cancellation, termination and deletion',
         blocks: [
           { kind: 'p', text: 'A person ends their own access by deleting their account in the app. When the last active Owner deletes their account, the business is closed and its access ends, as the account deletion page describes. Some records are kept, de-identified, as that page explains.' },
-          { kind: 'p', text: '{displayName} may suspend or end the service for a business that does not pay, misuses it, breaks these terms or the law, or puts other users at risk. Except when the risk is urgent, the Owner is told beforehand by WhatsApp or email, with the reason, and may export the business’s data for 30 days.' },
+          { kind: 'p', text: '{displayName} may suspend or end the service for a business that does not pay, misuses it, breaks these terms or the law, or puts other users at risk. Except when the risk is urgent, the Owner is told beforehand by WhatsApp or email, with the reason, and may export the business’s data for 30 days after an ordinary termination — unless the Owner asks for immediate deletion, or access or export must be restricted because of fraud, security or a legal obligation.' },
         ],
       },
       {
@@ -148,7 +148,7 @@ export const terms: Record<Language, LegalDocument> = {
         heading: 'Availability and changes to the service',
         blocks: [
           { kind: 'p', text: 'Dukan ERP can be unavailable during maintenance or an incident; the app keeps some actions on the phone and sends them when the connection returns. Its features may change.' },
-          { kind: 'p', text: '{displayName} works to keep Dukan ERP available and its data backed up, but does not promise an uninterrupted service. As far as Mauritanian law allows, {displayName} is not liable for indirect losses or lost profits, and its liability towards a business is limited to what that business paid in the last 12 months. Nothing here limits a liability that the law does not allow to be limited.' },
+          { kind: 'p', text: '{displayName} works to keep Dukan ERP available and its data backed up, but does not promise an uninterrupted service. As far as Mauritanian law allows, {displayName} is not liable for indirect losses or lost profits, and for ordinary direct contractual claims its liability towards a business is limited to what that business paid in the last 12 months. This limit does not apply where the law prohibits it, including intentional misconduct, gross negligence, breaches of confidentiality or data protection, personal injury, or any liability the law makes mandatory.' },
         ],
       },
       {
@@ -170,7 +170,7 @@ export const terms: Record<Language, LegalDocument> = {
         id: 'changes',
         heading: 'Changes to these terms',
         blocks: [
-          { kind: 'p', text: '{displayName} may change these terms. The version and its effective date are shown at the top of this page. A significant change is announced to each Owner by WhatsApp or email at least 30 days before it applies.' },
+          { kind: 'p', text: '{displayName} may change these terms. The version and its effective date are shown at the top of this page. An ordinary material change is announced to each Owner by WhatsApp or email at least 30 days before it applies. A price change applies from the next renewal. A change required urgently for security or by mandatory law may take effect sooner, with prompt notice.' },
         ],
       },
       {
@@ -183,8 +183,8 @@ export const terms: Record<Language, LegalDocument> = {
     ],
   },
   fr: {
-    version: '1.2 (projet)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Conditions d’utilisation de Dukan ERP',
     summary: 'Les conditions auxquelles {displayName} fournit Dukan ERP aux entreprises.',
     sections: [
@@ -275,7 +275,7 @@ export const terms: Record<Language, LegalDocument> = {
               'Un magasin ou une place ajouté pendant un mois payé est facturé pour ce mois. Une suppression, ou le passage à une activité moins chère, prend effet au renouvellement suivant. Le passage à une activité plus chère est facturé pour la différence lorsqu’il est confirmé.',
               'Un magasin ou une place demandé pendant l’essai gratuit peut être payé pendant celui-ci, et commence à la fin de l’essai, avec la première période payée — facturé une seule fois et jamais commencé pendant l’essai. Si aucun accès payant n’a été approuvé d’ici là, il attend la première période payée.',
               'Un mois n’est jamais facturé deux fois, et rien ne se renouvelle tout seul : chaque période ne commence que lorsque {displayName} confirme son paiement.',
-              'Remboursements : l’accès payé n’est pas remboursé. Cela ne limite aucun droit que la loi mauritanienne impérative accorde à une entreprise.',
+              'Remboursements : l’accès payé n’est pas remboursé, ni à la discrétion de TSXMR ni au prorata. Un paiement en double ou erroné est corrigé. Cela ne limite aucun droit que la loi mauritanienne impérative accorde à une entreprise.',
             ],
           },
         ],
@@ -307,7 +307,7 @@ export const terms: Record<Language, LegalDocument> = {
         heading: 'Résiliation, fin du service et suppression',
         blocks: [
           { kind: 'p', text: 'Une personne met fin à son propre accès en supprimant son compte dans l’application. Lorsque le dernier propriétaire actif supprime son compte, l’entreprise est clôturée et son accès prend fin, comme le décrit la page sur la suppression de compte. Certains registres sont conservés, anonymisés, comme l’explique cette page.' },
-          { kind: 'p', text: '{displayName} peut suspendre ou arrêter le service d’une entreprise qui ne paie pas, en fait un mauvais usage, enfreint ces conditions ou la loi, ou met d’autres utilisateurs en danger. Sauf urgence, le propriétaire en est informé à l’avance par WhatsApp ou par e-mail, avec le motif, et peut exporter les données de l’entreprise pendant 30 jours.' },
+          { kind: 'p', text: '{displayName} peut suspendre ou arrêter le service d’une entreprise qui ne paie pas, en fait un mauvais usage, enfreint ces conditions ou la loi, ou met d’autres utilisateurs en danger. Sauf urgence, le propriétaire en est informé à l’avance par WhatsApp ou par e-mail, avec le motif, et peut exporter les données de l’entreprise pendant 30 jours après une résiliation ordinaire — sauf si le propriétaire demande la suppression immédiate, ou si l’accès ou l’export doit être restreint pour cause de fraude, de sécurité ou d’obligation légale.' },
         ],
       },
       {
@@ -323,7 +323,7 @@ export const terms: Record<Language, LegalDocument> = {
         heading: 'Disponibilité et évolution du service',
         blocks: [
           { kind: 'p', text: 'Dukan ERP peut être indisponible pendant une maintenance ou un incident ; l’application garde certaines actions sur le téléphone et les envoie au retour de la connexion. Ses fonctionnalités peuvent évoluer.' },
-          { kind: 'p', text: '{displayName} s’efforce de garder Dukan ERP disponible et ses données sauvegardées, sans promettre un service ininterrompu. Dans la mesure permise par la loi mauritanienne, {displayName} n’est pas responsable des pertes indirectes ou des pertes de profit, et sa responsabilité envers une entreprise est limitée à ce que celle-ci a payé au cours des 12 derniers mois. Rien ici ne limite une responsabilité que la loi ne permet pas de limiter.' },
+          { kind: 'p', text: '{displayName} s’efforce de garder Dukan ERP disponible et ses données sauvegardées, sans promettre un service ininterrompu. Dans la mesure permise par la loi mauritanienne, {displayName} n’est pas responsable des pertes indirectes ou des pertes de profit, et, pour les réclamations contractuelles directes ordinaires, sa responsabilité envers une entreprise est limitée à ce que celle-ci a payé au cours des 12 derniers mois. Cette limite ne s’applique pas là où la loi l’interdit, notamment en cas de faute intentionnelle, de faute lourde, d’atteinte à la confidentialité ou à la protection des données, de dommage corporel, ou de toute responsabilité que la loi rend impérative.' },
         ],
       },
       {
@@ -345,7 +345,7 @@ export const terms: Record<Language, LegalDocument> = {
         id: 'changes',
         heading: 'Modification de ces conditions',
         blocks: [
-          { kind: 'p', text: '{displayName} peut modifier ces conditions. La version et sa date d’entrée en vigueur figurent en haut de cette page. Un changement important est annoncé à chaque propriétaire par WhatsApp ou par e-mail au moins 30 jours avant de s’appliquer.' },
+          { kind: 'p', text: '{displayName} peut modifier ces conditions. La version et sa date d’entrée en vigueur figurent en haut de cette page. Un changement important ordinaire est annoncé à chaque propriétaire par WhatsApp ou par e-mail au moins 30 jours avant de s’appliquer. Un changement de prix s’applique à partir du prochain renouvellement. Un changement imposé en urgence par la sécurité ou par une loi impérative peut s’appliquer plus tôt, avec un avis rapide.' },
         ],
       },
       {
@@ -358,8 +358,8 @@ export const terms: Record<Language, LegalDocument> = {
     ],
   },
   ar: {
-    version: '1.2 (مسودة)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'شروط خدمة Dukan ERP',
     summary: 'الشروط التي تقدّم بموجبها {displayName} خدمة Dukan ERP للمؤسسات.',
     sections: [
@@ -450,7 +450,7 @@ export const terms: Record<Language, LegalDocument> = {
               'يُفوتر المتجر أو المقعد المضاف خلال شهر مدفوع عن ذلك الشهر. ويسري الحذف، أو الانتقال إلى نشاط أقل سعرًا، عند التجديد التالي. ويُفوتر الانتقال إلى نشاط أعلى سعرًا بالفرق عند تأكيده.',
               'المتجر أو المقعد المطلوب خلال التجربة المجانية يمكن دفع ثمنه أثناءها، ويبدأ عند انتهائها مع أول فترة مدفوعة — يُفوتر مرة واحدة ولا يبدأ أبدًا أثناء التجربة. وإن لم يُعتمد وصول مدفوع حتى ذلك الحين فإنه ينتظر أول فترة مدفوعة.',
               'لا يُفوتر شهر مرتين أبدًا، ولا يتجدد شيء من تلقاء نفسه: لا تبدأ أي فترة إلا عندما تؤكد {displayName} دفعها.',
-              'الاسترداد: لا يُسترد مبلغ الوصول المدفوع. ولا يحدّ ذلك من أي حق يمنحه القانون الموريتاني الآمر للمؤسسة.',
+              'الاسترداد: لا يُسترد مبلغ الوصول المدفوع، لا بتقدير من TSXMR ولا بالتناسب. ويُصحَّح أي دفع مكرّر أو خاطئ. ولا يحدّ ذلك من أي حق يمنحه القانون الموريتاني الآمر للمؤسسة.',
             ],
           },
         ],
@@ -482,7 +482,7 @@ export const terms: Record<Language, LegalDocument> = {
         heading: 'الإنهاء وإيقاف الخدمة والحذف',
         blocks: [
           { kind: 'p', text: 'يُنهي الشخص وصوله بحذف حسابه في التطبيق. وعندما يحذف آخر مالك نشط حسابه تُغلق المؤسسة وينتهي وصولها، كما تصف صفحة حذف الحساب. وتُحفظ بعض السجلات بعد إزالة الهوية منها، كما تشرح تلك الصفحة.' },
-          { kind: 'p', text: 'يجوز لـ{displayName} تعليق الخدمة أو إنهاؤها لمؤسسة لا تدفع، أو تسيء استخدامها، أو تخالف هذه الشروط أو القانون، أو تعرّض مستخدمين آخرين للخطر. وما لم يكن الخطر عاجلًا، يُبلَّغ المالك مسبقًا عبر واتساب أو البريد الإلكتروني مع ذكر السبب، ويمكنه تصدير بيانات المؤسسة خلال 30 يومًا.' },
+          { kind: 'p', text: 'يجوز لـ{displayName} تعليق الخدمة أو إنهاؤها لمؤسسة لا تدفع، أو تسيء استخدامها، أو تخالف هذه الشروط أو القانون، أو تعرّض مستخدمين آخرين للخطر. وما لم يكن الخطر عاجلًا، يُبلَّغ المالك مسبقًا عبر واتساب أو البريد الإلكتروني مع ذكر السبب، ويمكنه تصدير بيانات المؤسسة خلال 30 يومًا بعد الإنهاء العادي — ما لم يطلب المالك الحذف الفوري، أو تعيّن تقييد الوصول أو التصدير بسبب احتيال أو دواعٍ أمنية أو التزام قانوني.' },
         ],
       },
       {
@@ -498,7 +498,7 @@ export const terms: Record<Language, LegalDocument> = {
         heading: 'توفر الخدمة وتغييرها',
         blocks: [
           { kind: 'p', text: 'قد لا يكون Dukan ERP متاحًا أثناء الصيانة أو عند وقوع حادث؛ ويحتفظ التطبيق ببعض العمليات على الهاتف ويرسلها عند عودة الاتصال. وقد تتغير ميزاتها.' },
-          { kind: 'p', text: 'تسعى {displayName} إلى إبقاء Dukan ERP متاحًا وبياناته محفوظة احتياطيًا، دون أن تَعِد بخدمة لا تنقطع. وفي الحدود التي يسمح بها القانون الموريتاني، لا تتحمل {displayName} مسؤولية الخسائر غير المباشرة أو فوات الربح، وتقتصر مسؤوليتها تجاه المؤسسة على ما دفعته خلال الأشهر الاثني عشر الأخيرة. ولا يحدّ شيء هنا من مسؤولية لا يجيز القانون الحدّ منها.' },
+          { kind: 'p', text: 'تسعى {displayName} إلى إبقاء Dukan ERP متاحًا وبياناته محفوظة احتياطيًا، دون أن تَعِد بخدمة لا تنقطع. وفي الحدود التي يسمح بها القانون الموريتاني، لا تتحمل {displayName} مسؤولية الخسائر غير المباشرة أو فوات الربح، وفيما يخص المطالبات التعاقدية المباشرة العادية، تقتصر مسؤوليتها تجاه المؤسسة على ما دفعته خلال الأشهر الاثني عشر الأخيرة. ولا ينطبق هذا الحدّ حيث يحظره القانون، بما في ذلك سوء السلوك المتعمَّد، والإهمال الجسيم، والإخلال بالسرية أو بحماية البيانات، والأضرار الجسدية، وأي مسؤولية يجعلها القانون آمرة.' },
         ],
       },
       {
@@ -520,7 +520,7 @@ export const terms: Record<Language, LegalDocument> = {
         id: 'changes',
         heading: 'تعديل هذه الشروط',
         blocks: [
-          { kind: 'p', text: 'يجوز لـ{displayName} تعديل هذه الشروط. ويظهر الإصدار وتاريخ سريانه أعلى هذه الصفحة. ويُبلَّغ كل مالك بأي تغيير جوهري عبر واتساب أو البريد الإلكتروني قبل 30 يومًا على الأقل من سريانه.' },
+          { kind: 'p', text: 'يجوز لـ{displayName} تعديل هذه الشروط. ويظهر الإصدار وتاريخ سريانه أعلى هذه الصفحة. ويُبلَّغ كل مالك بأي تغيير جوهري عادي عبر واتساب أو البريد الإلكتروني قبل 30 يومًا على الأقل من سريانه. ويسري تغيير السعر ابتداءً من التجديد التالي. ويجوز أن يسري قبل ذلك التغيير الذي تقتضيه دواعٍ أمنية عاجلة أو قانون آمر، مع إشعار فوري.' },
         ],
       },
       {

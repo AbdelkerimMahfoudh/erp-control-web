@@ -3,15 +3,15 @@ import type { LegalDocument } from './types';
 
 /**
  * The legal notice (`/legal`): who publishes this website and operates Dukan ERP. Every identity fact is an input
- * TSX-MR supplies (`config/schema.ts`) — a production build refuses while one is blank — and nothing is named that TSX-MR
+ * TSXMR supplies (`config/schema.ts`) — a production build refuses while one is blank — and nothing is named that TSXMR
  * has not confirmed. `{operatorStatus}` says whether an individual or a company operates the name; the person
- * responsible for publication is the one TSX-MR designated (2026-10-17); the host still waits on its contract. A DRAFT,
+ * responsible for publication is the one TSXMR designated (2026-10-17); the host still waits on its contract. A DRAFT,
  * not legal advice.
  */
 export const legalNotice: Record<Language, LegalDocument> = {
   en: {
-    version: '1.0 (draft)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Legal notice',
     summary: 'Who publishes this website and operates Dukan ERP, and how to reach them.',
     sections: [
@@ -49,8 +49,8 @@ export const legalNotice: Record<Language, LegalDocument> = {
     ],
   },
   fr: {
-    version: '1.0 (projet)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'Mentions légales',
     summary: 'Qui publie ce site et exploite Dukan ERP, et comment les joindre.',
     sections: [
@@ -88,8 +88,8 @@ export const legalNotice: Record<Language, LegalDocument> = {
     ],
   },
   ar: {
-    version: '1.0 (مسودة)',
-    status: 'draft',
+    version: '1.0',
+    status: 'approved',
     title: 'البيانات القانونية',
     summary: 'من ينشر هذا الموقع ويشغّل Dukan ERP، وكيفية التواصل معه.',
     sections: [

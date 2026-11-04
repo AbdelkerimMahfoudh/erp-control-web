@@ -3,7 +3,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 /**
- * Account deletion is a Dukan ERP document, not a TSX-MR page (the owner's approval of 2026-10-19): on a public build it
+ * Account deletion is a Dukan ERP document, not a TSXMR page (the owner's approval of 2026-10-19): on a public build it
  * is an entry in the Dukan ERP page's Documentation, and contextual in Support and in the pages the app opens. The
  * company's navigation, footer and quick links leave it out. Its addresses do not move, and its page says whose
  * accounts it is about, that browsing the website creates none, and that information sent by email is a separate
@@ -29,9 +29,9 @@ const CATALOGUE = { en, fr, ar } as const;
 const TITLE = { en: 'Delete a Dukan ERP account', fr: 'Supprimer un compte Dukan ERP', ar: 'حذف حساب Dukan ERP' } as const;
 /** What the page must say, in each language: no account from browsing, and a separate request for emailed information. */
 const SAYS = {
-  en: [/Browsing the TSX-MR public website does not create an account/, /are separate requests/],
-  fr: [/Consulter le site public de TSX-MR ne crée aucun compte/, /sont deux demandes distinctes/],
-  ar: [/ولا يُنشئ تصفّح موقع TSX-MR العام أي حساب/, /طلبان منفصلان/],
+  en: [/Browsing the TSXMR public website does not create an account/, /are separate requests/],
+  fr: [/Consulter le site public de TSXMR ne crée aucun compte/, /sont deux demandes distinctes/],
+  ar: [/ولا يُنشئ تصفّح موقع TSXMR العام أي حساب/, /طلبان منفصلان/],
 } as const;
 
 function mount(path: string) {

@@ -21,7 +21,7 @@ import { RichText } from '../../components/public/RichText';
  * what it is not (no provider integration), how a business starts, the screens, the mobile app, the three languages,
  * trust, and — in a full build only — the prices the server publishes (`GET platform/plan`, D140). The pre-launch
  * website (docs/96) sells nothing. Since the owner's brief of 2026-10-17 (fourth) the product's detail is here and
- * nowhere else: the home page introduces TSX-MR and features this page.
+ * nowhere else: the home page introduces TSXMR and features this page.
  */
 const PROOF_ICONS: IconName[] = ['scan', 'check-circle', 'store'];
 const PROBLEM_ICONS: IconName[] = ['notebook', 'messages', 'box', 'coins', 'lock'];

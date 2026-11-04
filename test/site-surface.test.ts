@@ -47,7 +47,7 @@ const PUBLIC_REAL: Record<string, string> = {
 };
 
 describe('the PUBLIC_WEBSITE gate (a public build)', () => {
-  it('opens on the TSX-MR identity, contacts, effective date and origin alone — no API, no deletion channel, no support hours', () => {
+  it('opens on the TSXMR identity, contacts, effective date and origin alone — no API, no deletion channel, no support hours', () => {
     expect(releaseProblems(PUBLIC_REAL, [])).toEqual([]);
   });
 
