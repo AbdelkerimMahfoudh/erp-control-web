@@ -530,7 +530,7 @@ export const en = {
   'event.unknown': 'Change recorded',
 
   // ── legal / support ──
-  // ── public site (TSX-MR / Dukan ERP, docs/74) ──
+  // ── public site (TSXMR / Dukan ERP, docs/74) ──
   'skip.toMain': 'Skip to main content',
   'nav.main': 'Main navigation',
   'nav.openMenu': 'Open menu',
@@ -568,7 +568,7 @@ export const en = {
   'org.whatsapp': 'WhatsApp',
   'org.tradingName': "Trading and project name",
   'org.status': "Status",
-  'org.statusIndividual': "An individual operator. TSX-MR is not incorporated as a separate company, so it has no legal form and no trade-register (RCCM) number.",
+  'org.statusIndividual': "An individual operator. TSXMR is not incorporated as a separate company, so it has no legal form and no trade-register (RCCM) number.",
   'org.correspondenceAddress': "Correspondence address",
   'org.contactEmail': "General enquiries",
   'footer.address': "Correspondence address: {address}.",
@@ -580,8 +580,8 @@ export const en = {
   'legal.effective': 'Effective {date}',
   'legal.effectivePending': 'Effective date not set',
   'legal.contents': 'On this page',
-  'legal.draft': 'DRAFT — REQUIRES TSX-MR APPROVAL. This text was written from how the software works today; it is not legal advice and is not yet in force.',
-  'legal.draftPrelaunch': 'DRAFT — REQUIRES TSX-MR APPROVAL. This pre-launch text describes this website only; it is not legal advice and is not yet in force.',
+  'legal.draft': 'DRAFT — REQUIRES TSXMR APPROVAL. This text was written from how the software works today; it is not legal advice and is not yet in force.',
+  'legal.draftPrelaunch': 'DRAFT — REQUIRES TSXMR APPROVAL. This pre-launch text describes this website only; it is not legal advice and is not yet in force.',
   'prelaunch.badge': 'Coming soon — Dukan ERP is not yet open for public registration.',
   'legal.related': 'Related pages',
   'footer.privacyChoices': 'Privacy choices',

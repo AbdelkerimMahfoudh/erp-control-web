@@ -1,7 +1,7 @@
 /**
  * The `<head>` of a public page (docs/74 §5), computed once for both the prerenderer (`headHtml`) and the page itself
  * after a client-side navigation (`applyHead`): title, description, canonical address, the three language
- * alternates, robots, Open Graph and — only from values TSX-MR supplied — structured data. Nothing here states a
+ * alternates, robots, Open Graph and — only from values TSXMR supplied — structured data. Nothing here states a
  * rating, a review, a price or an availability.
  */
 import { LANGUAGES, OG_LOCALE, type Language } from '../i18n/languages';
@@ -83,7 +83,7 @@ export function headFor(h: HeadInput): Head {
   };
 }
 
-/** Only what TSX-MR supplied: a field the preview filled is left out, and nothing is guessed. */
+/** Only what TSXMR supplied: a field the preview filled is left out, and nothing is guessed. */
 function structuredData(h: HeadInput, canonical: string | null): object[] {
   const real = (name: string, value: string) => (value && !h.filled.includes(name) ? value : undefined);
   const origin = real('publicSiteOrigin', h.site.publicSiteOrigin);
@@ -96,7 +96,7 @@ function structuredData(h: HeadInput, canonical: string | null): object[] {
         addressCountry: real('country', h.site.country),
       }
     : undefined;
-  // An individual operator (the owner's brief of 2026-10-17, third): TSX-MR is a name, not a company, so the
+  // An individual operator (the owner's brief of 2026-10-17, third): TSXMR is a name, not a company, so the
   // organization carries no legal name. The person who publishes the website is named where the website says who
   // publishes it — the legal notice — and not on every page (the brief of 2026-10-17, fourth).
   const individual = h.site.operatorType !== 'company';

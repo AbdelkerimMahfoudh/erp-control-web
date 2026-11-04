@@ -3,7 +3,7 @@ import type { LegalDocument } from './types';
 
 /**
  * Reporting a security problem (`/security`). Says how to report and what not to do — never how the system is built,
- * never a reward. The contact is TSX-MR's security address (a required input); the promise not to pursue good-faith
+ * never a reward. The contact is TSXMR's security address (a required input); the promise not to pursue good-faith
  * research is legal wording and waits for review. A DRAFT, not legal advice.
  */
 export const security: Record<Language, LegalDocument> = {

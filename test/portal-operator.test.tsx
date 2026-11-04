@@ -10,7 +10,7 @@ import { pathOf } from '../src/site/routes';
 
 /**
  * The portal (a full build) under an individual operator (the brief "Final Legal, Identity, Portal and Website
- * Production Preparation", 2026-10-17). TSX-MR is a trading name operated by one person, with no company. The portal's
+ * Production Preparation", 2026-10-17). TSXMR is a trading name operated by one person, with no company. The portal's
  * texts say so, and its gate asks for no legal form or RCCM. It keeps the question an individual cannot settle alone:
  * whether paid access may be sold before the operator registers. Company mode stays as strict as before.
  */

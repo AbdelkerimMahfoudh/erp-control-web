@@ -8,9 +8,9 @@ import { Icon } from '../../components/public/icons';
 import { RichText } from '../../components/public/RichText';
 
 /**
- * The services TSX-MR offers to clients (the owner's brief of 2026-10-17, fourth): websites, mobile applications and
+ * The services TSXMR offers to clients (the owner's brief of 2026-10-17, fourth): websites, mobile applications and
  * business tools, each with what it covers; what helps before getting in touch; and, set apart, the one product
- * TSX-MR builds as its own, so the work done for clients and the product are never confused. No client work is shown
+ * TSXMR builds as its own, so the work done for clients and the product are never confused. No client work is shown
  * until its owner allows it (docs/21).
  */
 export function Services() {

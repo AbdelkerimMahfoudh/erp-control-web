@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 /**
  * Company mode, kept for when a company is formed (the brief "Final Legal, Identity, Portal and Website Production
  * Preparation"): the same pages name the company, its legal form, its RCCM number and its registered address, and say
- * TSX-MR is its trading name. Nothing of the individual operator remains.
+ * TSXMR is its trading name. Nothing of the individual operator remains.
  */
 vi.mock('../src/config/site', async (original) => {
   const real = await original<typeof import('../src/config/site')>();
@@ -53,7 +53,7 @@ describe('the portal’s texts under a company', () => {
   it('the legal notice: the trading name of the company, its legal form, RCCM and registered address', () => {
     const { container } = mount(pathOf('legalNotice', 'en'));
     const text = container.textContent ?? '';
-    expect(text).toContain('TSX-MR is a trading name of Registered Name SARL (“the operator”).');
+    expect(text).toContain('TSXMR is a trading name of Registered Name SARL (“the operator”).');
     const details = container.querySelector('.org-details')?.textContent ?? '';
     for (const fact of ['Legal form', 'SARL', 'RC 0000', 'Street 1, Nouakchott, Mauritania']) expect(details).toContain(fact);
     // Nothing describes an individual operator. The person responsible for publication is a person in either mode: it

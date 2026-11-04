@@ -9,7 +9,7 @@ export type AccountPageId = 'apply' | 'login' | 'applicationStatus';
 
 /**
  * Where a link into the business account goes (docs/95): on this origin in a full build; at the business account's own
- * origin in a public build once TSX-MR has given one (`VITE_PORTAL_ORIGIN`); nowhere before that — a public page never
+ * origin in a public build once TSXMR has given one (`VITE_PORTAL_ORIGIN`); nowhere before that — a public page never
  * offers something its origin cannot do.
  */
 export function accountHref(id: AccountPageId, lang: Language, site: Pick<typeof SITE, 'siteSurface' | 'portalOrigin'> = SITE): { to: string } | { href: string } | null {

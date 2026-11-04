@@ -30,15 +30,15 @@ const { fr } = await import('../src/i18n/fr');
 const { ar } = await import('../src/i18n/ar');
 const CATALOGUE = { en, fr, ar } as const;
 
-/** The approved copy (the brief), word for word, with TSX-MR as the site names itself. */
+/** The approved copy (the brief), word for word, with TSXMR as the site names itself. */
 const APPROVED = {
-  en: { tagline: 'School life, simply connected.', attribution: 'A new TSX-MR product for schools and their communities.', status: 'Coming soon' },
+  en: { tagline: 'School life, simply connected.', attribution: 'A new TSXMR product for schools and their communities.', status: 'Coming soon' },
   fr: {
     tagline: 'La vie scolaire, simplement connectée.',
-    attribution: 'Un nouveau produit TSX-MR destiné aux établissements scolaires et à leur communauté.',
+    attribution: 'Un nouveau produit TSXMR destiné aux établissements scolaires et à leur communauté.',
     status: 'Bientôt disponible',
   },
-  ar: { tagline: 'حياة مدرسية أكثر ترابطًا وبساطة', attribution: 'منتج جديد من TSX-MR للمؤسسات التعليمية ومجتمعاتها.', status: 'قريبًا' },
+  ar: { tagline: 'حياة مدرسية أكثر ترابطًا وبساطة', attribution: 'منتج جديد من TSXMR للمؤسسات التعليمية ومجتمعاتها.', status: 'قريبًا' },
 } as const;
 
 /**
@@ -103,9 +103,9 @@ describe('Riyade’s route and its head', () => {
 
   it('names its canonical address and the three alternates, and describes no software anyone could use or buy', () => {
     const ORIGIN = 'https://tsxmr.com';
-    const site = { publicSiteOrigin: ORIGIN, displayName: 'TSX-MR', legalName: '', operatorType: 'individual', country: 'Mauritania', city: '', address: '', supportEmail: '', contactEmail: 'contact@tsxmr.com' };
+    const site = { publicSiteOrigin: ORIGIN, displayName: 'TSXMR', legalName: '', operatorType: 'individual', country: 'Mauritania', city: '', address: '', supportEmail: '', contactEmail: 'contact@tsxmr.com' };
     for (const lang of LANGUAGES) {
-      const head = headFor({ id: 'riyade', lang, title: `Riyade — TSX-MR`, description: `${APPROVED[lang].attribution} ${APPROVED[lang].status}.`, site, filled: [], preview: false, productName: 'Dukan ERP' });
+      const head = headFor({ id: 'riyade', lang, title: `Riyade — TSXMR`, description: `${APPROVED[lang].attribution} ${APPROVED[lang].status}.`, site, filled: [], preview: false, productName: 'Dukan ERP' });
       expect(head.canonical).toBe(`${ORIGIN}${pathOf('riyade', lang)}`);
       expect(head.alternates).toEqual([
         { hreflang: 'en', href: `${ORIGIN}/products/riyade` },
@@ -115,7 +115,7 @@ describe('Riyade’s route and its head', () => {
       ]);
       expect(head.robots).toBe('index, follow');
       expect(head.meta).toContainEqual({ property: 'og:url', content: `${ORIGIN}${pathOf('riyade', lang)}` });
-      expect(head.meta).toContainEqual({ property: 'og:title', content: 'Riyade — TSX-MR' });
+      expect(head.meta).toContainEqual({ property: 'og:title', content: 'Riyade — TSXMR' });
       // The organization only: no SoftwareApplication or Product, no offer, price, rating, platform or date.
       const graph = (head.jsonLd[0] as { '@graph': { '@type': string }[] })['@graph'];
       expect(graph.map((n) => n['@type'])).toEqual(['Organization']);
@@ -133,7 +133,7 @@ describe('Riyade’s route and its head', () => {
 describe('Riyade’s words', () => {
   it('are the approved copy in each language, and its name is never translated', () => {
     for (const lang of LANGUAGES) {
-      expect({ ...riyade[lang], attribution: riyade[lang].attribution.replace('{displayName}', 'TSX-MR') }).toEqual(APPROVED[lang]);
+      expect({ ...riyade[lang], attribution: riyade[lang].attribution.replace('{displayName}', 'TSXMR') }).toEqual(APPROVED[lang]);
     }
     expect(RIYADE_NAME).toBe('Riyade');
   });
@@ -162,13 +162,13 @@ describe('Riyade on a public build, page by page', () => {
       expect(document.documentElement.dir).toBe(lang === 'ar' ? 'rtl' : 'ltr');
       // Exactly the approved words, in this order, and no other.
       expect(main().textContent).toBe(`Riyade${APPROVED[lang].tagline}${APPROVED[lang].attribution}${APPROVED[lang].status}`);
-      // TSX-MR keeps its reading order inside the Arabic sentence.
-      expect([...main().querySelectorAll('bdi')].map((b) => b.textContent)).toEqual(['TSX-MR']);
+      // TSXMR keeps its reading order inside the Arabic sentence.
+      expect([...main().querySelectorAll('bdi')].map((b) => b.textContent)).toEqual(['TSXMR']);
       // No sign-up, sign-in, price, trial, waiting list, documentation or contact action: no link, button or field.
       expect(main().querySelectorAll('a, button, form, input, select, textarea, iframe, img, video')).toHaveLength(0);
       // The drawing is decoration only.
       expect(main().querySelector('svg.riyade-art')?.getAttribute('aria-hidden')).toBe('true');
-      expect(document.title).toBe('Riyade — TSX-MR');
+      expect(document.title).toBe('Riyade — TSXMR');
       expect(requests).toEqual([]);
     });
 
@@ -195,7 +195,7 @@ describe('Riyade on a public build, page by page', () => {
       expect(card.textContent).not.toContain('Dukan');
       expect(card.textContent).not.toContain(CATALOGUE[lang]['prelaunch.badge']);
       // The summary no longer says there is one product.
-      expect(main().querySelector('h1 + p')?.textContent).toBe(products[lang].summary.replace('{displayName}', 'TSX-MR'));
+      expect(main().querySelector('h1 + p')?.textContent).toBe(products[lang].summary.replace('{displayName}', 'TSXMR'));
     });
 
     it(`the home page in ${lang}: one row under the featured Dukan ERP card, which leads to Riyade’s page`, () => {

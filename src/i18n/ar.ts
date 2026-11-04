@@ -517,7 +517,7 @@ export const ar: Catalogue = {
   'event.trial_expired.note.undated': 'لم يُطلب أي دفع.',
   'event.unknown': 'سُجّل تغيير',
 
-  // ── public site (TSX-MR / Dukan ERP, docs/74) ──
+  // ── public site (TSXMR / Dukan ERP, docs/74) ──
   'skip.toMain': 'الانتقال إلى المحتوى الرئيسي',
   'nav.main': 'التنقل الرئيسي',
   'nav.openMenu': 'فتح القائمة',
@@ -555,7 +555,7 @@ export const ar: Catalogue = {
   'org.whatsapp': 'واتساب',
   'org.tradingName': "الاسم التجاري واسم المشروع",
   'org.status': "الصفة",
-  'org.statusIndividual': "مشغّل بصفة شخص طبيعي. TSX-MR اسم مشروع غير مسجَّل كشركة مستقلة، ولذلك لا شكل قانوني له ولا رقم في السجل التجاري (RCCM).",
+  'org.statusIndividual': "مشغّل بصفة شخص طبيعي. TSXMR اسم مشروع غير مسجَّل كشركة مستقلة، ولذلك لا شكل قانوني له ولا رقم في السجل التجاري (RCCM).",
   'org.correspondenceAddress': "عنوان المراسلة",
   'org.contactEmail': "الاستفسارات العامة",
   'footer.address': "عنوان المراسلة: {address}.",
@@ -567,8 +567,8 @@ export const ar: Catalogue = {
   'legal.effective': 'ساري المفعول اعتبارًا من {date}',
   'legal.effectivePending': 'لم يُحدَّد تاريخ السريان',
   'legal.contents': 'في هذه الصفحة',
-  'legal.draft': 'مسودة — تتطلب موافقة TSX-MR. كُتب هذا النص انطلاقًا من طريقة عمل البرنامج اليوم؛ وهو ليس استشارة قانونية ولم يدخل حيز التنفيذ بعد.',
-  'legal.draftPrelaunch': 'مسودة — تتطلب موافقة TSX-MR. يصف هذا النص الخاص بمرحلة ما قبل الإطلاق هذا الموقع وحده؛ وهو ليس استشارة قانونية ولم يدخل حيز التنفيذ بعد.',
+  'legal.draft': 'مسودة — تتطلب موافقة TSXMR. كُتب هذا النص انطلاقًا من طريقة عمل البرنامج اليوم؛ وهو ليس استشارة قانونية ولم يدخل حيز التنفيذ بعد.',
+  'legal.draftPrelaunch': 'مسودة — تتطلب موافقة TSXMR. يصف هذا النص الخاص بمرحلة ما قبل الإطلاق هذا الموقع وحده؛ وهو ليس استشارة قانونية ولم يدخل حيز التنفيذ بعد.',
   'prelaunch.badge': 'قريبًا — التسجيل في Dukan ERP غير مفتوح للعموم بعد.',
   'legal.related': 'صفحات ذات صلة',
   'footer.privacyChoices': 'خيارات الخصوصية',

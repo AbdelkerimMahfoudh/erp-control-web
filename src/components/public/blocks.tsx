@@ -151,7 +151,7 @@ export function SectionHead({ id, title, lead }: { id: string; title: string; le
 }
 
 /**
- * A legal text: what it is, which version, since when, whether TSX-MR has approved it, and its sections with a table
+ * A legal text: what it is, which version, since when, whether TSXMR has approved it, and its sections with a table
  * of contents. A draft says so at the top in every language and every mode — a production build refuses one, so the
  * real site never shows the label.
  */
@@ -276,7 +276,7 @@ function PhoneLink({ phone }: { phone: string }) {
 }
 
 /**
- * The operator's details, as TSX-MR supplied them — never more — under the legal notice's "Publisher" section, whose
+ * The operator's details, as TSXMR supplied them — never more — under the legal notice's "Publisher" section, whose
  * sentence already names who operates the website (`{operatorStatus}`); the person responsible for publication is
  * named by its own section. An individual operator: the trading name, the plain statement that there is no company (so
  * no legal form or trade-register number) and a correspondence address. A company: its registered details.
@@ -308,7 +308,7 @@ export function OrgDetails() {
 }
 
 /**
- * How to reach TSX-MR (the 2026-10-17 refinement): each configured mailbox and number is a card that is itself the link
+ * How to reach TSXMR (the 2026-10-17 refinement): each configured mailbox and number is a card that is itself the link
  * (`mailto:` or `tel:`). Each card shows what it is for, the address or number in full (readable and copyable) and the
  * action, and its accessible name says all three. The emails come first, then the telephones under their own heading.
  * A number has no purpose of its own here (none is documented), so each is simply a number to call, and none is
@@ -387,7 +387,7 @@ export function ContactMethods({ reveal = false }: { reveal?: boolean } = {}) {
   );
 }
 
-/** One way to reach TSX-MR: the whole card is the link, the value stays visible and left to right in Arabic. */
+/** One way to reach TSXMR: the whole card is the link, the value stays visible and left to right in Arabic. */
 function ContactCard({ icon, href, purpose, value, action, name, reveal }: { icon: IconName; href: string; purpose?: string; value: string; action: string; name: string; reveal: boolean }) {
   return (
     <li className="contact-card elevated" data-reveal={reveal ? '' : undefined}>

@@ -3,9 +3,9 @@ import type { LegalDocument } from './types';
 
 /**
  * The legal notice (`/legal`): who publishes this website and operates Dukan ERP. Every identity fact is an input
- * TSX-MR supplies (`config/schema.ts`) — a production build refuses while one is blank — and nothing is named that TSX-MR
+ * TSXMR supplies (`config/schema.ts`) — a production build refuses while one is blank — and nothing is named that TSXMR
  * has not confirmed. `{operatorStatus}` says whether an individual or a company operates the name; the person
- * responsible for publication is the one TSX-MR designated (2026-10-17); the host still waits on its contract. A DRAFT,
+ * responsible for publication is the one TSXMR designated (2026-10-17); the host still waits on its contract. A DRAFT,
  * not legal advice.
  */
 export const legalNotice: Record<Language, LegalDocument> = {

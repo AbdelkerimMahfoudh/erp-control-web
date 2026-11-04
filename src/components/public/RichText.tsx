@@ -85,7 +85,7 @@ export function RichText({ text }: { text: string }) {
         );
       } else if (name === 'operatorStatus') {
         // A sentence in the reader's language, not a value: it takes the paragraph's direction. Isolated, a sentence that
-        // starts with the Latin "TSX-MR" would be laid out left to right inside Arabic.
+        // starts with the Latin "TSXMR" would be laid out left to right inside Arabic.
         parts.push(<Fragment key={i++}>{value}</Fragment>);
       } else if (name.endsWith('Email')) {
         parts.push(

@@ -46,7 +46,7 @@ export function releaseVerdicts(env: Record<string, string | undefined>): Verdic
 
   const app: ReleaseProblem[] = [];
   for (const b of svc.blockers) app.push({ problem: 'legal_blocker', detail: `${b.id}: ${b.summary}` });
-  for (const d of svc.drafts) app.push({ problem: 'legal_draft', detail: `${d}: the service text the app opens is still marked DRAFT — REQUIRES TSX-MR APPROVAL` });
+  for (const d of svc.drafts) app.push({ problem: 'legal_draft', detail: `${d}: the service text the app opens is still marked DRAFT — REQUIRES TSXMR APPROVAL` });
   for (const t of svc.placeholders) app.push({ problem: 'placeholder', detail: `a published text is a placeholder: “${t.slice(0, 80)}”` });
   const { deletionChannel } = readInputs(env, 'production').inputs;
   if (deletionChannel !== 'whatsapp') app.push({ env: 'VITE_ACCOUNT_DELETION_CHANNEL', problem: deletionChannel ? 'malformed' : 'missing', detail: 'the deletion channel the app relies on (whatsapp), once working end to end in production' });

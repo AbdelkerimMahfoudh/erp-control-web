@@ -104,7 +104,7 @@ export function Products() {
         {/* Riyade after Dukan ERP, coming soon and told in a few words (2026-10-20). */}
         <RiyadeCard />
       </ul>
-      {/* Owned products and client services, told apart: the other half of what TSX-MR does is one step away. */}
+      {/* Owned products and client services, told apart: the other half of what TSXMR does is one step away. */}
       <p className="products-services">
         <span>{t('products.servicesNote', { name: SITE.displayName })}</span>
         <Link className="text-action" to={pathOf('services', lang)}>
@@ -196,7 +196,7 @@ export function PrivacyChoices() {
   return <LegalView doc={privacyChoices[lang]} after={{ contact: <ContactMethods /> }} />;
 }
 
-/** The publisher: who operates TSX-MR, as supplied — never more. Every policy is in the page's related pages. */
+/** The publisher: who operates TSXMR, as supplied — never more. Every policy is in the page's related pages. */
 export function LegalNotice() {
   const { lang } = useI18n();
   return <LegalView doc={legalNotice[lang]} after={{ entity: <OrgDetails />, contact: <ContactMethods /> }} />;

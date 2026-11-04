@@ -115,7 +115,7 @@ export function redirectsFile(site: WithSurface = {}): string {
   return rules.length ? `${rules.join('\n')}\n` : '';
 }
 
-/** RFC 9116, only when TSX-MR supplied a security contact; it expires a year after the build. */
+/** RFC 9116, only when TSXMR supplied a security contact; it expires a year after the build. */
 export function securityTxt(site: Pick<SiteInputs, 'securityEmail' | 'publicSiteOrigin'>, builtAt: Date): string | null {
   if (!site.securityEmail) return null;
   const expires = new Date(builtAt.getTime() + 365 * 24 * 3600 * 1000).toISOString();

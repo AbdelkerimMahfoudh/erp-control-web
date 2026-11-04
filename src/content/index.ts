@@ -65,7 +65,7 @@ export function legalDocumentsFor(surface: Surface): Record<keyof typeof LEGAL_D
   return surface === 'public' ? PRELAUNCH_LEGAL_DOCUMENTS : LEGAL_DOCUMENTS;
 }
 
-/** TSX-MR itself — the home page and the services (`brand.ts`): the same on every surface. */
+/** TSXMR itself — the home page and the services (`brand.ts`): the same on every surface. */
 export function brandFor(lang: Language): BrandContent {
   return brand[lang];
 }

@@ -1,9 +1,9 @@
 import type { Language } from '../i18n/languages';
 
 /**
- * Riyade, TSX-MR's second own product (the owner's brief of 2026-10-20): presented as coming soon, with as little as
+ * Riyade, TSXMR's second own product (the owner's brief of 2026-10-20): presented as coming soon, with as little as
  * possible. The site says only these words — its name, one line, who makes it and for whom, and that it is coming
- * soon — in the owner's approved copy, the same on every surface. `{displayName}` is TSX-MR.
+ * soon — in the owner's approved copy, the same on every surface. `{displayName}` is TSXMR.
  *
  * Never said anywhere about it, in any language, in a page, a title, a description, structured data or alt text: what it
  * does or is made of, how it is built, a price, a subscription, a trial or a free period, a release date or a delay, a

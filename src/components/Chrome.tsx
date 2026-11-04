@@ -24,7 +24,7 @@ export function Chrome({ children, area }: { children: ReactNode; area: 'public'
   // The public pages' sections rise into view as the reader reaches them (lib/reveal.ts).
   useReveal(pathname);
 
-  // What TSX-MR does for clients first, then what it owns: Services and Products stay two separate destinations.
+  // What TSXMR does for clients first, then what it owns: Services and Products stay two separate destinations.
   const links: [PublicRouteId, string][] = [
     ['services', t('nav.services')],
     ['products', t('nav.products')],
@@ -233,9 +233,9 @@ function Footer() {
   const to = (id: PublicRouteId) => pathOf(id, lang);
   const columns: [string, [PublicRouteId, string][]][] = [
     [INDIVIDUAL_OPERATOR ? SITE.displayName : t('footer.company'), [['services', t('nav.services')], ['about', t('nav.about')], ['contact', t('nav.contact')]]],
-    // TSX-MR's own products, Dukan ERP first; Riyade, coming soon, by its name, which no language translates (2026-10-20).
+    // TSXMR's own products, Dukan ERP first; Riyade, coming soon, by its name, which no language translates (2026-10-20).
     [t('footer.product'), [['dukanErp', t('nav.dukanErp')], ['riyade', RIYADE_NAME], ['products', t('nav.products')], ['apply', t('nav.apply')]]],
-    // Account deletion is a Dukan ERP matter, not TSX-MR's: it is documented on the product page and in Support, not here.
+    // Account deletion is a Dukan ERP matter, not TSXMR's: it is documented on the product page and in Support, not here.
     [t('footer.help'), [['support', t('nav.support')], ['applicationStatus', t('footer.applicationStatus')]]],
     [
       t('footer.legal'),

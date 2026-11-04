@@ -3,7 +3,7 @@ import type { Language } from '../i18n/languages';
 /**
  * What Dukan ERP is made of, as its product page shows it below the product's own introduction (`dukan-erp.ts`): the
  * three proofs, what it replaces, its six parts, the screens, the three languages and trust. Until the owner's brief of
- * 2026-10-17 (fourth) these sections were the TSX-MR home page; the home page now introduces TSX-MR itself
+ * 2026-10-17 (fourth) these sections were the TSXMR home page; the home page now introduces TSXMR itself
  * (`brand.ts`), and the product's detail lives on the product's page. Every capability and every trust sentence is
  * something the code does (audited 2026-10-12, docs/74 §6) — no figures, clients, awards or availability claims. The
  * product visual's words are here too (`visual`); its numbers are ordinary demo values kept in the component, never a
