@@ -2,7 +2,11 @@
 /**
  * Package a portal build for https://dukan.tsxmr.com on the production edge (backend deploy/production/portal-site.sh).
  *
- *   node scripts/caddy-portal-release.mjs <dist> <release-dir> <commit>
+ *   node scripts/caddy-portal-release.mjs <dist> <release-dir> <commit> [--audit]
+ *
+ * `--audit` packages CI's customer-audit build (production aliases, marked test values) to prove these checks on a real
+ * portal build while the PORTAL gate keeps a production one closed. Its release says so, and portal-site.sh never
+ * installs it.
  *
  * Writes `<release-dir>/site/`, `<release-dir>/routes.caddy` and `<release-dir>/portal-release.txt`. It refuses a build
  * whose Content Security Policy names any API but https://api.tsxmr.com, a build that is not the portal surface, a build
@@ -14,7 +18,8 @@ import { join } from 'node:path';
 import { caddyRoutes, parseHeaders, parseRedirects } from './caddy-rules.ts';
 
 const API = 'https://api.tsxmr.com';
-const [dist, releaseDir, commit] = process.argv.slice(2);
+const [dist, releaseDir, commit, flag] = process.argv.slice(2);
+const audit = flag === '--audit';
 /** @param {string} message @returns {never} */
 const fail = (message) => {
   console.error(`caddy-portal-release: ${message}`);
@@ -42,7 +47,7 @@ const files = (/** @type {string} */ dir) => readdirSync(dir).flatMap((n) => (st
 for (const file of files(dist).filter((f) => /\.(js|html|css)$/.test(f))) {
   const text = readFileSync(file, 'utf8');
   if (/platform\/admin\/|platform\/businesses|platform\/dashboard/.test(text)) fail(`${file} holds console code`);
-  if (/\.invalid\b|\[TEST\]/.test(text)) fail(`${file} is from a preview build`);
+  if (!audit && /\.invalid\b|\[TEST\]/.test(text)) fail(`${file} is from a preview build`);
 }
 
 mkdirSync(releaseDir, { recursive: true });

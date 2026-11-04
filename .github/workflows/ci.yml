@@ -223,6 +223,12 @@ jobs:
           npx vite build --ssr src/entry-server.tsx --outDir dist-ssr --mode customer-audit > /dev/null
           node scripts/prerender.mjs > /dev/null
           node scripts/audit-bundle.mjs dist --preview --portal --no-console 2>&1 | tee "$EV/customer-audit.txt"
+          # Post-Build-4: the portal package, from this build — its checks proven while the PORTAL gate keeps production closed.
+          node scripts/caddy-portal-release.mjs dist /tmp/portal-release "$GITHUB_SHA" --audit 2>&1 | tee "$EV/portal-release.txt"
+          grep -q "audit build" /tmp/portal-release/portal-release.txt
+          if grep -rqE "platform/admin/|platform/businesses" /tmp/portal-release/site; then echo "FAIL: console code in the portal package"; exit 1; fi
+          if grep -qF "/admin" /tmp/portal-release/routes.caddy; then echo "FAIL: /admin in the portal routes"; exit 1; fi
+          grep -qF "/claim/*" /tmp/portal-release/routes.caddy
       - name: Keep the evidence
         if: always()
         env:
