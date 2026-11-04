@@ -342,7 +342,9 @@ export function releaseProblems(
   if (inputs.siteSurface === 'portal' && !inputs.portalOrigin) {
     problems.push({ input: 'portalOrigin', env: INPUTS.portalOrigin.env, problem: 'missing', detail: `${INPUTS.portalOrigin.label} — a portal build is published at ${PORTAL_WEBSITE_ORIGIN}` });
   }
-  if (gate === 'PORTAL' && inputs.operatorType === 'individual') problems.push({ problem: 'legal_blocker', detail: `${OPERATOR_REGISTRATION.id}: ${OPERATOR_REGISTRATION.summary}` });
+  // The owner's decision (2026-11-04): an individual operator is a supported, factual model for the portal, not a
+  // blocker. Registration and formal tax invoicing are a business-compliance task (docs/118), and the portal claims
+  // neither: no RCCM, no NIF and no tax invoice is ever shown or invented for an individual operator.
   for (const b of legalBlockers) problems.push({ problem: 'legal_blocker', detail: `${b.id}: ${b.summary}` });
   for (const d of content.drafts) problems.push({ problem: 'legal_draft', detail: `${d}: still marked DRAFT — REQUIRES TSX-MR APPROVAL` });
   for (const t of content.placeholders) problems.push({ problem: 'placeholder', detail: `a published text is a placeholder: “${t.slice(0, 80)}”` });
