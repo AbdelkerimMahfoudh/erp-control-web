@@ -145,7 +145,7 @@ for (const lang of LANGS) {
       expect(f.text).not.toContain(CATALOGUE[lang]['home.pricing.loading']);
       expect(f.text).not.toMatch(/\b7-day\b|essai gratuit|تجربة مجانية/);
       const p = await priceFacts(page);
-      // A whole word: the footer's "TSX-MR" runs into the next line's first letter in `textContent`.
+      // A whole word: the footer's "TSXMR" runs into the next line's first letter in `textContent`.
       expect(p.rest).not.toMatch(/\bMRU\b/);
       expect({ id, amounts: p.amounts, isolated: p.isolated, note: p.note }).toEqual({ id, amounts: demoAmounts(lang), isolated: true, note: dukanDemo[lang].note });
     }
@@ -154,7 +154,7 @@ for (const lang of LANGS) {
   test(`public site: who operates it, said plainly in ${lang} — an individual, no company, nothing invented`, async ({ page }) => {
     const c = CATALOGUE[lang];
     const NAME = 'Abdel Kerim Taleb Ould Sidi';
-    // The legal notice says who operates TSX-MR and who is responsible for publication — the only page that names the
+    // The legal notice says who operates TSXMR and who is responsible for publication — the only page that names the
     // person twice; every other legal text names them once, and the brand's own pages not at all.
     await page.goto(pathOf('legalNotice', lang));
     const notice = (await facts(page)).text;
@@ -684,7 +684,7 @@ for (const lang of LANGS) {
     }));
     expect(new URL(head.canonical).pathname).toBe(own);
     expect(head.alternates).toEqual([...LANGS.map((l) => [l, pathOf('riyade', l)]), ['x-default', pathOf('riyade', 'en')]]);
-    expect([head.title, head.og]).toEqual(['Riyade — TSX-MR', 'Riyade — TSX-MR']);
+    expect([head.title, head.og]).toEqual(['Riyade — TSXMR', 'Riyade — TSXMR']);
     expect(head.jsonLd).not.toMatch(/SoftwareApplication|Riyade|offers|price/);
 
     // The Products page: Dukan ERP first and the larger card, then Riyade, each saying its own status.
@@ -941,7 +941,7 @@ test('public site: not found — after a link inside the site the router shows t
     canonical: document.querySelectorAll('link[rel="canonical"]').length,
     alternates: document.querySelectorAll('link[rel="alternate"][hreflang]').length,
   }));
-  expect(head).toEqual({ title: `${fr['notFound.title']} — TSX-MR`, robots: 'noindex, nofollow', canonical: 0, alternates: 0 });
+  expect(head).toEqual({ title: `${fr['notFound.title']} — TSXMR`, robots: 'noindex, nofollow', canonical: 0, alternates: 0 });
   // Back to the home page in the same language, by the router.
   await page.locator('.nf-copy .btn-primary').click();
   await expect(page).toHaveURL(/\/fr$/);
