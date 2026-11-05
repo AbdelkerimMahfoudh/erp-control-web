@@ -16,7 +16,9 @@ const STATES: EntitlementState[] = ['pending', 'trial_available', 'trial_active'
  * period's — a grant over a paid month runs on into that month — never the paid end alone, long past for a shop that
  * lapsed before the grant. Every other business ends with its paid period.
  */
-export function accessEnd(r: Pick<BusinessRow, 'state' | 'periodEnd' | 'complimentary'>): string | null {
+export function accessEnd(r: Pick<BusinessRow, 'state' | 'periodEnd' | 'complimentary'> & Partial<Pick<BusinessRow, 'trial'>>): string | null {
+  // A running trial with nothing decided after it ends with the trial (owner, 2026-11-05).
+  if (r.state === 'trial_active' && !r.periodEnd) return r.trial?.endsAt ?? null;
   const until = r.state === 'complimentary' ? r.complimentary?.until ?? null : null;
   if (!until) return r.periodEnd;
   return r.periodEnd && new Date(r.periodEnd).getTime() > new Date(until).getTime() ? r.periodEnd : until;
@@ -98,6 +100,8 @@ export function Businesses() {
                 ),
               },
               { label: t('admin.business.storeId'), render: (r) => <span className="ltr">{r.publicStoreId}</span> },
+              // The Owner's verified number, as the search finds it; nothing for a number not verified (owner, 2026-11-05).
+              { label: t('admin.businesses.ownerPhone'), render: (r) => (r.ownerPhone ? <bdi className="ltr">{r.ownerPhone}</bdi> : '—') },
               { label: t('apply.city'), render: (r) => r.city ?? '—' },
               { label: t('admin.businesses.state'), render: (r) => <StateBadge state={r.state} /> },
               { label: t('account.period.ends', { date: '' }).trim(), render: (r) => <AccessEndCell row={r} /> },

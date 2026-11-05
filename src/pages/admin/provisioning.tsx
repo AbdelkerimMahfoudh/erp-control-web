@@ -4,7 +4,7 @@ import type { Activity, BusinessDetail, ConsoleStoreResult, IssuedInvitation } f
 import { adminRequest } from '../../auth/admin';
 import { Badge, ErrorNotice, Field, Notice, Phrase } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
-import { formatDateTime } from '../../lib/format';
+import { formatDateTime, formatInstant } from '../../lib/format';
 import { PhoneVerificationBadge } from './deferral';
 
 /** The activities a store can have (D154), in the order the console offers them. */
@@ -103,6 +103,7 @@ export function SetupCode({ invitation, onDone }: { invitation: IssuedInvitation
 export function SetupPanel({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<boolean>; onDone: () => Promise<void> }) {
   const { t, lang } = useI18n();
   const setup = business.setup;
+  const trialRunsTo = business.entitlement?.trial?.status === 'active' ? (business.trial?.claim?.endsAt ?? business.entitlement.trial.endsAt) : null;
   const [issued, setIssued] = useState<IssuedInvitation | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
@@ -152,7 +153,16 @@ export function SetupPanel({ business, ask, onDone }: { business: BusinessDetail
           <span className="muted small">{t(`admin.setup.createdBy.${setup.createdBy}` as Key)}</span>
         </dd>
         <dt>{t('admin.setup.activation')}</dt>
-        <dd>{setup.activation.status ? t(`admin.setup.activation.${setup.activation.status}` as Key) : '—'}</dd>
+        <dd>
+          {trialRunsTo && setup.activation.status === 'pending_activation' ? (
+            // A running trial is access: say so, with its end, rather than "Not given yet" (owner, 2026-11-05).
+            <Phrase text={t('admin.trial.access')} values={{ date: formatInstant(trialRunsTo, business.trial?.timeZone ?? business.entitlement?.trial?.timeZone ?? null, lang) }} />
+          ) : setup.activation.status ? (
+            t(`admin.setup.activation.${setup.activation.status}` as Key)
+          ) : (
+            '—'
+          )}
+        </dd>
         <dt>{t('admin.setup.invitation')}</dt>
         <dd>{invitationLine}</dd>
         <dt>{t('admin.setup.phone')}</dt>

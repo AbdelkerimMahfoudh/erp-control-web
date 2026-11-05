@@ -320,6 +320,13 @@ function trialZone(business: BusinessDetail): string | null {
   return business.trial?.timeZone ?? business.entitlement?.trial?.timeZone ?? null;
 }
 
+/** Calendar months after an instant: the server's `monthsFrom` (subscription-lifecycle.service.ts), for the preview only. */
+export function monthsAfter(from: string, months: number): string {
+  const end = new Date(from);
+  end.setMonth(end.getMonth() + months);
+  return end.toISOString();
+}
+
 /** The end of a trial still running: paid access decided now starts there, so an end date must lie after it. */
 function runningTrialEnd(business: BusinessDetail): string | null {
   return business.entitlement?.trial?.status === 'active' ? (business.trial?.claim?.endsAt ?? business.entitlement.trial.endsAt) : null;
@@ -418,6 +425,16 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
           {open === 'approve' || open === 'extend' ? (
             <Field label={open === 'approve' ? t('admin.action.approve.months') : t('admin.action.extend.months')}>
               <input type="number" min={1} max={60} value={form.months} onChange={(e) => setForm({ ...form, months: e.target.value })} />
+              {open === 'approve' && trialEnd && !form.periodEnd && Number(form.months) >= 1 ? (
+                // Counted from the trial's end, as the server counts it (`monthsFrom`): no zero-length period, no grace rule
+                // changed (owner, 2026-11-05).
+                <p className="muted small">
+                  <Phrase
+                    text={t('admin.trial.approve.fromTrial')}
+                    values={{ start: formatInstant(trialEnd, trialZone(business), lang), end: formatInstant(monthsAfter(trialEnd, Number(form.months)), trialZone(business), lang) }}
+                  />
+                </p>
+              ) : null}
             </Field>
           ) : null}
           {open === 'approve' || open === 'period' ? (

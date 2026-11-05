@@ -37,7 +37,7 @@ export function Proofs() {
 
 function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Promise<boolean>; onDone: () => Promise<void> }) {
   const { t, lang } = useI18n();
-  const [form, setForm] = useState({ amount: proof.amount, paidAt: proof.paidAt.slice(0, 10), months: '1', channel: 'manual', reason: '' });
+  const [form, setForm] = useState({ amount: proof.amount, paidAt: proof.paidAt.slice(0, 10), months: String(proof.months ?? 1), channel: proof.months ? 'mobile_money' : 'manual', reason: '' });
   const [refusal, setRefusal] = useState('');
   const [error, setError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);

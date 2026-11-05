@@ -61,7 +61,9 @@ describe('the console: a business’s trial, recorded', () => {
     const c = await trialCard();
     const at = (iso: string) => zoneName(TRIAL_ZONE, 'en-GB', iso);
     expect(c.textContent).toContain(`Eligible since 12 October 2026 at 11:00 (${at('2026-10-12T10:00:00.000Z')}); registered with an email address and a WhatsApp number.`);
-    expect(c.textContent).toContain(en['admin.trial.open']);
+    // Claimed: the eligibility is spent (owner, 2026-11-05), never "can still claim".
+    expect(c.textContent).toContain(en['admin.trial.used']);
+    expect(c.textContent).not.toContain(en['admin.trial.open']);
     expect(c.textContent).toContain(`Claimed by the Owner on 13 October 2026 at 10:30 (${at(TRIAL_START)}).`);
     expect(c.textContent).toContain(`From 13 October 2026 at 10:30 (${at(TRIAL_START)}) to 20 October 2026 at 10:30 (${LAGOS}).`);
     expect(c.textContent).toContain(en['admin.trial.expiryPending']);
@@ -384,8 +386,9 @@ describe('the businesses list: a business with a trial ends in its own zone (C18
       expect({ dubai: ends('Boutique Dubai').textContent, isolated: isolated('Boutique Dubai') }).toEqual({ dubai: inDubai, isolated: [inDubai] });
       // A grant decided during the trial ends on the day it ends in Lagos.
       expect({ cadeau: ends('Boutique Cadeau').textContent, isolated: isolated('Boutique Cadeau') }).toEqual({ cadeau: inLagos, isolated: [inLagos] });
-      // A trial with no paid period yet has no end here; nothing is isolated for a dash.
-      expect({ essai: ends('Boutique Essai').textContent, isolated: isolated('Boutique Essai') }).toEqual({ essai: '—', isolated: [] });
+      // A running trial with no paid period ends with the trial (owner, 2026-11-05): in the business's zone, isolated.
+      const trialEnds = inZone(locale, TRIAL_ZONE, TRIAL_END);
+      expect({ essai: ends('Boutique Essai').textContent, isolated: isolated('Boutique Essai') }).toEqual({ essai: trialEnds, isolated: [trialEnds] });
       // No trial, and an API that sends none: the date this list always showed.
       const unchanged = asBefore(locale, PERIOD_END);
       if (before) expect(unchanged).toBe(before);

@@ -652,6 +652,8 @@ export interface TrialSummary {
 export interface BusinessRow {
   /** D227: for the list, when there is no trading name. Presentation only. */
   accountLabel?: { owner: string | null; store: string | null; moreStores: number };
+  /** The Owner's WhatsApp number once verified, else null (owner, 2026-11-05). Absent from an older API. */
+  ownerPhone?: string | null;
   id: string;
   name: string;
   publicStoreId: string;
@@ -938,6 +940,13 @@ export type AcquisitionLookup =
   | { usable: true; source: 'user_invite' };
 
 /** D227: a payment proof from the Owner's portal, and where its review stands. */
+/** One plan on the portal (owner, 2026-11-05): 1, 3 or 12 months, priced by the server per store. */
+export interface PlanQuote {
+  months: 1 | 3 | 12;
+  lines: { branchId: string; name: string; activity: 'electronics' | 'money_agent' | 'both'; storeAmount: number; paidSeats: number; seatAmount: number; amount: number }[];
+  total: number;
+}
+
 export interface PaymentProof {
   id: string;
   companyId: string;

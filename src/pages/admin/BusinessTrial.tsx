@@ -42,6 +42,9 @@ export function BusinessTrial({ business }: { business: BusinessDetail }) {
                 values={{ date: at(eligibility.closedAt), reason: eligibility.closedReason ? t(`admin.trial.reason.${eligibility.closedReason}` as Key) : '—' }}
               />
             </p>
+          ) : claim ? (
+            // Claimed: the eligibility is spent, whatever its row says (owner, 2026-11-05).
+            <p>{t('admin.trial.used')}</p>
           ) : (
             <p>{t('admin.trial.open')}</p>
           )}
