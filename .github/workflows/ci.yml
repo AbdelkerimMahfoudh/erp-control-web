@@ -229,6 +229,61 @@ jobs:
           if grep -rqE "platform/admin/|platform/businesses" /tmp/portal-release/site; then echo "FAIL: console code in the portal package"; exit 1; fi
           if grep -qF "/admin" /tmp/portal-release/routes.caddy; then echo "FAIL: /admin in the portal routes"; exit 1; fi
           grep -qF "/claim/*" /tmp/portal-release/routes.caddy
+      # The production portal package for https://dukan.tsxmr.com (owner, 2026-11-05): a real production build of the
+      # portal alone — no console — for the backend release deployed at api.tsxmr.com, WhatsApp onboarding, email
+      # disabled, email-assisted deletion at launch. Its public identity and service commitments are GitHub repository
+      # variables (public values, never secrets); without every one of them the step says so and builds nothing. The
+      # package and its checksums go to this commit's evidence; deploy/production/portal-site.sh installs it.
+      - name: Portal release package (production, console-less) for https://dukan.tsxmr.com
+        if: ${{ !cancelled() }}
+        env:
+          VITE_SITE_SURFACE: portal
+          VITE_API_BASE: https://api.tsxmr.com/api/v1
+          VITE_PORTAL_ORIGIN: https://dukan.tsxmr.com
+          VITE_PORTAL_LAUNCH_CHANNEL: whatsapp
+          VITE_PORTAL_EMAIL_CHANNEL: disabled
+          VITE_PORTAL_BACKEND_RELEASE: ${{ vars.PORTAL_BACKEND_RELEASE }}
+          VITE_PUBLIC_SITE_ORIGIN: ${{ vars.PORTAL_PUBLIC_SITE_ORIGIN }}
+          VITE_ORGANIZATION_PHONE: ${{ vars.PORTAL_ORGANIZATION_PHONE }}
+          VITE_LEGAL_EFFECTIVE_DATE: ${{ vars.PORTAL_LEGAL_EFFECTIVE_DATE }}
+          VITE_SUPPORT_HOURS: ${{ vars.PORTAL_SUPPORT_HOURS }}
+          VITE_SUPPORT_LANGUAGES: ${{ vars.PORTAL_SUPPORT_LANGUAGES }}
+          VITE_SUPPORT_RESPONSE_TIME: ${{ vars.PORTAL_SUPPORT_RESPONSE_TIME }}
+          VITE_ACCOUNT_DELETION_CHANNEL: ${{ vars.PORTAL_ACCOUNT_DELETION_CHANNEL }}
+        run: |
+          missing=""
+          for v in VITE_PORTAL_BACKEND_RELEASE VITE_PUBLIC_SITE_ORIGIN VITE_ORGANIZATION_PHONE VITE_LEGAL_EFFECTIVE_DATE VITE_SUPPORT_HOURS VITE_SUPPORT_LANGUAGES VITE_SUPPORT_RESPONSE_TIME VITE_ACCOUNT_DELETION_CHANNEL; do
+            [ -n "${!v}" ] || missing="$missing $v"
+          done
+          if [ -n "$missing" ]; then
+            echo "SKIPPED: no production portal package — repository variables missing for:$missing" | tee "$EV/portal-production-release.txt"
+            exit 0
+          fi
+          [[ "$VITE_PORTAL_BACKEND_RELEASE" =~ ^[0-9a-f]{40}$ ]] || { echo "FAIL: PORTAL_BACKEND_RELEASE is not a full 40-character commit"; exit 1; }
+          rm -rf dist dist-ssr /tmp/portal-production-release
+          set -o pipefail
+          # A real production build: the PORTAL gate checks every input, and production mode leaves the console out.
+          npm run build 2>&1 | tee "$EV/portal-production-build.log"
+          (cd dist && find . -type f | sort) > "$EV/portal-production-dist-files.txt"
+          node scripts/audit-links.mjs dist 2>&1 | tee "$EV/portal-production-audit-links.txt"
+          node scripts/audit-bundle.mjs dist --portal --no-console 2>&1 | tee "$EV/portal-production-audit-bundle.txt"
+          if [ -n "$(find dist -name '*.map' -print -quit)" ]; then echo "FAIL: source maps in the portal build"; exit 1; fi
+          if grep -rqE --include='*.js' --include='*.html' --include='*.css' '\.invalid\b|\[TEST\]' dist; then echo "FAIL: preview or test values in the portal build"; exit 1; fi
+          other=$(grep -rhoE 'https?://[A-Za-z0-9.-]+(:[0-9]+)?/api/v1' dist | sort -u | grep -vx 'https://api.tsxmr.com/api/v1' || true)
+          if [ -n "$other" ]; then echo "FAIL: another API in the portal build: $other"; exit 1; fi
+          docker run --rm -v "$PWD/dist:/dist" zricethezav/gitleaks:latest dir /dist --redact --no-banner 2>&1 | tee "$EV/portal-production-gitleaks.txt"
+          # Without --audit: a release portal-site.sh may install. The packager refuses /admin, console code, a preview
+          # build and any API but https://api.tsxmr.com.
+          node scripts/caddy-portal-release.mjs dist /tmp/portal-production-release "$GITHUB_SHA" 2>&1 | tee -a "$EV/portal-production-release.txt"
+          if grep -q 'audit build' /tmp/portal-production-release/portal-release.txt; then echo "FAIL: an audit package"; exit 1; fi
+          if grep -qF '/admin' /tmp/portal-production-release/routes.caddy; then echo "FAIL: /admin in the portal routes"; exit 1; fi
+          if grep -rqE 'platform/admin/|platform/businesses|platform/dashboard' /tmp/portal-production-release/site; then echo "FAIL: console code in the package"; exit 1; fi
+          grep -qF "connect-src 'self' https://api.tsxmr.com;" /tmp/portal-production-release/routes.caddy
+          grep -qF '/claim/*' /tmp/portal-production-release/routes.caddy
+          printf 'backend %s\ndeletion %s\n' "$VITE_PORTAL_BACKEND_RELEASE" "$VITE_ACCOUNT_DELETION_CHANNEL" >> /tmp/portal-production-release/portal-release.txt
+          (cd /tmp/portal-production-release && find . -type f | sort | xargs sha256sum) > "$EV/portal-production-release.sha256"
+          (cd /tmp/portal-production-release && tar czf - .) > "$EV/portal-production-release.tar.gz"
+          sha256sum "$EV/portal-production-release.tar.gz" | tee -a "$EV/portal-production-release.txt"
       - name: Keep the evidence
         if: always()
         env:
