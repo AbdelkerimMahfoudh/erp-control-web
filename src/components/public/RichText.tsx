@@ -19,7 +19,8 @@ const CITY: Record<string, Record<Language, string>> = {
   nouakchott: { en: 'Nouakchott', fr: 'Nouakchott', ar: 'نواكشوط' },
 };
 
-const DELETION_CHANNEL_NAMES: Record<string, string> = { whatsapp: 'WhatsApp' };
+/** The in-app code's channel. Email-assisted deletion (1.1) keeps WhatsApp as that channel; support is the fallback. */
+const DELETION_CHANNEL_NAMES: Record<string, string> = { whatsapp: 'WhatsApp', 'email-assisted': 'WhatsApp' };
 
 /**
  * The correspondence address in the reader's language: the address line (its Arabic line in Arabic, when one is

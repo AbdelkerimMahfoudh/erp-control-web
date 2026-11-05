@@ -34,7 +34,12 @@ export interface InputSpec {
 }
 
 /** The only verification channel the backend implements for account deletion (docs/64; account-deletion.service.ts). */
-export const DELETION_CHANNELS = ['whatsapp'] as const;
+/**
+ * `whatsapp`: the in-app code by WhatsApp, working end to end. `email-assisted` (owner, 2026-11-05): the same in-app
+ * path once code delivery works, and until then — or for anyone who cannot reach the app — support@ verifies the
+ * person and carries out the deletion. The deletion text (1.1) says both; the code channel is named WhatsApp either way.
+ */
+export const DELETION_CHANNELS = ['whatsapp', 'email-assisted'] as const;
 
 /** What one build publishes: `surface.ts`, kept apart so the page can name its surface without this table. */
 export { SURFACES, surfaceOf, type Surface } from './surface';
@@ -129,7 +134,7 @@ export const INPUTS = {
   supportWhatsapp: { env: 'VITE_SUPPORT_WHATSAPP', kind: 'phone', required: false, preview: '', label: 'Support WhatsApp number' },
   appleAppStoreUrl: { env: 'VITE_APPLE_APP_STORE_URL', kind: 'https-url', required: false, publicSite: 'forbidden', preview: '', label: 'App Store listing, once the app is published there' },
   googlePlayUrl: { env: 'VITE_GOOGLE_PLAY_URL', kind: 'https-url', required: false, publicSite: 'forbidden', preview: '', label: 'Google Play listing, once the app is published there' },
-  deletionChannel: { env: 'VITE_ACCOUNT_DELETION_CHANNEL', kind: 'deletion-channel', required: true, preview: '', label: 'The deletion verification channel configured AND tested in production (whatsapp)' },
+  deletionChannel: { env: 'VITE_ACCOUNT_DELETION_CHANNEL', kind: 'deletion-channel', required: true, preview: '', label: 'The deletion channel: whatsapp (the in-app code configured AND tested in production) or email-assisted (support@ verifies and deletes until then)' },
   legalEffectiveDate: { env: 'VITE_LEGAL_EFFECTIVE_DATE', kind: 'date', required: true, publicSite: 'required', preview: '', label: 'Effective date of the published privacy policy and terms (YYYY-MM-DD)' },
 } as const satisfies Record<string, InputSpec>;
 

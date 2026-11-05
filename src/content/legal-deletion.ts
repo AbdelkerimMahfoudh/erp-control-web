@@ -6,11 +6,15 @@ import type { LegalDocument } from './types';
  * app/account/delete.tsx; docs/64): password again, a one-time code to the account's verified number on the one
  * channel the backend supports, immediate and irreversible, the last Owner closes the business. The channel is named
  * from `VITE_ACCOUNT_DELETION_CHANNEL`, which a production build requires — set only once that channel is configured
- * and tested (docs/74 §3). There is no deletion by the support team: it helps a person regain access to the app.
+ * and tested (docs/74 §3).
+ *
+ * 1.1 (owner, 2026-11-05, effective 2026-11-04): email-assisted deletion at launch. When the code cannot be delivered
+ * or the person cannot reach the app, support@ verifies their identity and authority over the account, carries out
+ * the deletion and confirms it (`VITE_ACCOUNT_DELETION_CHANNEL=email-assisted`). The legal channel stays WhatsApp.
  */
 export const accountDeletion: Record<Language, LegalDocument> = {
   en: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'Deleting a Dukan ERP account',
     summary: 'How to delete a Dukan ERP account, what is removed, what is kept, and why.',
@@ -51,11 +55,11 @@ export const accountDeletion: Record<Language, LegalDocument> = {
         ],
       },
       { id: 'final', heading: 'Deletion cannot be undone', blocks: [{ kind: 'p', text: 'Once completed, a deleted account cannot be restored and can no longer be used to sign in.' }] },
-      { id: 'help', heading: 'If you cannot use the app', blocks: [{ kind: 'p', text: 'Deletion is completed in the app, which confirms that the request comes from you. If you cannot open the app, write to {supportEmail} with the business name and the contact you sign in with; {displayName} will help you regain access so that you can delete the account.' }] },
+      { id: 'help', heading: 'If you cannot use the app', blocks: [{ kind: 'p', text: 'You may request deletion from the app. When WhatsApp verification-code delivery is available, the app will ask for a code sent to your verified number. If code delivery is unavailable or you cannot access the app, contact {supportEmail}. After verifying your identity and authority over the account, support will process the request and confirm completion.' }] },
     ],
   },
   fr: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'Supprimer un compte Dukan ERP',
     summary: 'Comment supprimer un compte Dukan ERP, ce qui est supprimé, ce qui est conservé, et pourquoi.',
@@ -96,11 +100,11 @@ export const accountDeletion: Record<Language, LegalDocument> = {
         ],
       },
       { id: 'final', heading: 'La suppression est irréversible', blocks: [{ kind: 'p', text: 'Une fois effectuée, la suppression d’un compte ne peut pas être annulée, et le compte ne permet plus de se connecter.' }] },
-      { id: 'help', heading: 'Si vous ne pouvez pas utiliser l’application', blocks: [{ kind: 'p', text: 'La suppression se fait dans l’application, qui confirme que la demande vient bien de vous. Si vous ne pouvez pas ouvrir l’application, écrivez à {supportEmail} en indiquant le nom de l’entreprise et le contact avec lequel vous vous connectez ; {displayName} vous aidera à retrouver l’accès afin que vous puissiez supprimer le compte.' }] },
+      { id: 'help', heading: 'Si vous ne pouvez pas utiliser l’application', blocks: [{ kind: 'p', text: 'Vous pouvez demander la suppression depuis l’application. Lorsque l’envoi du code de vérification WhatsApp est disponible, l’application vous demandera un code envoyé à votre numéro vérifié. Si l’envoi du code est indisponible ou si vous ne pouvez pas accéder à l’application, contactez {supportEmail}. Après vérification de votre identité et de votre autorité sur le compte, l’assistance traitera la demande et confirmera son exécution.' }] },
     ],
   },
   ar: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'حذف حساب Dukan ERP',
     summary: 'كيف تحذف حساب Dukan ERP، وما الذي يُحذف، وما الذي يُحتفَظ به، ولماذا.',
@@ -141,7 +145,7 @@ export const accountDeletion: Record<Language, LegalDocument> = {
         ],
       },
       { id: 'final', heading: 'لا يمكن التراجع عن الحذف', blocks: [{ kind: 'p', text: 'بعد إتمام الحذف، لا يمكن استعادة الحساب، ولا يمكن استخدامه لتسجيل الدخول.' }] },
-      { id: 'help', heading: 'إن تعذّر عليك استخدام التطبيق', blocks: [{ kind: 'p', text: 'يتم الحذف من التطبيق، الذي يتأكّد من أن الطلب صادر عنك. وإن تعذّر عليك فتح التطبيق، فراسل {supportEmail} ذاكرًا اسم الشركة وجهة الاتصال التي تسجّل الدخول بها، وستساعدك {displayName} على استعادة الوصول لتتمكّن من حذف الحساب.' }] },
+      { id: 'help', heading: 'إن تعذّر عليك استخدام التطبيق', blocks: [{ kind: 'p', text: 'يمكنك طلب حذف الحساب من داخل التطبيق. عندما يكون إرسال رمز التحقق عبر واتساب متاحًا، سيطلب منك التطبيق إدخال رمز يُرسل إلى رقمك الموثق. إذا تعذر إرسال الرمز أو لم تتمكن من الوصول إلى التطبيق، فتواصل مع {supportEmail}. بعد التحقق من هويتك وصلاحيتك على الحساب، سيعالج فريق الدعم الطلب ويؤكد اكتماله.' }] },
     ],
   },
 };

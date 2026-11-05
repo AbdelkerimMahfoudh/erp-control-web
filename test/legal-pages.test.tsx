@@ -75,14 +75,15 @@ describe('the public legal and support pages', () => {
 
   for (const lang of LANGS) {
     for (const name of Object.keys(LEGAL_DOCUMENTS) as (keyof typeof LEGAL_DOCUMENTS)[]) {
-      it(`${name} (${lang}) shows its version 1.0, no draft label, and every other legal page`, () => {
+      it(`${name} (${lang}) shows its approved version, no draft label, and every other legal page`, () => {
         const id = name as PublicRouteId;
         mount(pathOf(id, lang));
         const main = screen.getByRole('main');
         const doc = LEGAL_DOCUMENTS[name][lang];
         expect(within(main).getByText(new RegExp(doc.version.replace(/[()]/g, '\\$&')))).toBeTruthy();
-        // Approved (owner, 2026-11-04): version 1.0 and no draft label.
-        expect(doc.version).toBe('1.0');
+        // Approved (owner, 2026-11-04): version 1.0 and no draft label; the deletion page 1.1 (owner, 2026-11-05:
+        // email-assisted deletion at launch, effective the same date).
+        expect(doc.version).toBe(name === 'accountDeletion' ? '1.1' : '1.0');
         expect(main.querySelector('.legal-draft')).toBeNull();
         // One group of related pages (the brief of 2026-10-17, fourth): every other page a link, this one plain text
         // marked current — never a link back to itself.
