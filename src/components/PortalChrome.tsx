@@ -2,18 +2,26 @@ import type { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { SITE, SURFACE } from '../config/site';
 import { useI18n } from '../i18n';
-import { pathOf, PORTAL_HOME, type PublicRouteId } from '../site/routes';
+import { inAppPathOf, pathOf, PORTAL_HOME, type PublicRouteId } from '../site/routes';
 import { LanguageSwitch, ThemeToggle } from './controls';
 import { PreviewBanner, ProductMark } from './public/blocks';
 
 /**
- * A page of the company site, from the portal: on the company site's own origin in a portal build — the portal
- * publishes none of its pages (docs/101) — and on this origin in a full build, where they live beside it.
+ * A help or legal page, from the portal's or the console's footer. A portal build has the approved Dukan ERP texts on its
+ * own origin, at the in-app addresses (owner, 2026-11-05) — never the company site's pre-launch texts; the console links
+ * to the company site's pages; a full build to its own.
  */
 export function PublicLink({ id, children }: { id: PublicRouteId; children: ReactNode }) {
   const { lang } = useI18n();
   const path = pathOf(id, lang);
-  if (SURFACE !== 'portal' && SURFACE !== 'admin') {
+  if (SURFACE === 'portal') {
+    return (
+      <Link className="related-link" to={inAppPathOf(id, lang)}>
+        {children}
+      </Link>
+    );
+  }
+  if (SURFACE !== 'admin') {
     return (
       <Link className="related-link" to={path}>
         {children}
@@ -30,7 +38,7 @@ export function PublicLink({ id, children }: { id: PublicRouteId; children: Reac
 /**
  * The frame of the signed-in areas — the Dukan ERP portal's `/subscription` and the console's `/admin` (docs/101): the
  * product, the languages and the appearance; no navigation into the company site, nothing to buy. Its footer leads to
- * the help and legal pages, which are the company site's.
+ * the help and legal pages, on this origin for the portal (the approved texts), on the company site for the console.
  */
 export function PortalChrome({ children }: { children: ReactNode }) {
   const { t } = useI18n();

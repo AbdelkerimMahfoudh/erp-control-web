@@ -421,7 +421,9 @@ export function PageHead({ id, title, description }: { id: PublicRouteId; title:
         lang,
         title: plainText(title, values),
         description: plainText(description, values),
-        site: SITE,
+        // On the portal the texts are its own (owner, 2026-11-05): no canonical or alternate on the company site, whose
+        // pages are the pre-launch texts.
+        site: SURFACE === 'portal' ? { ...SITE, publicSiteOrigin: '' } : SITE,
         filled: FILLED_INPUTS,
         preview: IS_PREVIEW,
         productName: 'Dukan ERP',

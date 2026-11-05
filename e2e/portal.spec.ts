@@ -158,6 +158,8 @@ test('the host files: nothing indexed, the root and the old address sent to /sub
   const admin = await request.get('/admin');
   const missing = await request.get('/privacy');
   const sitemap = await request.get('/sitemap.xml');
+  // The portal's own legal and support pages (owner, 2026-11-05): the shell, noindex, in every language.
+  const legal = await Promise.all(['/in-app/privacy', '/fr/in-app/terms', '/ar/in-app/account-deletion'].map((p) => request.get(p)));
   record('portal-host-files', {
     robots: await robots.text(),
     root: [root.status(), root.headers()['location']],
@@ -165,7 +167,9 @@ test('the host files: nothing indexed, the root and the old address sent to /sub
     pageHeaders: page.headers(),
     missing: [missing.status(), missing.headers()['x-robots-tag']],
     sitemap: sitemap.status(),
+    legal: legal.map((r) => [r.status(), r.headers()['x-robots-tag']]),
   });
+  for (const r of legal) expect([r.status(), r.headers()['x-robots-tag']]).toEqual([200, 'noindex, nofollow']);
   expect(await robots.text()).toBe('User-agent: *\nDisallow: /\n');
   expect([root.status(), root.headers()['location']]).toEqual([302, '/subscription']);
   expect([retired.status(), retired.headers()['location']]).toEqual([301, '/subscription']);
@@ -185,7 +189,7 @@ test('the host files: nothing indexed, the root and the old address sent to /sub
 
 for (const lang of LANGS) {
   for (const w of WIDTHS) {
-    test(`signed out, ${lang} at ${w.name}: the Owner's sign-in, the company site's legal links, ${lang === 'ar' ? 'right to left' : 'left to right'}`, async ({ page }) => {
+    test(`signed out, ${lang} at ${w.name}: the Owner's sign-in, the portal's own legal links, ${lang === 'ar' ? 'right to left' : 'left to right'}`, async ({ page }) => {
       const errors = watch(page);
       await mockApi(page, lang);
       await page.setViewportSize({ width: w.width, height: w.height });
@@ -202,8 +206,10 @@ for (const lang of LANGS) {
       expect(f.h1).toBe(1);
       expect(f.robots).toBe('noindex, nofollow');
       expect(f.overflow, 'no sideways scroll').toBeLessThanOrEqual(0);
-      // The legal and support pages are the company site's (a preview names its marked test origin).
-      expect(f.links.filter((h) => /privacy|terms|support|account-deletion/.test(h)).every((h) => h.startsWith('https://'))).toBe(true);
+      // The legal and support pages are the portal's own (owner, 2026-11-05) — never the company site's pre-launch texts.
+      const legalLinks = f.links.filter((h) => /privacy|terms|support|account-deletion|security|legal/.test(h));
+      expect(legalLinks.length).toBeGreaterThanOrEqual(7);
+      expect(legalLinks.every((h) => /^(\/(fr|ar))?\/in-app\//.test(h))).toBe(true);
       expect(f.html).not.toContain('portal.tsxmr.com');
       expect(serious).toEqual([]);
       expect(errors).toEqual([]);
@@ -261,3 +267,19 @@ for (const lang of LANGS) {
     expect(errors).toEqual([]);
   });
 }
+
+test('the portal’s own legal pages, opened directly in Arabic, link only among themselves', async ({ page }) => {
+  const errors = watch(page);
+  await mockApi(page, 'ar');
+  await page.goto('/ar/in-app/privacy');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
+  await page.waitForLoadState('networkidle');
+  const f = await facts(page);
+  record('portal-legal-ar-privacy', { ...f, html: undefined, errors });
+  expect([f.lang, f.dir]).toEqual(['ar', 'rtl']);
+  expect(f.robots).toBe('noindex, nofollow');
+  expect(f.links.filter((h) => /^https?:/.test(h) || h.startsWith('/admin'))).toEqual([]);
+  expect(await page.locator('link[rel="canonical"][href*="//tsxmr.com"], link[rel="alternate"][href*="//tsxmr.com"]').count()).toBe(0);
+  expect(f.html).not.toContain('portal.tsxmr.com');
+  expect(errors).toEqual([]);
+});

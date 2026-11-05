@@ -122,6 +122,8 @@ export function redirectsFile(site: WithSurface = {}, consoleAbsent = false): st
     ...(surface === 'admin' ? ['/ /admin 302'] : []),
     ...retiredFor(site).flatMap((p) => [`${p} ${PORTAL_HOME} 301`, `${p}/* ${PORTAL_HOME} 301`]),
     ...prefixes.flatMap((p) => [`${p} ${APP_SHELL} 200`, `${p}/* ${APP_SHELL} 200`]),
+    // The portal's own legal and support pages (owner, 2026-11-05), at the addresses the app opens them.
+    ...(surface === 'portal' ? Object.values(LANGUAGE_PREFIX).map((l) => `${l}${IN_APP_PREFIX}/* ${APP_SHELL} 200`) : []),
   ];
   return rules.length ? `${rules.join('\n')}\n` : '';
 }

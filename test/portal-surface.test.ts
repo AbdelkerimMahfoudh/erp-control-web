@@ -107,6 +107,9 @@ describe('what a portal build publishes', () => {
         '/join/* /app-shell.html 200',
         '/claim /app-shell.html 200',
         '/claim/* /app-shell.html 200',
+        '/in-app/* /app-shell.html 200',
+        '/fr/in-app/* /app-shell.html 200',
+        '/ar/in-app/* /app-shell.html 200',
         '',
       ].join('\n'),
     );
@@ -126,7 +129,9 @@ describe('the build takes the portal’s stub, and its files carry none of the c
   it('vite aliases the company site’s pages to the stub in a portal build, and the stub imports no public page', () => {
     expect(read('vite.config.ts')).toMatch(/surface === 'portal'\) \{\s+const areas = \[\{ find: \/\^\\\.\\\/public-areas\$\/, replacement: stub\('\.\/src\/public-areas\.portal\.tsx'\) \}\]/);
     const stub = read('src/public-areas.portal.tsx');
-    expect(stub).not.toMatch(/pages\/public|components\/Chrome'|Legal|Home|Apply/);
+    // Only the legal and support pages (owner, 2026-11-05): no home, no application, no other company-site page.
+    expect(stub).not.toMatch(/Home|Apply|About|DukanErp|Contact|Products|Login/);
+    expect(stub.match(/from '\.\/pages\/public\/\w+'/g)).toEqual(["from './pages/public/Legal'", "from './pages/public/NotFound'"]);
   });
 
   it('the prerenderer writes the shell for the portal and no page of the company site; the bundle audit has a portal mode', () => {
