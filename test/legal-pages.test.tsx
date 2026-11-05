@@ -82,8 +82,8 @@ describe('the public legal and support pages', () => {
         const doc = LEGAL_DOCUMENTS[name][lang];
         expect(within(main).getByText(new RegExp(doc.version.replace(/[()]/g, '\\$&')))).toBeTruthy();
         // Approved (owner, 2026-11-04): version 1.0 and no draft label; the deletion page 1.1 (owner, 2026-11-05:
-        // email-assisted deletion at launch, effective the same date).
-        expect(doc.version).toBe(name === 'accountDeletion' ? '1.1' : '1.0');
+        // email-assisted deletion at launch, effective the same date), and privacy 1.1 with it.
+        expect(doc.version).toBe(name === 'accountDeletion' || name === 'privacy' ? '1.1' : '1.0');
         expect(main.querySelector('.legal-draft')).toBeNull();
         // One group of related pages (the brief of 2026-10-17, fourth): every other page a link, this one plain text
         // marked current — never a link back to itself.

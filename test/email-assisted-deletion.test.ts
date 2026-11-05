@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { releaseVerdicts } from '../src/config/gates';
 import { DELETION_CHANNELS } from '../src/config/schema';
 import { accountDeletion } from '../src/content/legal-deletion';
+import { privacy } from '../src/content/legal-privacy';
 
 /*
  * Email-assisted deletion at launch (owner, 2026-11-05). The in-app path stays, with its WhatsApp code once delivery
@@ -59,5 +60,15 @@ describe('the deletion page 1.1', () => {
     expect(help('fr')).toContain('l’assistance traitera la demande et confirmera son exécution.');
     expect(help('ar')).toContain('إذا تعذر إرسال الرمز أو لم تتمكن من الوصول إلى التطبيق، فتواصل مع {supportEmail}.');
     expect(help('ar')).toContain('سيعالج فريق الدعم الطلب ويؤكد اكتماله.');
+  });
+});
+
+describe('the privacy policy 1.1', () => {
+  it('says the same deletion path, in the owner-approved wording, in EN, FR and AR', () => {
+    for (const lang of ['en', 'fr', 'ar'] as const) expect(privacy[lang].version).toBe('1.1');
+    expect(JSON.stringify(privacy.en)).toContain('If code delivery is unavailable or you cannot access the app, contact {supportEmail}.');
+    expect(JSON.stringify(privacy.fr)).toContain('conformément à la politique de suppression de compte et confirmera son exécution.');
+    expect(JSON.stringify(privacy.ar)).toContain('سيعالج فريق الدعم الطلب وفقًا لسياسة حذف الحساب ويؤكد اكتماله.');
+    expect(JSON.stringify(privacy.en)).not.toContain('the deletion is confirmed with a code');
   });
 });

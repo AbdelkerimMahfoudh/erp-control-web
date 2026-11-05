@@ -8,7 +8,7 @@ import type { LegalDocument } from './types';
  */
 export const privacy: Record<Language, LegalDocument> = {
   en: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'Dukan ERP privacy policy',
     summary: 'How {displayName} collects, uses, shares and keeps personal information in Dukan ERP and on this website.',
@@ -140,7 +140,7 @@ export const privacy: Record<Language, LegalDocument> = {
         id: 'deletion',
         heading: 'Deleting an account',
         blocks: [
-          { kind: 'p', text: 'You can delete your account in the app; the deletion is confirmed with a code sent to your verified {deletionChannelName} number. The account deletion page explains how, and what is removed and kept.' },
+          { kind: 'p', text: 'Account-deletion requests normally use the in-app flow and, when available, a code sent to the account’s verified WhatsApp number. If code delivery is unavailable or you cannot access the app, contact {supportEmail}. After verifying your identity and authority over the account, support will process the request under the account-deletion policy and confirm completion.' },
           { kind: 'p', text: 'Deletion removes the person’s identity and contact details from the records in use, and every copy the app made of them that can be edited. The sealed audit trail and subscription history, and backups until they expire, are not edited, nor are notifications already shown to other people of the business. Backups expire on the schedule above. Mandatory legal rights are not limited by this.' },
         ],
       },
@@ -169,7 +169,7 @@ export const privacy: Record<Language, LegalDocument> = {
     ],
   },
   fr: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'Politique de confidentialité de Dukan ERP',
     summary: 'Comment {displayName} collecte, utilise, partage et conserve les informations personnelles dans Dukan ERP et sur ce site.',
@@ -301,7 +301,7 @@ export const privacy: Record<Language, LegalDocument> = {
         id: 'deletion',
         heading: 'Supprimer un compte',
         blocks: [
-          { kind: 'p', text: 'Vous pouvez supprimer votre compte dans l’application ; la suppression est confirmée par un code envoyé à votre numéro {deletionChannelName} vérifié. La page sur la suppression de compte explique comment, et ce qui est supprimé ou conservé.' },
+          { kind: 'p', text: 'Les demandes de suppression de compte suivent normalement le parcours intégré à l’application et, lorsqu’il est disponible, un code envoyé au numéro WhatsApp vérifié du compte. Si l’envoi du code est indisponible ou si vous ne pouvez pas accéder à l’application, contactez {supportEmail}. Après vérification de votre identité et de votre autorité sur le compte, l’assistance traitera la demande conformément à la politique de suppression de compte et confirmera son exécution.' },
           { kind: 'p', text: 'La suppression retire l’identité et les coordonnées de la personne des données en service, et de toutes les copies modifiables que l’application en a faites. Le journal d’audit et l’historique de l’abonnement scellés, ainsi que les sauvegardes jusqu’à leur expiration, ne sont pas modifiés, pas plus que les notifications déjà affichées à d’autres personnes de l’entreprise. Les sauvegardes expirent selon le calendrier ci-dessus. Cela ne limite aucun droit légal impératif.' },
         ],
       },
@@ -330,7 +330,7 @@ export const privacy: Record<Language, LegalDocument> = {
     ],
   },
   ar: {
-    version: '1.0',
+    version: '1.1',
     status: 'approved',
     title: 'سياسة الخصوصية في Dukan ERP',
     summary: 'كيف تجمع {displayName} المعلومات الشخصية وتستخدمها وتشاركها وتحتفظ بها في Dukan ERP وعلى هذا الموقع.',
@@ -462,7 +462,7 @@ export const privacy: Record<Language, LegalDocument> = {
         id: 'deletion',
         heading: 'حذف الحساب',
         blocks: [
-          { kind: 'p', text: 'يمكنك حذف حسابك من التطبيق؛ ويُؤكَّد الحذف برمز يُرسَل إلى رقم {deletionChannelName} المتحقَّق منه. وتشرح صفحة حذف الحساب الطريقة، وما يُحذف وما يُحتفَظ به.' },
+          { kind: 'p', text: 'تُقدَّم طلبات حذف الحساب عادةً من خلال المسار الموجود داخل التطبيق، مع استخدام رمز يُرسل إلى رقم واتساب الموثق للحساب عندما تكون خدمة إرسال الرمز متاحة. إذا تعذر إرسال الرمز أو لم تتمكن من الوصول إلى التطبيق، فتواصل مع {supportEmail}. بعد التحقق من هويتك وصلاحيتك على الحساب، سيعالج فريق الدعم الطلب وفقًا لسياسة حذف الحساب ويؤكد اكتماله.' },
           { kind: 'p', text: 'يزيل الحذف هوية الشخص وبيانات الاتصال به من السجلات المستعملة، ومن كل نسخة قابلة للتعديل صنعها التطبيق منها. ولا يُعدَّل سجل التدقيق وسجل الاشتراك المختومان، ولا النسخ الاحتياطية حتى تنتهي صلاحيتها، ولا الإشعارات التي عُرضت بالفعل على أشخاص آخرين في المؤسسة. تنتهي صلاحية النسخ الاحتياطية وفق الجدول أعلاه. ولا يحدّ ذلك من أي حق قانوني آمر.' },
         ],
       },

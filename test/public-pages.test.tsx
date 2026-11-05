@@ -77,8 +77,8 @@ describe('every public page in every language', () => {
 describe('the legal pages', () => {
   it('name their version and effective date, and show every pending decision visibly in a preview', async () => {
     mount('/privacy');
-    // Approved (owner, 2026-11-04): version 1.0, and no pending decision left on the page.
-    expect(await screen.findByText(/Version 1\.0/)).toBeTruthy();
+    // Approved (owner, 2026-11-04), then 1.1 (owner, 2026-11-05: email-assisted deletion); no pending decision left.
+    expect(await screen.findByText(/Version 1\.1/)).toBeTruthy();
     expect(screen.getByText('Effective date not set')).toBeTruthy();
     expect(document.querySelectorAll('mark.pending[data-blocker]')).toHaveLength(0);
   });
