@@ -264,6 +264,8 @@ export const en = {
   'trial.started': 'Your free trial has started. It ends on {date}.',
   'trial.active.ends': 'Your free trial ends on {date}.',
   'trial.active.started': 'It started on {date}.',
+  'trial.active.left': 'Time left: {left}.',
+  'trial.alreadyActive': 'Your free trial is already active. It ends on {date}.',
   'trial.expired.ended': 'Your free trial ended on {date}.',
   'trial.expired.readOnly': 'Your business is read-only now: you can still sign in, read and export everything, manage your security and delete your account. New sales, stock and money can be recorded again once paid access starts; it is arranged from this portal.',
   'trial.paidStart': 'Paid access starts when the free trial ends, on {date}.',

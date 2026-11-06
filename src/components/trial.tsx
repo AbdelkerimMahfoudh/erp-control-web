@@ -3,7 +3,7 @@ import { ApiError } from '../api/client';
 import type { EntitlementState, TrialClaimResult, TrialContact, TrialOffer, TrialView } from '../api/types';
 import { ownerRequest } from '../auth/owner';
 import { useI18n, type Key } from '../i18n';
-import { formatInstant } from '../lib/format';
+import { formatInstant, formatTimeLeft } from '../lib/format';
 import { detailOf, refusalOf, TRIAL_TERMS_SHOWN } from '../lib/trial';
 import { ErrorNotice, Notice, Phrase } from './ui';
 
@@ -128,7 +128,7 @@ export function ClaimOutcome({ claimed, refused, offer }: { claimed: TrialClaimR
   if (claimed) {
     return (
       <Notice tone="ok">
-        <Phrase text={t('trial.started')} values={{ date: formatInstant(claimed.trial.endsAt, claimed.trial.timeZone, lang) }} />
+        <Phrase text={t(claimed.alreadyActive ? 'trial.alreadyActive' : 'trial.started')} values={{ date: formatInstant(claimed.trial.endsAt, claimed.trial.timeZone, lang) }} />
       </Notice>
     );
   }
@@ -156,6 +156,11 @@ export function TrialFacts({ trial, state }: { trial: TrialView; state: Entitlem
         <p className="muted">
           <Phrase text={t('trial.active.started')} values={{ date: at(trial.startedAt) }} />
         </p>
+        {formatTimeLeft(trial.endsAt, lang) ? (
+          <p data-testid="trial-left">
+            <Phrase text={t('trial.active.left')} values={{ left: formatTimeLeft(trial.endsAt, lang)! }} />
+          </p>
+        ) : null}
         {after ? (
           <p>
             <Phrase text={t(after.kind === 'granted' ? 'trial.access.granted' : 'trial.access.paid')} values={{ date: at(after.startsAt) }} />

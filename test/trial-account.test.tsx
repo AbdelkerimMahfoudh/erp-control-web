@@ -124,6 +124,15 @@ describe('the Owner’s trial card on /subscription', () => {
     expect(h.textContent).toContain(`The 7-day free trial is running. It ends on 20 October 2026 at 10:30 (${LAGOS}).`);
   });
 
+  it('0131: a trial started automatically shows its time left from the server’s end — and no claim button', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(new Date(TRIAL_START).getTime() + 3_600_000));
+    account('trial_active', { state: 'trial_active', trial: trialView('active'), offer: null, setup: null, calculatedAt: TRIAL_START });
+    const c = await card();
+    expect(within(c).getByTestId('trial-left').textContent).toBe('Time left: 6 days, 23 hours.');
+    expect(within(c).queryByRole('button', { name: CLAIM })).toBeNull();
+  });
+
   it('an ended trial: when it ended, and that the business is read-only until paid access starts', async () => {
     account('trial_expired', { state: 'trial_expired', trial: trialView('expired'), offer: null, setup: null, calculatedAt: TRIAL_END });
     const c = await card();

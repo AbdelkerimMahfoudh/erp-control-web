@@ -53,6 +53,18 @@ export function listParts(items: string[], lang: Language): { type: 'element' | 
   return new Intl.ListFormat(LOCALE[lang], { type: 'conjunction' }).formatToParts(items);
 }
 
+/** Time left until an instant the server recorded, in whole days and hours ("6 days, 23 hours"); nothing once it passed. */
+export function formatTimeLeft(untilIso: string | null, lang: Language, now: number = Date.now()): string | null {
+  if (!untilIso) return null;
+  const ms = new Date(untilIso).getTime() - now;
+  if (!(ms > 0)) return null;
+  const days = Math.floor(ms / 86_400_000);
+  const hours = Math.floor((ms % 86_400_000) / 3_600_000);
+  const unit = (n: number, u: 'day' | 'hour') => new Intl.NumberFormat(LOCALE[lang], { style: 'unit', unit: u, unitDisplay: 'long' }).format(n);
+  const parts = days > 0 ? [unit(days, 'day'), unit(hours, 'hour')] : [unit(Math.max(hours, 0), 'hour')];
+  return new Intl.ListFormat(LOCALE[lang], { type: 'unit', style: 'long' }).format(parts);
+}
+
 export function formatInt(n: number, lang: Language): string {
   return new Intl.NumberFormat(LOCALE[lang]).format(n);
 }

@@ -150,6 +150,8 @@ export interface TrialClaimResult {
   state: 'trial_active';
   trial: TrialView;
   subscriptionVersion: number;
+  /** 0131: the trial had already started automatically; an old link's claim changed nothing. */
+  alreadyActive?: true;
 }
 
 /** Every refusal of the claim, by its code; the page says each one in words. */

@@ -257,6 +257,8 @@ export const fr: Catalogue = {
   'trial.started': 'Votre essai gratuit a commencé. Il se termine le {date}.',
   'trial.active.ends': 'Votre essai gratuit se termine le {date}.',
   'trial.active.started': 'Il a commencé le {date}.',
+  'trial.active.left': 'Temps restant : {left}.',
+  'trial.alreadyActive': 'Votre période d’essai gratuite est déjà active. Elle se termine le {date}.',
   'trial.expired.ended': 'Votre essai gratuit s’est terminé le {date}.',
   'trial.expired.readOnly': 'Votre entreprise est maintenant en lecture seule : vous pouvez toujours vous connecter, tout consulter et tout exporter, gérer votre sécurité et supprimer votre compte. Les ventes, le stock et l’argent pourront de nouveau être enregistrés dès le début de l’accès payant, qui s’organise depuis ce portail.',
   'trial.paidStart': 'L’accès payant commence à la fin de l’essai gratuit, le {date}.',
