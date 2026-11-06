@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { ProofLines } from '../../components/stores';
 import { Link } from 'react-router-dom';
 import { apiBase } from '../../api/client';
 import type { PaymentProof, ProofRecovery } from '../../api/types';
@@ -74,6 +75,7 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
       )}
       {proof.applying ? <Recovery proof={proof} ask={ask} onDone={onDone} /> : (
       <>
+      <ProofLines lines={proof.lines} />
       <form
         className="stack"
         onSubmit={(e) => {

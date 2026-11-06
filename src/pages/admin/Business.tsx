@@ -13,6 +13,7 @@ import { useI18n, type Key } from '../../i18n';
 import { formatDate, formatDateTime, formatInstant, formatInt } from '../../lib/format';
 import { detailOf } from '../../lib/trial';
 import { BusinessTrial } from './BusinessTrial';
+import { StoreStatusList } from '../../components/stores';
 import { BusinessGrace, BusinessMessages } from './BusinessLifecycle';
 import { ConsoleStore, ProvisioningDraft, SetupPanel, TestBadge, TestBanner, TestStatus } from './provisioning';
 import { DeferredAccounts, PhoneVerificationBadge, ProvisionStaff } from './deferral';
@@ -115,6 +116,13 @@ export function Business() {
       <SetupPanel business={data} ask={ask} onDone={load} />
 
       <BusinessTrial business={data} />
+
+      {data.storeStatus?.length ? (
+        <section className="card stack" aria-labelledby="stores-h">
+          <h2 id="stores-h">{t('admin.stores.title')}</h2>
+          <StoreStatusList stores={data.storeStatus} />
+        </section>
+      ) : null}
 
       <BusinessGrace grace={ent?.grace} timeZone={ent?.timeZone} />
 

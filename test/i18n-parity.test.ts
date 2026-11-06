@@ -35,7 +35,7 @@ const NAMES_THE_AGENT_TRADE = new Set(['activity.money_agent.body']);
  * arranged apart from it. The history tells the trial's own events (`event.trial_*`) in words of their own, and the
  * portal names the trial's messages (`notice.kind.trial_*`, `notice.kind.portal_instructions`, docs/101).
  */
-const TRIAL_KEY = /^(trial\.|status\.trial_|status\.explain\.trial_|admin\.trial\.|event\.trial_|notice\.kind\.(trial_|portal_instructions))/;
+const TRIAL_KEY = /^(trial\.|status\.trial_|portal\.stores\.state\.trial_|status\.explain\.trial_|admin\.trial\.|event\.trial_|notice\.kind\.(trial_|portal_instructions))/;
 const DESCRIBES_THE_TRIAL = new Set(['home.pricing.rules', 'apply.lead', 'apply.done.trial', 'page.apply.description']);
 const TRIAL_WORD = /\btrial|essai|تجريب/;
 

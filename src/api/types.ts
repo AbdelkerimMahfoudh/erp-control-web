@@ -703,6 +703,8 @@ export interface Person {
 
 export interface BusinessDetail {
   id: string;
+  /** 0132: each store's own state and dates. */
+  storeStatus?: StoreStatus[];
   name: string;
   /** D225: the Arabic name; null until given. */
   nameAr?: string | null;
@@ -949,10 +951,25 @@ export interface PlanQuote {
   total: number;
 }
 
+/** 0132 (docs/122): one store's own subscription — its state and dates, from the server. */
+export interface StoreStatus {
+  branchId: string;
+  name: string;
+  nameAr: string | null;
+  state: 'suspended' | 'locked' | 'complimentary' | 'trial_active' | 'active' | 'grace' | 'trial_expired' | 'expired';
+  canWrite: boolean;
+  trialEndsAt: string | null;
+  paidUntil: string | null;
+  complimentaryUntil: string | null;
+  graceEndsAt: string | null;
+}
+
 export interface PaymentProof {
   id: string;
   companyId: string;
   status: 'submitted' | 'under_review' | 'approved' | 'refused';
+  /** 0132: the stores it pays for, each with its amount (a waiting store marked pending). */
+  lines?: { branchId: string; name: string; amount: number; pending?: boolean }[] | null;
   amount: string;
   paidAt: string;
   reference: string | null;

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import type { PaymentInstructions, PaymentProof, PlanQuote } from '../../api/types';
+import type { PaymentInstructions, PaymentProof, PlanQuote, StoreStatus } from '../../api/types';
 import { ownerRequest } from '../../auth/owner';
 import { Badge, ErrorNotice, Money, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
@@ -25,23 +25,42 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
   const [plans, setPlans] = useState<PlanQuote[] | null>(null);
   const [pay, setPay] = useState<PaymentInstructions | null>(null);
   const [chosen, setChosen] = useState<PlanQuote | null>(null);
+  // 0132 (docs/122): each store is its own subscription — its status, and which stores this payment covers.
+  const [stores, setStores] = useState<StoreStatus[]>([]);
+  const [everyLine, setEveryLine] = useState<PlanQuote['lines']>([]);
+  const [picked, setPicked] = useState<Set<string> | null>(null);
   const [error, setError] = useState<unknown>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (only: Set<string> | null = null) => {
     try {
+      const query = only && only.size ? `?branches=${[...only].join(',')}` : '';
       const [proofs, offered, instructions] = await Promise.all([
         ownerRequest<PaymentProof[]>('platform/my-subscription/payment-proofs'),
-        ownerRequest<{ plans: PlanQuote[] }>('platform/my-subscription/plans'),
+        ownerRequest<{ plans: PlanQuote[]; branches?: StoreStatus[] }>(`platform/my-subscription/plans${query}`),
         ownerRequest<PaymentInstructions>('platform/payment-instructions'),
       ]);
       setRows(proofs);
       setPlans(offered.plans);
+      setStores(offered.branches ?? []);
+      if (!only) setEveryLine(offered.plans[0]?.lines ?? []);
       setPay(instructions);
     } catch (e) {
       setError(e);
     }
   }, []);
   useEffect(() => void load(), [load]);
+
+  const toggle = (id: string) => {
+    const next = new Set(picked ?? everyLine.map((l) => l.branchId));
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    // At least one store: a payment pays for something.
+    if (next.size === 0) return;
+    const all = next.size === everyLine.length;
+    setPicked(all ? null : next);
+    void load(all ? null : next);
+  };
+  const stateOf = (id: string) => stores.find((s) => s.branchId === id) ?? null;
 
   const open = rows?.some((p) => p.status === 'submitted' || p.status === 'under_review') ?? false;
   // 0130: the stores added in the app and waiting for activation — named by the server's quote, activated by a verified payment.
@@ -74,6 +93,28 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
           ))}
           . {t(open ? 'portal.branches.pending.review' : 'portal.branches.pending.body')}
         </Notice>
+      ) : null}
+      {everyLine.length ? (
+        <fieldset className="stack-tight" aria-describedby="stores-help">
+          <legend>{t('portal.stores.title')}</legend>
+          <p id="stores-help" className="muted small">{t('portal.stores.help')}</p>
+          {everyLine.map((l) => {
+            const s = stateOf(l.branchId);
+            const ends = s?.paidUntil ?? s?.trialEndsAt ?? s?.complimentaryUntil ?? null;
+            return (
+              <label key={l.branchId} className="row spread" data-testid="store-choice">
+                <span className="row">
+                  <input type="checkbox" checked={picked ? picked.has(l.branchId) : true} disabled={open} onChange={() => toggle(l.branchId)} />
+                  <bdi>{lang === 'ar' && s?.nameAr ? s.nameAr : l.name}</bdi>
+                </span>
+                <span className="small">
+                  <Badge tone={s?.canWrite ? 'ok' : 'warn'}>{t(`portal.stores.state.${l.pending ? 'locked' : (s?.state ?? 'locked')}` as Key)}</Badge>
+                  {ends ? <> · {t(s?.graceEndsAt ? 'portal.stores.graceUntil' : 'portal.stores.until', { date: formatDate(s?.graceEndsAt ?? ends, lang) })}</> : null}
+                </span>
+              </label>
+            );
+          })}
+        </fieldset>
       ) : null}
       {open ? (
         <p className="muted small">{t('portal.proof.waiting')}</p>
@@ -108,6 +149,7 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
       ) : null}
       <PayDialog
         plan={chosen}
+        branches={picked ? [...picked] : null}
         instructions={pay}
         onClose={() => setChosen(null)}
         onDone={async () => {
@@ -123,11 +165,14 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
 /** The amount, where to send it — each number with its copy button — and the screenshot to confirm it with. */
 function PayDialog({
   plan,
+  branches,
   instructions,
   onClose,
   onDone,
 }: {
   plan: PlanQuote | null;
+  /** 0132: the stores chosen; null — every store, as quoted. */
+  branches: string[] | null;
   instructions: PaymentInstructions | null;
   onClose: () => void;
   onDone: () => Promise<void>;
@@ -176,6 +221,8 @@ function PayDialog({
     const body = new FormData();
     body.set('idempotencyKey', key.current);
     body.set('months', String(plan.months));
+    // 0132: the stores chosen — none named means every store, as quoted.
+    if (branches?.length) body.set('branches', branches.join(','));
     body.set('file', file);
     setBusy(true);
     try {
