@@ -1,0 +1,10 @@
+
+> erp-control-web@0.1.0 build
+> npm run typecheck && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && node scripts/prerender.mjs
+
+
+> erp-control-web@0.1.0 typecheck
+> tsc -p tsconfig.json --noEmit
+
+test/store-status.test.tsx(51,12): error TS2532: Object is possibly 'undefined'.
+test/store-status.test.tsx(69,12): error TS2532: Object is possibly 'undefined'.
