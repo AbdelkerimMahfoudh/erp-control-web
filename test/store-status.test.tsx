@@ -48,7 +48,7 @@ describe('each store’s own subscription', () => {
     );
     const rows = within(screen.getByTestId('store-status')).getAllByRole('listitem');
     expect(rows.map((r) => r.textContent)).toEqual([expect.stringContaining('Active'), expect.stringContaining('Free trial'), expect.stringContaining('Ended')]);
-    expect(rows[1].textContent).toContain('until');
+    expect(rows[1]?.textContent).toContain('until');
     cleanup();
     render(
       <I18nProvider fixed="ar">
@@ -66,6 +66,6 @@ describe('each store’s own subscription', () => {
     );
     const rows = within(screen.getByTestId('proof-lines')).getAllByRole('listitem');
     expect(rows).toHaveLength(2);
-    expect(rows[1].textContent).toContain('Pending activation');
+    expect(rows[1]?.textContent).toContain('Pending activation');
   });
 });
