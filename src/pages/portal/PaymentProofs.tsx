@@ -44,6 +44,8 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
   useEffect(() => void load(), [load]);
 
   const open = rows?.some((p) => p.status === 'submitted' || p.status === 'under_review') ?? false;
+  // 0130: the stores added in the app and waiting for activation — named by the server's quote, activated by a verified payment.
+  const waiting = plans?.[0]?.lines.filter((l) => l.pending) ?? [];
 
   return (
     <section className="card stack" aria-labelledby="plans-h">
@@ -61,6 +63,18 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
         </div>
       ))}
       <ErrorNotice error={error} />
+      {waiting.length ? (
+        <Notice tone="info">
+          <strong>{t('portal.branches.pending.title')}</strong>{' '}
+          {waiting.map((l, i) => (
+            <span key={l.branchId}>
+              {i ? ', ' : ''}
+              <bdi>{l.name}</bdi>
+            </span>
+          ))}
+          . {t(open ? 'portal.branches.pending.review' : 'portal.branches.pending.body')}
+        </Notice>
+      ) : null}
       {open ? (
         <p className="muted small">{t('portal.proof.waiting')}</p>
       ) : plans ? (
@@ -76,7 +90,10 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
                 <ul className="stack-tight small">
                   {plan.lines.map((l) => (
                     <li key={l.branchId} className="row spread">
-                      <bdi>{l.name}</bdi>
+                      <span>
+                        <bdi>{l.name}</bdi>
+                        {l.pending ? <> <Badge tone="warn">{t('portal.branches.pending.badge')}</Badge></> : null}
+                      </span>
                       <Money amount={l.amount} />
                     </li>
                   ))}

@@ -943,7 +943,7 @@ export type AcquisitionLookup =
 /** One plan on the portal (owner, 2026-11-05): 1, 3 or 12 months, priced by the server per store. */
 export interface PlanQuote {
   months: 1 | 3 | 12;
-  lines: { branchId: string; name: string; activity: 'electronics' | 'money_agent' | 'both'; storeAmount: number; paidSeats: number; seatAmount: number; amount: number }[];
+  lines: { branchId: string; name: string; activity: 'electronics' | 'money_agent' | 'both'; storeAmount: number; paidSeats: number; seatAmount: number; amount: number; /** 0130: a store added in the app, waiting for activation — activated by this payment. */ pending?: boolean }[];
   total: number;
 }
 
