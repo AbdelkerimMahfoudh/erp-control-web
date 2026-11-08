@@ -473,11 +473,39 @@ export interface TimelineEvent {
   createdAt: string;
 }
 
+/** 0134 (owner, 2026-11-08): what a payment or proof pays for. */
+export type PaymentCategory = 'subscription' | 'store_activation' | 'extra_seats' | 'other';
+export const PAYMENT_CATEGORIES: readonly PaymentCategory[] = ['subscription', 'store_activation', 'extra_seats', 'other'];
+
+/** 0134: the one price list every screen shows (`period-offers.ts` on the server). */
+export interface PriceList {
+  currency: string;
+  months: number[];
+  electronics: Record<string, number>;
+  moneyAgentMonthly: number;
+  bothMonthly: number;
+  seatMonthly: number;
+  /** Every figure a page shows, by period ('1', '3', '12') — the server's, so no page computes a price. */
+  table?: { electronics: Record<string, number>; money_agent: Record<string, number>; both: Record<string, number>; seat: Record<string, number> };
+  categories: PaymentCategory[];
+}
+
+/** 0134: the server's price for a categorised payment; null for an adjustment. */
+export interface PaymentPrice {
+  months: number;
+  seats: number | null;
+  total: number;
+  stores: { branchId: string; amount: number }[];
+}
+
 export interface PaymentRow {
   id: string;
   amount: string;
   currency: string;
   channel: string;
+  /** 0134: null before 0134 or from an API older than it. */
+  category?: PaymentCategory | null;
+  details?: { months?: number | null; seats?: number | null; stores?: { branchId: string; name?: string; amount: number }[] | null; note?: string } | null;
   reference: string | null;
   note: string | null;
   paidAt: string;
@@ -970,6 +998,9 @@ export interface PaymentProof {
   status: 'submitted' | 'under_review' | 'approved' | 'refused';
   /** 0132: the stores it pays for, each with its amount (a waiting store marked pending). */
   lines?: { branchId: string; name: string; amount: number; pending?: boolean }[] | null;
+  /** 0134: what the Owner said it pays for, and the seats of an extra-seats payment. */
+  category?: PaymentCategory | null;
+  seats?: number | null;
   amount: string;
   paidAt: string;
   reference: string | null;

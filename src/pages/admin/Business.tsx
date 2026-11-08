@@ -20,6 +20,7 @@ import { DeferredAccounts, PhoneVerificationBadge, ProvisionStaff } from './defe
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
 import { AccountReadyResend, BusinessDeletion } from './BusinessDeletion';
+import { categoryBody, DEFAULT_CHOICE, PaymentCategoryFields, type CategoryChoice } from './PaymentCategoryFields';
 
 type Decision = 'approve' | 'reject' | 'period' | 'extend' | 'suspend' | 'reinstate' | 'cancel' | 'grant' | 'payment';
 
@@ -288,6 +289,8 @@ export function Business() {
               columns={[
                 { label: t('admin.audit.when'), render: (p) => formatDate(p.paidAt, lang) },
                 { label: t('admin.action.amount'), render: (p) => <Money amount={p.amount} /> },
+                // 0134: what each payment was for (an older one says nothing).
+                { label: t('payment.category'), render: (p) => (p.category ? t(`payment.category.${p.category}` as Key) + (p.details?.months ? ' · ' + t('payment.months.n', { n: String(p.details.months) }) : '') + (p.details?.seats ? ' · ' + t('payment.seats.n', { n: String(p.details.seats) }) : '') : '—') },
                 { label: t('admin.action.reference'), render: (p) => <span className="ltr">{p.reference ?? '—'}</span> },
                 { label: t('admin.audit.actor'), render: (p) => <span className="ltr">{p.confirmedBy ?? p.recordedBy}</span> },
               ]}
@@ -360,6 +363,7 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
   const { t, lang } = useI18n();
   const [open, setOpen] = useState<Decision | null>(null);
   const [form, setForm] = useState({ months: '1', periodEnd: '', days: '14', reason: '', amount: '', paidAt: new Date().toISOString().slice(0, 10), channel: 'bank_transfer', reference: '', note: '', confirm: true });
+  const [choice, setChoice] = useState<CategoryChoice>(DEFAULT_CHOICE);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [done, setDone] = useState<string | null>(null);
@@ -396,6 +400,8 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
             reference: form.reference.trim() || undefined,
             note: form.note.trim() || undefined,
             confirm: form.confirm,
+            // 0134: what it pays for; the server checks the amount is its price.
+            ...categoryBody(choice),
           };
           break;
         default:
@@ -460,9 +466,16 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
           ) : null}
           {open === 'payment' ? (
             <>
+              <PaymentCategoryFields
+                businessId={business.id}
+                stores={business.storeStatus ?? []}
+                choice={choice}
+                onChoice={setChoice}
+                onPrice={(amount) => setForm((f) => ({ ...f, amount: amount ?? (choice.category === 'other' ? f.amount : '') }))}
+              />
               <div className="grid">
                 <Field label={t('admin.action.amount')}>
-                  <input required inputMode="decimal" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} dir="ltr" />
+                  <input required inputMode="decimal" readOnly={choice.category !== 'other'} value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} dir="ltr" />
                 </Field>
                 <Field label={t('admin.action.paidAt')}>
                   <input required type="date" value={form.paidAt} onChange={(e) => setForm({ ...form, paidAt: e.target.value })} />
@@ -478,8 +491,8 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
               <Field label={t('admin.action.reference')} hint={t('admin.action.reference.required')}>
                 <input required minLength={3} maxLength={120} value={form.reference} onChange={(e) => setForm({ ...form, reference: e.target.value })} dir="ltr" />
               </Field>
-              <Field label={t('admin.action.note')}>
-                <textarea maxLength={500} rows={2} value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} />
+              <Field label={t('admin.action.note')} hint={choice.category === 'other' ? t('admin.action.reason.required') : undefined}>
+                <textarea required={choice.category === 'other'} maxLength={500} rows={2} value={form.note} onChange={(e) => setForm({ ...form, note: e.target.value })} />
               </Field>
               <label className="row">
                 <input type="checkbox" checked={form.confirm} onChange={(e) => setForm({ ...form, confirm: e.target.checked })} className="checkbox-inline" />

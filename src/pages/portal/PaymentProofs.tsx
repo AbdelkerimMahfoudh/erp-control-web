@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
-import type { PaymentInstructions, PaymentProof, PlanQuote, StoreStatus } from '../../api/types';
+import type { PaymentCategory, PaymentInstructions, PaymentProof, PlanQuote, PriceList, StoreStatus } from '../../api/types';
 import { ownerRequest } from '../../auth/owner';
 import { Badge, ErrorNotice, Money, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
@@ -30,19 +30,37 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
   const [everyLine, setEveryLine] = useState<PlanQuote['lines']>([]);
   const [picked, setPicked] = useState<Set<string> | null>(null);
   const [error, setError] = useState<unknown>(null);
+  // 0134 (owner, 2026-11-08): the price list, and what this payment is for.
+  const [prices, setPrices] = useState<PriceList | null>(null);
+  const [category, setCategory] = useState<PaymentCategory>('subscription');
+  const [seatStore, setSeatStore] = useState<string>('');
+  const [seats, setSeats] = useState(1);
+  const [otherAmount, setOtherAmount] = useState('');
+  const [otherNote, setOtherNote] = useState('');
+  const [waitingLines, setWaitingLines] = useState<PlanQuote['lines']>([]);
+  const [seatPrices, setSeatPrices] = useState<Record<number, number>>({});
 
-  const load = useCallback(async (only: Set<string> | null = null) => {
+  const load = useCallback(async (only: Set<string> | null = null, cat: PaymentCategory = 'subscription') => {
     try {
-      const query = only && only.size ? `?branches=${[...only].join(',')}` : '';
+      const parts: string[] = [];
+      if (only && only.size) parts.push(`branches=${encodeURIComponent([...only].join(','))}`);
+      if (cat === 'subscription' || cat === 'store_activation') parts.push(`category=${cat}`);
+      const query = parts.length ? `?${parts.join('&')}` : '';
       const [proofs, offered, instructions] = await Promise.all([
         ownerRequest<PaymentProof[]>('platform/my-subscription/payment-proofs'),
-        ownerRequest<{ plans: PlanQuote[]; branches?: StoreStatus[] }>(`platform/my-subscription/plans${query}`),
+        ownerRequest<{ plans: PlanQuote[]; branches?: StoreStatus[]; prices?: PriceList }>(`platform/my-subscription/plans${query}`),
         ownerRequest<PaymentInstructions>('platform/payment-instructions'),
       ]);
       setRows(proofs);
       setPlans(offered.plans);
+      if (offered.prices) setPrices(offered.prices);
       setStores(offered.branches ?? []);
-      if (!only) setEveryLine(offered.plans[0]?.lines ?? []);
+      if (!only && cat === 'subscription') {
+        // Every store and waiting request, as the unnarrowed quote names them (for the store list and the waiting notice).
+        const all = await ownerRequest<{ plans: PlanQuote[] }>('platform/my-subscription/plans');
+        setEveryLine(all.plans[0]?.lines ?? []);
+        setWaitingLines((all.plans[0]?.lines ?? []).filter((l) => l.pending));
+      }
       setPay(instructions);
     } catch (e) {
       setError(e);
@@ -58,13 +76,34 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
     if (next.size === 0) return;
     const all = next.size === everyLine.length;
     setPicked(all ? null : next);
-    void load(all ? null : next);
+    void load(all ? null : next, category);
   };
   const stateOf = (id: string) => stores.find((s) => s.branchId === id) ?? null;
 
   const open = rows?.some((p) => p.status === 'submitted' || p.status === 'under_review') ?? false;
   // 0130: the stores added in the app and waiting for activation — named by the server's quote, activated by a verified payment.
-  const waiting = plans?.[0]?.lines.filter((l) => l.pending) ?? [];
+  const waiting = waitingLines;
+  const openStores = everyLine.filter((l) => !l.pending);
+  const choose = (c: PaymentCategory) => {
+    setCategory(c);
+    setPicked(null);
+    void load(null, c);
+  };
+  // 0134: the extra seats' price for each period — the server's (the page multiplies nothing).
+  useEffect(() => {
+    if (category !== 'extra_seats' || !seatStore) return setSeatPrices({});
+    let live = true;
+    void Promise.all(
+      ([1, 3, 12] as const).map((m) =>
+        ownerRequest<{ price: { total: number } | null }>(`platform/my-subscription/payment-price?category=extra_seats&months=${m}&branches=${seatStore}&seats=${seats}`).then((r) => [m, r.price?.total ?? 0] as const),
+      ),
+    )
+      .then((all) => live && setSeatPrices(Object.fromEntries(all)))
+      .catch((e: unknown) => live && setError(e));
+    return () => {
+      live = false;
+    };
+  }, [category, seatStore, seats]);
 
   return (
     <section className="card stack" aria-labelledby="plans-h">
@@ -116,8 +155,65 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
           })}
         </fieldset>
       ) : null}
+      {prices ? <PriceTable prices={prices} /> : null}
+      {!open && plans ? (
+        <fieldset className="stack-tight" data-testid="payment-category">
+          <legend>{t('payment.category.question')}</legend>
+          {(['subscription', 'store_activation', 'extra_seats', 'other'] as const)
+            .filter((c) => c !== 'store_activation' || waiting.length > 0)
+            .map((c) => (
+              <label key={c} className="row">
+                <input type="radio" name="payment-category" checked={category === c} onChange={() => choose(c)} />
+                {t(`payment.category.${c}` as Key)}
+              </label>
+            ))}
+        </fieldset>
+      ) : null}
       {open ? (
         <p className="muted small">{t('portal.proof.waiting')}</p>
+      ) : plans && category === 'extra_seats' ? (
+        <div className="stack-tight" data-testid="extra-seats">
+          <label className="field">
+            {t('payment.store.one')}
+            <select value={seatStore} onChange={(e) => setSeatStore(e.target.value)}>
+              <option value="">—</option>
+              {openStores.map((l) => (
+                <option key={l.branchId} value={l.branchId}>
+                  {l.name}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className="field">
+            {t('payment.seats')}
+            <input type="number" min={1} max={50} value={seats} onChange={(e) => setSeats(Math.max(1, Math.min(50, Number(e.target.value) || 1)))} />
+          </label>
+          <div className="grid plans">
+            {([1, 3, 12] as const).map((m) => (
+              <div key={m} className="card stack-tight plan" data-months={m}>
+                <h3>{t(monthsKey(m))}</h3>
+                <p className="plan-total">{seatPrices[m] !== undefined ? <Money amount={seatPrices[m]} /> : '—'}</p>
+                <button type="button" className="btn btn-primary" disabled={!seatStore || seatPrices[m] === undefined} onClick={() => setChosen({ months: m, lines: [], total: seatPrices[m] ?? 0 })}>
+                  {t('portal.plans.choose')}
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : plans && category === 'other' ? (
+        <div className="stack-tight" data-testid="other-payment">
+          <label className="field">
+            {t('admin.action.amount')}
+            <input inputMode="numeric" dir="ltr" value={otherAmount} onChange={(e) => setOtherAmount(e.target.value.replace(/[^0-9]/g, ''))} />
+          </label>
+          <label className="field">
+            {t('payment.other.note')}
+            <textarea maxLength={500} rows={2} value={otherNote} onChange={(e) => setOtherNote(e.target.value)} />
+          </label>
+          <button type="button" className="btn btn-primary" disabled={!Number(otherAmount) || !otherNote.trim()} onClick={() => setChosen({ months: 1, lines: [], total: Number(otherAmount) })}>
+            {t('portal.plans.choose')}
+          </button>
+        </div>
       ) : plans ? (
         <>
           <p className="muted small">{t('portal.plans.intro')}</p>
@@ -149,7 +245,15 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
       ) : null}
       <PayDialog
         plan={chosen}
-        branches={picked ? [...picked] : null}
+        category={category}
+        extra={
+          category === 'extra_seats'
+            ? { branches: seatStore, seats: String(seats) }
+            : category === 'other'
+              ? { amount: otherAmount, paidAt: new Date().toISOString(), note: otherNote.trim() }
+              : {}
+        }
+        branches={category === 'subscription' || category === 'store_activation' ? (chosen?.lines.map((l) => l.branchId).filter((id) => !picked || picked.has(id)) ?? null) : null}
         instructions={pay}
         onClose={() => setChosen(null)}
         onDone={async () => {
@@ -165,12 +269,17 @@ export function PaymentProofs({ onChanged }: { onChanged: () => void | Promise<v
 /** The amount, where to send it — each number with its copy button — and the screenshot to confirm it with. */
 function PayDialog({
   plan,
+  category,
+  extra,
   branches,
   instructions,
   onClose,
   onDone,
 }: {
   plan: PlanQuote | null;
+  /** 0134: what the payment is for, and the fields that category adds (seats, or an adjustment's amount and note). */
+  category: PaymentCategory;
+  extra: Record<string, string>;
   /** 0132: the stores chosen; null — every store, as quoted. */
   branches: string[] | null;
   instructions: PaymentInstructions | null;
@@ -220,9 +329,11 @@ function PayDialog({
     if (file.size > MAX_BYTES) return setProblem('portal.proof.problem.size');
     const body = new FormData();
     body.set('idempotencyKey', key.current);
-    body.set('months', String(plan.months));
+    body.set('category', category);
+    if (category !== 'other') body.set('months', String(plan.months));
     // 0132: the stores chosen — none named means every store, as quoted.
     if (branches?.length) body.set('branches', branches.join(','));
+    for (const [k, v] of Object.entries(extra)) if (v) body.set(k, v);
     body.set('file', file);
     setBusy(true);
     try {
@@ -241,7 +352,8 @@ function PayDialog({
       {plan ? (
         <form className="body stack" onSubmit={confirm}>
           <h2 id="pay-title">
-            {t(monthsKey(plan.months))} · <Money amount={plan.total} />
+            {t(`payment.category.${category}` as Key)} · {category !== 'other' ? <>{t(monthsKey(plan.months))} · </> : null}
+            <Money amount={plan.total} />
           </h2>
           {offered.length > 0 ? (
             <>
@@ -293,5 +405,45 @@ function PayDialog({
         </form>
       ) : null}
     </dialog>
+  );
+}
+
+/** 0134: the one price list — every store and seat, per period — the server's figures. */
+function PriceTable({ prices }: { prices: PriceList }) {
+  const { t } = useI18n();
+  const table = prices.table;
+  if (!table) return null;
+  const rows: Array<[Key, Record<string, number>]> = [
+    ['payment.prices.electronics', table.electronics],
+    ['payment.prices.agent', table.money_agent],
+    ['payment.prices.both', table.both],
+    ['payment.prices.seat', table.seat],
+  ];
+  return (
+    <table className="table small" data-testid="price-list">
+      <caption>{t('payment.prices.title')}</caption>
+      <thead>
+        <tr>
+          <th />
+          {prices.months.map((m) => (
+            <th key={m} scope="col">
+              {t(monthsKey(m))}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map(([label, by]) => (
+          <tr key={label}>
+            <th scope="row">{t(label)}</th>
+            {prices.months.map((m) => (
+              <td key={m}>
+                <Money amount={by[String(m)] ?? 0} />
+              </td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }

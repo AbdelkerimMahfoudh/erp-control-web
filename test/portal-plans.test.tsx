@@ -42,7 +42,7 @@ beforeEach(() => {
     vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
       const url = String(input);
       const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
-      if (url.endsWith('/platform/my-subscription/plans')) return json(PLANS);
+      if (url.split('?')[0]!.endsWith('/platform/my-subscription/plans')) return json(PLANS); // 0134: narrowed by ?category=
       if (url.endsWith('/platform/payment-instructions')) return json(INSTRUCTIONS);
       if (url.endsWith('/platform/my-subscription/payment-proofs') && init?.method === 'POST') {
         posted = init.body as FormData;
