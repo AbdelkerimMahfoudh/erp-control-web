@@ -1,7 +1,7 @@
 /*
  * The Dukan D symbol from the owner's Dukan-ERP-Logo-Pack (2026-11-04) — the same artwork as the app's icon and launch
  * (erp-mobile assets/brand/pack/D-symbol.svg), imported, not redrawn. Owner, 2026-11-11: the portals use the new logo.
- * The lettering layer takes the theme's ink (--mark-left: navy on light, white on dark); the accent stays #5146D9.
+ * The lettering layer takes the theme's ink (--mark-left: navy on light, white on dark); the accent is the pack's indigo (--mark-right).
  * Never mirrored in Arabic. Decorative here: the product's name always stands beside it.
  */
 const INK = "M126.5,23.0 236.4,23.0 244.0,24.0 256.0,27.0 264.0,29.9 272.8,34.0 282.0,40.0 291.4,49.0 298.1,59.0 302.2,68.0 304.0,75.3 305.0,82.0 305.1,92.0 303.1,105.0 299.5,117.0 295.0,121.0 285.0,128.3 272.0,136.4 259.0,143.2 237.0,153.1 203.0,165.2 164.0,175.4 124.0,183.4 105.0,186.3 75.0,189.7 63.0,190.4 62.5,189.0 66.9,176.0 117.8,30.0 119.0,27.4 121.0,25.3 124.0,23.6 126.5,23.0Z M162.0,66.8 160.6,68.0 159.5,71.0 155.1,85.0 133.7,146.0 132.7,149.0 133.0,150.4 135.0,150.9 188.0,151.1 199.0,150.4 207.0,148.5 213.0,146.3 221.0,142.1 228.0,136.6 233.1,131.0 238.4,123.0 242.5,115.0 246.5,102.0 247.1,95.0 246.5,88.0 244.5,82.0 241.0,76.8 238.0,74.0 234.0,71.4 227.0,68.6 221.0,67.3 213.0,66.7 162.0,66.8Z";

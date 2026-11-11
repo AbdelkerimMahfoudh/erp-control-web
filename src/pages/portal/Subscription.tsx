@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { StorePayDialog, openProofFor } from './StorePayment';
 import { ApiError } from '../../api/client';
 import { arabicNameProblem, latinNameProblem, nameProblemKey, normalizeName } from '../../lib/names';
 import type {
@@ -11,6 +12,7 @@ import type {
   NewStoreOption,
   NoticeTimeline,
   PaymentInstructions,
+  PaymentProof,
   PortalStatus,
   QuoteLine,
   RequestResult,
@@ -18,7 +20,7 @@ import type {
   SubscriptionBranch,
   TrialView,
 } from '../../api/types';
-import { isUnauthorized, ownerRequest, portalChooseAccount, portalSession, portalSignIn, portalSignOut, type AccountChoice, type PortalSession } from '../../auth/owner';
+import { isUnauthorized, ownerRequest, takeLandingStore, portalChooseAccount, portalSession, portalSignIn, portalSignOut, type AccountChoice, type PortalSession } from '../../auth/owner';
 import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
 import { FailureNote, FallbackNote, NoticeStateBadge, Where, noticeName } from '../../components/notices';
@@ -225,6 +227,8 @@ function explanation(ent: Entitlement, t: (k: Key, p?: Record<string, string>) =
 
 
 function SubscriptionView({ session, data, reload, onSignOut }: { session: PortalSession; data: MySubscription; reload: () => Promise<void>; onSignOut: () => Promise<void> }) {
+  // An activation message's link lands here with its waiting store (Claim.tsx), kept in memory; never read from the address.
+  const [focusStore] = useState(takeLandingStore);
   const { t, lang } = useI18n();
   const ent = data.entitlement;
   const quote = data.pricing.quote;
@@ -367,6 +371,7 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
         trial={ent.trial ?? null}
         version={requestsVersion}
         onChanged={reload}
+        focusStore={focusStore}
       />
 
       <HowToPay version={data} />
@@ -980,6 +985,7 @@ function Requests({
   trial,
   version,
   onChanged,
+  focusStore,
 }: {
   stores: { id: string; name: string }[];
   /** What a new store of each activity is charged per month now — the server's figure; null until it is read. */
@@ -988,9 +994,16 @@ function Requests({
   trial: TrialView | null;
   version: number;
   onChanged: () => Promise<void>;
+  /** The waiting store an activation message's link was for (owner, 2026-11-11): its payment opens at once. */
+  focusStore?: string | null;
 }) {
   const { t, lang } = useI18n();
   const [rows, setRows] = useState<SeatRequest[] | null>(null);
+  // 0135: the proofs already sent (a waiting store's open one makes it "waiting for confirmation") and how to pay.
+  const [proofs, setProofs] = useState<PaymentProof[] | null>(null);
+  const [instructions, setInstructions] = useState<PaymentInstructions | null>(null);
+  const [paying, setPaying] = useState<SeatRequest | null>(null);
+  const focused = useRef(false);
   const [error, setError] = useState<unknown>(null);
   const [branchId, setBranchId] = useState(stores[0]?.id ?? '');
   const [storeName, setStoreName] = useState('');
@@ -1001,7 +1014,14 @@ function Requests({
 
   const load = useCallback(async () => {
     try {
-      setRows(await ownerRequest<SeatRequest[]>('platform/my-subscription/seat-requests'));
+      const [list, sent, how] = await Promise.all([
+        ownerRequest<SeatRequest[]>('platform/my-subscription/seat-requests'),
+        ownerRequest<PaymentProof[]>('platform/my-subscription/payment-proofs').catch(() => null),
+        ownerRequest<PaymentInstructions>('platform/payment-instructions').catch(() => null),
+      ]);
+      setRows(list);
+      setProofs(sent);
+      setInstructions(how);
     } catch (e) {
       setError(e);
     }
@@ -1009,6 +1029,13 @@ function Requests({
   useEffect(() => {
     void load();
   }, [load, version]);
+  // The activation message's link: that store's payment opens once its row is read.
+  useEffect(() => {
+    if (focused.current || !focusStore || !rows) return;
+    const row = rows.find((r) => r.id.toLowerCase() === focusStore.toLowerCase() && r.kind === 'store' && r.status === 'pending_payment');
+    focused.current = true;
+    if (row) setPaying(row);
+  }, [focusStore, rows]);
 
   const act = async (fn: () => Promise<unknown>) => {
     setBusy(true);
@@ -1038,7 +1065,24 @@ function Requests({
           columns={[
             { label: t('admin.seats.request'), render: (r) => <RequestSummary request={r} /> },
             { label: t('admin.seats.amount'), render: (r) => <RequestAmount request={r} /> },
-            { label: t('admin.businesses.state'), render: (r) => <RequestStatus request={r} /> },
+            {
+              label: t('admin.businesses.state'),
+              render: (r) =>
+                // 0135: a waiting store is paid from its status, and its proof corrected there until it is confirmed.
+                r.kind === 'store' && r.status === 'pending_payment' ? (
+                  <button
+                    type="button"
+                    className="badge-button"
+                    data-testid={`store-pay-${r.id}`}
+                    aria-label={openProofFor(r.id, proofs) ? t('portal.store.waitingConfirmation') : t('portal.store.waitingPayment')}
+                    onClick={() => setPaying(r)}
+                  >
+                    {openProofFor(r.id, proofs) ? <Badge tone="info">{t('portal.store.waitingConfirmation')}</Badge> : <RequestStatus request={r} />}
+                  </button>
+                ) : (
+                  <RequestStatus request={r} />
+                ),
+            },
             { label: t('admin.seats.requested'), render: (r) => formatDate(r.requestedAt, lang) },
             {
               label: '',
@@ -1057,6 +1101,17 @@ function Requests({
         />
       )}
       {rows?.some((r) => r.status === 'scheduled') ? <p className="small">{t('trial.addons.paidNote')}</p> : null}
+      <StorePayDialog
+        request={paying}
+        proof={paying ? openProofFor(paying.id, proofs) : null}
+        instructions={instructions}
+        onClose={() => setPaying(null)}
+        onDone={async () => {
+          setPaying(null);
+          await load();
+          await onChanged();
+        }}
+      />
       <ErrorNotice error={error} />
       <div className="grid">
         <form

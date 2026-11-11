@@ -31,6 +31,8 @@ export type SignInResult =
 
 interface RawSignIn {
   status?: string;
+  /** A claim link's destination (owner, 2026-11-11): the waiting store its activation message was about. */
+  landing?: { store?: string } | null;
   session?: PortalSession;
   continuationToken?: string;
   expiresIn?: number;
@@ -65,7 +67,17 @@ export async function portalSignIn(identifier: string, password: string): Promis
  * normal portal session. In the body, never in a URL the API could log.
  */
 export async function portalClaimLink(token: string): Promise<PortalSession> {
-  return opened(await request<RawSignIn>('platform/portal/claim-link', { method: 'POST', body: { token } }));
+  const result = await request<RawSignIn>('platform/portal/claim-link', { method: 'POST', body: { token } });
+  landingStore = result.landing?.store ?? null;
+  return opened(result);
+}
+
+/** Owner, 2026-11-11: the waiting store an activation message's link was for, kept in memory once and handed to the page. */
+let landingStore: string | null = null;
+export function takeLandingStore(): string | null {
+  const store = landingStore;
+  landingStore = null;
+  return store;
 }
 
 /** The same contact and password at more than one business: continue as the one chosen. */

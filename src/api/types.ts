@@ -1004,6 +1004,10 @@ export interface PaymentProof {
   amount: string;
   paidAt: string;
   reference: string | null;
+  /** 0135: the number the Owner paid from; the proof's revision (raised by each correction) and when it was last corrected. */
+  payerPhone?: string | null;
+  revision?: number;
+  revisedAt?: string | null;
   note: string | null;
   contentType: string;
   byteSize: number;

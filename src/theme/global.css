@@ -879,3 +879,21 @@ fieldset.promo legend {
   font-size: 1.25rem;
   font-variant-numeric: tabular-nums;
 }
+
+/* 0135: a waiting store's status opens its payment — the badge itself, pressable (owner, 2026-11-11). */
+.badge-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+.badge-button .badge {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.badge-button:focus-visible {
+  outline: 2px solid var(--focus, currentColor);
+  outline-offset: 2px;
+  border-radius: 999px;
+}

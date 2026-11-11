@@ -48,10 +48,13 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
     if (!(await ask())) return;
     setBusy(true);
     try {
-      await adminRequest(`platform/payment-proofs/${proof.id}/${path}`, { method: 'POST', body: { ...body } });
+      // 0135: the decision names the revision shown here; one the Owner has corrected since is refused (proof_revised).
+      await adminRequest(`platform/payment-proofs/${proof.id}/${path}`, { method: 'POST', body: { ...body, revision: proof.revision ?? 1 } });
       await onDone();
     } catch (e) {
       setError(e);
+      // The Owner corrected it meanwhile: the latest version is read at once, with the error kept above it.
+      if ((e as { code?: string } | null)?.code === 'proof_revised') await onDone().catch(() => undefined);
     } finally {
       setBusy(false);
     }
@@ -66,6 +69,14 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
         </span>
       </div>
       {proof.reference ? <p className="ltr">{proof.reference}</p> : null}
+      {proof.payerPhone ? (
+        <p>
+          {t('admin.proofs.payer')}: <span className="ltr" dir="ltr">{proof.payerPhone}</span>
+        </p>
+      ) : null}
+      {(proof.revision ?? 1) > 1 ? (
+        <Notice tone="warn">{t('admin.proofs.revised', { revision: String(proof.revision), when: proof.revisedAt ? formatDate(proof.revisedAt, lang) : '' })}</Notice>
+      ) : null}
       {proof.fileAvailable ? (
         <a className="btn" href={`${apiBase()}/platform/payment-proofs/${proof.id}/file`} rel="noreferrer">
           {t('admin.proofs.download')}

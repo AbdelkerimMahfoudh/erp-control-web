@@ -46,4 +46,16 @@ describe('payment proofs on the web (D227)', () => {
     const client = readFileSync('src/api/client.ts', 'utf8');
     expect(client).toMatch(/instanceof FormData/);
   });
+
+  it("0135: a decision names the revision it was made on; the payer number and a correction are shown; the portal never decides", () => {
+    const page = readFileSync("src/pages/admin/Proofs.tsx", "utf8");
+    expect(page).toContain('revision: proof.revision ?? 1');
+    expect(page).toMatch(/proof.payerPhone/);
+    expect(page).toMatch(/admin.proofs.revised/);
+    expect(page).toMatch(/proof_revised/);
+    const store = readFileSync("src/pages/portal/StorePayment.tsx", "utf8");
+    expect(store).not.toMatch(/(approve|refuse)/);
+    expect(store).not.toMatch(/set\('amount'/);
+  });
+
 });

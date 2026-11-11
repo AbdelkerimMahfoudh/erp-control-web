@@ -34,6 +34,7 @@ export function Claim() {
     spent.current = true;
     window.history.replaceState(null, '', '/claim');
     portalClaimLink(token)
+      // An activation message's link opens its waiting store's payment (owner, 2026-11-11: takeLandingStore).
       .then(() => navigate(PORTAL_HOME, { replace: true }))
       .catch((e: unknown) => {
         const code = e instanceof ApiError ? e.code : null;
