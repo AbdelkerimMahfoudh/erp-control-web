@@ -897,3 +897,63 @@ fieldset.promo legend {
   outline-offset: 2px;
   border-radius: 999px;
 }
+
+/* 0136: a payment proof where it is decided — fitted, zoomed on a press; a PDF in the browser's own viewer. */
+.proof-image {
+  display: block;
+  max-inline-size: 100%;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 8px);
+  background: var(--surface-2, transparent);
+  cursor: zoom-in;
+  overflow: auto;
+  max-block-size: 70vh;
+}
+.proof-image img {
+  display: block;
+  max-inline-size: 100%;
+  block-size: auto;
+}
+.proof-image.zoomed {
+  cursor: zoom-out;
+}
+.proof-image.zoomed img {
+  max-inline-size: none;
+  inline-size: 200%;
+}
+.proof-pdf {
+  inline-size: 100%;
+  block-size: 70vh;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 8px);
+}
+
+/* Owner, 2026-11-11: the portal's three tabs — sticky at the top on a phone, each a comfortable touch target. */
+.portal-tabs {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg, Canvas);
+  overflow-x: auto;
+}
+.portal-tab {
+  flex: 1 0 auto;
+  min-block-size: 44px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.portal-tab.active {
+  background: var(--mark-right);
+  color: var(--on-accent, white);
+}

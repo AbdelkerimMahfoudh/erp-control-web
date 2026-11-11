@@ -1,8 +1,9 @@
 import { act, cleanup, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { EntitlementState, MySubscription, SeatRequest, TimelineEvent, TrialClaimResult, TrialStatus, TrialView } from '../src/api/types';
 import { portalSignOut } from '../src/auth/owner';
+import { openPortalTab } from '../src/pages/portal/Subscription';
 import { ar } from '../src/i18n/ar';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
@@ -678,6 +679,9 @@ describe('dates in the business’s zone, in every language', () => {
 });
 
 describe('the history: every event in words, the trial’s own from its facts in the business’s zone (R4-01)', () => {
+  // Owner, 2026-11-11: the history is its own tab; these tests open the page on it, as a returning Owner would.
+  beforeEach(() => openPortalTab('history'));
+  afterEach(() => openPortalTab('stores'));
   /** The notes the server writes for the trial's events: English, with raw UTC instants — never what the page shows. */
   const SERVER_NOTES = [
     'Eligible for one 7-day free trial, to be claimed by the Owner on the Dukan ERP website. Not started.',

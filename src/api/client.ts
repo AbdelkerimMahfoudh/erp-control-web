@@ -28,6 +28,25 @@ export function apiBase(): string {
   return `${window.location.protocol}//${window.location.hostname}:3010/api/v1`;
 }
 
+/**
+ * A file (a payment proof) fetched with the session's own credentials, as bytes and the type the server sent; never
+ * opened on the API's origin. A refusal is the API's error, as for any request.
+ */
+export async function requestFile(path: string): Promise<{ blob: Blob; type: string }> {
+  let res: Response;
+  try {
+    res = await fetch(`${apiBase()}/${path.replace(/^\/+/, '')}`, { credentials: 'include', headers: { Accept: '*/*' } });
+  } catch {
+    throw new ApiError('network', 0, 'network', null);
+  }
+  if (!res.ok) {
+    const payload = (await res.json().catch(() => null)) as { message?: unknown; code?: unknown } | null;
+    throw new ApiError(String(payload?.message ?? `Request failed (${res.status})`), res.status, typeof payload?.code === 'string' ? payload.code : null, payload);
+  }
+  const blob = await res.blob();
+  return { blob, type: (res.headers.get('Content-Type') ?? blob.type ?? '').split(';')[0]!.trim() };
+}
+
 export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const method = options.method ?? 'GET';
   const headers: Record<string, string> = { Accept: 'application/json' };

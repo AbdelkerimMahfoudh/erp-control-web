@@ -1,4 +1,4 @@
-import { act, screen, within } from '@testing-library/react';
+import { act, fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
 import { en } from '../src/i18n/en';
@@ -44,6 +44,8 @@ describe('Account: a store’s activity and its change', () => {
     expect(within(stores).getByText('Warehouse')).toBeTruthy();
     expect(within(stores).getAllByRole('button', { name: 'Change this store’s activity' })).toHaveLength(2);
     // The quote itemises each store's activity fee.
+    // Owner, 2026-11-11: the monthly total is on the Pay & renew tab.
+    fireEvent.click(screen.getByRole('tab', { name: 'Pay & renew' }));
     const quote = (await screen.findByRole('heading', { name: 'Your monthly total' })).closest('section')!;
     expect(within(quote).getByText('Store fee')).toBeTruthy();
     expect(within(quote).getByText('300 MRU')).toBeTruthy();
@@ -197,6 +199,8 @@ describe('Account: a store’s activity and its change', () => {
     const stores = (await screen.findByRole('heading', { name: 'Stores' })).closest('section')!;
     expect(within(stores).getByText('Agence Centre')).toBeTruthy();
     expect(within(stores).queryByRole('button', { name: 'Change this store’s activity' })).toBeNull();
+    // Owner, 2026-11-11: the monthly total is on the Pay & renew tab.
+    fireEvent.click(screen.getByRole('tab', { name: 'Pay & renew' }));
     const quote = (await screen.findByRole('heading', { name: 'Your monthly total' })).closest('section')!;
     expect(within(quote).queryByText('300 MRU')).toBeNull();
   });

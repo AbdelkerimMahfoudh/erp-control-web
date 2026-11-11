@@ -8,6 +8,7 @@ import { Empty, ErrorNotice, Field, Money, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
 import { formatDate } from '../../lib/format';
 import { useStepUp } from './useStepUp';
+import { ProofViewer, proofFileHref } from '../../components/ProofViewer';
 
 /** Payment proofs waiting for a person (D227). An approval records what the administrator verified, not what was claimed. */
 export function Proofs() {
@@ -78,9 +79,13 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
         <Notice tone="warn">{t('admin.proofs.revised', { revision: String(proof.revision), when: proof.revisedAt ? formatDate(proof.revisedAt, lang) : '' })}</Notice>
       ) : null}
       {proof.fileAvailable ? (
-        <a className="btn" href={`${apiBase()}/platform/payment-proofs/${proof.id}/file`} rel="noreferrer">
-          {t('admin.proofs.download')}
-        </a>
+        // 0136: the proof itself, as the Owner last sent it (its revision), before any decision.
+        <ProofViewer
+          path={`platform/payment-proofs/${proof.id}/file`}
+          revision={proof.revision ?? 1}
+          fileName={proof.fileName ?? 'payment-proof'}
+          downloadHref={proofFileHref(`platform/payment-proofs/${proof.id}/file`)}
+        />
       ) : (
         <Notice tone="warn">{t('admin.proofs.purged')}</Notice>
       )}

@@ -59,11 +59,14 @@ function originOf(url: string): string | null {
 /** The Content Security Policy: same-origin everything, plus the API for requests (none in a public build). No inline script or style. */
 export function contentSecurityPolicy(site: Pick<SiteInputs, 'apiBase'> & WithSurface): string {
   const api = surfaceOf(site) === 'public' ? null : originOf(site.apiBase);
+  // 0136: the console and the portal show a payment proof from the bytes they fetched: an image, or a PDF in a frame.
+  const proofs = surfaceOf(site) !== 'public';
   return [
     "default-src 'self'",
     "script-src 'self'",
     "style-src 'self'",
-    "img-src 'self' data:",
+    proofs ? "img-src 'self' data: blob:" : "img-src 'self' data:",
+    ...(proofs ? ["frame-src 'self' blob:"] : []),
     "font-src 'self'",
     `connect-src 'self'${api ? ` ${api}` : ''}`,
     "manifest-src 'self'",

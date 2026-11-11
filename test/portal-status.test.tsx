@@ -1,6 +1,7 @@
 import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { openPortalTab } from '../src/pages/portal/Subscription';
 import type { GraceView, NoticeTimeline, PortalStatus } from '../src/api/types';
 import { portalSignOut } from '../src/auth/owner';
 import { ar } from '../src/i18n/ar';
@@ -209,6 +210,9 @@ describe('the Owner’s email address, verified on the portal', () => {
 });
 
 describe('how to pay, as the server says it', () => {
+  // Owner, 2026-11-11: how to pay is on the Pay & renew tab.
+  beforeEach(() => openPortalTab('payments'));
+  afterEach(() => openPortalTab('stores'));
   const howTo = async () => (await screen.findByRole('heading', { name: en['account.payment.howto'], level: 2 }, SLOW_WAIT)).closest('section')!;
 
   it('nothing offered yet: the honest sentence, no provider, no code', async () => {

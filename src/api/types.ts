@@ -1010,6 +1010,8 @@ export interface PaymentProof {
   revisedAt?: string | null;
   note: string | null;
   contentType: string;
+  /** 0136: the name it downloads under (its sent name made safe, or one built from its date and type). */
+  fileName?: string;
   byteSize: number;
   refusalReason: string | null;
   months: number | null;

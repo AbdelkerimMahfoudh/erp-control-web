@@ -229,6 +229,12 @@ function explanation(ent: Entitlement, t: (k: Key, p?: Record<string, string>) =
 function SubscriptionView({ session, data, reload, onSignOut }: { session: PortalSession; data: MySubscription; reload: () => Promise<void>; onSignOut: () => Promise<void> }) {
   // An activation message's link lands here with its waiting store (Claim.tsx), kept in memory; never read from the address.
   const [focusStore] = useState(takeLandingStore);
+  // Owner, 2026-11-11: three tabs instead of one long page; the one chosen is kept for the visit.
+  const [tab, setTabState] = useState<PortalTab>(() => (focusStore ? 'stores' : readTab()));
+  const setTab = (next: PortalTab) => {
+    setTabState(next);
+    rememberedTab = next;
+  };
   const { t, lang } = useI18n();
   const ent = data.entitlement;
   const quote = data.pricing.quote;
@@ -277,6 +283,16 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
         </div>
       </section>
 
+      <nav className="portal-tabs" role="tablist" aria-label={t('portal.tabs.label')}>
+        {PORTAL_TABS.map((id) => (
+          <button key={id} type="button" role="tab" id={`tab-${id}`} aria-selected={tab === id} aria-controls={`panel-${id}`} className={tab === id ? 'portal-tab active' : 'portal-tab'} onClick={() => setTab(id)}>
+            {t(`portal.tabs.${id}` as Key)}
+          </button>
+        ))}
+      </nav>
+
+      {tab === 'stores' ? (
+      <div className="stack" role="tabpanel" id="panel-stores" aria-labelledby="tab-stores">
       <StatusPanel version={data} />
 
       <TrialCard version={data} onChanged={reload} />
@@ -320,6 +336,20 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
       </section>
 
       <StoreActivities data={data} options={options} optionsError={optionsError} onRequested={afterActivityRequest} />
+
+      <Requests
+        stores={ent.seatsByStore.map((s) => ({ id: s.branchId, name: s.name }))}
+        newStore={options?.newStore ?? null}
+        trial={ent.trial ?? null}
+        version={requestsVersion}
+        onChanged={reload}
+        focusStore={focusStore}
+      />
+      </div>
+      ) : null}
+
+      {tab === 'payments' ? (
+      <div className="stack" role="tabpanel" id="panel-payments" aria-labelledby="tab-payments">
 
       <section className="card stack">
         <h2>{t('account.quote')}</h2>
@@ -365,18 +395,14 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
         <p className="muted small">{t('account.quote.next', { amount: `${formatInt(data.pricing.nextRenewalEstimate.monthlyTotal, lang)} MRU` })}</p>
       </section>
 
-      <Requests
-        stores={ent.seatsByStore.map((s) => ({ id: s.branchId, name: s.name }))}
-        newStore={options?.newStore ?? null}
-        trial={ent.trial ?? null}
-        version={requestsVersion}
-        onChanged={reload}
-        focusStore={focusStore}
-      />
-
       <HowToPay version={data} />
 
       <PaymentProofs onChanged={reload} />
+      </div>
+      ) : null}
+
+      {tab === 'history' ? (
+      <div className="stack" role="tabpanel" id="panel-history" aria-labelledby="tab-history">
 
       <section className="card stack">
         <h2>{t('account.payments')}</h2>
@@ -401,6 +427,8 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
         <h2>{t('account.timeline')}</h2>
         <Timeline events={data.events} trial={historyTrial(data)} />
       </section>
+      </div>
+      ) : null}
 
       <section className="card stack">
         <h2>{t('portal.help.title')}</h2>
@@ -1188,4 +1216,17 @@ function Requests({
       ) : null}
     </section>
   );
+}
+
+/** Owner, 2026-11-11: the portal's three tabs — the stores and their state, paying, and what happened. */
+const PORTAL_TABS = ['stores', 'payments', 'history'] as const;
+type PortalTab = (typeof PORTAL_TABS)[number];
+/** The tab chosen, kept in memory for the visit (the portal stores nothing else): back from paying, the same tab. */
+let rememberedTab: PortalTab = 'stores';
+function readTab(): PortalTab {
+  return rememberedTab;
+}
+/** Tests only: start the page on a tab. */
+export function openPortalTab(tab: PortalTab): void {
+  rememberedTab = tab;
 }

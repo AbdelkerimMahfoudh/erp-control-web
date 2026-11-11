@@ -1,6 +1,7 @@
 import { cleanup, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, beforeEach, vi } from 'vitest';
+import { openPortalTab } from '../src/pages/portal/Subscription';
 import { App } from '../src/app';
 import type { Activity, ActivityOption, ActivityOptions, SeatRequest, SubscriptionBranch } from '../src/api/types';
 import { I18nProvider } from '../src/i18n';
@@ -89,6 +90,8 @@ export function useActivityHarness() {
     localStorage.setItem('erp.web.language', 'en');
   });
   afterEach(() => {
+    // The portal remembers its tab for the visit; every test starts on the first one.
+    openPortalTab('stores');
     cleanup();
     vi.unstubAllGlobals();
   });
