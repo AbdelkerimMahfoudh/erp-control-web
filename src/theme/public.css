@@ -90,8 +90,9 @@ main:focus {
   color: var(--on-org);
 }
 .product-mark-symbol {
-  /* The Dukan ledger mark itself (2026-10-29): no tile behind it, its own colours, never mirrored. */
+  /* The Dukan D symbol (logo pack): no tile behind it, its own colours and proportions (335:238), never mirrored. */
   border-radius: 0;
+  inline-size: 42px;
   direction: ltr;
 }
 .product-mark-symbol .mark-left {
@@ -104,7 +105,7 @@ main:focus {
   stroke: var(--mark-highlight);
 }
 .product-mark-lg .product-mark-symbol {
-  inline-size: 44px;
+  inline-size: 62px;
   block-size: 44px;
 }
 

@@ -12,11 +12,12 @@ import { webManifest } from '../src/site/generated';
 const root = join(__dirname, '..');
 
 describe('the product mark', () => {
-  it('is the ledger with its three named layers, and no letter tile', () => {
+  it('is the logo pack’s D symbol, two layers (ink and accent), and no letter tile', () => {
     const { container } = render(<ProductMark />);
     const svg = container.querySelector('svg.product-mark-symbol')!;
     expect(svg).toBeTruthy();
-    for (const id of ['ledger-left', 'ledger-right', 'interlock-highlight']) expect(svg.querySelector(`#${id}`)).toBeTruthy();
+    expect(svg.getAttribute('viewBox')).toBe('0 0 335 238');
+    expect(svg.querySelectorAll('path.mark-left, path.mark-right')).toHaveLength(2);
     expect(svg.getAttribute('aria-hidden')).toBe('true');
     expect(container.textContent).toBe('Dukan ERP');
   });
@@ -25,10 +26,10 @@ describe('the product mark', () => {
     const tokens = readFileSync(join(root, 'src/theme/tokens.css'), 'utf8');
     const light = tokens.slice(tokens.indexOf(':root {'), tokens.indexOf(":root[data-theme='dark']"));
     const dark = tokens.slice(tokens.indexOf(":root[data-theme='dark']"));
-    expect(light).toMatch(/--mark-left: #172033;/);
+    expect(light).toMatch(/--mark-left: #000a37;/);
     expect(light).toMatch(/--mark-right: #5146d9;/);
-    expect(dark).toMatch(/--mark-left: #e7ecf5;/);
-    expect(dark).toMatch(/--mark-right: #8b82ef;/);
+    expect(dark).toMatch(/--mark-left: #ffffff;/);
+    expect(dark).toMatch(/--mark-right: #5146d9;/);
     const css = readFileSync(join(root, 'src/theme/public.css'), 'utf8');
     expect(css).toMatch(/\.product-mark-symbol \.mark-left \{\s*fill: var\(--mark-left\);/);
   });
