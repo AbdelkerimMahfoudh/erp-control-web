@@ -1,4 +1,5 @@
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PaymentProof, SeatRequest } from '../src/api/types';
 import { I18nProvider } from '../src/i18n';
@@ -109,6 +110,9 @@ describe('a waiting store paid from the portal', () => {
     expect(en['portal.store.payTitle']).toMatch(/store/);
     expect(fr['portal.store.payTitle']).toMatch(/boutique/);
     expect(ar['portal.store.payTitle']).toMatch(/المتجر/);
+    // 0132: a store added in the app opens on approval, even during the free trial; the window says so.
+    expect(readFileSync('src/pages/portal/StorePayment.tsx', 'utf8')).toContain("t('trial.addons.appStoreOpens')");
+    expect(en['trial.addons.appStoreOpens']).toMatch(/as soon as we confirm.*even while your free trial/);
     expect(fr['portal.store.waitingConfirmation']).toBe('En attente de confirmation');
     for (const d of [en, fr, ar]) expect(JSON.stringify(d)).not.toMatch(/succursale/);
   });

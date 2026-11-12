@@ -132,6 +132,8 @@ export function StorePayDialog({
       {request ? (
         <form className="body stack" onSubmit={send}>
           <h2 id="store-pay-title">{t('portal.store.payTitle', { store: name })}</h2>
+          {/* 0132 (owner, 2026-11-12): a store added in the app opens when its payment is confirmed, even during the free trial. */}
+          <p className="small">{t('trial.addons.appStoreOpens')}</p>
           {editing ? (
             <>
               <Notice tone="info">{t('portal.store.correctionNote')}</Notice>

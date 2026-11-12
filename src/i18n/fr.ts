@@ -180,6 +180,7 @@ export const fr: Catalogue = {
   'admin.proofs.revised': "Corrigé par le propriétaire (version {revision}, {when}). Vous examinez la dernière version ; téléchargez à nouveau le fichier.",
   'portal.store.waitingPayment': "En attente de paiement",
   'portal.store.waitingConfirmation': "En attente de confirmation",
+  'trial.addons.appStoreOpens': "La boutique ouvre dès que nous confirmons son paiement, même pendant votre essai gratuit.",
   'portal.store.payTitle': "Activer la boutique {store}",
   'portal.store.payer': "Le numéro depuis lequel vous avez payé",
   'portal.store.screenshot': "Capture d’écran du paiement",
@@ -318,7 +319,7 @@ export const fr: Catalogue = {
   'trial.addons.seatAtEnd': 'Commence à la fin de l’essai gratuit, le {date}',
   'trial.addons.waitsForPaidAccess': 'Commence avec le premier mois payant, une fois l’accès payant approuvé',
   'trial.addons.note':
-    'Pendant votre essai gratuit, un magasin ou une place que vous demandez peut déjà être payé. Il ne commence jamais pendant l’essai : il commence à la fin de l’essai gratuit, le {date} — ou, si l’accès payant n’est pas approuvé d’ici là, avec le premier mois payant, une fois qu’il l’est.',
+    "Pendant votre essai gratuit, une boutique ou une place que vous demandez sur cette page peut déjà être payée. Elle commence à la fin de l’essai gratuit, le {date} — ou, si l’accès payant n’est pas approuvé d’ici là, avec le premier mois payant, une fois qu’il l’est. Une boutique ajoutée dans l’application Dukan ERP est différente : elle ouvre dès que son paiement est confirmé.",
   'trial.addons.paidNote': 'Un magasin ou une place payé pendant l’essai gratuit n’est payé qu’une fois : le total de votre premier mois payant l’inclut, et son propre paiement est ce que ce mois facture pour lui.',
   'trial.verify.phone': 'Avant de pouvoir le démarrer, vérifiez votre numéro WhatsApp dans l’application Dukan ERP, sous Votre compte → Numéro WhatsApp.',
   'trial.verify.email': 'Avant de pouvoir le démarrer, vérifiez votre adresse e-mail sur cette page.',

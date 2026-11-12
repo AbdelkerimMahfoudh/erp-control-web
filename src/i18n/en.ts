@@ -187,6 +187,7 @@ export const en = {
   'admin.proofs.revised': "Corrected by the Owner (version {revision}, {when}). You are reviewing the latest version; download the file again.",
   'portal.store.waitingPayment': "Waiting for payment",
   'portal.store.waitingConfirmation': "Waiting for confirmation",
+  'trial.addons.appStoreOpens': "The store opens as soon as we confirm its payment, even while your free trial is running.",
   'portal.store.payTitle': "Activate the store {store}",
   'portal.store.payer': "The number you paid from",
   'portal.store.screenshot': "Screenshot of the payment",
@@ -326,7 +327,7 @@ export const en = {
   'trial.addons.seatAtEnd': 'Starts when the free trial ends, on {date}',
   'trial.addons.waitsForPaidAccess': 'Starts with the first paid month, once paid access is approved',
   'trial.addons.note':
-    'During your free trial, a store or seat you request can already be paid for. It never starts during the trial: it starts when the free trial ends, on {date} — or, if paid access is not approved by then, with the first paid month, once it is.',
+    "During your free trial, a store or seat you request on this page can already be paid for. It starts when the free trial ends, on {date} — or, if paid access is not approved by then, with the first paid month, once it is. A store added in the Dukan ERP app is different: it opens as soon as its payment is confirmed.",
   'trial.addons.paidNote': 'A store or seat paid for during the free trial is paid for once: your first paid month’s total includes it, and its own payment is that month’s charge for it.',
   'trial.verify.phone': 'Before you can start it, verify your WhatsApp number in the Dukan ERP app, under Your account → WhatsApp number.',
   'trial.verify.email': 'Before you can start it, verify your email address on this page.',

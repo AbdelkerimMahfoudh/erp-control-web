@@ -133,9 +133,9 @@ export function activityOptions(stores: Partial<Record<string, ActivityOption[]>
       },
     ],
     newStore: newStore ?? [
-      { activity: 'electronics', monthly: 500 },
+      { activity: 'electronics', monthly: 600 },
       { activity: 'money_agent', monthly: 300 },
-      { activity: 'both', monthly: 700 },
+      { activity: 'both', monthly: 800 },
     ],
   };
 }
