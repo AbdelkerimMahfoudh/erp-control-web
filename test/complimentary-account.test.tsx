@@ -4,6 +4,8 @@ import { describe, expect, it } from 'vitest';
 import type { ComplimentaryGrant, NewStoreOption, SeatRequest } from '../src/api/types';
 import { accessEnd } from '../src/pages/admin/Businesses';
 import { BRANCHES, LINES, activityOptions, allocation, mount, serve, subscription, useActivityHarness } from './activity-fixtures';
+import { openPortalTab } from '../src/pages/portal/Subscription';
+import { en } from '../src/i18n/en';
 
 useActivityHarness();
 
@@ -100,10 +102,18 @@ describe('Account: a new store that replaces one closed this month (D158)', () =
     { activity: 'both', monthly: 700, dueNow: 200, replaces: { branchId: 'b-old', name: 'Ancien Ksar', credit: 500 } },
   ];
 
+  /** Owner, 2026-11-12: a new store is added beside the stores of the one payment flow. */
+  const addStore = async () => {
+    const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: `+ ${en['pay.addStore']}` }));
+    return { user, form: (await screen.findByLabelText(en['account.requests.store.name'])).closest('form')! };
+  };
+
   it('says there is nothing more to pay when the replacement is the same or cheaper', async () => {
+    openPortalTab('payments');
     account('active', '2026-11-01T00:00:00.000Z', undefined, replaced(0));
-    const requests = (await screen.findByRole('heading', { name: 'Seat, store and activity requests' })).closest('section')!;
-    expect(await within(requests).findByText(/replaces Ancien Ksar, closed during this paid month: no additional charge/)).toBeTruthy();
+    const { form } = await addStore();
+    expect(await within(form).findByText(/replaces Ancien Ksar, closed during this paid month: no additional charge/)).toBeTruthy();
   });
 
   it('a sent replacement is listed as what it costs now and from the renewal — never as a monthly price', async () => {
@@ -119,13 +129,13 @@ describe('Account: a new store that replaces one closed this month (D158)', () =
   });
 
   it('names the server’s difference for a dearer activity, and nothing for a store that replaces none', async () => {
+    openPortalTab('payments');
     account('active', '2026-11-01T00:00:00.000Z', undefined, replaced(0));
-    const requests = (await screen.findByRole('heading', { name: 'Seat, store and activity requests' })).closest('section')!;
-    const user = userEvent.setup();
-    const select = within(requests).getAllByRole('combobox').at(-1)!;
+    const { user, form } = await addStore();
+    const select = within(form).getAllByRole('combobox').at(-1)!;
     await user.selectOptions(select, 'both');
-    expect(await within(requests).findByText(/replaces Ancien Ksar, closed during this paid month: 200 MRU now/)).toBeTruthy();
+    expect(await within(form).findByText(/replaces Ancien Ksar, closed during this paid month: 200 MRU now/)).toBeTruthy();
     await user.selectOptions(select, 'money_agent');
-    expect(within(requests).queryByText(/replaces Ancien Ksar/)).toBeNull();
+    expect(within(form).queryByText(/replaces Ancien Ksar/)).toBeNull();
   });
 });

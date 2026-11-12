@@ -6,7 +6,7 @@ import { I18nProvider } from '../src/i18n';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
 import { ar } from '../src/i18n/ar';
-import { StorePayDialog, openProofFor, payerPhoneValid } from '../src/pages/portal/StorePayment';
+import { openProofFor, payerPhoneValid } from '../src/pages/portal/StorePayment';
 
 /*
  * 0135 (owner, 2026-11-11): a waiting store is paid from its status: the server's price, the payment numbers, the number
@@ -51,56 +51,6 @@ afterEach(() => {
 const png = () => new File([new Uint8Array([0x89, 0x50, 0x4e, 0x47])], 'pay.png', { type: 'image/png' });
 
 describe('a waiting store paid from the portal', () => {
-  it('shows the server’s prices and the numbers; sends the store, the period, the payer number and the screenshot — never an amount', async () => {
-    const onDone = vi.fn(async () => undefined);
-    render(
-      <I18nProvider fixed="en">
-        <StorePayDialog request={STORE} proof={null} instructions={INSTRUCTIONS as never} onClose={() => undefined} onDone={onDone} />
-      </I18nProvider>,
-    );
-    const dialog = document.querySelector('dialog')!;
-    await waitFor(() => expect(within(dialog).getByText(/5[\s,.  ]?000/)).toBeTruthy());
-    expect(within(dialog).getByText('36963839')).toBeTruthy();
-    fireEvent.click(within(dialog).getAllByRole('radio')[1]!);
-    // No payer number: refused on the page.
-    fireEvent.change(dialog.querySelector('input[type="file"]')!, { target: { files: [png()] } });
-    fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.send'] }));
-    expect(await within(dialog).findByText(en['portal.store.problem.payer'])).toBeTruthy();
-    fireEvent.change(dialog.querySelector('input[type="tel"]')!, { target: { value: '+222 36 00 00 01' } });
-    fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.send'] }));
-    await waitFor(() => expect(posts).toHaveLength(1));
-    const b = posts[0]!.body;
-    expect(posts[0]!.url).toMatch(/\/platform\/my-subscription\/payment-proofs$/);
-    expect(b.get('category')).toBe('store_activation');
-    expect(b.get('branches')).toBe(STORE.id);
-    expect(b.get('months')).toBe('3');
-    expect(b.get('payerPhone')).toBe('+222 36 00 00 01');
-    expect(b.get('file')).toBeInstanceOf(File);
-    expect(b.get('amount')).toBeNull();
-    await waitFor(() => expect(onDone).toHaveBeenCalled());
-  });
-
-  it('waiting for confirmation: the number is corrected with the revision it corrects; nothing unchanged is sent', async () => {
-    render(
-      <I18nProvider fixed="en">
-        <StorePayDialog request={STORE} proof={OPEN} instructions={INSTRUCTIONS as never} onClose={() => undefined} onDone={async () => undefined} />
-      </I18nProvider>,
-    );
-    const dialog = document.querySelector('dialog')!;
-    expect(within(dialog).getByText(en['portal.store.correctionNote'])).toBeTruthy();
-    expect((dialog.querySelector('input[type="tel"]') as HTMLInputElement).value).toBe('36000001');
-    fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.saveCorrection'] }));
-    expect(await within(dialog).findByText(en['portal.store.problem.unchanged'])).toBeTruthy();
-    expect(posts).toHaveLength(0);
-    fireEvent.change(dialog.querySelector('input[type="tel"]')!, { target: { value: '36000002' } });
-    fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.saveCorrection'] }));
-    await waitFor(() => expect(posts).toHaveLength(1));
-    expect(posts[0]!.url).toMatch(/\/platform\/my-subscription\/payment-proofs\/p-1\/correct$/);
-    expect(posts[0]!.body.get('revision')).toBe('2');
-    expect(posts[0]!.body.get('payerPhone')).toBe('36000002');
-    expect(posts[0]!.body.get('category')).toBeNull();
-  });
-
   it('a store’s open proof is the one naming it; the payer number rule matches the server’s; store words in three languages', () => {
     expect(openProofFor(STORE.id, [OPEN])?.id).toBe('p-1');
     expect(openProofFor(STORE.id, [{ ...OPEN, status: 'approved' }])).toBeNull();
@@ -111,7 +61,7 @@ describe('a waiting store paid from the portal', () => {
     expect(fr['portal.store.payTitle']).toMatch(/boutique/);
     expect(ar['portal.store.payTitle']).toMatch(/المتجر/);
     // 0132: a store added in the app opens on approval, even during the free trial; the window says so.
-    expect(readFileSync('src/pages/portal/StorePayment.tsx', 'utf8')).toContain("t('trial.addons.appStoreOpens')");
+    expect(readFileSync('src/pages/portal/PayFlow.tsx', 'utf8')).toContain("t('trial.addons.appStoreOpens')");
     expect(en['trial.addons.appStoreOpens']).toMatch(/as soon as we confirm.*even while your free trial/);
     expect(fr['portal.store.waitingConfirmation']).toBe('En attente de confirmation');
     for (const d of [en, fr, ar]) expect(JSON.stringify(d)).not.toMatch(/succursale/);

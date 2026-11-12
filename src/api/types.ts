@@ -320,7 +320,8 @@ export interface TrialClaims {
  */
 export interface PaymentInstructions {
   available: boolean;
-  providers: { key: string; label: string; code: string }[];
+  /** 0138: every number a service receives on (`code` is the first); a pairing not listed does not exist. */
+  providers: { key: string; label: string; code: string; codes?: string[] }[];
   defaultProvider: string | null;
 }
 
@@ -1006,6 +1007,11 @@ export interface PaymentProof {
   reference: string | null;
   /** 0135: the number the Owner paid from; the proof's revision (raised by each correction) and when it was last corrected. */
   payerPhone?: string | null;
+  /** 0138: the service and receiving number the Owner says they paid to. */
+  receiveService?: string | null;
+  receiveNumber?: string | null;
+  /** 0138, console only: who opened the access and who confirmed it; overdue past the 24-hour target. */
+  review?: { openedBy: string | null; openedAt: string; openedRevision: number | null; confirmedBy: string | null; overdue: boolean } | null;
   revision?: number;
   revisedAt?: string | null;
   note: string | null;

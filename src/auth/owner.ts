@@ -32,7 +32,7 @@ export type SignInResult =
 interface RawSignIn {
   status?: string;
   /** A claim link's destination (owner, 2026-11-11): the waiting store its activation message was about. */
-  landing?: { store?: string } | null;
+  landing?: { store?: string; request?: string; kind?: 'store' | 'seat' } | null;
   session?: PortalSession;
   continuationToken?: string;
   expiresIn?: number;
@@ -68,16 +68,23 @@ export async function portalSignIn(identifier: string, password: string): Promis
  */
 export async function portalClaimLink(token: string): Promise<PortalSession> {
   const result = await request<RawSignIn>('platform/portal/claim-link', { method: 'POST', body: { token } });
-  landingStore = result.landing?.store ?? null;
+  const id = result.landing?.request ?? result.landing?.store ?? null;
+  landing = id ? { request: id, kind: result.landing?.kind ?? 'store' } : null;
   return opened(result);
 }
 
 /** Owner, 2026-11-11: the waiting store an activation message's link was for, kept in memory once and handed to the page. */
-let landingStore: string | null = null;
+let landing: { request: string; kind: 'store' | 'seat' } | null = null;
+/** 0138: the request (a waiting store or seat) the link was for — its details are then read from the server by its id. */
+export function takeLanding(): { request: string; kind: 'store' | 'seat' } | null {
+  const l = landing;
+  landing = null;
+  return l;
+}
+/** The waiting store only (older callers). */
 export function takeLandingStore(): string | null {
-  const store = landingStore;
-  landingStore = null;
-  return store;
+  const l = takeLanding();
+  return l?.kind === 'store' ? l.request : null;
 }
 
 /** The same contact and password at more than one business: continue as the one chosen. */

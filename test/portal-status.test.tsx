@@ -209,35 +209,12 @@ describe('the Owner’s email address, verified on the portal', () => {
   });
 });
 
-describe('how to pay, as the server says it', () => {
-  // Owner, 2026-11-11: how to pay is on the Pay & renew tab.
-  beforeEach(() => openPortalTab('payments'));
-  afterEach(() => openPortalTab('stores'));
-  const howTo = async () => (await screen.findByRole('heading', { name: en['account.payment.howto'], level: 2 }, SLOW_WAIT)).closest('section')!;
-
-  it('nothing offered yet: the honest sentence, no provider, no code', async () => {
-    portal(portalStatus());
-    const s = await howTo();
-    expect(within(s).getByText(en['account.payment.none'])).toBeTruthy();
-    expect(within(s).queryByText(en['portal.pay.with'])).toBeNull();
-  });
-
-  it('once the platform offers a provider with its code: that provider and code, exactly as sent', async () => {
-    portal(portalStatus(), (url) =>
-      url.endsWith('/platform/payment-instructions') ? { body: { available: true, providers: [{ key: 'test', label: 'Test provider', code: 'TEST-CODE-1' }], defaultProvider: 'test' } } : undefined,
-    );
-    const s = await howTo();
-    await waitFor(() => expect(within(s).getByText(en['portal.pay.with'])).toBeTruthy());
-    expect(within(s).getByText('Test provider')).toBeTruthy();
-    expect(within(s).getByText('TEST-CODE-1').className).toBe('ltr');
-    expect(within(s).queryByText(en['account.payment.none'])).toBeNull();
-  });
-});
-
 describe('help and the Owner’s data', () => {
-  it('support, the privacy policy, the terms and account deletion, one tap away', async () => {
+  it('support, the privacy policy, the terms and account deletion, one tap away — in the footer, once (the Help card repeated it)', async () => {
     portal(portalStatus());
-    const help = (await screen.findByRole('heading', { name: en['portal.help.title'], level: 2 }, SLOW_WAIT)).closest('section')!;
-    expect(within(help).getAllByRole('link').map((a) => a.getAttribute('href'))).toEqual(['/support', '/privacy', '/terms', '/account-deletion']);
+    await screen.findByRole('heading', { name: en['account.owner'], level: 2 }, SLOW_WAIT);
+    expect(screen.queryByRole('heading', { name: en['portal.help.title'] })).toBeNull();
+    const hrefs = within(screen.getByRole('contentinfo')).getAllByRole('link').map((a) => a.getAttribute('href'));
+    for (const h of ['/support', '/privacy', '/terms', '/account-deletion']) expect(hrefs).toContain(h);
   });
 });

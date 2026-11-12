@@ -58,7 +58,7 @@ function addons(waitsFor: 'trial_end' | 'paid_access'): SeatRequest[] {
     allocation({ id: '0192f000-0000-7000-8000-0000000000d3', kind: 'seat', store: { id: B2, name: 'Boutique Ksar' }, branchId: B2, branchName: 'Boutique Ksar', activityFrom: null, activityTo: null, activityEffective: null, monthlyAmount: 100 }),
   ].map((r) => ({ ...r, business: BUSINESS }));
 }
-type Session = { owner?: boolean; admin?: boolean; trial?: keyof typeof TRIALS; lang?: 'en' | 'fr' | 'ar'; addons?: 'trial_end' | 'paid_access' };
+type Session = { owner?: boolean; admin?: boolean; trial?: keyof typeof TRIALS; lang?: 'en' | 'fr' | 'ar'; addons?: 'trial_end' | 'paid_access'; /** 0138: the payment flow's own routes. */ pay?: boolean };
 
 /** The Owner's account for a business whose trial is `trial`, or the paid business of the other fixtures. */
 function ownerAccount(trial: Session['trial']) {
@@ -166,7 +166,34 @@ const proofRow = (id: string, over: Record<string, unknown>) => ({
   category: 'store_activation',
   ...over,
 });
-const PROOFS_WAITING = [proofRow('0192f000-0000-7000-8000-0000000000f1', { revision: 2, revisedAt: '2026-11-11T08:10:00.000Z', payerPhone: '+222 36 00 00 01' })];
+const PROOFS_WAITING = [
+  proofRow('0192f000-0000-7000-8000-0000000000f1', { revision: 2, revisedAt: '2026-11-11T08:10:00.000Z', payerPhone: '+222 36 00 00 01', receiveService: 'bankily', receiveNumber: '37676827' }),
+  proofRow('0192f000-0000-7000-8000-0000000000f4', { status: 'under_review', amount: '1500', months: 3, receiveService: 'sedad', receiveNumber: '36963839', lines: null, category: 'subscription', review: { openedBy: 'first.admin@preview.invalid', openedAt: '2026-11-11T09:00:00.000Z', openedRevision: 1, confirmedBy: null, overdue: false } }),
+];
+/** 0138: the payment flow — two stores, both receiving numbers for each service, no proof waiting. */
+const PAY_INSTRUCTIONS = {
+  available: true,
+  defaultProvider: 'bankily',
+  placeholder: false,
+  providers: [
+    { key: 'bankily', label: 'Bankily', code: '36963839', codes: ['36963839', '37676827'] },
+    { key: 'sedad', label: 'Sedad', code: '36963839', codes: ['36963839', '37676827'] },
+  ],
+};
+const PAY_LINES = [
+  { branchId: B1, name: 'Agence Centre', activity: 'electronics', storeAmount: 600, paidSeats: 0, seatAmount: 0, amount: 600 },
+  { branchId: B2, name: 'Boutique Ksar', activity: 'both', storeAmount: 800, paidSeats: 0, seatAmount: 0, amount: 800 },
+];
+const FACTOR: Record<number, number> = { 1: 1, 3: 2.5, 12: 25 / 3 };
+function payPlans(url: string) {
+  const only = /branches=([^&]+)/.exec(url)?.[1];
+  const ids = only ? decodeURIComponent(only).split(',') : null;
+  const lines = PAY_LINES.filter((l) => !ids || ids.includes(l.branchId));
+  return {
+    plans: [1, 3, 12].map((m) => ({ months: m, lines: lines.map((l) => ({ ...l, amount: Math.round(l.amount * FACTOR[m]!) })), total: lines.reduce((t, l) => t + Math.round(l.amount * FACTOR[m]!), 0) })),
+    branches: PAY_LINES.map((l) => ({ branchId: l.branchId, name: l.name, nameAr: null, state: 'active', canWrite: true, trialEndsAt: null, paidUntil: '2026-12-11T00:00:00.000Z', complimentaryUntil: null, graceEndsAt: null })),
+  };
+}
 const PROOFS_DECIDED = [
   proofRow('0192f000-0000-7000-8000-0000000000f2', { status: 'approved', amount: '1500', months: 3, decidedAt: '2026-11-07T11:00:00.000Z', lines: null, category: 'subscription' }),
   proofRow('0192f000-0000-7000-8000-0000000000f3', { status: 'refused', refusalReason: 'The amount does not match the transfer.', decidedAt: '2026-11-05T09:00:00.000Z' }),
@@ -184,7 +211,10 @@ async function mockApi(page: Page, signedIn: Session = {}) {
     if (url.endsWith('/platform/my-subscription')) return signedIn.owner ? json(ownerAccount(signedIn.trial)) : json({ message: 'Unauthorized' }, 401);
     if (url.endsWith('/platform/my-subscription/status')) return signedIn.owner ? json(ownerStatus(signedIn.trial)) : json({ message: 'Unauthorized' }, 401);
     if (url.endsWith('/platform/my-subscription/trial')) return signedIn.owner ? json(signedIn.trial ? TRIALS[signedIn.trial] : NO_TRIAL) : json({ message: 'Unauthorized' }, 401);
-    if (url.endsWith('/platform/payment-instructions')) return signedIn.owner ? json({ available: false, providers: [], defaultProvider: null, placeholder: false }) : json({ message: 'Unauthorized' }, 401);
+    if (url.endsWith('/platform/payment-instructions')) return signedIn.owner ? json(signedIn.pay ? PAY_INSTRUCTIONS : { available: false, providers: [], defaultProvider: null, placeholder: false }) : json({ message: 'Unauthorized' }, 401);
+    if (signedIn.owner && signedIn.pay && url.includes('/platform/my-subscription/plans')) return json(payPlans(url));
+    if (signedIn.owner && signedIn.pay && url.endsWith('/platform/my-subscription/payment-proofs')) return json([]);
+    if (signedIn.owner && signedIn.pay && url.includes('/platform/my-subscription/payment-price')) return json({ price: { total: 100 * Number(/months=(\d+)/.exec(url)?.[1] ?? 1) } });
     if (url.endsWith('/platform/admin/me')) return signedIn.admin ? json({ id: 'a1', email: 'admin@preview.invalid', name: 'Preview administrator' }) : json({ message: 'Unauthorized' }, 401);
     // The console's oversight of the lifecycle (0099): messages, grace decisions, trials claimed.
     if (signedIn.admin && url.includes('/platform/notices')) return json(OVERSIGHT.notices);
@@ -977,7 +1007,10 @@ for (const [lang, width] of [['en', 1280], ['en', 375], ['fr', 1280], ['ar', 375
     const card = page.locator('.proof-review-card').first();
     await expect(card.getByRole('img', { name: cat['admin.proofs.imageAlt'] })).toBeVisible();
     await expect(card.getByText(cat['admin.proofs.revised'].replace('{revision}', '2').split('{when}')[0]!.trim())).toBeVisible();
-    await expect(card.getByRole('button', { name: cat['admin.proofs.approve'] })).toBeVisible();
+    await expect(card.getByRole('button', { name: cat['admin.proofs.open'] })).toBeVisible();
+    await expect(card.getByText(cat['admin.proofs.receiver'])).toBeVisible();
+    // The opened one: the second step only — confirm the deposit, or refuse.
+    await expect(page.getByTestId('proof-second-step').getByRole('button', { name: cat['admin.proofs.confirmDeposit'] })).toBeVisible();
     await page.waitForLoadState('networkidle');
     await page.screenshot({ path: join(dir, `proofs-review-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 72 });
     const l = await layout(page);
@@ -989,6 +1022,42 @@ for (const [lang, width] of [['en', 1280], ['en', 375], ['fr', 1280], ['ar', 375
     const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
     const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
     record({ test: 'redesign', lang, width, overflow: l.overflow, serious: serious.map((v) => v.id), consoleErrors: errors });
+    expect(serious.map((v) => v.id)).toEqual([]);
+    expect(errors).toEqual([]);
+  });
+}
+
+/*
+ * The one payment flow (owner, 2026-11-12): store(s), action, term, the server's line items and total, then the manual
+ * payment window with only the service/number pairs the server offers — in English, French and Arabic, at desktop
+ * width and on a phone, with no sideways scroll, no console error and no serious accessibility violation.
+ */
+for (const [lang, width] of [['en', 1280], ['en', 375], ['fr', 1280], ['fr', 375], ['ar', 1280], ['ar', 375]] as const) {
+  test(`the Owner's payment flow, ${lang} at ${width} px: one card, the server's total, the payment window`, async ({ page }) => {
+    const errors = watchConsole(page);
+    const cat = CATALOGUES[lang];
+    await mockApi(page, { owner: true, pay: true, lang });
+    await page.setViewportSize({ width, height: 900 });
+    const dir = join(EV, 'screenshots', 'pay-flow');
+    mkdirSync(dir, { recursive: true });
+    await page.goto('/subscription');
+    await page.getByRole('tab', { name: cat['portal.tabs.payments'] }).click();
+    const quote = page.getByTestId('pay-quote');
+    await expect(quote.getByText('Boutique Ksar')).toBeVisible();
+    await page.waitForLoadState('networkidle');
+    await page.screenshot({ path: join(dir, `flow-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 72 });
+    expect((await layout(page)).overflow).toBeLessThanOrEqual(0);
+    // The help links once, in the footer: no Help card.
+    await expect(page.getByRole('heading', { name: cat['portal.help.title'] })).toHaveCount(0);
+
+    await page.getByRole('button', { name: cat['pay.continue'] }).click();
+    const dialog = page.locator('dialog[open]');
+    await expect(dialog.getByRole('radio')).toHaveCount(4);
+    await expect(dialog.getByText('37 67 68 27')).toHaveCount(2);
+    await page.screenshot({ path: join(dir, `window-${lang}-${width}.jpg`), type: 'jpeg', quality: 72 });
+    const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+    const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+    record({ test: 'pay-flow', lang, width, serious: serious.map((v) => v.id), consoleErrors: errors });
     expect(serious.map((v) => v.id)).toEqual([]);
     expect(errors).toEqual([]);
   });

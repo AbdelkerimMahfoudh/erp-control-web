@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest';
 import { en } from '../src/i18n/en';
 import type { Activity, SeatRequest, SubscriptionBranch } from '../src/api/types';
 import { B1, B2, BOTH, BRANCHES, LINES, activityOptions, allocation, mount, serve, subscription, useActivityHarness } from './activity-fixtures';
+import { openPortalTab } from '../src/pages/portal/Subscription';
 
 useActivityHarness();
 
@@ -172,14 +173,17 @@ describe('Account: a store’s activity and its change', () => {
         return { status: 201, body: { allocation: allocation({ kind: 'store', label: 'Agence Port', activityTo: 'money_agent', activityFrom: null, activityEffective: null, monthlyAmount: 300 }), created: true } };
       return undefined;
     });
+    // Owner, 2026-11-12: a new store is added beside the stores of the one payment flow.
+    openPortalTab('payments');
     mount('/account');
     const user = userEvent.setup();
+    await user.click(await screen.findByRole('button', { name: `+ ${en['pay.addStore']}` }));
     await user.type(await screen.findByLabelText(en['account.requests.store.name']), 'Agence Port');
     const select = screen.getByLabelText('What will it do?') as HTMLSelectElement;
     expect(await screen.findByText('Electronics store — 550 MRU per month')).toBeTruthy();
     expect([...select.options].map((o) => o.textContent)).toEqual(['Electronics store — 550 MRU per month', 'Money services agent — 330 MRU per month', `${BOTH} — 770 MRU per month`]);
     await user.selectOptions(select, 'money_agent');
-    await user.click(within(select.closest('form')!).getByRole('button', { name: 'Send the request' }));
+    await user.click(within(select.closest('form')!).getByRole('button', { name: en['pay.addStore.submit'] }));
     await act(async () => undefined);
     expect(sent.filter((r) => r.url.endsWith('/store-requests')).map((r) => r.body)).toEqual([{ name: 'Agence Port', activity: 'money_agent' }]);
   });

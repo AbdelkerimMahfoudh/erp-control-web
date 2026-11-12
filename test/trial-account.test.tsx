@@ -990,11 +990,12 @@ describe('a store or seat paid for during the trial: "Paid · scheduled", and wh
     const card = await requestsCard();
     await rowOf(card, 'Boutique Sud');
     expect(card.textContent).toContain(NOTE);
-    // Under the forms, its date isolated; and no word of a payment counted once while no row was paid for that way.
+    // Under the way to pay (the request forms moved into the payment flow, 2026-11-12), its date isolated; and no word of
+    // a payment counted once while no row was paid for that way.
     const note = within(card).getByText(/During your free trial/).closest('.notice')!;
-    const forms = [...card.querySelectorAll('form')];
-    expect(forms).toHaveLength(2);
-    expect(forms[1]!.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(card.querySelectorAll('form')).toHaveLength(0);
+    const pay = within(card).getByRole('button', { name: en['portal.stores.goPay'] });
+    expect(pay.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     expect([...note.querySelectorAll('bdi')].map((b) => b.textContent)).toEqual([AT_END]);
     expect(note.textContent).not.toMatch(/MRU|09:30/);
     expect(card.textContent).not.toContain(en['trial.addons.paidNote']);
@@ -1030,10 +1031,10 @@ describe('a store or seat paid for during the trial: "Paid · scheduled", and wh
       const card = await requestsCard(cat['account.requests']);
       await waitFor(() => expect(card.textContent).toContain(cat['trial.addons.paidNote']), SLOW_WAIT);
       expect(card.textContent).toContain(cat['trial.addons.note'].replace('{date}', inZone(locale)));
-      // Said once, under the list and above the forms.
+      // Said once, under the list and above the way to pay.
       const paid = within(card).getByText(cat['trial.addons.paidNote']);
       expect(card.querySelector('table')!.compareDocumentPosition(paid) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-      expect(paid.compareDocumentPosition(card.querySelector('form')!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+      expect(paid.compareDocumentPosition(within(card).getByRole('button', { name: cat['portal.stores.goPay'] })) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
       await portalSignOut();
       cleanup();
     }

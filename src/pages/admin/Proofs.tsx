@@ -6,7 +6,7 @@ import type { PaymentProof, ProofRecovery } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
 import { Empty, ErrorNotice, Field, Money, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
-import { formatDate } from '../../lib/format';
+import { formatDate, formatDateTime } from '../../lib/format';
 import { useStepUp } from './useStepUp';
 import { ProofViewer, proofFileHref } from '../../components/ProofViewer';
 
@@ -48,7 +48,7 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
   const [error, setError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
 
-  const act = async (path: 'approve' | 'refuse', body: Record<string, unknown>) => {
+  const act = async (path: 'approve' | 'refuse' | 'confirm', body: Record<string, unknown>) => {
     setError(null);
     if (!(await ask())) return;
     setBusy(true);
@@ -91,6 +91,17 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
           )}
         </div>
         <div className="proof-review-decision stack">
+          {proof.receiveService && proof.receiveNumber ? (
+            // 0138: where the Owner says the money went — the account to check.
+            <p className="proof-receiver">
+              {t('admin.proofs.receiver')}: <strong>{proof.receiveService === 'sedad' ? 'Sedad' : proof.receiveService === 'bankily' ? 'Bankily' : proof.receiveService}</strong>{' '}
+              <span className="ltr" dir="ltr">
+                {proof.receiveNumber.replace(/(\d{2})(?=\d)/g, '$1 ')}
+              </span>
+            </p>
+          ) : (
+            <p className="muted small">{t('admin.proofs.receiverNone')}</p>
+          )}
           {proof.payerPhone ? (
             <p>
               {t('admin.proofs.payer')}: <span className="ltr" dir="ltr">{proof.payerPhone}</span>
@@ -98,7 +109,32 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
           ) : null}
           {proof.reference ? <p className="ltr">{proof.reference}</p> : null}
           <ProofLines lines={proof.lines} />
-          {proof.applying ? (
+          {proof.review ? (
+            <div className="stack" data-testid="proof-second-step">
+              <Notice tone={proof.review.overdue ? 'warn' : 'info'}>
+                {t('admin.proofs.opened', { who: proof.review.openedBy ?? '—', when: formatDateTime(proof.review.openedAt, lang), revision: String(proof.review.openedRevision ?? revision) })}
+                {proof.review.overdue ? <> {t('admin.proofs.overdue')}</> : null}
+              </Notice>
+              <p className="muted small">{t('admin.proofs.secondStep')}</p>
+              <button type="button" className="btn btn-primary" disabled={busy} onClick={() => void act('confirm', {})}>
+                {t('admin.proofs.confirmDeposit')}
+              </button>
+              <form
+                className="stack refuse-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void act('refuse', { reason: refusal.trim() });
+                }}
+              >
+                <Field label={t('admin.proofs.refusal')}>
+                  <input required maxLength={500} value={refusal} onChange={(e) => setRefusal(e.target.value)} />
+                </Field>
+                <button type="submit" className="btn" disabled={busy}>
+                  {t('admin.proofs.refuse')}
+                </button>
+              </form>
+            </div>
+          ) : proof.applying ? (
             <Recovery proof={proof} ask={ask} onDone={onDone} />
           ) : (
             <>
@@ -133,8 +169,9 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
                   <input required maxLength={500} value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} />
                 </Field>
                 <button type="submit" className="btn btn-primary" disabled={busy}>
-                  {t('admin.proofs.approve')}
+                  {t('admin.proofs.open')}
                 </button>
+                <p className="muted small">{t('admin.proofs.openNote')}</p>
               </form>
               <form
                 className="stack refuse-form"

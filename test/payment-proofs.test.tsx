@@ -37,9 +37,9 @@ describe('payment proofs on the web (D227)', () => {
   });
 
   it('the portal only sends; nothing here may decide access', () => {
-    const portal = readFileSync('src/pages/portal/PaymentProofs.tsx', 'utf8');
+    const portal = readFileSync('src/pages/portal/PayFlow.tsx', 'utf8');
     expect(portal).toContain('platform/my-subscription/payment-proofs');
-    expect(portal).not.toMatch(/payment-proofs\/[^'"]*(approve|refuse)/);
+    expect(portal).not.toMatch(/payment-proofs\/[^'"]*(approve|refuse|confirm)/);
   });
 
   it('a file goes as a form with its own boundary, never as JSON', () => {
@@ -58,4 +58,24 @@ describe('payment proofs on the web (D227)', () => {
     expect(store).not.toMatch(/set\('amount'/);
   });
 
+});
+
+describe('0138: the two-person review in the console', () => {
+  it('names where the money went; the first step opens the access; an opened proof offers only confirm or refuse, with its revision', () => {
+    const page = readFileSync('src/pages/admin/Proofs.tsx', 'utf8');
+    expect(page).toContain('proof.receiveService && proof.receiveNumber');
+    expect(page).toMatch(/proof\.review \? \(/);
+    expect(page).toContain("act('confirm', {})");
+    // Every decision still names the revision it was made on (the server refuses an older one).
+    expect(page).toContain('revision: proof.revision ?? 1');
+    for (const k of ['admin.proofs.open', 'admin.proofs.confirmDeposit', 'admin.proofs.opened', 'admin.proofs.overdue', 'admin.proofs.receiver'] as const) {
+      expect([en[k], fr[k], ar[k]].every(Boolean)).toBe(true);
+    }
+    // The Owner's words never mention a provisional step or a second administrator.
+    for (const cat of [en, fr, ar]) {
+      for (const [k, v] of Object.entries(cat)) {
+        if (k.startsWith('pay.') || k.startsWith('portal.')) expect({ k, v: /provisional|second administrator|provisoire|second administrateur|مؤقت|مسؤول آخر/i.test(v) }).toEqual({ k, v: false });
+      }
+    }
+  });
 });

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
-import { StorePayDialog, openProofFor } from './StorePayment';
+import { openProofFor } from './StorePayment';
+import { PayFlow, type PendingRequest } from './PayFlow';
 import { ApiError } from '../../api/client';
 import { arabicNameProblem, latinNameProblem, nameProblemKey, normalizeName } from '../../lib/names';
 import type {
@@ -20,7 +21,7 @@ import type {
   SubscriptionBranch,
   TrialView,
 } from '../../api/types';
-import { isUnauthorized, ownerRequest, takeLandingStore, portalChooseAccount, portalSession, portalSignIn, portalSignOut, type AccountChoice, type PortalSession } from '../../auth/owner';
+import { isUnauthorized, ownerRequest, takeLanding, portalChooseAccount, portalSession, portalSignIn, portalSignOut, type AccountChoice, type PortalSession } from '../../auth/owner';
 import { ActivityCards, ActivityName, ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
 import { FailureNote, FallbackNote, NoticeStateBadge, Where, noticeName } from '../../components/notices';
@@ -31,7 +32,7 @@ import { Badge, DatedPhrase, Empty, ErrorNotice, Field, Loading, Money, Notice, 
 import { useI18n, type Key, type Language } from '../../i18n';
 import { ACTIVITIES, canWithdraw, isScheduledActivityChange, pricesAfter } from '../../lib/activity';
 import { formatDate, formatInstant, formatInt, formatMru } from '../../lib/format';
-import { PaymentProofs } from './PaymentProofs';
+
 import { TrialCard } from './TrialCard';
 
 type Session =
@@ -227,10 +228,12 @@ function explanation(ent: Entitlement, t: (k: Key, p?: Record<string, string>) =
 
 
 function SubscriptionView({ session, data, reload, onSignOut }: { session: PortalSession; data: MySubscription; reload: () => Promise<void>; onSignOut: () => Promise<void> }) {
-  // An activation message's link lands here with its waiting store (Claim.tsx), kept in memory; never read from the address.
-  const [focusStore] = useState(takeLandingStore);
+  // An activation message's link lands here with its request (Claim.tsx), kept in memory; never read from the address.
+  // 0138: its details are read from the server by its id, and the payment flow opens filled with them.
+  const [landed] = useState(takeLanding);
+  const [payFor, setPayFor] = useState<PendingRequest | null>(null);
   // Owner, 2026-11-11: three tabs instead of one long page; the one chosen is kept for the visit.
-  const [tab, setTabState] = useState<PortalTab>(() => (focusStore ? 'stores' : readTab()));
+  const [tab, setTabState] = useState<PortalTab>(() => (landed ? 'payments' : readTab()));
   const setTab = (next: PortalTab) => {
     setTabState(next);
     rememberedTab = next;
@@ -238,6 +241,26 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
   const { t, lang } = useI18n();
   const ent = data.entitlement;
   const quote = data.pricing.quote;
+  useEffect(() => {
+    if (!landed) return;
+    let live = true;
+    ownerRequest<PendingRequest>(`platform/my-subscription/pending/${encodeURIComponent(landed.request)}`)
+      .then((r) => live && setPayFor(r))
+      // Gone or already paid: the flow opens unfilled, and the Owner finds the request in the list.
+      .catch(() => undefined);
+    return () => {
+      live = false;
+    };
+  }, [landed]);
+  /** A request from the list, paid in the one flow (owner, 2026-11-12). */
+  const payRequest = (r: SeatRequest | null) => {
+    setPayFor(
+      r
+        ? { id: r.id, kind: r.kind === 'seat' ? 'seat' : 'store', label: r.label, labelAr: null, activity: r.activityTo ?? null, store: r.store, person: r.person ? { name: r.person.name } : null, monthlyAmount: r.monthlyAmount }
+        : null,
+    );
+    setTab('payments');
+  };
   // Bumped after an activity request, so the requests list below reads the new row.
   const [requestsVersion, setRequestsVersion] = useState(0);
   const afterActivityRequest = useCallback(async () => {
@@ -295,6 +318,12 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
       <div className="stack" role="tabpanel" id="panel-stores" aria-labelledby="tab-stores">
       <StatusPanel version={data} />
 
+      <div className="row">
+        <button type="button" className="btn btn-primary" onClick={() => payRequest(null)}>
+          {t('portal.stores.goPay')}
+        </button>
+      </div>
+
       <TrialCard version={data} onChanged={reload} />
 
       <section className="grid">
@@ -339,11 +368,10 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
 
       <Requests
         stores={ent.seatsByStore.map((s) => ({ id: s.branchId, name: s.name }))}
-        newStore={options?.newStore ?? null}
         trial={ent.trial ?? null}
         version={requestsVersion}
         onChanged={reload}
-        focusStore={focusStore}
+        onPay={payRequest}
       />
       </div>
       ) : null}
@@ -395,9 +423,7 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
         <p className="muted small">{t('account.quote.next', { amount: `${formatInt(data.pricing.nextRenewalEstimate.monthlyTotal, lang)} MRU` })}</p>
       </section>
 
-      <HowToPay version={data} />
-
-      <PaymentProofs onChanged={reload} />
+      <PayFlow key={payFor?.id ?? 'pay'} landing={payFor} onChanged={reload} newStore={options?.newStore ?? null} />
       </div>
       ) : null}
 
@@ -430,24 +456,6 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
       </div>
       ) : null}
 
-      <section className="card stack">
-        <h2>{t('portal.help.title')}</h2>
-        <p className="muted small">{t('portal.help.body')}</p>
-        <ul className="legal-links" role="list">
-          <li>
-            <PublicLink id="support">{t('footer.support')}</PublicLink>
-          </li>
-          <li>
-            <PublicLink id="privacy">{t('footer.privacy')}</PublicLink>
-          </li>
-          <li>
-            <PublicLink id="terms">{t('footer.terms')}</PublicLink>
-          </li>
-          <li>
-            <PublicLink id="accountDeletion">{t('footer.deletion')}</PublicLink>
-          </li>
-        </ul>
-      </section>
     </div>
   );
 }
@@ -681,52 +689,6 @@ function EmailVerification({ onVerified }: { onVerified: () => Promise<void> }) 
 }
 
 /**
- * How to pay, as the server says it (GET platform/payment-instructions): the providers the platform offers with their
- * real codes, once it offers any — and until then, honestly, that each payment is confirmed by hand. Never a code this
- * page holds, never a stand-in.
- */
-function HowToPay({ version }: { version: unknown }) {
-  const { t } = useI18n();
-  const [instructions, setInstructions] = useState<PaymentInstructions | null>(null);
-  useEffect(() => {
-    let live = true;
-    ownerRequest<PaymentInstructions>('platform/payment-instructions')
-      .then((p) => {
-        if (live) setInstructions(p);
-      })
-      .catch(() => {
-        if (live) setInstructions(null);
-      });
-    return () => {
-      live = false;
-    };
-  }, [version]);
-  const offered = instructions?.available ? instructions.providers.filter((p) => p.code) : [];
-  return (
-    <section className="card stack">
-      <h2>{t('account.payment.howto')}</h2>
-      {offered.length > 0 ? (
-        <>
-          <p>{t('portal.pay.with')}</p>
-          <ul className="stack-tight">
-            {offered.map((p) => (
-              <li key={p.key} className="row">
-                <strong>{p.label}</strong>
-                <span className="ltr">{p.code}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="muted small">{t('portal.pay.confirmed')}</p>
-        </>
-      ) : (
-        <Notice tone="info">{t('account.payment.none')}</Notice>
-      )}
-      <p className="muted small">{t('account.team.note')}</p>
-    </section>
-  );
-}
-
-/**
  * The trial facts the history is told with: the trial's view, or — when the server gives none (a business whose chance
  * to claim closed unused, or one suspended before it claimed) — the business's zone alone (C18), so the trial's own
  * rows are dated in that zone, as the console dates them. An API older than C18 sends no zone, and those rows keep the
@@ -758,20 +720,6 @@ function PeriodStart({ data }: { data: MySubscription }) {
     );
   }
   return <p>{t('account.period.starts', { date: formatDate(start, lang) })}</p>;
-}
-
-/**
- * A new store that takes over the month of one closed during this paid month (D158): the server names the store it
- * replaces and what is due now — the difference between the two activities, or nothing. The page does no arithmetic.
- */
-function ReplacementNote({ option }: { option: NewStoreOption | null }) {
-  const { t, lang } = useI18n();
-  if (!option?.replaces || typeof option.dueNow !== 'number') return null;
-  return option.dueNow === 0 ? (
-    <Notice tone="info">{t('account.requests.store.replacesFree', { store: option.replaces.name })}</Notice>
-  ) : (
-    <Notice tone="info">{t('account.requests.store.replaces', { store: option.replaces.name, amount: formatMru(option.dueNow, lang) })}</Notice>
-  );
 }
 
 /** What `activity-requests` refuses by name (docs/73 §6), said in words. */
@@ -1008,48 +956,34 @@ function outcomeOf(
  * with the trial's end in the business's zone, and a list holding one paid for that way says it is paid for once.
  */
 function Requests({
-  stores,
-  newStore,
   trial,
   version,
   onChanged,
-  focusStore,
+  onPay,
 }: {
   stores: { id: string; name: string }[];
-  /** What a new store of each activity is charged per month now — the server's figure; null until it is read. */
-  newStore: NewStoreOption[] | null;
   /** The business's free trial as the entitlement tells it, or null. */
   trial: TrialView | null;
   version: number;
   onChanged: () => Promise<void>;
-  /** The waiting store an activation message's link was for (owner, 2026-11-11): its payment opens at once. */
-  focusStore?: string | null;
+  /** 0138: a waiting request is paid in the one payment flow (owner, 2026-11-12); null opens it unfilled. */
+  onPay: (request: SeatRequest | null) => void;
 }) {
   const { t, lang } = useI18n();
   const [rows, setRows] = useState<SeatRequest[] | null>(null);
-  // 0135: the proofs already sent (a waiting store's open one makes it "waiting for confirmation") and how to pay.
+  // 0135: the proofs already sent: a waiting store's open one makes it "waiting for confirmation".
   const [proofs, setProofs] = useState<PaymentProof[] | null>(null);
-  const [instructions, setInstructions] = useState<PaymentInstructions | null>(null);
-  const [paying, setPaying] = useState<SeatRequest | null>(null);
-  const focused = useRef(false);
   const [error, setError] = useState<unknown>(null);
-  const [branchId, setBranchId] = useState(stores[0]?.id ?? '');
-  const [storeName, setStoreName] = useState('');
-  const [storeNameAr, setStoreNameAr] = useState('');
-  const [storeProblems, setStoreProblems] = useState<{ name?: Key; nameAr?: Key }>({});
-  const [storeActivity, setStoreActivity] = useState<Activity>('electronics');
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
     try {
-      const [list, sent, how] = await Promise.all([
+      const [list, sent] = await Promise.all([
         ownerRequest<SeatRequest[]>('platform/my-subscription/seat-requests'),
         ownerRequest<PaymentProof[]>('platform/my-subscription/payment-proofs').catch(() => null),
-        ownerRequest<PaymentInstructions>('platform/payment-instructions').catch(() => null),
       ]);
       setRows(list);
       setProofs(sent);
-      setInstructions(how);
     } catch (e) {
       setError(e);
     }
@@ -1057,14 +991,6 @@ function Requests({
   useEffect(() => {
     void load();
   }, [load, version]);
-  // The activation message's link: that store's payment opens once its row is read.
-  useEffect(() => {
-    if (focused.current || !focusStore || !rows) return;
-    const row = rows.find((r) => r.id.toLowerCase() === focusStore.toLowerCase() && r.kind === 'store' && r.status === 'pending_payment');
-    focused.current = true;
-    if (row) setPaying(row);
-  }, [focusStore, rows]);
-
   const act = async (fn: () => Promise<unknown>) => {
     setBusy(true);
     setError(null);
@@ -1097,13 +1023,13 @@ function Requests({
               label: t('admin.businesses.state'),
               render: (r) =>
                 // 0135: a waiting store is paid from its status, and its proof corrected there until it is confirmed.
-                r.kind === 'store' && r.status === 'pending_payment' ? (
+                (r.kind === 'store' || r.kind === 'seat') && r.status === 'pending_payment' ? (
                   <button
                     type="button"
                     className="badge-button"
                     data-testid={`store-pay-${r.id}`}
                     aria-label={openProofFor(r.id, proofs) ? t('portal.store.waitingConfirmation') : t('portal.store.waitingPayment')}
-                    onClick={() => setPaying(r)}
+                    onClick={() => onPay(r)}
                   >
                     {openProofFor(r.id, proofs) ? <Badge tone="info">{t('portal.store.waitingConfirmation')}</Badge> : <RequestStatus request={r} />}
                   </button>
@@ -1130,86 +1056,10 @@ function Requests({
         />
       )}
       {rows?.some((r) => r.status === 'scheduled') ? <p className="small">{t('trial.addons.paidNote')}</p> : null}
-      <StorePayDialog
-        request={paying}
-        proof={paying ? openProofFor(paying.id, proofs) : null}
-        instructions={instructions}
-        onClose={() => setPaying(null)}
-        onDone={async () => {
-          setPaying(null);
-          await load();
-          await onChanged();
-        }}
-      />
       <ErrorNotice error={error} />
-      <div className="grid">
-        <form
-          className="stack"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (branchId) void act(() => ownerRequest('platform/my-subscription/seat-requests', { method: 'POST', body: { branchId } }));
-          }}
-        >
-          <h3>{t('account.requests.add.seat')}</h3>
-          <Field label={t('account.requests.seat.store')}>
-            <select value={branchId} onChange={(e) => setBranchId(e.target.value)}>
-              {stores.map((s) => (
-                <option key={s.id} value={s.id}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
-          </Field>
-          <button type="submit" className="btn" disabled={busy || !branchId}>
-            {t('account.requests.submit')}
-          </button>
-        </form>
-        <form
-          className="stack"
-          onSubmit={(e) => {
-            e.preventDefault();
-            // D225: the store's Arabic name is optional here, as the API has it; given, it must be Arabic and the other
-            // name Latin. Said beside the field, in the Owner's language, before anything is sent.
-            const hasAr = normalizeName(storeNameAr) !== '';
-            const latin = hasAr ? latinNameProblem(storeName) : normalizeName(storeName) ? null : 'name_blank';
-            const arabic = hasAr ? arabicNameProblem(storeNameAr) : null;
-            const problems = { name: latin ? nameProblemKey(latin) : undefined, nameAr: arabic ? nameProblemKey(arabic) : undefined };
-            setStoreProblems(problems);
-            if (problems.name || problems.nameAr) return;
-            const body = { name: storeName.trim(), ...(hasAr ? { nameAr: storeNameAr.trim() } : {}), activity: storeActivity };
-            void act(() => ownerRequest('platform/my-subscription/store-requests', { method: 'POST', body })).then(() => {
-              setStoreName('');
-              setStoreNameAr('');
-            });
-          }}
-          noValidate
-        >
-          <h3>{t('account.requests.add.store')}</h3>
-          <Field label={t('account.requests.store.name')} error={storeProblems.name ? t(storeProblems.name) : null}>
-            <input maxLength={160} dir="ltr" value={storeName} aria-invalid={storeProblems.name ? true : undefined} onChange={(e) => setStoreName(e.target.value)} />
-          </Field>
-          <Field label={t('portal.store.nameAr')} error={storeProblems.nameAr ? t(storeProblems.nameAr) : null}>
-            <input maxLength={160} dir="rtl" lang="ar" value={storeNameAr} aria-invalid={storeProblems.nameAr ? true : undefined} onChange={(e) => setStoreNameAr(e.target.value)} />
-          </Field>
-          <Field label={t('account.requests.store.activity')}>
-            <select value={storeActivity} onChange={(e) => setStoreActivity(e.target.value as Activity)}>
-              {ACTIVITIES.map((a) => {
-                const price = newStore?.find((n) => n.activity === a)?.monthly ?? null;
-                const label = t(`activity.${a}` as Key);
-                return (
-                  <option key={a} value={a}>
-                    {price !== null ? t('account.requests.option', { activity: label, amount: formatMru(price, lang) }) : label}
-                  </option>
-                );
-              })}
-            </select>
-          </Field>
-          <ReplacementNote option={newStore?.find((n) => n.activity === storeActivity) ?? null} />
-          <button type="submit" className="btn" disabled={busy || !storeName.trim()}>
-            {t('account.requests.submit')}
-          </button>
-        </form>
-      </div>
+      <button type="button" className="btn" onClick={() => onPay(null)}>
+        {t('portal.stores.goPay')}
+      </button>
       {trial?.status === 'active' && trial.endsAt ? (
         <Notice tone="info">
           <Phrase text={t('trial.addons.note')} values={{ date: formatInstant(trial.endsAt, trial.timeZone, lang) }} />
