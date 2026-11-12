@@ -6,7 +6,7 @@ import type { PaymentProof, ProofRecovery } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
 import { Empty, ErrorNotice, Field, Money, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
-import { formatDate, formatDateTime } from '../../lib/format';
+import { formatDate, formatDateTime, localNumber } from '../../lib/format';
 import { useStepUp } from './useStepUp';
 import { ProofViewer, proofFileHref } from '../../components/ProofViewer';
 
@@ -43,7 +43,7 @@ export function Proofs() {
 
 function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Promise<boolean>; onDone: () => Promise<void> }) {
   const { t, lang } = useI18n();
-  const [form, setForm] = useState({ amount: proof.amount, paidAt: proof.paidAt.slice(0, 10), months: String(proof.months ?? 1), channel: proof.months ? 'mobile_money' : 'manual', reason: '' });
+  const [form, setForm] = useState({ amount: proof.amount, paidAt: proof.paidAt.slice(0, 10), months: String(proof.months ?? 1), reason: '' });
   const [refusal, setRefusal] = useState('');
   const [error, setError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
@@ -104,7 +104,7 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
           )}
           {proof.payerPhone ? (
             <p>
-              {t('admin.proofs.payer')}: <span className="ltr" dir="ltr">{proof.payerPhone}</span>
+              {t('admin.proofs.payer')}: <span className="ltr" dir="ltr">{localNumber(proof.payerPhone)}</span>
             </p>
           ) : null}
           {proof.reference ? <p className="ltr">{proof.reference}</p> : null}
@@ -144,7 +144,7 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
                   e.preventDefault();
                   // Owner, 2026-11-12: one administrator, two actions — the submit button that was pressed says which.
                   const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
-                  void act(submitter?.value === 'open' ? 'open' : 'approve', { amount: form.amount.trim(), paidAt: new Date(form.paidAt).toISOString(), months: Number(form.months), channel: form.channel, reason: form.reason.trim() });
+                  void act(submitter?.value === 'open' ? 'open' : 'approve', { amount: form.amount.trim(), paidAt: new Date(form.paidAt).toISOString(), months: Number(form.months), channel: 'mobile_money', reason: form.reason.trim() });
                 }}
               >
                 <div className="grid">
@@ -156,15 +156,6 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
                   </Field>
                   <Field label={t('admin.proofs.months')}>
                     <input required type="number" min={1} max={60} dir="ltr" value={form.months} onChange={(e) => setForm({ ...form, months: e.target.value })} />
-                  </Field>
-                  <Field label={t('admin.action.channel')}>
-                    <select value={form.channel} onChange={(e) => setForm({ ...form, channel: e.target.value })}>
-                      {['manual', 'bank_transfer', 'mobile_money'].map((ch) => (
-                        <option key={ch} value={ch}>
-                          {t(`admin.action.channel.${ch}` as Key)}
-                        </option>
-                      ))}
-                    </select>
                   </Field>
                 </div>
                 <Field label={t('admin.proofs.reason')}>

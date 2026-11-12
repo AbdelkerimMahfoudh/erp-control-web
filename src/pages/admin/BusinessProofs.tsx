@@ -4,7 +4,7 @@ import { ProofViewer, proofFileHref } from '../../components/ProofViewer';
 import { ProofLines } from '../../components/stores';
 import { Badge, Empty, Money, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
-import { formatDate } from '../../lib/format';
+import { formatDate, localNumber } from '../../lib/format';
 
 /**
  * One business's payment proofs in its payment history (owner, 2026-11-12): every decision — waiting, approved,
@@ -49,7 +49,7 @@ function ProofItem({ proof }: { proof: PaymentProof }) {
       </div>
       {proof.payerPhone ? (
         <p className="small">
-          {t('admin.proofs.payer')}: <span className="ltr" dir="ltr">{proof.payerPhone}</span>
+          {t('admin.proofs.payer')}: <span className="ltr" dir="ltr">{localNumber(proof.payerPhone)}</span>
         </p>
       ) : null}
       {proof.status === 'refused' && proof.refusalReason ? <p className="small">{t('admin.proofs.refusedBecause', { reason: proof.refusalReason })}</p> : null}

@@ -122,13 +122,24 @@ describe('the one payment flow', () => {
     fireEvent.click(choices[3]!);
     fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.send'] }));
     expect(await within(dialog).findByText(en['portal.store.problem.payer'])).toBeTruthy();
-    fireEvent.change(dialog.querySelector('input[inputmode="tel"]')!, { target: { value: '+222 36 00 00 01' } });
+    // Owner, 2026-11-12: eight digits, no +222 — fewer is refused; anything typed beyond eight is not taken.
+    const payer = dialog.querySelector('input[inputmode="numeric"]') as HTMLInputElement;
+    fireEvent.change(payer, { target: { value: '3600000' } });
+    fireEvent.change(dialog.querySelector('input[type="file"]')!, { target: { files: [png()] } });
+    fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.send'] }));
+    expect(await within(dialog).findByText(en['portal.store.problem.payer'])).toBeTruthy();
+    expect(posts).toHaveLength(0);
+    fireEvent.change(payer, { target: { value: '+222 36 00 00 01 9' } });
+    expect(payer.value).toBe('22236000');
+    fireEvent.change(payer, { target: { value: '36 00 00 01 99' } });
+    expect(payer.value).toBe('36000001');
+    expect(payer.maxLength).toBe(8);
     fireEvent.change(dialog.querySelector('input[type="file"]')!, { target: { files: [png()] } });
     fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.send'] }));
     await waitFor(() => expect(posts).toHaveLength(1));
     const b = posts[0]!.body as FormData;
     expect(posts[0]!.url).toMatch(/\/platform\/my-subscription\/payment-proofs$/);
-    expect([b.get('category'), b.get('months'), b.get('branches'), b.get('receiveService'), b.get('receiveNumber'), b.get('payerPhone')]).toEqual(['subscription', '1', MAIN, 'sedad', '37676827', '+222 36 00 00 01']);
+    expect([b.get('category'), b.get('months'), b.get('branches'), b.get('receiveService'), b.get('receiveNumber'), b.get('payerPhone')]).toEqual(['subscription', '1', MAIN, 'sedad', '37676827', '36000001']);
     expect(b.get('file')).toBeInstanceOf(File);
     expect(b.get('amount')).toBeNull();
   });
@@ -217,7 +228,8 @@ describe('the payment window’s numbers and file', () => {
     // Copying chose nothing.
     expect(within(dialog).getAllByRole('radio').every((r) => !(r as HTMLInputElement).checked)).toBe(true);
     // The payer's own number stays international.
-    expect((dialog.querySelector('input[inputmode="tel"]') as HTMLInputElement).placeholder).toBe('+222');
+    const payer = dialog.querySelector('input[inputmode="numeric"]') as HTMLInputElement;
+    expect([payer.placeholder, payer.maxLength, within(dialog).getByText(en['pay.payer.hint']).textContent]).toEqual(['', 8, '8 digits, without +222.']);
   });
 
   it('the file: a real button opens the chooser; the name chosen is shown and announced with it', async () => {

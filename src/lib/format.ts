@@ -68,3 +68,10 @@ export function formatTimeLeft(untilIso: string | null, lang: Language, now: num
 export function formatInt(n: number, lang: Language): string {
   return new Intl.NumberFormat(LOCALE[lang]).format(n);
 }
+
+/** Owner, 2026-11-12: a local mobile number — eight digits, shown in pairs, without +222 (older records may carry it). */
+export function localNumber(raw: string | null | undefined): string {
+  if (!raw) return '';
+  const digits = raw.replace(/\D/g, '').replace(/^(?:00)?222(?=\d{8}$)/, '');
+  return digits.length === 8 ? digits.replace(/(\d{2})(?=\d)/g, '$1 ') : raw;
+}

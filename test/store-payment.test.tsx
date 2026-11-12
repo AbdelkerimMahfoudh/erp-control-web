@@ -55,7 +55,9 @@ describe('a waiting store paid from the portal', () => {
     expect(openProofFor(STORE.id, [OPEN])?.id).toBe('p-1');
     expect(openProofFor(STORE.id, [{ ...OPEN, status: 'approved' }])).toBeNull();
     expect(openProofFor('other', [OPEN])).toBeNull();
-    expect(payerPhoneValid('+222 36-00.00 01')).toBe(true);
+    // Exactly eight digits, without +222 (owner, 2026-11-12).
+    expect(payerPhoneValid('36 00 00 01')).toBe(true);
+    for (const bad of ['+222 36 00 00 01', '22236000001', '3600000', '360000011', '3600-0001']) expect(payerPhoneValid(bad)).toBe(false);
     expect(payerPhoneValid('abc')).toBe(false);
     expect(en['portal.store.payTitle']).toMatch(/store/);
     expect(fr['portal.store.payTitle']).toMatch(/boutique/);

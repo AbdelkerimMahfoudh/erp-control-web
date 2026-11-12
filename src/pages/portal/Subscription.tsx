@@ -439,7 +439,6 @@ function SubscriptionView({ session, data, reload, onSignOut }: { session: Porta
             columns={[
               { label: t('admin.audit.when'), render: (p) => formatDate(p.paidAt, lang) },
               { label: t('admin.action.amount'), render: (p) => <Money amount={p.amount} /> },
-              { label: t('admin.action.channel'), render: (p) => t(`admin.action.channel.${p.channel}` as Key) },
               { label: t('admin.action.reference'), render: (p) => <span className="ltr">{!p.reference ? '—' : p.reference.startsWith('proof:') ? t('portal.payments.byProof') : p.reference}</span> },
             ]}
             rows={data.payments}

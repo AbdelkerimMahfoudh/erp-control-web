@@ -398,7 +398,7 @@ function PayWindow({
     if (!open && d.open) d.close();
     if (open) {
       setReceiver(correcting?.receiveService && correcting.receiveNumber ? `${correcting.receiveService}:${correcting.receiveNumber}` : '');
-      setPayer(correcting?.payerPhone ?? '');
+      setPayer((correcting?.payerPhone ?? '').replace(/\D/g, '').replace(/^(?:00)?222(?=\d{8}$)/, '').slice(0, 8));
       setFile(null);
       setCopied(null);
       setProblem(null);
@@ -413,13 +413,13 @@ function PayWindow({
     setError(null);
     const [service, number] = receiver.split(':');
     if (!service || !number) return setProblem('pay.problem.receiver');
-    if (!/^\+?[\d\s]{8,16}$/.test(payer.trim())) return setProblem('portal.store.problem.payer');
+    if (!/^\d{8}$/.test(payer)) return setProblem('portal.store.problem.payer');
     if (!correcting && !file) return setProblem('portal.proof.problem.file');
     if (file && file.size > MAX_BYTES) return setProblem('portal.proof.problem.size');
     const body = new FormData();
     body.set('receiveService', service);
     body.set('receiveNumber', number);
-    body.set('payerPhone', payer.trim());
+    body.set('payerPhone', payer);
     if (file) body.set('file', file);
     setBusy(true);
     try {
@@ -481,7 +481,19 @@ function PayWindow({
           )}
           <label className="field">
             {t('portal.store.payer')}
-            <input inputMode="tel" dir="ltr" value={payer} onChange={(e) => setPayer(e.target.value)} placeholder="+222" />
+            <input
+              inputMode="numeric"
+              autoComplete="tel-national"
+              dir="ltr"
+              maxLength={8}
+              pattern="[0-9]{8}"
+              value={payer}
+              aria-describedby="pay-payer-hint"
+              onChange={(e) => setPayer(e.target.value.replace(/\D/g, '').slice(0, 8))}
+            />
+            <span id="pay-payer-hint" className="muted small">
+              {t('pay.payer.hint')}
+            </span>
           </label>
           <div className="field">
             <span id="pay-file-label">{correcting ? t('portal.store.replaceScreenshot') : t('portal.store.screenshot')}</span>

@@ -459,7 +459,7 @@ function DecisionRefusal({ error, business }: { error: unknown; business: Busine
 function Decisions({ business, ask, onDone, kinds, title }: { business: BusinessDetail; ask: () => Promise<boolean>; onDone: () => Promise<void>; kinds: Decision[]; title: string }) {
   const { t, lang } = useI18n();
   const [open, setOpen] = useState<Decision | null>(null);
-  const [form, setForm] = useState({ months: '1', periodEnd: '', days: '14', reason: '', amount: '', paidAt: new Date().toISOString().slice(0, 10), channel: 'bank_transfer', reference: '', note: '', confirm: true });
+  const [form, setForm] = useState({ months: '1', periodEnd: '', days: '14', reason: '', amount: '', paidAt: new Date().toISOString().slice(0, 10), reference: '', note: '', confirm: true });
   const [choice, setChoice] = useState<CategoryChoice>(DEFAULT_CHOICE);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
@@ -493,7 +493,8 @@ function Decisions({ business, ask, onDone, kinds, title }: { business: Business
           body = {
             amount: form.amount.trim(),
             paidAt: new Date(form.paidAt).toISOString(),
-            channel: form.channel,
+            // Every payment arrives by mobile transaction (owner, 2026-11-12).
+            channel: 'mobile_money',
             reference: form.reference.trim() || undefined,
             note: form.note.trim() || undefined,
             confirm: form.confirm,
@@ -576,13 +577,6 @@ function Decisions({ business, ask, onDone, kinds, title }: { business: Business
                 </Field>
                 <Field label={t('admin.action.paidAt')}>
                   <input required type="date" value={form.paidAt} onChange={(e) => setForm({ ...form, paidAt: e.target.value })} />
-                </Field>
-                <Field label={t('admin.action.channel')}>
-                  <select value={form.channel} onChange={(e) => setForm({ ...form, channel: e.target.value })}>
-                    <option value="bank_transfer">{t('admin.action.channel.bank_transfer')}</option>
-                    <option value="mobile_money">{t('admin.action.channel.mobile_money')}</option>
-                    <option value="manual">{t('admin.action.channel.manual')}</option>
-                  </select>
                 </Field>
               </div>
               <Field label={t('admin.action.reference')} hint={t('admin.action.reference.required')}>
