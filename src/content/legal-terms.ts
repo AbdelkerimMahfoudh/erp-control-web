@@ -8,10 +8,10 @@ import type { LegalDocument } from './types';
  */
 /**
  * Terms 1.1 (owner, 2026-11-12): an additional store has no free trial and opens on its own approved payment, its own
- * paid term beginning when its access opens. Effective on this date — the terms only; set to the actual deployment day
- * (or, with the 30-day notice, the day it applies) in the commit that ships it.
+ * paid term beginning when its access opens. Effective on the deployment day (2026-11-12) — the terms only; every
+ * existing account was a test account (owner, 2026-11-12), so no 30-day notice applied.
  */
-export const TERMS_EFFECTIVE = '2026-11-13';
+export const TERMS_EFFECTIVE = '2026-11-12';
 
 export const terms: Record<Language, LegalDocument> = {
   en: {
