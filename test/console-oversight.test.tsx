@@ -6,6 +6,7 @@ import { ar } from '../src/i18n/ar';
 import { en } from '../src/i18n/en';
 import { BRANCHES, LINES, SLOW_WAIT, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
 import { TRIAL_ZONE, portalStatus, zoneName } from './fixtures-data';
+import { openBusinessTab } from '../src/pages/admin/Business';
 
 useActivityHarness();
 
@@ -221,6 +222,7 @@ describe('the console: a business’s grace and messages', () => {
   }
 
   it('the grace running, its end and hours left, the allowance used and when the next returns — in the business’s zone', async () => {
+    openBusinessTab('payments');
     business();
     const card = (await screen.findByRole('heading', { name: en['admin.business.grace.title'], level: 2 }, SLOW_WAIT)).closest('section')!;
     expect(within(card).getByText(en['admin.business.grace.status.active']).className).toBe('badge tone-warn');
@@ -231,6 +233,7 @@ describe('the console: a business’s grace and messages', () => {
   });
 
   it('the next message due and the latest, each in the business’s zone', async () => {
+    openBusinessTab('history');
     business();
     const card = (await screen.findByRole('heading', { name: en['admin.business.messages.title'], level: 2 }, SLOW_WAIT)).closest('section')!;
     expect(card.textContent).toContain(`Next: grace period reminder, 24 hours left, due ${LAGOS('2026-11-03T09:30:00.000Z')}.`);
@@ -240,6 +243,7 @@ describe('the console: a business’s grace and messages', () => {
   });
 
   it('in Arabic: the same, right to left, each date isolated', async () => {
+    openBusinessTab('payments');
     localStorage.setItem('erp.web.language', 'ar');
     business();
     const card = (await screen.findByRole('heading', { name: ar['admin.business.grace.title'], level: 2 }, SLOW_WAIT)).closest('section')!;
@@ -249,8 +253,9 @@ describe('the console: a business’s grace and messages', () => {
   });
 
   it('an API without the messages route: no section, no error', async () => {
+    openBusinessTab('history');
     business((url) => (url.endsWith(`/platform/businesses/${ID}/notices`) ? { status: 404, body: { message: 'Not Found' } } : undefined));
-    await screen.findByRole('heading', { name: en['admin.business.grace.title'], level: 2 }, SLOW_WAIT);
+    await screen.findByRole('heading', { name: en['account.timeline'], level: 2 }, SLOW_WAIT);
     expect(screen.queryByRole('heading', { name: en['admin.business.messages.title'] })).toBeNull();
     expect(screen.queryByText(en['error.generic'])).toBeNull();
   });

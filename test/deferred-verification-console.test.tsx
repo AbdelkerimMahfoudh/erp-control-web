@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { BusinessDetail, DeferredAccount, ProvisioningStatus } from '../src/api/types';
 import { en } from '../src/i18n/en';
 import { BRANCHES, LINES, SLOW_WAIT, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
+import { openBusinessTab } from '../src/pages/admin/Business';
 
 useActivityHarness();
 
@@ -178,6 +179,8 @@ describe('creating a business: WhatsApp verification', () => {
 });
 
 describe('a business’s page', () => {
+  // The layout review (2026-11-12): accounts and their verification are on the People tab.
+  beforeEach(() => openBusinessTab('people'));
   it('a deferred number reads Deferred — not verified — never Verified', async () => {
     serveConsole({ deferral: true, business: detail(), deferred: [DEFERRED] });
     mount(`/admin/businesses/${ID}`);
@@ -257,6 +260,7 @@ describe('the businesses list', () => {
 });
 
 describe('an ordinary business', () => {
+  beforeEach(() => openBusinessTab('people'));
   it('offers the choice with the test-business box unticked, and sends no test or pilot field', async () => {
     const sent = serveConsole({ deferral: true }, (url) => (url.endsWith('/platform/businesses') ? { status: 201, body: { companyId: ID, publicStoreId: 'PL12CD34EF', created: true, invitation: null, setupCode: CODE, setup: setup() } } : undefined));
     mount('/admin/businesses/new');

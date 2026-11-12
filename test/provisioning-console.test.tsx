@@ -6,6 +6,7 @@ import { ar } from '../src/i18n/ar';
 import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
 import { BRANCHES, LINES, SLOW_WAIT, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
+import { openBusinessTab } from '../src/pages/admin/Business';
 
 useActivityHarness();
 // Creating a business types every name in both scripts, then a step-up: more than five seconds on a loaded machine.
@@ -158,6 +159,7 @@ describe('creating a business and its Owner', () => {
 
 describe('a test business’s page', () => {
   it('is marked unmistakably, tells setup and access apart, and offers no payment', async () => {
+    openBusinessTab('payments');
     serveBusiness(detail());
     mount(`/admin/businesses/${ID}`);
     expect(await screen.findByText(en['admin.test.bannerTitle'], undefined, SLOW_WAIT)).toBeTruthy();
@@ -263,6 +265,7 @@ describe('a test business’s page', () => {
   });
 
   it('says a test status refusal in words', async () => {
+    openBusinessTab('settings');
     serveBusiness(detail({ isTest: false, setup: setup({ isTest: false, customerActivation: 'closed' }) }), (url) =>
       url.endsWith('/test-status') ? { status: 409, body: { statusCode: 409, code: 'test_status_connected', message: 'x' } } : undefined,
     );

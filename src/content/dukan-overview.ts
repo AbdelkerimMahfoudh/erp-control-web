@@ -136,7 +136,7 @@ export const dukanOverview: Record<Language, DukanOverview> = {
     proofs: [
       { title: 'Chaque IMEI enregistré une seule fois', body: 'Un téléphone ne peut être ni reçu ni vendu deux fois.' },
       { title: 'La journée clôturée par rapport à l’attendu', body: 'Caisse et comptes comptés ; tout écart dit en toutes lettres.' },
-      { title: 'Des droits par personne et par magasin', body: 'Chaque employé ne voit et ne fait que ce que son rôle permet.' },
+      { title: 'Des droits par personne et par boutique', body: 'Chaque employé ne voit et ne fait que ce que son rôle permet.' },
     ],
     problems: {
       title: 'Ce que Dukan ERP remplace',
@@ -157,7 +157,7 @@ export const dukanOverview: Record<Language, DukanOverview> = {
         { title: 'Ventes et paiements', body: 'En espèces ou par les comptes que l’entreprise configure, avec les paiements partiels et le reçu.' },
         { title: 'Dettes et retours', body: 'Les soldes dus par les clients, et les retours avec leur motif — stock et argent corrigés ensemble.' },
         { title: 'Caisse et comptes configurés', body: 'La caisse et chaque compte comptés en fin de journée, tout écart affiché en toutes lettres.' },
-        { title: 'Équipe et droits', body: 'Propriétaire, gérants et employés, chacun avec un rôle, magasin par magasin.' },
+        { title: 'Équipe et droits', body: 'Propriétaire, gérants et employés, chacun avec un rôle, boutique par boutique.' },
         { title: 'Rapports et clôture', body: 'La clôture du jour, les résultats du mois et des exports en PDF et en tableur.' },
       ],
     },
@@ -181,7 +181,7 @@ export const dukanOverview: Record<Language, DukanOverview> = {
       items: [
         'Les mots de passe et codes PIN ne sont conservés que sous forme d’empreintes à sens unique, jamais lisibles.',
         'Les modifications des données de l’entreprise sont inscrites dans un journal d’audit que l’application elle-même ne peut ni modifier ni supprimer.',
-        'Les autorisations sont accordées par personne et par magasin, et le serveur les vérifie à chaque requête.',
+        'Les autorisations sont accordées par personne et par boutique, et le serveur les vérifie à chaque requête.',
         'Les sessions ouvertes peuvent être fermées, et les appareils retirés d’un compte, à tout moment.',
       ],
       privacy: 'Lire la politique de confidentialité',

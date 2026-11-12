@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
@@ -141,6 +141,37 @@ const OVERSIGHT = (() => {
 })();
 
 /** The API the pages may call, answered from fixtures: signed out unless a test says otherwise. */
+/** Payment proofs (layout review, 2026-11-12): one waiting, corrected once; two decided. The image is the app's icon. */
+const PROOF_IMAGE = readFileSync('public/icons/dukan-icon-512.png');
+const proofRow = (id: string, over: Record<string, unknown>) => ({
+  id,
+  companyId: BUSINESS.id,
+  status: 'submitted',
+  amount: '600',
+  paidAt: '2026-11-11T06:43:00.000Z',
+  reference: null,
+  note: null,
+  contentType: 'image/png',
+  fileName: `payment-proof-2026-11-11-${id.slice(-8)}.png`,
+  byteSize: PROOF_IMAGE.length,
+  refusalReason: null,
+  months: 1,
+  submittedAt: '2026-11-11T06:43:00.000Z',
+  decidedAt: null,
+  fileAvailable: true,
+  revision: 1,
+  revisedAt: null,
+  payerPhone: null,
+  lines: [{ branchId: 'b-new', name: 'Boutique Ksar', amount: 600, pending: true }],
+  category: 'store_activation',
+  ...over,
+});
+const PROOFS_WAITING = [proofRow('0192f000-0000-7000-8000-0000000000f1', { revision: 2, revisedAt: '2026-11-11T08:10:00.000Z', payerPhone: '+222 36 00 00 01' })];
+const PROOFS_DECIDED = [
+  proofRow('0192f000-0000-7000-8000-0000000000f2', { status: 'approved', amount: '1500', months: 3, decidedAt: '2026-11-07T11:00:00.000Z', lines: null, category: 'subscription' }),
+  proofRow('0192f000-0000-7000-8000-0000000000f3', { status: 'refused', refusalReason: 'The amount does not match the transfer.', decidedAt: '2026-11-05T09:00:00.000Z' }),
+];
+
 async function mockApi(page: Page, signedIn: Session = {}) {
   if (signedIn.lang) await page.addInitScript((lang) => localStorage.setItem('erp.web.language', lang), signedIn.lang);
   await page.route(`${API}/**`, async (route) => {
@@ -162,6 +193,9 @@ async function mockApi(page: Page, signedIn: Session = {}) {
     if (url.endsWith('/platform/dashboard'))
       return json({ byState: { pending: 2, active: 7, grace: 1, complimentary: 3, suspended: 0, expired: 1, cancelled: 0, rejected: 1 }, businesses: 15, branches: 21, activeUsers: 48, pendingSeatRequests: 2, pendingStaff: 1, revenue: null, calculatedAt: '2026-10-12T08:00:00.000Z' });
     if (url.includes('/platform/my-subscription/activity-options')) return json({ stores: [], newStore: [] });
+    if (signedIn.admin && /\/platform\/payment-proofs\/[^/]+\/file/.test(url)) return route.fulfill({ status: 200, contentType: 'image/png', body: PROOF_IMAGE });
+    if (signedIn.admin && url.includes('/platform/payment-proofs?company=')) return json([...PROOFS_WAITING, ...PROOFS_DECIDED]);
+    if (signedIn.admin && url.endsWith('/platform/payment-proofs')) return json(PROOFS_WAITING);
     // Stores and seats asked for during the trial (D176): the Owner's list, the console's queue and the business page.
     if (signedIn.addons) {
       const rows = addons(signedIn.addons);
@@ -535,12 +569,15 @@ for (const lang of LANGS) {
     await mockApi(page, { admin: true, addons: 'trial_end', lang });
     await page.setViewportSize({ width: 375, height: 900 });
     await page.goto(`/admin/businesses/${BUSINESS.id}`);
+    // The layout review (2026-11-12): the people are on their own tab.
+    await page.getByRole('tab', { name: CATALOGUES[lang]['admin.tabs.people'] }).click();
     await expect(page.getByText(LONG_ADDRESS)).toBeVisible();
     await page.waitForLoadState('networkidle');
     const at375 = await layout(page);
     await page.setViewportSize({ width: 320, height: 900 });
     const at320 = await layout(page);
     await page.setViewportSize({ width: 1280, height: 900 });
+    await page.getByRole('tab', { name: CATALOGUES[lang]['admin.tabs.stores'] }).click();
     const tables = await page.locator('.card table.data').evaluateAll((els) =>
       els.map((table) => {
         const card = table.closest('.card')!.getBoundingClientRect();
@@ -898,6 +935,61 @@ for (const lang of LANGS) {
     // Left to right on every page, Arabic included: the first digit is the leftmost box.
     expect(order).toEqual([...order].sort((a, b) => a - b));
     expect(l.overflow, 'no sideways scroll at 320 px').toBeLessThanOrEqual(0);
+    expect(errors).toEqual([]);
+  });
+}
+
+/*
+ * The layout review (owner, 2026-11-12, approved direction): a business as a summary and five tabs, a decided proof
+ * viewed in place, and the payment review with the proof beside the decision — at desktop width and on a phone, in
+ * English and Arabic, with no sideways scroll, no console error and no serious accessibility violation.
+ */
+for (const [lang, width] of [['en', 1280], ['en', 375], ['fr', 1280], ['ar', 375]] as const) {
+  test(`the redesigned console, ${lang} at ${width} px: summary and tabs, a proof viewed in place, the review beside the decision`, async ({ page }) => {
+    const errors = watchConsole(page);
+    const cat = CATALOGUES[lang];
+    await mockApi(page, { admin: true, addons: 'trial_end', lang });
+    await page.setViewportSize({ width, height: 900 });
+    const dir = join(EV, 'screenshots', 'redesign');
+    mkdirSync(dir, { recursive: true });
+
+    await page.goto(`/admin/businesses/${BUSINESS.id}`);
+    await expect(page.getByRole('tab', { name: cat['admin.tabs.stores'] })).toHaveAttribute('aria-selected', 'true');
+    // A proof waits: the summary's one primary action says so.
+    await expect(page.getByRole('link', { name: cat['admin.next.reviewProof'] })).toBeVisible();
+    await page.waitForLoadState('networkidle');
+    await page.screenshot({ path: join(dir, `business-stores-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 72 });
+    expect((await layout(page)).overflow).toBeLessThanOrEqual(0);
+
+    await page.getByRole('tab', { name: cat['admin.tabs.payments'] }).click();
+    const decided = page.locator('.proof-item').filter({ hasText: cat['portal.proof.status.approved'] });
+    await decided.getByRole('button', { name: cat['admin.proofs.view'] }).click();
+    await expect(decided.getByRole('img', { name: cat['admin.proofs.imageAlt'] })).toBeVisible();
+    await expect(decided.getByRole('link', { name: cat['admin.proofs.download'] })).toBeVisible();
+    await page.screenshot({ path: join(dir, `business-payments-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 72 });
+    expect((await layout(page)).overflow).toBeLessThanOrEqual(0);
+
+    await page.getByRole('tab', { name: cat['admin.tabs.settings'] }).click();
+    await expect(page.getByRole('heading', { name: cat['admin.business.danger'] })).toBeVisible();
+    await page.screenshot({ path: join(dir, `business-settings-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 72 });
+
+    await page.goto('/admin/proofs');
+    const card = page.locator('.proof-review-card').first();
+    await expect(card.getByRole('img', { name: cat['admin.proofs.imageAlt'] })).toBeVisible();
+    await expect(card.getByText(cat['admin.proofs.revised'].replace('{revision}', '2').split('{when}')[0]!.trim())).toBeVisible();
+    await expect(card.getByRole('button', { name: cat['admin.proofs.approve'] })).toBeVisible();
+    await page.waitForLoadState('networkidle');
+    await page.screenshot({ path: join(dir, `proofs-review-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 72 });
+    const l = await layout(page);
+    expect(l.overflow).toBeLessThanOrEqual(0);
+    // Beside the decision at desktop width; on top of it on a phone.
+    const [file, decision] = await Promise.all([card.locator('.proof-review-file').boundingBox(), card.locator('.proof-review-decision').boundingBox()]);
+    if (width >= 1000) expect(Math.abs(file!.y - decision!.y)).toBeLessThan(4);
+    else expect(file!.y + file!.height).toBeLessThanOrEqual(decision!.y + 1);
+    const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+    const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
+    record({ test: 'redesign', lang, width, overflow: l.overflow, serious: serious.map((v) => v.id), consoleErrors: errors });
+    expect(serious.map((v) => v.id)).toEqual([]);
     expect(errors).toEqual([]);
   });
 }

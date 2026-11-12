@@ -30,7 +30,7 @@ describe('payment proofs on the web (D227)', () => {
       }
     }
     const page = readFileSync('src/pages/admin/Proofs.tsx', 'utf8');
-    expect(page).toContain('proof.applying ? <Recovery');
+    expect(page).toMatch(/proof\.applying \? \(\s*<Recovery/);
     const recovery = page.slice(page.indexOf('function Recovery'));
     expect(recovery).toContain('state.actions.release ?');
     expect(recovery).not.toMatch(/amount:\s*form/);

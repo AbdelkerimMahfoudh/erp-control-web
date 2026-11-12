@@ -957,3 +957,69 @@ fieldset.promo legend {
   background: var(--mark-right);
   color: var(--on-accent, white);
 }
+
+/* Owner, 2026-11-12 (layout review): a business's summary — its facts in one line of small cards. */
+.summary-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+.summary-facts > div {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-tint, transparent);
+}
+.summary-facts dt {
+  font-size: 0.85em;
+  color: var(--muted-fg);
+}
+.summary-facts dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+}
+/* Deleting the business sits apart from every everyday action. */
+.danger-zone {
+  padding: 16px;
+  border: 1px solid var(--danger-fg);
+  border-radius: 16px;
+  background: var(--danger-bg);
+}
+/* A business's proofs, each opened in place. */
+.proof-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.proof-item {
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+/* The review: the proof beside the decision; on a phone, the proof on top. */
+.proof-review {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 20px;
+  align-items: start;
+}
+.proof-review-file {
+  position: sticky;
+  inset-block-start: 12px;
+  min-inline-size: 0;
+}
+.refuse-form {
+  padding-block-start: 12px;
+  border-block-start: 1px solid var(--border);
+}
+@media (max-width: 760px) {
+  .proof-review {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .proof-review-file {
+    position: static;
+  }
+}

@@ -10,7 +10,11 @@ import { formatDate } from '../../lib/format';
 import { useStepUp } from './useStepUp';
 import { ProofViewer, proofFileHref } from '../../components/ProofViewer';
 
-/** Payment proofs waiting for a person (D227). An approval records what the administrator verified, not what was claimed. */
+/**
+ * Payment proofs waiting for a person (D227). An approval records what the administrator verified, not what was claimed.
+ * Owner, 2026-11-12 (layout review): one proof per full-width card — the proof itself beside the decision (on top of it
+ * on a phone), its latest revision named first, Approve the primary action and Refuse the secondary one.
+ */
 export function Proofs() {
   const { t } = useI18n();
   const { ask, dialog } = useStepUp();
@@ -61,88 +65,96 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
     }
   };
 
+  const revision = proof.revision ?? 1;
   return (
-    <section className="card stack">
-      <div className="row spread">
-        <Link to={`/admin/businesses/${proof.companyId}`}>{t('admin.proofs.business')}</Link>
-        <span>
-          <Money amount={proof.amount} /> · {formatDate(proof.paidAt, lang)} · {t(`portal.proof.status.${proof.status}` as Key)}
+    <section className="card stack proof-review-card" aria-label={t('admin.proofs.decision')}>
+      <header className="row spread">
+        <span className="row">
+          <Link to={`/admin/businesses/${proof.companyId}`}>{t('admin.proofs.business')}</Link>
+          <span className="muted small">{t('admin.proofs.sent', { date: formatDate(proof.submittedAt, lang) })}</span>
         </span>
-      </div>
-      {proof.reference ? <p className="ltr">{proof.reference}</p> : null}
-      {proof.payerPhone ? (
-        <p>
-          {t('admin.proofs.payer')}: <span className="ltr" dir="ltr">{proof.payerPhone}</span>
-        </p>
-      ) : null}
-      {(proof.revision ?? 1) > 1 ? (
-        <Notice tone="warn">{t('admin.proofs.revised', { revision: String(proof.revision), when: proof.revisedAt ? formatDate(proof.revisedAt, lang) : '' })}</Notice>
-      ) : null}
-      {proof.fileAvailable ? (
-        // 0136: the proof itself, as the Owner last sent it (its revision), before any decision.
-        <ProofViewer
-          path={`platform/payment-proofs/${proof.id}/file`}
-          revision={proof.revision ?? 1}
-          fileName={proof.fileName ?? 'payment-proof'}
-          downloadHref={proofFileHref(`platform/payment-proofs/${proof.id}/file`)}
-        />
-      ) : (
-        <Notice tone="warn">{t('admin.proofs.purged')}</Notice>
-      )}
-      {proof.applying ? <Recovery proof={proof} ask={ask} onDone={onDone} /> : (
-      <>
-      <ProofLines lines={proof.lines} />
-      <form
-        className="stack"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void act('approve', { amount: form.amount.trim(), paidAt: new Date(form.paidAt).toISOString(), months: Number(form.months), channel: form.channel, reason: form.reason.trim() });
-        }}
-      >
-        <div className="grid">
-          <Field label={t('admin.access.amount')}>
-            <input required inputMode="decimal" dir="ltr" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
-          </Field>
-          <Field label={t('admin.access.paidAt')}>
-            <input required type="date" dir="ltr" value={form.paidAt} onChange={(e) => setForm({ ...form, paidAt: e.target.value })} />
-          </Field>
-          <Field label={t('admin.proofs.months')}>
-            <input required type="number" min={1} max={60} dir="ltr" value={form.months} onChange={(e) => setForm({ ...form, months: e.target.value })} />
-          </Field>
-          <Field label={t('admin.action.channel')}>
-            <select value={form.channel} onChange={(e) => setForm({ ...form, channel: e.target.value })}>
-              {['manual', 'bank_transfer', 'mobile_money'].map((c) => (
-                <option key={c} value={c}>
-                  {t(`admin.action.channel.${c}` as Key)}
-                </option>
-              ))}
-            </select>
-          </Field>
+        <span className="row">
+          <strong>
+            <Money amount={proof.amount} />
+          </strong>
+          <span className="muted small">{t(`portal.proof.status.${proof.status}` as Key)}</span>
+        </span>
+      </header>
+      {revision > 1 ? <Notice tone="warn">{t('admin.proofs.revised', { revision: String(revision), when: proof.revisedAt ? formatDate(proof.revisedAt, lang) : '' })}</Notice> : null}
+      <div className="proof-review">
+        <div className="proof-review-file">
+          {proof.fileAvailable ? (
+            // 0136: the proof itself, as the Owner last sent it (its revision), before any decision.
+            <ProofViewer path={`platform/payment-proofs/${proof.id}/file`} revision={revision} fileName={proof.fileName ?? 'payment-proof'} downloadHref={proofFileHref(`platform/payment-proofs/${proof.id}/file`)} />
+          ) : (
+            <Notice tone="warn">{t('admin.proofs.purged')}</Notice>
+          )}
         </div>
-        <Field label={t('admin.proofs.reason')}>
-          <input required maxLength={500} value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} />
-        </Field>
-        <button type="submit" className="btn btn-primary" disabled={busy}>
-          {t('admin.proofs.approve')}
-        </button>
-      </form>
-      <form
-        className="stack"
-        onSubmit={(e) => {
-          e.preventDefault();
-          void act('refuse', { reason: refusal.trim() });
-        }}
-      >
-        <Field label={t('admin.proofs.refusal')}>
-          <input required maxLength={500} value={refusal} onChange={(e) => setRefusal(e.target.value)} />
-        </Field>
-        <button type="submit" className="btn" disabled={busy}>
-          {t('admin.proofs.refuse')}
-        </button>
-      </form>
-      </>
-      )}
-      <ErrorNotice error={error} />
+        <div className="proof-review-decision stack">
+          {proof.payerPhone ? (
+            <p>
+              {t('admin.proofs.payer')}: <span className="ltr" dir="ltr">{proof.payerPhone}</span>
+            </p>
+          ) : null}
+          {proof.reference ? <p className="ltr">{proof.reference}</p> : null}
+          <ProofLines lines={proof.lines} />
+          {proof.applying ? (
+            <Recovery proof={proof} ask={ask} onDone={onDone} />
+          ) : (
+            <>
+              <form
+                className="stack"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void act('approve', { amount: form.amount.trim(), paidAt: new Date(form.paidAt).toISOString(), months: Number(form.months), channel: form.channel, reason: form.reason.trim() });
+                }}
+              >
+                <div className="grid">
+                  <Field label={t('admin.access.amount')}>
+                    <input required inputMode="decimal" dir="ltr" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
+                  </Field>
+                  <Field label={t('admin.access.paidAt')}>
+                    <input required type="date" dir="ltr" value={form.paidAt} onChange={(e) => setForm({ ...form, paidAt: e.target.value })} />
+                  </Field>
+                  <Field label={t('admin.proofs.months')}>
+                    <input required type="number" min={1} max={60} dir="ltr" value={form.months} onChange={(e) => setForm({ ...form, months: e.target.value })} />
+                  </Field>
+                  <Field label={t('admin.action.channel')}>
+                    <select value={form.channel} onChange={(e) => setForm({ ...form, channel: e.target.value })}>
+                      {['manual', 'bank_transfer', 'mobile_money'].map((ch) => (
+                        <option key={ch} value={ch}>
+                          {t(`admin.action.channel.${ch}` as Key)}
+                        </option>
+                      ))}
+                    </select>
+                  </Field>
+                </div>
+                <Field label={t('admin.proofs.reason')}>
+                  <input required maxLength={500} value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} />
+                </Field>
+                <button type="submit" className="btn btn-primary" disabled={busy}>
+                  {t('admin.proofs.approve')}
+                </button>
+              </form>
+              <form
+                className="stack refuse-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void act('refuse', { reason: refusal.trim() });
+                }}
+              >
+                <Field label={t('admin.proofs.refusal')}>
+                  <input required maxLength={500} value={refusal} onChange={(e) => setRefusal(e.target.value)} />
+                </Field>
+                <button type="submit" className="btn" disabled={busy}>
+                  {t('admin.proofs.refuse')}
+                </button>
+              </form>
+            </>
+          )}
+          <ErrorNotice error={error} />
+        </div>
+      </div>
     </section>
   );
 }

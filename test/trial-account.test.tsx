@@ -983,7 +983,7 @@ describe('a store or seat paid for during the trial: "Paid · scheduled", and wh
     expect(inZone('fr-FR')).toBe(`20 octobre 2026 à 10:30 (${zoneName(TRIAL_ZONE, 'fr-FR')})`);
   });
 
-  const NOTE = `During your free trial, a store or seat you request on this page can already be paid for. It starts when the free trial ends, on ${AT_END} — or, if paid access is not approved by then, with the first paid month, once it is. A store added in the Dukan ERP app is different: it opens as soon as its payment is confirmed.`;
+  const NOTE = `During your free trial, an additional store opens as soon as its payment is confirmed — here or in the Dukan ERP app — with its own paid month and no free trial. A seat paid for during the trial starts when the free trial ends, on ${AT_END} — or, if paid access is not approved by then, with the first paid month, once it is.`;
 
   it('while the trial runs, the forms say what a request made now does: never started during the trial, the trial’s end in the business’s zone', async () => {
     account('trial_active', RUNNING, listing([PENDING_STORE]));

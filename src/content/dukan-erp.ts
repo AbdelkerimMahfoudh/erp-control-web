@@ -93,10 +93,10 @@ export const dukanErp: Record<Language, DukanErpContent> = {
     summary: 'Dukan ERP est une plateforme de gestion développée et exploitée par {displayName}, pour les commerces de détail et d’électronique et pour les agents de services monétaires.',
     intro: 'Dukan ERP remplace le cahier, la calculatrice et les approximations de fin de journée par une seule application que toute l’équipe partage. Le propriétaire et le personnel de l’entreprise l’utilisent sur l’application mobile ; le compte de l’entreprise et son abonnement se gèrent sur ce site.',
     activitiesTitle: 'Deux activités, une seule plateforme',
-    activitiesLead: 'Dukan ERP prend actuellement en charge deux activités. Chaque magasin d’une entreprise exerce l’une, l’autre ou les deux, selon ce que permet son abonnement approuvé.',
+    activitiesLead: 'Dukan ERP prend actuellement en charge deux activités. Chaque boutique d’une entreprise exerce l’une, l’autre ou les deux, selon ce que permet son abonnement approuvé.',
     retail: {
       title: 'Commerce de détail et électronique',
-      lead: 'Pour les magasins qui vendent des téléphones, de l’électronique, des accessoires et d’autres articles.',
+      lead: 'Pour les boutiques qui vendent des téléphones, de l’électronique, des accessoires et d’autres articles.',
       items: [
         'Inventaire et modèles de produits, avec caractéristiques, quantités et prix',
         'Suivi par IMEI et numéro de série de chaque appareil concerné',
@@ -107,7 +107,7 @@ export const dukanErp: Record<Language, DukanErpContent> = {
         'Retours et remboursements',
         'Dépenses',
         'Rapports quotidiens, mensuels et annuels',
-        'Autorisations du personnel et par magasin',
+        'Autorisations du personnel et par boutique',
       ],
     },
     agent: {
@@ -124,7 +124,7 @@ export const dukanErp: Record<Language, DukanErpContent> = {
         'Numéros des clients masqués dans les listes et visibles en entier seulement avec l’autorisation',
       ],
     },
-    either: 'Une entreprise peut utiliser l’une ou l’autre activité, ou les deux, magasin par magasin, selon son abonnement approuvé.',
+    either: 'Une entreprise peut utiliser l’une ou l’autre activité, ou les deux, boutique par boutique, selon son abonnement approuvé.',
     providers: {
       title: 'À propos des opérateurs de paiement mobile',
       body: 'Dukan ERP enregistre les échanges que saisit l’équipe de l’agent. Il n’est relié à aucun opérateur de paiement mobile et ne vérifie pas le solde d’un opérateur. Aucun opérateur n’a approuvé ni recommandé Dukan ERP, et aucun n’y est intégré.',
@@ -132,10 +132,10 @@ export const dukanErp: Record<Language, DukanErpContent> = {
     start: {
       title: 'Comment une entreprise démarre',
       steps: [
-        'Le propriétaire fait sa demande sur ce site, avec les informations de l’entreprise et de son premier magasin.',
+        'Le propriétaire fait sa demande sur ce site, avec les informations de l’entreprise et de sa première boutique.',
         'Les coordonnées sont vérifiées. Le propriétaire peut alors démarrer l’essai gratuit unique de 7 jours de l’entreprise depuis le compte entreprise sur ce site ; il ne commence qu’à la confirmation du propriétaire, et aucun paiement n’est demandé.',
         'Pendant l’essai, puis une fois l’accès payant convenu avec {displayName}, le propriétaire et l’équipe se connectent à l’application mobile.',
-        'Des magasins, des postes ou des activités supplémentaires se demandent depuis le compte de l’entreprise et sont activés après confirmation.',
+        'Des boutiques, des postes ou des activités supplémentaires se demandent depuis le compte de l’entreprise et sont activés après confirmation.',
       ],
     },
     app: {

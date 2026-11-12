@@ -217,8 +217,8 @@ export const dukanErpPrelaunch: Record<Language, DukanErpPrelaunch> = {
   fr: {
     summary: 'Dukan ERP est une plateforme de gestion d’entreprise développée par {displayName} pour les boutiques de détail et d’électronique et pour les agents de services monétaires. Il arrive bientôt.',
     intro: 'Dukan ERP remplace le cahier, la calculatrice et les approximations de fin de journée par une seule application que toute l’équipe partage sur téléphone. Il est en préparation pour son lancement et n’est pas encore ouvert aux inscriptions.',
-    activitiesLead: 'Dukan ERP est construit pour deux activités. Chaque magasin d’une entreprise exercera l’une ou les deux.',
-    either: 'Une entreprise pourra utiliser l’une des activités ou les deux, magasin par magasin.',
+    activitiesLead: 'Dukan ERP est construit pour deux activités. Chaque boutique d’une entreprise exercera l’une ou les deux.',
+    either: 'Une entreprise pourra utiliser l’une des activités ou les deux, boutique par boutique.',
     start: {
       title: 'Lancement',
       steps: [

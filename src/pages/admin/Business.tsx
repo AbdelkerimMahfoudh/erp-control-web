@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState, type FormEvent, type ReactNode } from 'react';
 import { BusinessNames } from './names';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ApiError } from '../../api/client';
-import type { BusinessDetail, SeatRequest } from '../../api/types';
+import type { BusinessDetail, PaymentProof, SeatRequest } from '../../api/types';
 import { adminRequest } from '../../auth/admin';
 import { ActivityWithNext } from '../../components/activity';
 import { GrantLine } from '../../components/grant';
@@ -20,6 +20,7 @@ import { DeferredAccounts, PhoneVerificationBadge, ProvisionStaff } from './defe
 import { SeatRequestActions } from './SeatRequestActions';
 import { useStepUp } from './useStepUp';
 import { AccountReadyResend, BusinessDeletion } from './BusinessDeletion';
+import { BusinessProofs } from './BusinessProofs';
 import { categoryBody, DEFAULT_CHOICE, PaymentCategoryFields, type CategoryChoice } from './PaymentCategoryFields';
 
 type Decision = 'approve' | 'reject' | 'period' | 'extend' | 'suspend' | 'reinstate' | 'cancel' | 'grant' | 'payment';
@@ -59,14 +60,44 @@ function decisionsFor(status: string | undefined, isTest = false): Decision[] {
   }
 }
 
+/** Owner, 2026-11-12 (layout review, approved): one business as a summary and five focused tabs. */
+export const BUSINESS_TABS = ['stores', 'payments', 'people', 'history', 'settings'] as const;
+export type BusinessTab = (typeof BUSINESS_TABS)[number];
+/** The tab chosen, kept in memory for the visit: back from the review page, the same tab. */
+let rememberedBusinessTab: BusinessTab = 'stores';
+/** For tests and for links that must land on one tab. */
+export function openBusinessTab(tab: BusinessTab): void {
+  rememberedBusinessTab = tab;
+}
+
+/** The access decisions, kept with the payments; the business's status ones, kept in its settings. */
+const ACCESS_DECISIONS: Decision[] = ['approve', 'grant', 'extend', 'period', 'payment'];
+const STATUS_DECISIONS: Decision[] = ['reject', 'suspend', 'reinstate', 'cancel'];
+
+/** The one thing this business is waiting for, said first: a proof to review, a store waiting, or access to decide. */
+type NextAction = { kind: 'proof' } | { kind: 'store'; count: number } | { kind: 'access' } | null;
+function nextActionOf(data: BusinessDetail, requests: SeatRequest[], proofs: PaymentProof[] | null): NextAction {
+  if (proofs?.some((p) => p.status === 'submitted' || p.status === 'under_review')) return { kind: 'proof' };
+  const waiting = requests.filter((r) => r.kind === 'store' && r.status === 'pending_payment').length;
+  if (waiting > 0) return { kind: 'store', count: waiting };
+  if (data.entitlement?.status === 'pending_activation') return { kind: 'access' };
+  return null;
+}
+
 export function Business() {
   const { id = '' } = useParams();
   const { t, lang } = useI18n();
   const [data, setData] = useState<BusinessDetail | null>(null);
   const [requests, setRequests] = useState<SeatRequest[]>([]);
+  const [proofs, setProofs] = useState<PaymentProof[] | null>(null);
   const [error, setError] = useState<unknown>(null);
   /** The last decision's result, kept above the requests: the decided row may leave or change in the reloaded list. */
   const [outcome, setOutcome] = useState<ReactNode[] | null>(null);
+  const [tab, setTabState] = useState<BusinessTab>(() => rememberedBusinessTab);
+  const setTab = (next: BusinessTab) => {
+    rememberedBusinessTab = next;
+    setTabState(next);
+  };
   const { ask, dialog } = useStepUp();
 
   const load = useCallback(async () => {
@@ -77,6 +108,12 @@ export function Business() {
       setError(null);
     } catch (e) {
       setError(e);
+    }
+    // The proofs are read beside the page, never in its way: an API without the per-business list shows none.
+    try {
+      setProofs(await adminRequest<PaymentProof[]>(`platform/payment-proofs?company=${encodeURIComponent(id)}`));
+    } catch {
+      setProofs([]);
     }
   }, [id]);
   useEffect(() => {
@@ -91,220 +128,280 @@ export function Business() {
   // Each branch's activity and scheduled change, and its fee on the server's quote (D154): the price components.
   const branchOf = (id: string) => data.branches.find((b) => b.id === id);
   const feeOf = (id: string) => data.pricing?.quote.lines.find((l) => l.branchId === id)?.activityFee;
+  const next = nextActionOf(data, requests, proofs);
+  const storeCount = data.storeStatus?.length ?? data.branches.length;
 
   return (
     <div className="stack">
       {dialog}
-      <section className="hero row spread">
-        <div>
-          <h1>{data.name}</h1>
-          <p className="lead row">
-            <StateBadge state={ent?.state} />
-            {data.isTest ? <TestBadge /> : null}
-            <span className="ltr muted">{data.publicStoreId}</span>
-            {data.city ? <span className="muted">{data.city}</span> : null}
-            <span className="muted small">{t('admin.business.version', { n: formatInt(data.version, lang) })}</span>
-          </p>
+      <section className="card stack business-summary" aria-labelledby="business-h">
+        <div className="row spread">
+          <div className="stack-tight">
+            <h1 id="business-h">{data.name}</h1>
+            <p className="row">
+              <StateBadge state={ent?.state} />
+              {data.isTest ? <TestBadge /> : null}
+              <span className="ltr muted">{data.publicStoreId}</span>
+              {data.city ? <span className="muted">{data.city}</span> : null}
+            </p>
+          </div>
+          <div className="row">
+            {next?.kind === 'proof' ? (
+              <Link className="btn btn-primary" to="/admin/proofs">
+                {t('admin.next.reviewProof')}
+              </Link>
+            ) : next?.kind === 'store' ? (
+              <button type="button" className="btn btn-primary" onClick={() => setTab('stores')}>
+                {t('admin.next.storeWaiting', { n: formatInt(next.count, lang) })}
+              </button>
+            ) : next?.kind === 'access' ? (
+              <button type="button" className="btn btn-primary" onClick={() => setTab('payments')}>
+                {t('admin.next.decideAccess')}
+              </button>
+            ) : null}
+            <button type="button" className="btn btn-sm" onClick={() => void load()}>
+              {t('action.refresh')}
+            </button>
+          </div>
         </div>
-        <button type="button" className="btn btn-sm" onClick={() => void load()}>
-          {t('action.refresh')}
-        </button>
+        <dl className="summary-facts">
+          <div>
+            <dt>{t('admin.summary.paidUntil')}</dt>
+            <dd>{ent?.periodEnd ? formatInstant(ent.periodEnd, accessZone, lang) : '—'}</dd>
+          </div>
+          <div>
+            <dt>{t('admin.summary.stores')}</dt>
+            <dd>{formatInt(storeCount, lang)}</dd>
+          </div>
+          <div>
+            <dt>{t('account.quote.total')}</dt>
+            <dd>{data.pricing ? <Money amount={data.pricing.quote.monthlyTotal} /> : '—'}</dd>
+          </div>
+          <div>
+            <dt>{t('admin.summary.version')}</dt>
+            <dd>{formatInt(data.version, lang)}</dd>
+          </div>
+        </dl>
       </section>
       <ErrorNotice error={error} />
       {data.isTest ? <TestBanner /> : null}
 
+      {/* Setting a business up comes before everything else, whichever tab is open. */}
       <ProvisioningDraft business={data} ask={ask} onDone={load} />
       <SetupPanel business={data} ask={ask} onDone={load} />
 
-      <BusinessTrial business={data} />
+      <nav className="portal-tabs" role="tablist" aria-label={t('admin.tabs.label')}>
+        {BUSINESS_TABS.map((k) => (
+          <button key={k} type="button" role="tab" id={`btab-${k}`} aria-selected={tab === k} aria-controls={`bpanel-${k}`} className={tab === k ? 'portal-tab active' : 'portal-tab'} onClick={() => setTab(k)}>
+            {t(`admin.tabs.${k}` as Key)}
+          </button>
+        ))}
+      </nav>
 
-      {data.storeStatus?.length ? (
-        <section className="card stack" aria-labelledby="stores-h">
-          <h2 id="stores-h">{t('admin.stores.title')}</h2>
-          <StoreStatusList stores={data.storeStatus} />
-        </section>
+      {tab === 'stores' ? (
+        <div className="stack" role="tabpanel" id="bpanel-stores" aria-labelledby="btab-stores">
+          {data.storeStatus?.length ? (
+            <section className="card stack" aria-labelledby="stores-h">
+              <h2 id="stores-h">{t('admin.stores.title')}</h2>
+              <StoreStatusList stores={data.storeStatus} />
+            </section>
+          ) : null}
+
+          <section className="card stack">
+            <h2>{t('account.stores')}</h2>
+            {ent && ent.seatsByStore.length > 0 ? (
+              <Table
+                columns={[
+                  { label: t('account.quote.store'), render: (s) => s.name },
+                  {
+                    label: t('account.stores.activity'),
+                    render: (s) => <ActivityWithNext activity={s.activity ?? branchOf(s.branchId)?.activity} next={s.activityNext ?? branchOf(s.branchId)?.activityNext} />,
+                  },
+                  {
+                    label: t('account.quote.activityFee'),
+                    render: (s) => {
+                      const fee = feeOf(s.branchId);
+                      return typeof fee === 'number' ? <Money amount={fee} /> : '—';
+                    },
+                  },
+                  { label: t('account.quote.staff'), render: (s) => formatInt(s.seatsUsed, lang) },
+                  { label: t('account.quote.included'), render: (s) => formatInt(s.includedSeats, lang) },
+                  { label: t('account.quote.paid'), render: (s) => formatInt(s.paidSeats, lang) },
+                  { label: t('account.quote.granted'), render: (s) => formatInt(s.grantedSeats, lang) },
+                  { label: t('admin.businesses.state'), render: (s) => (s.overLimit ? <Badge tone="warn">{t('account.quote.over')}</Badge> : <Badge tone="ok">{formatInt(s.seatsAvailable, lang)}</Badge>) },
+                ]}
+                rows={ent.seatsByStore}
+                keyOf={(s) => s.branchId}
+              />
+            ) : (
+              <ul>
+                {data.branches.map((b) => (
+                  <li key={b.id}>
+                    {b.name}
+                    {b.activity ? <ActivityWithNext activity={b.activity} next={b.activityNext} /> : null}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
+
+          <section className="card stack">
+            <h2>{t('admin.seats.title')}</h2>
+            {outcome ? (
+              <Notice tone="ok">
+                {outcome.map((l, i) => (
+                  <div key={i}>{l}</div>
+                ))}
+              </Notice>
+            ) : null}
+            {requests.some(paidDuringTrial) ? <Notice tone="info">{t('admin.trial.addonsPaidNote')}</Notice> : null}
+            {requests.length === 0 ? (
+              <Empty text={t('account.requests.none')} />
+            ) : (
+              <Table
+                columns={[
+                  { label: t('admin.seats.request'), render: (r) => <RequestSummary request={r} /> },
+                  { label: t('admin.seats.amount'), render: (r) => <RequestAmount request={r} /> },
+                  { label: t('admin.businesses.state'), render: (r) => <RequestStatus request={r} /> },
+                  { label: t('admin.action.reference'), render: (r) => <span className="ltr">{r.payment?.reference ?? '—'}</span> },
+                  { label: t('admin.seats.requested'), render: (r) => formatDateTime(r.requestedAt, lang) },
+                  { label: '', render: (r) => <SeatRequestActions companyId={data.id} request={r} ask={ask} onDone={load} onOutcome={setOutcome} /> },
+                ]}
+                rows={requests}
+                keyOf={(r) => r.id}
+              />
+            )}
+          </section>
+
+          <ConsoleStore business={data} ask={ask} onDone={load} />
+          <BusinessNames business={data} ask={ask} onDone={load} />
+        </div>
       ) : null}
 
-      <BusinessGrace grace={ent?.grace} timeZone={ent?.timeZone} />
-
-      <BusinessMessages businessId={id} timeZone={ent?.timeZone} version={data} />
-
-      <Decisions business={data} ask={ask} onDone={load} />
-
-      <ConsoleStore business={data} ask={ask} onDone={load} />
-
-      <BusinessNames business={data} ask={ask} onDone={load} />
-
-      <DeferredAccounts business={data} ask={ask} onDone={load} />
-
-      <ProvisionStaff business={data} ask={ask} onDone={load} />
-
-      <AccountReadyResend businessId={id} ask={ask} />
-
-      <BusinessDeletion businessId={id} ask={ask} onDone={load} />
-
-      <section className="grid">
-        <div className="card stack">
-          <h2>{t('account.stores')}</h2>
-          {ent && ent.seatsByStore.length > 0 ? (
-            <Table
-              columns={[
-                { label: t('account.quote.store'), render: (s) => s.name },
-                {
-                  label: t('account.stores.activity'),
-                  render: (s) => <ActivityWithNext activity={s.activity ?? branchOf(s.branchId)?.activity} next={s.activityNext ?? branchOf(s.branchId)?.activityNext} />,
-                },
-                {
-                  label: t('account.quote.activityFee'),
-                  render: (s) => {
-                    const fee = feeOf(s.branchId);
-                    return typeof fee === 'number' ? <Money amount={fee} /> : '—';
-                  },
-                },
-                { label: t('account.quote.staff'), render: (s) => formatInt(s.seatsUsed, lang) },
-                { label: t('account.quote.included'), render: (s) => formatInt(s.includedSeats, lang) },
-                { label: t('account.quote.paid'), render: (s) => formatInt(s.paidSeats, lang) },
-                { label: t('account.quote.granted'), render: (s) => formatInt(s.grantedSeats, lang) },
-                { label: t('admin.businesses.state'), render: (s) => (s.overLimit ? <Badge tone="warn">{t('account.quote.over')}</Badge> : <Badge tone="ok">{formatInt(s.seatsAvailable, lang)}</Badge>) },
-              ]}
-              rows={ent.seatsByStore}
-              keyOf={(s) => s.branchId}
-            />
-          ) : (
-            <ul>
-              {data.branches.map((b) => (
-                <li key={b.id}>
-                  {b.name}
-                  {b.activity ? <ActivityWithNext activity={b.activity} next={b.activityNext} /> : null}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-        <div className="card stack">
-          <h2>{t('account.quote')}</h2>
-          {data.pricing ? (
-            <>
-              <div className="kpi">
-                <span className="value">
-                  <Money amount={data.pricing.quote.monthlyTotal} />
-                </span>
-                <span className="label">{t('account.quote.total')}</span>
-              </div>
-              <p className="muted small">
-                {t('account.quote.storesFee')}: <Money amount={data.pricing.quote.branchFee} /> · {t('account.quote.seatsFee')}: <Money amount={data.pricing.quote.staffFee} />
-              </p>
-              {data.pricing.currentPeriod.available ? (
-                <p className="muted small">{t('account.quote.assessed', { amount: `${formatInt(data.pricing.currentPeriod.assessedTotal, lang)} MRU` })}</p>
-              ) : null}
-              {ent?.periodEnd ? (
+      {tab === 'payments' ? (
+        <div className="stack" role="tabpanel" id="bpanel-payments" aria-labelledby="btab-payments">
+          <section className="card stack">
+            <h2>{t('account.quote')}</h2>
+            {data.pricing ? (
+              <>
+                <div className="kpi">
+                  <span className="value">
+                    <Money amount={data.pricing.quote.monthlyTotal} />
+                  </span>
+                  <span className="label">{t('account.quote.total')}</span>
+                </div>
                 <p className="muted small">
-                  <DatedPhrase phrase="account.period.ends" dates={{ date: ent.periodEnd }} timeZone={accessZone} />
+                  {t('account.quote.storesFee')}: <Money amount={data.pricing.quote.branchFee} /> · {t('account.quote.seatsFee')}: <Money amount={data.pricing.quote.staffFee} />
                 </p>
-              ) : null}
-              <div className="muted small">
-                <GrantLine grant={ent?.complimentary} timeZone={accessZone} />
-              </div>
-            </>
-          ) : (
-            <Empty />
-          )}
+                {data.pricing.currentPeriod.available ? (
+                  <p className="muted small">{t('account.quote.assessed', { amount: `${formatInt(data.pricing.currentPeriod.assessedTotal, lang)} MRU` })}</p>
+                ) : null}
+                {ent?.periodEnd ? (
+                  <p className="muted small">
+                    <DatedPhrase phrase="account.period.ends" dates={{ date: ent.periodEnd }} timeZone={accessZone} />
+                  </p>
+                ) : null}
+                <div className="muted small">
+                  <GrantLine grant={ent?.complimentary} timeZone={accessZone} />
+                </div>
+              </>
+            ) : (
+              <Empty />
+            )}
+          </section>
+
+          <BusinessProofs proofs={proofs} />
+
+          <section className="card stack">
+            <h2>{t('account.payments')}</h2>
+            {data.payments.length === 0 ? (
+              <Empty text={t('account.payments.none')} />
+            ) : (
+              <Table
+                columns={[
+                  { label: t('admin.audit.when'), render: (p) => formatDate(p.paidAt, lang) },
+                  { label: t('admin.action.amount'), render: (p) => <Money amount={p.amount} /> },
+                  // 0134: what each payment was for (an older one says nothing).
+                  { label: t('payment.category'), render: (p) => (p.category ? t(`payment.category.${p.category}` as Key) + (p.details?.months ? ' · ' + t('payment.months.n', { n: String(p.details.months) }) : '') + (p.details?.seats ? ' · ' + t('payment.seats.n', { n: String(p.details.seats) }) : '') : '—') },
+                  { label: t('admin.action.reference'), render: (p) => <span className="ltr">{p.reference ?? '—'}</span> },
+                  { label: t('admin.audit.actor'), render: (p) => <span className="ltr">{p.confirmedBy ?? p.recordedBy}</span> },
+                ]}
+                rows={data.payments}
+                keyOf={(p) => p.id}
+              />
+            )}
+            <p className="muted small">{t('account.payments.recorded')}</p>
+          </section>
+
+          <Decisions business={data} ask={ask} onDone={load} kinds={ACCESS_DECISIONS} title={t('admin.business.actions')} />
+          <BusinessTrial business={data} />
+          <BusinessGrace grace={ent?.grace} timeZone={ent?.timeZone} />
         </div>
-      </section>
+      ) : null}
 
-      <section className="card stack">
-        <h2>{t('admin.business.people')}</h2>
-        <Table
-          columns={[
-            { label: t('apply.owner'), render: (p) => <strong>{p.name}</strong> },
-            {
-              label: t('apply.email'),
-              render: (p) => (
-                <span className="row">
-                  {p.email ? (
-                    <>
-                      <span className="ltr">{p.email}</span>
-                      <Badge tone={p.emailVerified ? 'ok' : 'warn'}>{p.emailVerified ? t('admin.business.verified') : t('admin.business.unverified')}</Badge>
-                    </>
-                  ) : null}
-                  {p.phone ? (
-                    <>
-                      <span className="ltr">{p.phone}</span>
-                      <PhoneVerificationBadge state={p.phoneVerification} verified={p.phoneVerified} />
-                    </>
-                  ) : null}
-                </span>
-              ),
-            },
-            {
-              label: t('admin.businesses.state'),
-              render: (p) => (
-                <Badge tone={p.status === 'active' ? 'ok' : p.status === 'pending' ? 'info' : 'muted'}>{t(`admin.business.people.${p.status}` as Key)}</Badge>
-              ),
-            },
-            { label: t('admin.audit.when'), render: (p) => formatDateTime(p.lastLoginAt, lang) },
-          ]}
-          rows={data.people}
-          keyOf={(p) => p.id}
-        />
-      </section>
-
-      <TestStatus business={data} ask={ask} onDone={load} />
-
-      <section className="card stack">
-        <h2>{t('admin.seats.title')}</h2>
-        {outcome ? (
-          <Notice tone="ok">
-            {outcome.map((l, i) => (
-              <div key={i}>{l}</div>
-            ))}
-          </Notice>
-        ) : null}
-        {requests.some(paidDuringTrial) ? <Notice tone="info">{t('admin.trial.addonsPaidNote')}</Notice> : null}
-        {requests.length === 0 ? (
-          <Empty text={t('account.requests.none')} />
-        ) : (
-          <Table
-            columns={[
-              { label: t('admin.seats.request'), render: (r) => <RequestSummary request={r} /> },
-              { label: t('admin.seats.amount'), render: (r) => <RequestAmount request={r} /> },
-              { label: t('admin.businesses.state'), render: (r) => <RequestStatus request={r} /> },
-              { label: t('admin.action.reference'), render: (r) => <span className="ltr">{r.payment?.reference ?? '—'}</span> },
-              { label: t('admin.seats.requested'), render: (r) => formatDateTime(r.requestedAt, lang) },
-              { label: '', render: (r) => <SeatRequestActions companyId={data.id} request={r} ask={ask} onDone={load} onOutcome={setOutcome} /> },
-            ]}
-            rows={requests}
-            keyOf={(r) => r.id}
-          />
-        )}
-      </section>
-
-      <section className="grid">
-        <div className="card stack">
-          <h2>{t('account.payments')}</h2>
-          {data.payments.length === 0 ? (
-            <Empty text={t('account.payments.none')} />
-          ) : (
+      {tab === 'people' ? (
+        <div className="stack" role="tabpanel" id="bpanel-people" aria-labelledby="btab-people">
+          <section className="card stack">
+            <h2>{t('admin.business.people')}</h2>
             <Table
               columns={[
-                { label: t('admin.audit.when'), render: (p) => formatDate(p.paidAt, lang) },
-                { label: t('admin.action.amount'), render: (p) => <Money amount={p.amount} /> },
-                // 0134: what each payment was for (an older one says nothing).
-                { label: t('payment.category'), render: (p) => (p.category ? t(`payment.category.${p.category}` as Key) + (p.details?.months ? ' · ' + t('payment.months.n', { n: String(p.details.months) }) : '') + (p.details?.seats ? ' · ' + t('payment.seats.n', { n: String(p.details.seats) }) : '') : '—') },
-                { label: t('admin.action.reference'), render: (p) => <span className="ltr">{p.reference ?? '—'}</span> },
-                { label: t('admin.audit.actor'), render: (p) => <span className="ltr">{p.confirmedBy ?? p.recordedBy}</span> },
+                { label: t('apply.owner'), render: (p) => <strong>{p.name}</strong> },
+                {
+                  label: t('apply.email'),
+                  render: (p) => (
+                    <span className="row">
+                      {p.email ? (
+                        <>
+                          <span className="ltr">{p.email}</span>
+                          <Badge tone={p.emailVerified ? 'ok' : 'warn'}>{p.emailVerified ? t('admin.business.verified') : t('admin.business.unverified')}</Badge>
+                        </>
+                      ) : null}
+                      {p.phone ? (
+                        <>
+                          <span className="ltr">{p.phone}</span>
+                          <PhoneVerificationBadge state={p.phoneVerification} verified={p.phoneVerified} />
+                        </>
+                      ) : null}
+                    </span>
+                  ),
+                },
+                {
+                  label: t('admin.businesses.state'),
+                  render: (p) => <Badge tone={p.status === 'active' ? 'ok' : p.status === 'pending' ? 'info' : 'muted'}>{t(`admin.business.people.${p.status}` as Key)}</Badge>,
+                },
+                { label: t('admin.audit.when'), render: (p) => formatDateTime(p.lastLoginAt, lang) },
               ]}
-              rows={data.payments}
+              rows={data.people}
               keyOf={(p) => p.id}
             />
-          )}
-          <p className="muted small">{t('account.payments.recorded')}</p>
+          </section>
+          <DeferredAccounts business={data} ask={ask} onDone={load} />
+          <ProvisionStaff business={data} ask={ask} onDone={load} />
+          <AccountReadyResend businessId={id} ask={ask} />
         </div>
-        <div className="card stack">
-          <h2>{t('account.timeline')}</h2>
-          <Timeline events={data.events} trial={timelineTrial(data)} actors />
+      ) : null}
+
+      {tab === 'history' ? (
+        <div className="stack" role="tabpanel" id="bpanel-history" aria-labelledby="btab-history">
+          <BusinessMessages businessId={id} timeZone={ent?.timeZone} version={data} />
+          <section className="card stack">
+            <h2>{t('account.timeline')}</h2>
+            <Timeline events={data.events} trial={timelineTrial(data)} actors />
+          </section>
         </div>
-      </section>
+      ) : null}
+
+      {tab === 'settings' ? (
+        <div className="stack" role="tabpanel" id="bpanel-settings" aria-labelledby="btab-settings">
+          <TestStatus business={data} ask={ask} onDone={load} />
+          <Decisions business={data} ask={ask} onDone={load} kinds={STATUS_DECISIONS} title={t('admin.business.statusActions')} />
+          {/* Never beside an everyday button: deleting the business has its own zone and its own confirmation. */}
+          <section className="danger-zone stack" aria-labelledby="danger-h">
+            <h2 id="danger-h">{t('admin.business.danger')}</h2>
+            <BusinessDeletion businessId={id} ask={ask} onDone={load} />
+          </section>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -359,7 +456,7 @@ function DecisionRefusal({ error, business }: { error: unknown; business: Busine
   );
 }
 
-function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: () => Promise<boolean>; onDone: () => Promise<void> }) {
+function Decisions({ business, ask, onDone, kinds, title }: { business: BusinessDetail; ask: () => Promise<boolean>; onDone: () => Promise<void>; kinds: Decision[]; title: string }) {
   const { t, lang } = useI18n();
   const [open, setOpen] = useState<Decision | null>(null);
   const [form, setForm] = useState({ months: '1', periodEnd: '', days: '14', reason: '', amount: '', paidAt: new Date().toISOString().slice(0, 10), channel: 'bank_transfer', reference: '', note: '', confirm: true });
@@ -367,7 +464,7 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(null);
   const [done, setDone] = useState<string | null>(null);
-  const available = decisionsFor(business.entitlement?.status, business.isTest === true);
+  const available = decisionsFor(business.entitlement?.status, business.isTest === true).filter((d) => kinds.includes(d));
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
@@ -424,7 +521,7 @@ function Decisions({ business, ask, onDone }: { business: BusinessDetail; ask: (
 
   return (
     <section className="card stack">
-      <h2>{t('admin.business.actions')}</h2>
+      <h2>{title}</h2>
       <div className="row">
         {available.map((d) => (
           <button key={d} type="button" className={`btn btn-sm ${d === 'reject' || d === 'suspend' || d === 'cancel' ? 'btn-danger' : ''}`} onClick={() => (setDone(null), setOpen(d))}>

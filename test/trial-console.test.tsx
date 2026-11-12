@@ -7,6 +7,7 @@ import { en } from '../src/i18n/en';
 import { fr } from '../src/i18n/fr';
 import { BRANCHES, LINES, SLOW_WAIT, mount, serve, subscription, useActivityHarness, type Handler } from './activity-fixtures';
 import { TRIAL_END, TRIAL_START, TRIAL_ZONE, allocation, scheduledRequest, trialView, zoneName } from './fixtures-data';
+import { openBusinessTab } from '../src/pages/admin/Business';
 
 useActivityHarness();
 
@@ -18,6 +19,8 @@ useActivityHarness();
 const LAGOS = zoneName(TRIAL_ZONE);
 
 describe('the console: a business’s trial, recorded', () => {
+  // The layout review (2026-11-12): the trial, the monthly total and the access decisions are on the Payments tab.
+  beforeEach(() => openBusinessTab('payments'));
   const ADMIN = { id: 'a1', email: 'admin@example.test', name: 'Admin' };
   const ID = '0192f000-0000-7000-8000-0000000000b1';
 
@@ -70,7 +73,8 @@ describe('the console: a business’s trial, recorded', () => {
     expect(c.textContent).toContain(en['admin.trial.paidAfter']);
     expect(c.textContent).toContain(en['admin.trial.noAction']);
     const decisions = (await screen.findByRole('heading', { name: 'Decisions' })).closest('section')!;
-    expect(within(decisions).getAllByRole('button').map((b) => b.textContent)).toEqual(['Approve', 'Refuse', 'Grant access (no payment)']);
+    expect(within(decisions).getAllByRole('button').map((b) => b.textContent)).toEqual(['Approve', 'Grant access (no payment)']);
+    // Refusing the business is a status decision: on the Settings tab (layout review, 2026-11-12), never beside these.
     expect(within(await screen.findByRole('heading', { level: 1 })).queryByText('Boutique Test')).toBeTruthy();
     expect(screen.getAllByText('Free trial').length).toBeGreaterThan(0);
   });
@@ -97,6 +101,7 @@ describe('the console: a business’s trial, recorded', () => {
   });
 
   it('the history says each kind in words and the trial’s events from the recorded claim, in the business’s zone (R4-01)', async () => {
+    openBusinessTab('history');
     const claimed = `Free trial claimed on the website by the Owner: 7 days from ${TRIAL_START} to ${TRIAL_END}. Nothing was charged.`;
     business(
       {

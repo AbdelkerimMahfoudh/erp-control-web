@@ -191,12 +191,12 @@ export const support: Docs = {
   },
   fr: {
     title: 'Assistance Dukan ERP',
-    summary: 'Réponses aux questions fréquentes sur la connexion, les magasins, le personnel, le stock, les ventes, les retours, les abonnements et la suppression de compte.',
+    summary: 'Réponses aux questions fréquentes sur la connexion, les boutiques, le personnel, le stock, les ventes, les retours, les abonnements et la suppression de compte.',
     sections: [
       { id: 'signin', heading: 'Connexion', blocks: [{ kind: 'p', text: 'Connectez-vous avec l’adresse e-mail ou le numéro WhatsApp de votre compte et votre mot de passe. Un employé dont la connexion ne fonctionne plus doit demander au propriétaire ou à un responsable de vérifier que son compte est actif. Un propriétaire qui ne parvient pas à se connecter peut écrire à l’assistance en indiquant le nom de l’entreprise.' }] },
       { id: 'verification', heading: 'Codes de vérification', blocks: [{ kind: 'p', text: 'Un code de vérification est envoyé au contact à vérifier et expire au bout de quelques minutes. S’il n’arrive pas, attendez que l’application ou la page permette une nouvelle demande. Lorsqu’aucun canal d’envoi n’est disponible, l’application et ce site l’indiquent, et rien n’est modifié.' }] },
-      { id: 'stores', heading: 'Magasins', blocks: [{ kind: 'p', text: 'Le propriétaire demande un magasin supplémentaire, ou une autre activité pour un magasin, depuis le compte de l’entreprise sur ce site. Le changement est activé une fois confirmé par {displayName}.' }] },
-      { id: 'staff', heading: 'Personnel', blocks: [{ kind: 'p', text: 'L’abonnement de chaque magasin comprend des postes pour le personnel ; des postes supplémentaires se demandent depuis le compte de l’entreprise. Le propriétaire invite les employés depuis l’application et choisit leurs autorisations, magasin par magasin.' }] },
+      { id: 'stores', heading: 'Boutiques', blocks: [{ kind: 'p', text: 'Le propriétaire demande une boutique supplémentaire, ou une autre activité pour une boutique, depuis le compte de l’entreprise sur ce site. Le changement est activé une fois confirmé par {displayName}.' }] },
+      { id: 'staff', heading: 'Personnel', blocks: [{ kind: 'p', text: 'L’abonnement de chaque boutique comprend des postes pour le personnel ; des postes supplémentaires se demandent depuis le compte de l’entreprise. Le propriétaire invite les employés depuis l’application et choisit leurs autorisations, boutique par boutique.' }] },
       { id: 'inventory', heading: 'Stock et produits', blocks: [{ kind: 'p', text: 'Les produits s’ajoutent dans l’application par le scan d’un code-barres, par saisie ou par l’import d’un fichier fournisseur. Les téléphones et autres appareils à numéro de série sont enregistrés par IMEI ou numéro de série.' }] },
       { id: 'sales', heading: 'Ventes et paiements', blocks: [{ kind: 'p', text: 'Les ventes s’enregistrent dans l’application, en espèces ou par les comptes de paiement configurés par l’entreprise. Les écritures financières ne sont jamais effacées : une erreur se corrige par une nouvelle écriture, enregistrée.' }] },
       { id: 'returns', heading: 'Retours et remboursements', blocks: [{ kind: 'p', text: 'Les retours et remboursements s’enregistrent dans l’application avec leur motif. Le stock et l’argent sont ajustés ensemble, et le rapport de la journée les affiche.' }] },
@@ -318,7 +318,7 @@ export const login: Docs = {
     title: 'Connexion',
     summary: 'Se connecter à un compte entreprise Dukan ERP.',
     sections: [
-      { id: 'owners', heading: 'Propriétaires d’entreprise', blocks: [{ kind: 'p', text: 'Le compte de l’entreprise sur ce site affiche le statut de la demande ou de l’abonnement, les magasins et les postes, et les demandes en cours.' }] },
+      { id: 'owners', heading: 'Propriétaires d’entreprise', blocks: [{ kind: 'p', text: 'Le compte de l’entreprise sur ce site affiche le statut de la demande ou de l’abonnement, les boutiques et les postes, et les demandes en cours.' }] },
       { id: 'staff', heading: 'Employés et responsables', blocks: [{ kind: 'p', text: 'Les employés et responsables se connectent à l’application mobile Dukan ERP avec les informations fournies par leur entreprise. Leur accès est géré par le propriétaire de l’entreprise.' }] },
     ],
   },
