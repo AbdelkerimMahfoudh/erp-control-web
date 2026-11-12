@@ -189,7 +189,7 @@ export const dukanOverview: Record<Language, DukanOverview> = {
       support: 'Assistance',
     },
     visual: {
-      store: 'Magasin',
+      store: 'Boutique',
       today: 'Ventes du jour',
       salesWord: 'ventes',
       returnsWord: 'retours',

@@ -195,9 +195,9 @@ export const privacy: Record<Language, LegalDocument> = {
           { kind: 'h3', text: 'Comptes' },
           { kind: 'list', items: ['Le nom, l’identifiant de connexion et un identifiant généré par le service.', 'L’adresse e-mail et le numéro de téléphone (WhatsApp), et si et quand chacun a été vérifié.', 'Le mot de passe et le code PIN facultatif, conservés uniquement sous forme d’empreintes à sens unique.'] },
           { kind: 'h3', text: 'Demandes de compte entreprise' },
-          { kind: 'list', items: ['Le nom du propriétaire, les noms de l’entreprise et de son premier magasin, l’activité, la ville, les coordonnées et la langue préférée.'] },
-          { kind: 'h3', text: 'Entreprises, magasins et personnel' },
-          { kind: 'list', items: ['Le nom et la ville de l’entreprise ; les noms, adresses et numéros de téléphone des magasins ; les réglages, l’abonnement et les postes.', 'Les rôles, les affectations aux magasins et les autorisations du personnel, ainsi que les dettes ou manquants qu’une entreprise enregistre pour un employé.'] },
+          { kind: 'list', items: ['Le nom du propriétaire, les noms de l’entreprise et de sa première boutique, l’activité, la ville, les coordonnées et la langue préférée.'] },
+          { kind: 'h3', text: 'Entreprises, boutiques et personnel' },
+          { kind: 'list', items: ['Le nom et la ville de l’entreprise ; les noms, adresses et numéros de téléphone des boutiques ; les réglages, l’abonnement et les postes.', 'Les rôles, les affectations aux boutiques et les autorisations du personnel, ainsi que les dettes ou manquants qu’une entreprise enregistre pour un employé.'] },
           { kind: 'h3', text: 'Données de l’entreprise' },
           {
             kind: 'list',
@@ -260,7 +260,7 @@ export const privacy: Record<Language, LegalDocument> = {
         heading: 'Qui peut voir les informations',
         blocks: [
           { kind: 'p', text: 'Au sein d’une entreprise, chacun voit ce que permettent son rôle et les autorisations choisies par le propriétaire.' },
-          { kind: 'p', text: 'L’équipe de la plateforme {displayName} voit les entreprises, leurs magasins, les noms et coordonnées de leurs comptes, leurs abonnements et les paiements enregistrés pour ces abonnements.' },
+          { kind: 'p', text: 'L’équipe de la plateforme {displayName} voit les entreprises, leurs boutiques, les noms et coordonnées de leurs comptes, leurs abonnements et les paiements enregistrés pour ces abonnements.' },
           { kind: 'p', text: 'Lorsque l’envoi par WhatsApp est activé, les codes de vérification et les messages de service passent par la plateforme WhatsApp Business de Meta, qui reçoit le numéro de destination et le message.' },
           { kind: 'p', text: 'L’envoi par e-mail est désactivé : les codes et les messages de service passent par WhatsApp. Si l’e-mail est activé plus tard, son prestataire sera d’abord indiqué ici.' },
           { kind: 'p', text: 'Hébergement et autres prestataires : Hetzner Online GmbH (Allemagne) exploite le serveur à Nuremberg et conserve les sauvegardes chiffrées à Falkenstein ; la plateforme WhatsApp Business de Meta transmet les messages WhatsApp et reçoit le numéro et le message ; Cloudflare fournit le service de noms du domaine et ne reçoit aucune donnée de l’application.' },

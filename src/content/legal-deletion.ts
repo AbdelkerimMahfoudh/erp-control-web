@@ -86,7 +86,7 @@ export const accountDeletion: Record<Language, LegalDocument> = {
         heading: 'Employés, responsables et propriétaires',
         blocks: [
           { kind: 'p', text: 'Supprimer votre compte ne supprime que votre propre accès.' },
-          { kind: 'p', text: 'Si vous êtes le dernier propriétaire de l’entreprise, supprimer votre compte clôture l’entreprise : tous ses comptes sont fermés et déconnectés ; les coordonnées de ses clients, de ses fournisseurs et des personnes à qui elle a prêté sont supprimées, avec les numéros d’où venaient ses paiements et ceux servis à son comptoir de services d’argent ; les notes sur ses clients, ses fournisseurs et ses dépenses, ses photos de reçus, ses adresses de magasins et sa ville sont supprimées ; ses magasins sont désactivés et son abonnement est annulé.' },
+          { kind: 'p', text: 'Si vous êtes le dernier propriétaire de l’entreprise, supprimer votre compte clôture l’entreprise : tous ses comptes sont fermés et déconnectés ; les coordonnées de ses clients, de ses fournisseurs et des personnes à qui elle a prêté sont supprimées, avec les numéros d’où venaient ses paiements et ceux servis à son comptoir de services d’argent ; les notes sur ses clients, ses fournisseurs et ses dépenses, ses photos de reçus, ses adresses de boutiques et sa ville sont supprimées ; ses boutiques sont désactivées et son abonnement est annulé.' },
         ],
       },
       {

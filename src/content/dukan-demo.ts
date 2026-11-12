@@ -159,7 +159,7 @@ export const dukanDemo: Record<Language, DukanDemo> = {
     pause: 'Mettre en pause',
     replay: 'Rejouer',
     electronics: {
-      tab: 'Magasins d’électronique',
+      tab: 'Boutiques d’électronique',
       steps: [
         { title: 'Choisir le produit', body: 'Scannez ou choisissez le téléphone : sa variante, son identifiant de stock et son prix se remplissent seuls.' },
         { title: 'Enregistrer le paiement', body: 'Indiquez ce que le client a payé, et comment. {productName} enregistre le paiement ; il ne l’encaisse pas.' },

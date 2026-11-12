@@ -210,7 +210,7 @@ export const terms: Record<Language, LegalDocument> = {
             kind: 'list',
             items: [
               'Le propriétaire demande le compte de l’entreprise et confirme qu’il peut agir pour elle. {displayName} examine chaque entreprise et peut en refuser une.',
-              'Le propriétaire choisit qui travaille dans l’application, à quels magasins chaque personne est affectée et ce que chacune peut faire, et il est responsable de ces choix.',
+              'Le propriétaire choisit qui travaille dans l’application, à quelles boutiques chaque personne est affectée et ce que chacune peut faire, et il est responsable de ces choix.',
               'Chaque personne garde pour elle son mot de passe et ses codes de vérification, et prévient le propriétaire, ou déconnecte l’appareil, lorsqu’un téléphone est perdu.',
             ],
           },
@@ -233,9 +233,9 @@ export const terms: Record<Language, LegalDocument> = {
       },
       {
         id: 'activities',
-        heading: 'Activités des magasins',
+        heading: 'Activités des boutiques',
         blocks: [
-          { kind: 'p', text: 'Chaque magasin est abonné à une activité : la vente d’électronique, les services monétaires en tant qu’agent, ou les deux. L’application ne montre à chaque magasin que ce que comprend son activité. Les entrepôts gardent l’activité électronique.' },
+          { kind: 'p', text: 'Chaque boutique est abonnée à une activité : la vente d’électronique, les services monétaires en tant qu’agent, ou les deux. L’application ne montre à chaque boutique que ce que comprend son activité. Les entrepôts gardent l’activité électronique.' },
         ],
       },
       {
@@ -265,15 +265,15 @@ export const terms: Record<Language, LegalDocument> = {
       },
       {
         id: 'access',
-        heading: 'Accès payant, magasins et places',
+        heading: 'Accès payant, boutiques et places',
         blocks: [
           {
             kind: 'list',
             items: [
-              'Chaque magasin a un prix mensuel pour son activité, avec des places de personnel incluses ; les places supplémentaires sont facturées par magasin. Les prix en vigueur figurent sur la page Dukan ERP et sont confirmés dans le compte entreprise. Aucun n’est affiché ni vendu dans l’application.',
+              'Chaque boutique a un prix mensuel pour son activité, avec des places de personnel incluses ; les places supplémentaires sont facturées par boutique. Les prix en vigueur figurent sur la page Dukan ERP et sont confirmés dans le compte entreprise. Aucun n’est affiché ni vendu dans l’application.',
               'L’entreprise paie {displayName} en dehors de l’application, comme convenu avec elle, et {displayName} confirme chaque paiement à partir de sa référence. Aucun paiement n’est encaissé dans l’application mobile ni sur ce site.',
-              'Un magasin ou une place ajouté pendant un mois payé est facturé pour ce mois. Une suppression, ou le passage à une activité moins chère, prend effet au renouvellement suivant. Le passage à une activité plus chère est facturé pour la différence lorsqu’il est confirmé.',
-              'Un magasin ou une place demandé pendant l’essai gratuit peut être payé pendant celui-ci, et commence à la fin de l’essai, avec la première période payée — facturé une seule fois et jamais commencé pendant l’essai. Si aucun accès payant n’a été approuvé d’ici là, il attend la première période payée.',
+              'Une boutique ou une place ajoutée pendant un mois payé est facturée pour ce mois. Une suppression, ou le passage à une activité moins chère, prend effet au renouvellement suivant. Le passage à une activité plus chère est facturé pour la différence lorsqu’il est confirmé.',
+              'Une boutique ou une place demandée pendant l’essai gratuit peut être payée pendant celui-ci, et commence à la fin de l’essai, avec la première période payée — facturée une seule fois et jamais commencée pendant l’essai. Si aucun accès payant n’a été approuvé d’ici là, il attend la première période payée.',
               'Un mois n’est jamais facturé deux fois, et rien ne se renouvelle tout seul : chaque période ne commence que lorsque {displayName} confirme son paiement.',
               'Remboursements : l’accès payé n’est pas remboursé, ni à la discrétion de TSXMR ni au prorata. Un paiement en double ou erroné est corrigé. Cela ne limite aucun droit que la loi mauritanienne impérative accorde à une entreprise.',
             ],
