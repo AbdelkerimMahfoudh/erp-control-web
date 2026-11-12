@@ -1,0 +1,555 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.4/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/playwright.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec",
+        "commitHash": "0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/43136223214"
+      },
+      "gitCommit": {
+        "shortHash": "0fbc5e2f",
+        "hash": "0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec",
+        "subject": "fix(portal): history payments say 'Payment proof' instead of the internal proof reference",
+        "body": "fix(portal): history payments say 'Payment proof' instead of the internal proof reference\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+        "author": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1794447676000
+        },
+        "committer": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1794447676000
+        },
+        "branch": "post-build4"
+      },
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec/admin/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec",
+            "commitHash": "0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/43136223214"
+          },
+          "gitCommit": {
+            "shortHash": "0fbc5e2f",
+            "hash": "0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec",
+            "subject": "fix(portal): history payments say 'Payment proof' instead of the internal proof reference",
+            "body": "fix(portal): history payments say 'Payment proof' instead of the internal proof reference\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1794447676000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1794447676000
+            },
+            "branch": "post-build4"
+          },
+          "actualWorkers": 4
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/admin\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec/admin/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec",
+            "commitHash": "0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/43136223214"
+          },
+          "gitCommit": {
+            "shortHash": "0fbc5e2f",
+            "hash": "0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec",
+            "subject": "fix(portal): history payments say 'Payment proof' instead of the internal proof reference",
+            "body": "fix(portal): history payments say 'Payment proof' instead of the internal proof reference\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1794447676000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1794447676000
+            },
+            "branch": "post-build4"
+          },
+          "actualWorkers": 4
+        },
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/0fbc5e2f2d8a35388e9afaa644a50ad4010aa9ec/admin/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "admin.spec.ts",
+      "file": "admin.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "sign-in, en, 375 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1632,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:14.991Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-833feeb5374f0c543ebd",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "sign-in, en, 1280 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1748,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:14.984Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-c78925780b5c4068bdb0",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "an address of the customers is an unknown page here, en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1368,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:14.970Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-3f7f922d076e567272c6",
+          "file": "admin.spec.ts",
+          "line": 49,
+          "column": 3
+        },
+        {
+          "title": "sign-in, fr, 375 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 1784,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:14.922Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-404a6019361a01f3b387",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "sign-in, fr, 1280 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1588,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:16.537Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-a18877f5e8f1da827256",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "an address of the customers is an unknown page here, fr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1136,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:16.880Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-e50bc20128f1d8f371e0",
+          "file": "admin.spec.ts",
+          "line": 49,
+          "column": 3
+        },
+        {
+          "title": "sign-in, ar, 375 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 1416,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:16.902Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-c44f4aa2c100e3a8c529",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "sign-in, ar, 1280 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1265,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:16.913Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-ed9f95df5b7fead3e021",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "an address of the customers is an unknown page here, ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 765,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:18.061Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-5134f985fffea7ca6f43",
+          "file": "admin.spec.ts",
+          "line": 49,
+          "column": 3
+        },
+        {
+          "title": "the root leads to the console, and its console routes are served",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 455,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:18.156Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-aaf5a17b32e3a9181a38",
+          "file": "admin.spec.ts",
+          "line": 61,
+          "column": 1
+        },
+        {
+          "title": "every page says noindex and carries the policy; no source map is served",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 64,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T01:58:18.212Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-a4845b6bc641366c9aab",
+          "file": "admin.spec.ts",
+          "line": 69,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-12T01:58:13.952Z",
+    "duration": 4930.148999999999,
+    "expected": 11,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
