@@ -962,7 +962,7 @@ for (const [lang, width] of [['en', 1280], ['en', 375], ['fr', 1280], ['ar', 375
     expect((await layout(page)).overflow).toBeLessThanOrEqual(0);
 
     await page.getByRole('tab', { name: cat['admin.tabs.payments'] }).click();
-    const decided = page.locator('.proof-item').filter({ hasText: cat['portal.proof.status.approved'] });
+    const decided = page.locator('.proof-item').filter({ hasText: cat['portal.proof.status.approved'] }).first();
     await decided.getByRole('button', { name: cat['admin.proofs.view'] }).click();
     await expect(decided.getByRole('img', { name: cat['admin.proofs.imageAlt'] })).toBeVisible();
     await expect(decided.getByRole('link', { name: cat['admin.proofs.download'] })).toBeVisible();
