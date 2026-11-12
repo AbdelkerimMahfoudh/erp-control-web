@@ -1274,3 +1274,20 @@ fieldset.promo legend {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+/* The payment window: wide enough for two receivers side by side, each number whole beside its copy button. */
+dialog.modal.pay-window {
+  max-width: 720px;
+}
+.pay-receiver-choice .ltr {
+  margin-inline-start: 0;
+  flex: none;
+  white-space: nowrap;
+}
+.pay-receiver-choice strong {
+  flex: none;
+}
+@media (max-width: 700px) {
+  .pay-receivers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

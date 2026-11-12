@@ -1060,6 +1060,9 @@ for (const [lang, width] of [['en', 1280], ['en', 375], ['fr', 1280], ['fr', 375
     await expect(dialog.getByRole('radio')).toHaveCount(4);
     await expect(dialog.getByText('37 67 68 27')).toHaveCount(2);
     await expect(dialog.getByRole('button', { name: cat['pay.copyNumber'].replace('{number}', '37 67 68 27') })).toHaveCount(2);
+    // Each copy button beside its number, never on top of it (owner, 2026-11-12).
+    const overlaps = await dialog.locator('.pay-receiver').evaluateAll((rows) => rows.map((row) => { const n = row.querySelector('.ltr')!.getBoundingClientRect(); const b = row.querySelector('.pay-copy')!.getBoundingClientRect(); return n.right > b.left + 0.5 && n.left < b.right - 0.5; }));
+    expect(overlaps).toEqual(overlaps.map(() => false));
     // Filled in, as an Owner would: a receiver chosen, a file named by the styled button.
     await dialog.getByRole('radio').nth(1).check();
     await dialog.locator('input[type="file"]').setInputFiles({ name: 'bankily-receipt.png', mimeType: 'image/png', buffer: PROOF_IMAGE });

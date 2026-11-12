@@ -443,7 +443,7 @@ function PayWindow({
   };
 
   return (
-    <dialog ref={ref} className="modal" onCancel={onClose} aria-labelledby="pay-window-h">
+    <dialog ref={ref} className="modal pay-window" onCancel={onClose} aria-labelledby="pay-window-h">
       {open ? (
         <form className="body stack" onSubmit={send}>
           <div className="row spread">
