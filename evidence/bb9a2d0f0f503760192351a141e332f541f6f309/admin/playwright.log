@@ -1,0 +1,16 @@
+
+Running 11 tests using 4 workers
+
+  ✓   1 e2e/admin.spec.ts:32:5 › sign-in, en, 375 px: direction, one heading, no sideways scroll, WCAG AA (1.2s)
+  ✓   3 e2e/admin.spec.ts:49:3 › an address of the customers is an unknown page here, en (1.4s)
+  ✓   2 e2e/admin.spec.ts:32:5 › sign-in, en, 1280 px: direction, one heading, no sideways scroll, WCAG AA (1.6s)
+  ✓   4 e2e/admin.spec.ts:32:5 › sign-in, fr, 375 px: direction, one heading, no sideways scroll, WCAG AA (1.5s)
+  ✓   5 e2e/admin.spec.ts:32:5 › sign-in, fr, 1280 px: direction, one heading, no sideways scroll, WCAG AA (1.4s)
+  ✓   6 e2e/admin.spec.ts:49:3 › an address of the customers is an unknown page here, fr (1.2s)
+  ✓   7 e2e/admin.spec.ts:32:5 › sign-in, ar, 375 px: direction, one heading, no sideways scroll, WCAG AA (1.3s)
+  ✓  11 e2e/admin.spec.ts:69:1 › every page says noindex and carries the policy; no source map is served (44ms)
+  ✓   8 e2e/admin.spec.ts:32:5 › sign-in, ar, 1280 px: direction, one heading, no sideways scroll, WCAG AA (1.4s)
+  ✓  10 e2e/admin.spec.ts:61:1 › the root leads to the console, and its console routes are served (497ms)
+  ✓   9 e2e/admin.spec.ts:49:3 › an address of the customers is an unknown page here, ar (789ms)
+
+  11 passed (4.5s)

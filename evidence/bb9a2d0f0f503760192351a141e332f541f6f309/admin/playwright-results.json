@@ -1,0 +1,555 @@
+{
+  "config": {
+    "argv": [
+      "/opt/hostedtoolcache/node/22.23.4/x64/bin/node",
+      "/home/runner/work/erp-control-web/erp-control-web/node_modules/.bin/playwright",
+      "test"
+    ],
+    "configFile": "/home/runner/work/erp-control-web/erp-control-web/playwright.config.ts",
+    "rootDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "ci": {
+        "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/bb9a2d0f0f503760192351a141e332f541f6f309",
+        "commitHash": "bb9a2d0f0f503760192351a141e332f541f6f309",
+        "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/43165411313"
+      },
+      "gitCommit": {
+        "shortHash": "bb9a2d0f",
+        "hash": "bb9a2d0f0f503760192351a141e332f541f6f309",
+        "subject": "feat(portal, console): one payment flow, receivers, app handoff by request id, two-person review",
+        "body": "feat(portal, console): one payment flow, receivers, app handoff by request id, two-person review\n\nOwner, 2026-11-12 (not yet published):\n- \"Pay or renew\" is one compact card: the store(s) (one preselected; several for\n  a renewal), one action (renew, activate a waiting store, an employee seat at\n  one store), 1/3/12 months, the server's line items and total, then the manual\n  payment window. \"Add a store\" sits beside the stores (names checked as before,\n  each activity's price and the D158 replacement note kept). The page prices\n  nothing and never sends an amount.\n- The window offers only the service/number pairs the server lists (Bankily and\n  Sedad on 36 96 38 39 and 37 67 68 27), and sends the one chosen with the\n  payer's number and the screenshot; a proof still waiting is corrected there,\n  naming its revision. Nothing offered: said honestly, nothing can be sent.\n- \"My stores\": stores, status and requests, with a clear \"Pay or renew\"; the\n  request forms moved into the flow. The duplicate Help card is gone (the footer\n  has the links, with its own spacing again).\n- The activation link's request is read from the server by its id\n  (GET my-subscription/pending/:rid) and fills the flow; nothing about it\n  travels in the address. An employee seat requested in the app shows the\n  person's name; employees are still added and verified in the app.\n- Console review: where the customer says the money went; the first step opens\n  the access (\"verification pending\"); an opened proof offers only \"Deposit\n  found - confirm\" or Refuse, for a different administrator, with who opened it,\n  when, on which version, and the 24-hour target.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+        "author": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1794463376000
+        },
+        "committer": {
+          "name": "CLAUDE",
+          "email": "abdelkerim.mahfoudh@gmail.com",
+          "time": 1794463376000
+        },
+        "branch": "post-build4"
+      },
+      "actualWorkers": 4
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/bb9a2d0f0f503760192351a141e332f541f6f309/admin/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/bb9a2d0f0f503760192351a141e332f541f6f309",
+            "commitHash": "bb9a2d0f0f503760192351a141e332f541f6f309",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/43165411313"
+          },
+          "gitCommit": {
+            "shortHash": "bb9a2d0f",
+            "hash": "bb9a2d0f0f503760192351a141e332f541f6f309",
+            "subject": "feat(portal, console): one payment flow, receivers, app handoff by request id, two-person review",
+            "body": "feat(portal, console): one payment flow, receivers, app handoff by request id, two-person review\n\nOwner, 2026-11-12 (not yet published):\n- \"Pay or renew\" is one compact card: the store(s) (one preselected; several for\n  a renewal), one action (renew, activate a waiting store, an employee seat at\n  one store), 1/3/12 months, the server's line items and total, then the manual\n  payment window. \"Add a store\" sits beside the stores (names checked as before,\n  each activity's price and the D158 replacement note kept). The page prices\n  nothing and never sends an amount.\n- The window offers only the service/number pairs the server lists (Bankily and\n  Sedad on 36 96 38 39 and 37 67 68 27), and sends the one chosen with the\n  payer's number and the screenshot; a proof still waiting is corrected there,\n  naming its revision. Nothing offered: said honestly, nothing can be sent.\n- \"My stores\": stores, status and requests, with a clear \"Pay or renew\"; the\n  request forms moved into the flow. The duplicate Help card is gone (the footer\n  has the links, with its own spacing again).\n- The activation link's request is read from the server by its id\n  (GET my-subscription/pending/:rid) and fills the flow; nothing about it\n  travels in the address. An employee seat requested in the app shows the\n  person's name; employees are still added and verified in the app.\n- Console review: where the customer says the money went; the first step opens\n  the access (\"verification pending\"); an opened proof offers only \"Deposit\n  found - confirm\" or Refuse, for a different administrator, with who opened it,\n  when, on which version, and the 24-hour target.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1794463376000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1794463376000
+            },
+            "branch": "post-build4"
+          },
+          "actualWorkers": 4
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/admin\\.spec\\.ts$/"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "filteredProjects": [
+      {
+        "grep": {},
+        "grepInvert": null,
+        "outputDir": "/home/runner/work/erp-control-web/erp-control-web/evidence/bb9a2d0f0f503760192351a141e332f541f6f309/admin/playwright-output",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "ci": {
+            "commitHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/commit/bb9a2d0f0f503760192351a141e332f541f6f309",
+            "commitHash": "bb9a2d0f0f503760192351a141e332f541f6f309",
+            "buildHref": "https://github.com/AbdelkerimMahfoudh/erp-control-web/actions/runs/43165411313"
+          },
+          "gitCommit": {
+            "shortHash": "bb9a2d0f",
+            "hash": "bb9a2d0f0f503760192351a141e332f541f6f309",
+            "subject": "feat(portal, console): one payment flow, receivers, app handoff by request id, two-person review",
+            "body": "feat(portal, console): one payment flow, receivers, app handoff by request id, two-person review\n\nOwner, 2026-11-12 (not yet published):\n- \"Pay or renew\" is one compact card: the store(s) (one preselected; several for\n  a renewal), one action (renew, activate a waiting store, an employee seat at\n  one store), 1/3/12 months, the server's line items and total, then the manual\n  payment window. \"Add a store\" sits beside the stores (names checked as before,\n  each activity's price and the D158 replacement note kept). The page prices\n  nothing and never sends an amount.\n- The window offers only the service/number pairs the server lists (Bankily and\n  Sedad on 36 96 38 39 and 37 67 68 27), and sends the one chosen with the\n  payer's number and the screenshot; a proof still waiting is corrected there,\n  naming its revision. Nothing offered: said honestly, nothing can be sent.\n- \"My stores\": stores, status and requests, with a clear \"Pay or renew\"; the\n  request forms moved into the flow. The duplicate Help card is gone (the footer\n  has the links, with its own spacing again).\n- The activation link's request is read from the server by its id\n  (GET my-subscription/pending/:rid) and fills the flow; nothing about it\n  travels in the address. An employee seat requested in the app shows the\n  person's name; employees are still added and verified in the app.\n- Console review: where the customer says the money went; the first step opens\n  the access (\"verification pending\"); an opened proof offers only \"Deposit\n  found - confirm\" or Refuse, for a different administrator, with who opened it,\n  when, on which version, and the 24-hour target.\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n",
+            "author": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1794463376000
+            },
+            "committer": {
+              "name": "CLAUDE",
+              "email": "abdelkerim.mahfoudh@gmail.com",
+              "time": 1794463376000
+            },
+            "branch": "post-build4"
+          },
+          "actualWorkers": 4
+        },
+        "name": "",
+        "testDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "snapshotDir": "/home/runner/work/erp-control-web/erp-control-web/e2e",
+        "testIgnore": [],
+        "testMatch": {},
+        "timeout": 60000,
+        "use": {
+          "baseURL": "http://127.0.0.1:4173",
+          "browserName": "chromium"
+        },
+        "dependencies": [],
+        "ignoreSnapshots": false,
+        "__projectId": ""
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "list",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "evidence/bb9a2d0f0f503760192351a141e332f541f6f309/admin/playwright-results.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "default",
+    "updateSourceMethod": "patch",
+    "version": "1.64.0",
+    "workers": 4,
+    "webServer": {
+      "command": "node scripts/serve-dist.mjs 4173",
+      "url": "http://127.0.0.1:4173/",
+      "reuseExistingServer": false,
+      "timeout": 30000
+    }
+  },
+  "suites": [
+    {
+      "title": "admin.spec.ts",
+      "file": "admin.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "sign-in, en, 375 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1218,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:03.335Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-833feeb5374f0c543ebd",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "sign-in, en, 1280 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1583,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:03.380Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-c78925780b5c4068bdb0",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "an address of the customers is an unknown page here, en",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1369,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:03.401Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-3f7f922d076e567272c6",
+          "file": "admin.spec.ts",
+          "line": 49,
+          "column": 3
+        },
+        {
+          "title": "sign-in, fr, 375 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 1503,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:03.415Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-404a6019361a01f3b387",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "sign-in, fr, 1280 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1389,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:04.714Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-a18877f5e8f1da827256",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "an address of the customers is an unknown page here, fr",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 1195,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:04.942Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-e50bc20128f1d8f371e0",
+          "file": "admin.spec.ts",
+          "line": 49,
+          "column": 3
+        },
+        {
+          "title": "sign-in, ar, 375 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 1279,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:05.119Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-c44f4aa2c100e3a8c529",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "sign-in, ar, 1280 px: direction, one heading, no sideways scroll, WCAG AA",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1443,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:05.122Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-ed9f95df5b7fead3e021",
+          "file": "admin.spec.ts",
+          "line": 32,
+          "column": 5
+        },
+        {
+          "title": "an address of the customers is an unknown page here, ar",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 789,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:06.145Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-5134f985fffea7ca6f43",
+          "file": "admin.spec.ts",
+          "line": 49,
+          "column": 3
+        },
+        {
+          "title": "the root leads to the console, and its console routes are served",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 2,
+                  "status": "passed",
+                  "duration": 497,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:06.184Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-aaf5a17b32e3a9181a38",
+          "file": "admin.spec.ts",
+          "line": 61,
+          "column": 1
+        },
+        {
+          "title": "every page says noindex and carries the policy; no source map is served",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 3,
+                  "status": "passed",
+                  "duration": 44,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-11-12T06:15:06.425Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "d4043a9dd1ab94463227-a4845b6bc641366c9aab",
+          "file": "admin.spec.ts",
+          "line": 69,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-12T06:15:02.488Z",
+    "duration": 4502.026000000001,
+    "expected": 11,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
