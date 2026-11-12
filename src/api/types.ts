@@ -187,7 +187,7 @@ export interface GraceView {
   nextUseRestoredAt: string | null;
 }
 
-export type NoticeKind = 'portal_instructions' | 'trial_reminder' | 'trial_expired' | 'paid_reminder' | 'paid_expired' | 'grace_reminder' | 'grace_ended';
+export type NoticeKind = 'portal_instructions' | 'trial_reminder' | 'trial_expired' | 'paid_reminder' | 'paid_expired' | 'grace_reminder' | 'grace_ended' | 'branch_activation' | 'trial_started';
 
 /** What became of a message: waiting, on its way, handed to a provider, delivered, not sent, cancelled or replaced. */
 export type NoticeState = 'pending' | 'sending' | 'accepted' | 'delivered' | 'failed' | 'cancelled' | 'superseded';

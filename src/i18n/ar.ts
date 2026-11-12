@@ -837,6 +837,8 @@ export const ar: Catalogue = {
   'notice.kind.grace_reminder': 'تذكير بفترة السماح',
   'notice.kind.grace_reminder.hours': 'تذكير بفترة السماح، تبقّت {hours} ساعة',
   'notice.kind.grace_ended': 'انتهاء فترة السماح',
+  'notice.kind.branch_activation': "متجر جاهز للتفعيل",
+  'notice.kind.trial_started': "بدأت الفترة التجريبية المجانية",
   'notice.state.pending': 'في انتظار الإرسال',
   'notice.state.sending': 'جارٍ الإرسال',
   'notice.state.accepted': 'أُرسلت',

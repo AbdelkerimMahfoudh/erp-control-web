@@ -838,6 +838,8 @@ export const fr: Catalogue = {
   'notice.kind.grace_reminder': 'rappel de la période de grâce',
   'notice.kind.grace_reminder.hours': 'rappel de la période de grâce, encore {hours} heures',
   'notice.kind.grace_ended': 'fin de la période de grâce',
+  'notice.kind.branch_activation': "boutique prête à activer",
+  'notice.kind.trial_started': "essai gratuit commencé",
   'notice.state.pending': 'en attente d’envoi',
   'notice.state.sending': 'en cours d’envoi',
   'notice.state.accepted': 'envoyé',

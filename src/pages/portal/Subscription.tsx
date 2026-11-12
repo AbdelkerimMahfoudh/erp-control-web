@@ -1120,7 +1120,8 @@ function Requests({
                     {t('account.requests.withdraw')}
                   </button>
                 ) : (
-                  <span className="muted small">{r.payment?.reference ? <span className="ltr">{r.payment.reference}</span> : null}</span>
+                  <span className="muted small">{/* A proof-approved payment's reference is the server's internal "proof:<id>": not the Owner's to read. */}
+                  {r.payment?.reference && !r.payment.reference.startsWith('proof:') ? <span className="ltr">{r.payment.reference}</span> : null}</span>
                 ),
             },
           ]}
