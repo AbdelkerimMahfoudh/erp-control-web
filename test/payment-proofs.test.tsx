@@ -60,12 +60,17 @@ describe('payment proofs on the web (D227)', () => {
 
 });
 
-describe('0138: the two-person review in the console', () => {
+describe('0138: the payment review in the console', () => {
   it('names where the money went; the first step opens the access; an opened proof offers only confirm or refuse, with its revision', () => {
     const page = readFileSync('src/pages/admin/Proofs.tsx', 'utf8');
     expect(page).toContain('proof.receiveService && proof.receiveNumber');
     expect(page).toMatch(/proof\.review \? \(/);
     expect(page).toContain("act('confirm', {})");
+    // One administrator, two actions (owner, 2026-11-12): confirm payment, or open access while reviewing.
+    expect(page).toContain('value="approve"');
+    expect(page).toContain('value="open"');
+    expect(page).toContain("submitter?.value === 'open' ? 'open' : 'approve'");
+    for (const cat of [en, fr, ar]) expect(Object.values(cat).some((v) => /another administrator|autre administrateur|مسؤول آخر/i.test(v))).toBe(false);
     // Every decision still names the revision it was made on (the server refuses an older one).
     expect(page).toContain('revision: proof.revision ?? 1');
     for (const k of ['admin.proofs.open', 'admin.proofs.confirmDeposit', 'admin.proofs.opened', 'admin.proofs.overdue', 'admin.proofs.receiver'] as const) {

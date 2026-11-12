@@ -48,7 +48,7 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
   const [error, setError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
 
-  const act = async (path: 'approve' | 'refuse' | 'confirm', body: Record<string, unknown>) => {
+  const act = async (path: 'approve' | 'refuse' | 'confirm' | 'open', body: Record<string, unknown>) => {
     setError(null);
     if (!(await ask())) return;
     setBusy(true);
@@ -142,7 +142,9 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
                 className="stack"
                 onSubmit={(e) => {
                   e.preventDefault();
-                  void act('approve', { amount: form.amount.trim(), paidAt: new Date(form.paidAt).toISOString(), months: Number(form.months), channel: form.channel, reason: form.reason.trim() });
+                  // Owner, 2026-11-12: one administrator, two actions — the submit button that was pressed says which.
+                  const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
+                  void act(submitter?.value === 'open' ? 'open' : 'approve', { amount: form.amount.trim(), paidAt: new Date(form.paidAt).toISOString(), months: Number(form.months), channel: form.channel, reason: form.reason.trim() });
                 }}
               >
                 <div className="grid">
@@ -168,9 +170,14 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
                 <Field label={t('admin.proofs.reason')}>
                   <input required maxLength={500} value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} />
                 </Field>
-                <button type="submit" className="btn btn-primary" disabled={busy}>
-                  {t('admin.proofs.open')}
-                </button>
+                <div className="row">
+                  <button type="submit" name="action" value="approve" className="btn btn-primary" disabled={busy}>
+                    {t('admin.proofs.approve')}
+                  </button>
+                  <button type="submit" name="action" value="open" className="btn" disabled={busy}>
+                    {t('admin.proofs.open')}
+                  </button>
+                </div>
                 <p className="muted small">{t('admin.proofs.openNote')}</p>
               </form>
               <form
