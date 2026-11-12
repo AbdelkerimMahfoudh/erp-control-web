@@ -9,6 +9,8 @@ import { headFor } from '../src/site/head';
 import { headersFile, sitemapXml } from '../src/site/generated';
 import { IN_APP_ROUTE_IDS, inAppPathOf, inAppRouteAt, pathOf, PUBLIC_ROUTES, type PublicRouteId } from '../src/site/routes';
 import { ThemeProvider } from '../src/theme/theme';
+import { formatDate } from '../src/lib/format';
+import { TERMS_EFFECTIVE } from '../src/content/legal-terms';
 
 /**
  * The public legal and support pages (the owner's brief of 2026-10-16, docs/85): each exists at its stable address in
@@ -83,7 +85,8 @@ describe('the public legal and support pages', () => {
         expect(within(main).getByText(new RegExp(doc.version.replace(/[()]/g, '\\$&')))).toBeTruthy();
         // Approved (owner, 2026-11-04): version 1.0 and no draft label; the deletion page 1.1 (owner, 2026-11-05:
         // email-assisted deletion at launch, effective the same date), and privacy 1.1 with it.
-        expect(doc.version).toBe(name === 'accountDeletion' || name === 'privacy' ? '1.1' : '1.0');
+        // Terms 1.1 (owner, 2026-11-12): an additional store's own term; account deletion and privacy were 1.1 before.
+        expect(doc.version).toBe(name === 'accountDeletion' || name === 'privacy' || name === 'terms' ? '1.1' : '1.0');
         expect(main.querySelector('.legal-draft')).toBeNull();
         // One group of related pages (the brief of 2026-10-17, fourth): every other page a link, this one plain text
         // marked current — never a link back to itself.
@@ -205,3 +208,40 @@ function order(href: string, lang: (typeof LANGS)[number]): number {
   const ids: PublicRouteId[] = ['privacy', 'privacyChoices', 'terms', 'accountDeletion', 'support', 'security', 'legalNotice'];
   return ids.findIndex((id) => pathOf(id, lang) === href);
 }
+
+/*
+ * Terms 1.1 (owner, 2026-11-12): an additional store has no free trial; its own paid term begins when its access opens;
+ * a refused payment withdraws only what it granted; never charged twice for the same store and days. The seat paragraph
+ * and the 30-day notice clause stay. The version and its own effective date, on the terms only, in each language.
+ */
+describe('the terms, version 1.1', () => {
+  const STORE = {
+    en: 'The business’s free trial does not cover additional stores. An additional store can open during the trial, and its own paid term begins on the date access opens. If we refuse the payment, we withdraw only the access granted for that payment. We do not charge twice for the same store and the same days.',
+    fr: 'L’essai gratuit de l’entreprise ne couvre pas les boutiques supplémentaires. Une boutique supplémentaire peut ouvrir pendant l’essai, et sa propre période d’abonnement commence à la date d’ouverture de l’accès. Si nous refusons le paiement, nous retirons uniquement l’accès accordé au titre de ce paiement. Nous ne facturons pas deux fois les mêmes jours pour une même boutique.',
+    ar: 'لا تشمل التجربة المجانية للنشاط التجاري المتاجر الإضافية. يمكن فتح متجر إضافي أثناء التجربة، وتبدأ مدة اشتراكه المدفوعة من تاريخ إتاحة الوصول إليه. إذا رفضنا الدفعة، نلغي فقط الوصول الذي أُتيح مقابلها. لا نفرض رسومًا مرتين على المتجر نفسه عن الأيام نفسها.',
+  } as const;
+  const SEAT = { en: /^A seat requested during the free trial may be paid during it/, fr: /^Une place demandée pendant l’essai gratuit peut être payée/, ar: /^أما المقعد المطلوب خلال التجربة المجانية/ } as const;
+  const NOTICE = { en: /at least 30 days before it applies/, fr: /au moins 30 jours avant de s’appliquer/, ar: /قبل 30 يومًا على الأقل من سريانه/ } as const;
+
+  for (const lang of LANGS) {
+    it(`${lang}: the store and seat paragraphs, version 1.1 and its own effective date, the notice clause unchanged`, () => {
+      localStorage.setItem('erp.web.language', lang);
+      mount(pathOf('terms', lang));
+      const main = screen.getByRole('main');
+      expect(within(main).getByText(STORE[lang])).toBeTruthy();
+      expect(within(main).getByText(SEAT[lang])).toBeTruthy();
+      expect(main.textContent).toMatch(NOTICE[lang]);
+      expect(main.textContent).toContain(lang === 'ar' ? '1.1' : 'Version 1.1');
+      expect(main.textContent).toContain(formatDate(`${TERMS_EFFECTIVE}T00:00:00Z`, lang));
+      // The old trial sentence for stores is gone.
+      expect(main.textContent).not.toMatch(/A store or a seat requested during the free trial|Une boutique ou une place demandée pendant l’essai|المتجر أو المقعد المطلوب خلال التجربة/);
+    });
+  }
+
+  it('the effective date is the terms’ own: the other legal texts keep the site’s date', async () => {
+    const { terms, TERMS_EFFECTIVE } = await import('../src/content/legal-terms');
+    expect(TERMS_EFFECTIVE).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    for (const lang of LANGS) expect([terms[lang].version, terms[lang].effective]).toEqual(['1.1', TERMS_EFFECTIVE]);
+    for (const [name, doc] of Object.entries(LEGAL_DOCUMENTS)) if (name !== 'terms') for (const lang of LANGS) expect({ name, lang, effective: doc[lang].effective }).toEqual({ name, lang, effective: undefined });
+  });
+});

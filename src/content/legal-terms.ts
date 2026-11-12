@@ -6,9 +6,17 @@ import type { LegalDocument } from './types';
  * advice. Every rule stated is one the software enforces; every clause the law decides carries a blocker, so a
  * production build cannot publish it unresolved. No price is named here: prices live on the Dukan ERP page.
  */
+/**
+ * Terms 1.1 (owner, 2026-11-12): an additional store has no free trial and opens on its own approved payment, its own
+ * paid term beginning when its access opens. Effective on this date — the terms only; set to the actual deployment day
+ * (or, with the 30-day notice, the day it applies) in the commit that ships it.
+ */
+export const TERMS_EFFECTIVE = '2026-11-13';
+
 export const terms: Record<Language, LegalDocument> = {
   en: {
-    version: '1.0',
+    version: '1.1',
+    effective: TERMS_EFFECTIVE,
     status: 'approved',
     title: 'Dukan ERP terms of service',
     summary: 'The terms on which {displayName} provides Dukan ERP to businesses.',
@@ -98,7 +106,8 @@ export const terms: Record<Language, LegalDocument> = {
               'Each store has a monthly price for its activity, with staff seats included; extra seats are charged per store. The current prices are on the Dukan ERP page and confirmed in the business account. None is shown or sold in the app.',
               'The business pays {displayName} outside the app, as agreed with it, and {displayName} confirms each payment against its reference. No payment is taken in the mobile app or on this website.',
               'A store or a seat added during a paid month is charged for that month. A removal, or a change to a lower-priced activity, takes effect at the next renewal. A change to a higher-priced activity is charged for the difference when it is confirmed.',
-              'A store or a seat requested during the free trial may be paid during it, and starts when the trial ends, with the first paid period — charged once and never started during the trial. If no paid access has been approved by then, it waits for the first paid period.',
+              'The business’s free trial does not cover additional stores. An additional store can open during the trial, and its own paid term begins on the date access opens. If we refuse the payment, we withdraw only the access granted for that payment. We do not charge twice for the same store and the same days.',
+              'A seat requested during the free trial may be paid during it, and starts when the trial ends, with the first paid period — charged once and never started during the trial. If no paid access has been approved by then, it waits for the first paid period.',
               'A month is never charged twice, and nothing renews by itself: each period starts only when {displayName} confirms its payment.',
               'Refunds: paid access is not refunded at TSXMR’s discretion or pro rata. A duplicate or erroneous payment is corrected. This does not limit any right that mandatory Mauritanian law gives a business.',
             ],
@@ -183,7 +192,8 @@ export const terms: Record<Language, LegalDocument> = {
     ],
   },
   fr: {
-    version: '1.0',
+    version: '1.1',
+    effective: TERMS_EFFECTIVE,
     status: 'approved',
     title: 'Conditions d’utilisation de Dukan ERP',
     summary: 'Les conditions auxquelles {displayName} fournit Dukan ERP aux entreprises.',
@@ -273,7 +283,8 @@ export const terms: Record<Language, LegalDocument> = {
               'Chaque boutique a un prix mensuel pour son activité, avec des places de personnel incluses ; les places supplémentaires sont facturées par boutique. Les prix en vigueur figurent sur la page Dukan ERP et sont confirmés dans le compte entreprise. Aucun n’est affiché ni vendu dans l’application.',
               'L’entreprise paie {displayName} en dehors de l’application, comme convenu avec elle, et {displayName} confirme chaque paiement à partir de sa référence. Aucun paiement n’est encaissé dans l’application mobile ni sur ce site.',
               'Une boutique ou une place ajoutée pendant un mois payé est facturée pour ce mois. Une suppression, ou le passage à une activité moins chère, prend effet au renouvellement suivant. Le passage à une activité plus chère est facturé pour la différence lorsqu’il est confirmé.',
-              'Une boutique ou une place demandée pendant l’essai gratuit peut être payée pendant celui-ci, et commence à la fin de l’essai, avec la première période payée — facturée une seule fois et jamais commencée pendant l’essai. Si aucun accès payant n’a été approuvé d’ici là, il attend la première période payée.',
+              'L’essai gratuit de l’entreprise ne couvre pas les boutiques supplémentaires. Une boutique supplémentaire peut ouvrir pendant l’essai, et sa propre période d’abonnement commence à la date d’ouverture de l’accès. Si nous refusons le paiement, nous retirons uniquement l’accès accordé au titre de ce paiement. Nous ne facturons pas deux fois les mêmes jours pour une même boutique.',
+              'Une place demandée pendant l’essai gratuit peut être payée pendant celui-ci, et commence à la fin de l’essai, avec la première période payée — facturée une seule fois et jamais commencée pendant l’essai. Si aucun accès payant n’a été approuvé d’ici là, elle attend la première période payée.',
               'Un mois n’est jamais facturé deux fois, et rien ne se renouvelle tout seul : chaque période ne commence que lorsque {displayName} confirme son paiement.',
               'Remboursements : l’accès payé n’est pas remboursé, ni à la discrétion de TSXMR ni au prorata. Un paiement en double ou erroné est corrigé. Cela ne limite aucun droit que la loi mauritanienne impérative accorde à une entreprise.',
             ],
@@ -358,7 +369,8 @@ export const terms: Record<Language, LegalDocument> = {
     ],
   },
   ar: {
-    version: '1.0',
+    version: '1.1',
+    effective: TERMS_EFFECTIVE,
     status: 'approved',
     title: 'شروط خدمة Dukan ERP',
     summary: 'الشروط التي تقدّم بموجبها {displayName} خدمة Dukan ERP للمؤسسات.',
@@ -448,7 +460,8 @@ export const terms: Record<Language, LegalDocument> = {
               'لكل متجر سعر شهري لنشاطه، يشمل مقاعد للموظفين؛ وتُفوتر المقاعد الإضافية لكل متجر. والأسعار السارية معروضة في صفحة Dukan ERP ومؤكدة في حساب المؤسسة. ولا يُعرض أي منها ولا يُباع في التطبيق.',
               'تدفع المؤسسة لـ{displayName} خارج التطبيق، وفق ما يُتفق عليه معها، وتؤكد {displayName} كل دفعة بالاستناد إلى مرجعها. ولا يُحصَّل أي دفع داخل تطبيق الهاتف أو على هذا الموقع.',
               'يُفوتر المتجر أو المقعد المضاف خلال شهر مدفوع عن ذلك الشهر. ويسري الحذف، أو الانتقال إلى نشاط أقل سعرًا، عند التجديد التالي. ويُفوتر الانتقال إلى نشاط أعلى سعرًا بالفرق عند تأكيده.',
-              'المتجر أو المقعد المطلوب خلال التجربة المجانية يمكن دفع ثمنه أثناءها، ويبدأ عند انتهائها مع أول فترة مدفوعة — يُفوتر مرة واحدة ولا يبدأ أبدًا أثناء التجربة. وإن لم يُعتمد وصول مدفوع حتى ذلك الحين فإنه ينتظر أول فترة مدفوعة.',
+              'لا تشمل التجربة المجانية للنشاط التجاري المتاجر الإضافية. يمكن فتح متجر إضافي أثناء التجربة، وتبدأ مدة اشتراكه المدفوعة من تاريخ إتاحة الوصول إليه. إذا رفضنا الدفعة، نلغي فقط الوصول الذي أُتيح مقابلها. لا نفرض رسومًا مرتين على المتجر نفسه عن الأيام نفسها.',
+              'أما المقعد المطلوب خلال التجربة المجانية فيمكن دفع ثمنه أثناءها، ويبدأ عند انتهائها مع أول فترة مدفوعة — يُفوتر مرة واحدة ولا يبدأ أبدًا أثناء التجربة. وإن لم يُعتمد وصول مدفوع حتى ذلك الحين فإنه ينتظر أول فترة مدفوعة.',
               'لا يُفوتر شهر مرتين أبدًا، ولا يتجدد شيء من تلقاء نفسه: لا تبدأ أي فترة إلا عندما تؤكد {displayName} دفعها.',
               'الاسترداد: لا يُسترد مبلغ الوصول المدفوع، لا بتقدير من TSXMR ولا بالتناسب. ويُصحَّح أي دفع مكرّر أو خاطئ. ولا يحدّ ذلك من أي حق يمنحه القانون الموريتاني الآمر للمؤسسة.',
             ],
