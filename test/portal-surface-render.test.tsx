@@ -28,7 +28,7 @@ const CATALOGUE = { en, fr, ar } as const;
 
 const requests: string[] = [];
 const LEGAL_PATHS = ['/support', '/privacy', '/privacy-choices', '/terms', '/account-deletion', '/security', '/legal'];
-const VERSIONS: Record<string, string> = { '/privacy': '1.1', '/account-deletion': '1.1', '/privacy-choices': '1.0', '/terms': '1.0', '/security': '1.0', '/legal': '1.0' };
+const VERSIONS: Record<string, string> = { '/privacy': '1.1', '/account-deletion': '1.1', '/privacy-choices': '1.0', '/terms': '1.1', '/security': '1.0', '/legal': '1.0' };
 
 /** Never a link, canonical or alternate back to the company site's pre-launch texts (owner, 2026-11-05); never /admin. */
 function expectNoPrelaunchLink() {
