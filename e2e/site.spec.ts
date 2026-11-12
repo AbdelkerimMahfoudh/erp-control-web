@@ -1044,6 +1044,11 @@ for (const [lang, width] of [['en', 1280], ['en', 375], ['fr', 1280], ['fr', 375
     await page.getByRole('tab', { name: cat['portal.tabs.payments'] }).click();
     const quote = page.getByTestId('pay-quote');
     await expect(quote.getByText('Boutique Ksar')).toBeVisible();
+    // The store choices fill the row: two stores, two equal halves on a desktop; stacked, full width, on a phone.
+    const cards = await page.getByTestId('store-choice').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).map((r) => ({ x: r.x, w: r.width })));
+    const row = await page.locator('.pay-stores').evaluate((e) => e.getBoundingClientRect().width);
+    if (width >= 1000) expect(Math.abs(cards[0]!.w + cards[1]!.w - row)).toBeLessThan(16);
+    else expect(cards.every((c) => Math.abs(c.w - row) < 2)).toBe(true);
     await page.waitForLoadState('networkidle');
     await page.screenshot({ path: join(dir, `flow-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 72 });
     expect((await layout(page)).overflow).toBeLessThanOrEqual(0);
@@ -1054,6 +1059,20 @@ for (const [lang, width] of [['en', 1280], ['en', 375], ['fr', 1280], ['fr', 375
     const dialog = page.locator('dialog[open]');
     await expect(dialog.getByRole('radio')).toHaveCount(4);
     await expect(dialog.getByText('37 67 68 27')).toHaveCount(2);
+    await expect(dialog.getByRole('button', { name: cat['pay.copyNumber'].replace('{number}', '37 67 68 27') })).toHaveCount(2);
+    // Filled in, as an Owner would: a receiver chosen, a file named by the styled button.
+    await dialog.getByRole('radio').nth(1).check();
+    await dialog.locator('input[type="file"]').setInputFiles({ name: 'bankily-receipt.png', mimeType: 'image/png', buffer: PROOF_IMAGE });
+    await expect(dialog.getByText('bankily-receipt.png')).toBeVisible();
+    // Send and Cancel centred together, in either direction.
+    const [send, cancel, box] = await Promise.all([
+      dialog.getByRole('button', { name: cat['portal.store.send'] }).boundingBox(),
+      dialog.getByRole('button', { name: cat['action.cancel'] }).boundingBox(),
+      dialog.locator('.pay-actions').boundingBox(),
+    ]);
+    const left = Math.min(send!.x, cancel!.x) - box!.x;
+    const right = box!.x + box!.width - Math.max(send!.x + send!.width, cancel!.x + cancel!.width);
+    expect(Math.abs(left - right)).toBeLessThan(4);
     await page.screenshot({ path: join(dir, `window-${lang}-${width}.jpg`), type: 'jpeg', quality: 72 });
     const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
     const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');

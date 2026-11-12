@@ -199,3 +199,43 @@ describe('the one payment flow', () => {
     expect(src).toContain('platform/my-subscription/pending/');
   });
 });
+
+describe('the payment window’s numbers and file', () => {
+  it('each number has its own copy button: named for screen readers, copies the eight digits without spaces, says Copied; choosing is untouched', async () => {
+    const written: string[] = [];
+    Object.assign(navigator, { clipboard: { writeText: vi.fn(async (v: string) => void written.push(v)) } });
+    flow();
+    await waitFor(() => expect(within(quoteBox()).getByText('Main')).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: en['pay.continue'] }));
+    const dialog = document.querySelector('dialog')!;
+    const copies = within(dialog).getAllByRole('button', { name: /^Copy / });
+    expect(copies.map((b) => b.getAttribute('aria-label'))).toEqual(['Copy 36 96 38 39', 'Copy 37 67 68 27', 'Copy 36 96 38 39', 'Copy 37 67 68 27']);
+    copies[1]!.focus();
+    fireEvent.click(copies[1]!);
+    await waitFor(() => expect(written).toEqual(['37676827']));
+    expect(await within(copies[1]!).findByText(en['portal.pay.copied'])).toBeTruthy();
+    // Copying chose nothing.
+    expect(within(dialog).getAllByRole('radio').every((r) => !(r as HTMLInputElement).checked)).toBe(true);
+    // The payer's own number stays international.
+    expect((dialog.querySelector('input[inputmode="tel"]') as HTMLInputElement).placeholder).toBe('+222');
+  });
+
+  it('the file: a real button opens the chooser; the name chosen is shown and announced with it', async () => {
+    flow();
+    await waitFor(() => expect(within(quoteBox()).getByText('Main')).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: en['pay.continue'] }));
+    const dialog = document.querySelector('dialog')!;
+    const choose = within(dialog).getByRole('button', { name: en['pay.file.choose'] });
+    expect(choose.getAttribute('aria-describedby')).toBe('pay-file-name');
+    expect(within(dialog).getByText(en['pay.file.none'])).toBeTruthy();
+    const input = dialog.querySelector('input[type="file"]') as HTMLInputElement;
+    const opened = vi.spyOn(input, 'click');
+    fireEvent.click(choose);
+    expect(opened).toHaveBeenCalled();
+    fireEvent.change(input, { target: { files: [new File([new Uint8Array([0x89])], 'reçu bankily.png', { type: 'image/png' })] } });
+    expect(within(dialog).getByText('reçu bankily.png')).toBeTruthy();
+    expect(within(dialog).getByRole('button', { name: en['pay.file.change'] })).toBeTruthy();
+    // Send and Cancel together, centred.
+    expect(dialog.querySelector('.pay-actions')!.children).toHaveLength(2);
+  });
+});

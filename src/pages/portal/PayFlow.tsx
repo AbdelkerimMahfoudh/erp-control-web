@@ -169,7 +169,7 @@ export function PayFlow({ onChanged, landing, newStore = null }: { onChanged: ()
                 }}
               />
             ) : null}
-            <div className="pay-stores" role={action === 'renew' ? 'group' : 'radiogroup'} aria-label={t('pay.step.stores')}>
+            <div className="pay-stores" style={{ ['--pay-cols' as string]: String(Math.max(1, Math.min(3, choices.length))) }} role={action === 'renew' ? 'group' : 'radiogroup'} aria-label={t('pay.step.stores')}>
               {choices.map((l) => {
                 const s = stateOf(l.branchId);
                 const ends = s?.paidUntil ?? s?.trialEndsAt ?? s?.complimentaryUntil ?? null;
@@ -378,6 +378,18 @@ function PayWindow({
   const [problem, setProblem] = useState<Key | null>(null);
   const [error, setError] = useState<unknown>(null);
   const [busy, setBusy] = useState(false);
+  const [copied, setCopied] = useState<string | null>(null);
+  const fileInput = useRef<HTMLInputElement>(null);
+  // The eight digits exactly as the server lists them — never the spaced or right-to-left text on the screen.
+  const copy = async (number: string) => {
+    try {
+      await navigator.clipboard.writeText(number);
+      setCopied(number);
+      setTimeout(() => setCopied((c) => (c === number ? null : c)), 2000);
+    } catch {
+      setCopied(null);
+    }
+  };
 
   useEffect(() => {
     const d = ref.current;
@@ -388,6 +400,7 @@ function PayWindow({
       setReceiver(correcting?.receiveService && correcting.receiveNumber ? `${correcting.receiveService}:${correcting.receiveNumber}` : '');
       setPayer(correcting?.payerPhone ?? '');
       setFile(null);
+      setCopied(null);
       setProblem(null);
       setError(null);
       key.current = newKey();
@@ -441,15 +454,27 @@ function PayWindow({
           {receivers.length ? (
             <fieldset className="pay-receivers">
               <legend>{t('pay.window.where')}</legend>
-              {receivers.map((r) => (
-                <label key={`${r.service}:${r.number}`} className={receiver === `${r.service}:${r.number}` ? 'pay-receiver on' : 'pay-receiver'}>
-                  <input type="radio" name="receiver" value={`${r.service}:${r.number}`} checked={receiver === `${r.service}:${r.number}`} onChange={(e) => setReceiver(e.target.value)} />
-                  <strong>{r.label}</strong>
-                  <span className="ltr" dir="ltr">
-                    {spaced(r.number)}
-                  </span>
-                </label>
-              ))}
+              {receivers.map((r) => {
+                const id = `${r.service}:${r.number}`;
+                return (
+                  <div key={id} className={receiver === id ? 'pay-receiver on' : 'pay-receiver'}>
+                    <label className="pay-receiver-choice">
+                      <input type="radio" name="receiver" value={id} checked={receiver === id} onChange={(e) => setReceiver(e.target.value)} />
+                      <strong>{r.label}</strong>
+                      <span className="ltr" dir="ltr">
+                        {spaced(r.number)}
+                      </span>
+                    </label>
+                    <button type="button" className="pay-copy" aria-label={t('pay.copyNumber', { number: spaced(r.number) })} title={t('pay.copyNumber', { number: spaced(r.number) })} onClick={() => void copy(r.number)}>
+                      <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <rect x="9" y="9" width="11" height="11" rx="2" />
+                        <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+                      </svg>
+                      <span aria-live="polite">{copied === r.number ? t('portal.pay.copied') : ''}</span>
+                    </button>
+                  </div>
+                );
+              })}
             </fieldset>
           ) : (
             <Notice tone="info">{t('account.payment.none')}</Notice>
@@ -458,14 +483,34 @@ function PayWindow({
             {t('portal.store.payer')}
             <input inputMode="tel" dir="ltr" value={payer} onChange={(e) => setPayer(e.target.value)} placeholder="+222" />
           </label>
-          <label className="field">
-            {correcting ? t('portal.store.replaceScreenshot') : t('portal.store.screenshot')}
-            <input type="file" accept="image/png,image/jpeg,application/pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
-          </label>
+          <div className="field">
+            <span id="pay-file-label">{correcting ? t('portal.store.replaceScreenshot') : t('portal.store.screenshot')}</span>
+            <div className="pay-upload">
+              <input
+                ref={fileInput}
+                id="pay-file"
+                className="visually-hidden"
+                type="file"
+                accept="image/png,image/jpeg,application/pdf"
+                aria-labelledby="pay-file-label"
+                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              />
+              <button type="button" className="btn" aria-describedby="pay-file-name" onClick={() => fileInput.current?.click()}>
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 16V4M6 10l6-6 6 6M4 20h16" />
+                </svg>
+                {file ? t('pay.file.change') : t('pay.file.choose')}
+              </button>
+              <span id="pay-file-name" className={file ? 'pay-file-name' : 'pay-file-name muted'} dir="auto">
+                {file ? file.name : t('pay.file.none')}
+              </span>
+            </div>
+            <span className="muted small">{t('pay.file.types')}</span>
+          </div>
           {problem ? <Notice tone="danger">{t(problem)}</Notice> : null}
           <ErrorNotice error={error} />
           <p className="muted small">{t('pay.window.after')}</p>
-          <div className="row">
+          <div className="pay-actions">
             <button type="submit" className="btn btn-primary" disabled={busy || receivers.length === 0}>
               {correcting ? t('portal.store.saveCorrection') : t('portal.store.send')}
             </button>

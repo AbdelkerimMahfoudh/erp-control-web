@@ -1186,3 +1186,91 @@ fieldset.promo legend {
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
+
+/* Owner, 2026-11-12: the store choices take the whole width — one per row, two halves, three thirds; a phone stacks them. */
+.pay-stores {
+  grid-template-columns: repeat(var(--pay-cols, 2), minmax(0, 1fr));
+}
+.pay-store > span {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+/* A receiver: its choice and its copy button side by side. */
+.pay-receiver {
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0;
+}
+.pay-receiver-choice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-inline-size: 0;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+.pay-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  margin-inline-end: 4px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  color: var(--brand-strong);
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.pay-copy:focus-visible {
+  outline: 2px solid var(--focus);
+}
+/* The proof's file: a real button, the name chosen beside it. */
+.pay-upload {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-block-start: 6px;
+}
+.pay-upload .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.pay-file-name {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
+}
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+/* Send and Cancel, centred together. */
+.pay-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+@media (max-width: 620px) {
+  .pay-stores {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pay-receivers {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
