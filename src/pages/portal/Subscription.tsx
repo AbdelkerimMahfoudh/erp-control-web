@@ -1006,7 +1006,7 @@ function Requests({
   };
 
   return (
-    <section className="card stack">
+    <section className="card stack" data-testid="requests">
       <h2>{t('account.requests')}</h2>
       <p className="muted small">{t('account.requests.explain')}</p>
       {rows === null ? (

@@ -541,14 +541,14 @@ for (const lang of LANGS) {
       await page.goto('/subscription');
       await expect(page.getByText(SCHEDULED_WORDS[lang]).first()).toBeVisible();
       await page.waitForLoadState('networkidle');
-      const rows = page.locator('section:has(form) table.data tbody tr');
+      const rows = page.locator('[data-testid="requests"] table.data tbody tr');
       await expect(rows).toHaveCount(3);
       const dates = await rows.locator('bdi').allTextContents();
       const l = await layout(page);
       const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa']).analyze();
       const serious = axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
       await page.screenshot({ path: join(EV, 'screenshots', 'addons', `account-${lang}-${width}.jpg`), fullPage: true, type: 'jpeg', quality: 70 });
-      await shotOf(page, 'section:has(form)', join(EV, 'screenshots', 'addons', `account-requests-${lang}-${width}.jpg`));
+      await shotOf(page, '[data-testid="requests"]', join(EV, 'screenshots', 'addons', `account-requests-${lang}-${width}.jpg`));
       // The narrowest phone too: a long status (French "En attente de paiement") wraps in its cell, never sideways.
       await page.setViewportSize({ width: 320, height: 900 });
       const at320 = await layout(page);
