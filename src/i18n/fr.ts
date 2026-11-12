@@ -840,6 +840,7 @@ export const fr: Catalogue = {
   'notice.kind.grace_ended': 'fin de la période de grâce',
   'notice.kind.branch_activation': "boutique prête à activer",
   'notice.kind.trial_started': "essai gratuit commencé",
+  'portal.payments.byProof': "Preuve de paiement",
   'notice.state.pending': 'en attente d’envoi',
   'notice.state.sending': 'en cours d’envoi',
   'notice.state.accepted': 'envoyé',

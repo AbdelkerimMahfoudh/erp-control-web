@@ -852,6 +852,7 @@ export const en = {
   'notice.kind.grace_ended': 'grace period ended',
   'notice.kind.branch_activation': "store ready for activation",
   'notice.kind.trial_started': "free trial started",
+  'portal.payments.byProof': "Payment proof",
   'notice.state.pending': 'waiting to be sent',
   'notice.state.sending': 'being sent',
   'notice.state.accepted': 'sent',

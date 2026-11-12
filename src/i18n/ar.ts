@@ -839,6 +839,7 @@ export const ar: Catalogue = {
   'notice.kind.grace_ended': 'انتهاء فترة السماح',
   'notice.kind.branch_activation': "متجر جاهز للتفعيل",
   'notice.kind.trial_started': "بدأت الفترة التجريبية المجانية",
+  'portal.payments.byProof': "إثبات الدفع",
   'notice.state.pending': 'في انتظار الإرسال',
   'notice.state.sending': 'جارٍ الإرسال',
   'notice.state.accepted': 'أُرسلت',

@@ -18,5 +18,6 @@ describe('subscription message kinds', () => {
   });
   it('hides the internal proof reference in the Owner’s requests', () => {
     expect(readFileSync('src/pages/portal/Subscription.tsx', 'utf8')).toContain("!r.payment.reference.startsWith('proof:')");
+    expect(readFileSync('src/pages/portal/Subscription.tsx', 'utf8')).toContain("p.reference.startsWith('proof:') ? t('portal.payments.byProof')");
   });
 });
