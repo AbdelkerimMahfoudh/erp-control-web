@@ -94,7 +94,7 @@ function ProofRow({ proof, ask, onDone }: { proof: PaymentProof; ask: () => Prom
           {proof.receiveService && proof.receiveNumber ? (
             // 0138: where the Owner says the money went — the account to check.
             <p className="proof-receiver">
-              {t('admin.proofs.receiver')}: <strong>{proof.receiveService === 'sedad' ? 'Sedad' : proof.receiveService === 'bankily' ? 'Bankily' : proof.receiveService}</strong>{' '}
+              {t('admin.proofs.receiver')}: <strong>{proof.receiveService.charAt(0).toUpperCase() + proof.receiveService.slice(1)}</strong>{' '}
               <span className="ltr" dir="ltr">
                 {proof.receiveNumber.replace(/(\d{2})(?=\d)/g, '$1 ')}
               </span>
