@@ -129,19 +129,70 @@ describe('the one payment flow', () => {
     fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.send'] }));
     expect(await within(dialog).findByText(en['portal.store.problem.payer'])).toBeTruthy();
     expect(posts).toHaveLength(0);
-    fireEvent.change(payer, { target: { value: '+222 36 00 00 01 9' } });
+    // A pasted full number loses its explicit +222 (or 00222) and separators; nothing is ever cut.
+    fireEvent.change(payer, { target: { value: '+222 36 96 38 39' } });
+    expect(payer.value).toBe('36963839');
+    fireEvent.change(payer, { target: { value: '00222-36.96.38.39' } });
+    expect(payer.value).toBe('36963839');
+    // An eight-digit local number that begins with 222 is kept as entered.
+    fireEvent.change(payer, { target: { value: '22236000' } });
     expect(payer.value).toBe('22236000');
+    // The wrong length stays as entered and is refused with our message — not truncated, no browser pattern tooltip.
     fireEvent.change(payer, { target: { value: '36 00 00 01 99' } });
+    expect(payer.value).toBe('3600000199');
+    expect([payer.maxLength, payer.getAttribute('pattern')]).toEqual([-1, null]);
+    fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.send'] }));
+    expect(await within(dialog).findByText(en['portal.store.problem.payer'])).toBeTruthy();
+    expect(posts).toHaveLength(0);
+    fireEvent.change(payer, { target: { value: '36 00 00 01' } });
     expect(payer.value).toBe('36000001');
-    expect(payer.maxLength).toBe(8);
     fireEvent.change(dialog.querySelector('input[type="file"]')!, { target: { files: [png()] } });
+    // Enter twice and a click, before the first answer: one request.
+    const form = dialog.querySelector('form')!;
+    fireEvent.submit(form);
+    fireEvent.submit(form);
     fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.send'] }));
     await waitFor(() => expect(posts).toHaveLength(1));
+    await new Promise((r) => setTimeout(r, 20));
+    expect(posts).toHaveLength(1);
     const b = posts[0]!.body as FormData;
     expect(posts[0]!.url).toMatch(/\/platform\/my-subscription\/payment-proofs$/);
     expect([b.get('category'), b.get('months'), b.get('branches'), b.get('receiveService'), b.get('receiveNumber'), b.get('payerPhone')]).toEqual(['subscription', '1', MAIN, 'sedad', '37676827', '36000001']);
     expect(b.get('file')).toBeInstanceOf(File);
     expect(b.get('amount')).toBeNull();
+  });
+
+  it('a file already approved: the server’s proof_duplicate is explained, never called somebody else’s change; only proof_revised is', async () => {
+    let answer = { code: 'proof_duplicate', message: 'This file has already been approved.' };
+    const base = vi.mocked(fetch).getMockImplementation()!;
+    vi.mocked(fetch).mockImplementation(async (input, init) => {
+      if (init?.method === 'POST') {
+        posts.push({ url: String(input), body: init.body as FormData });
+        return new Response(JSON.stringify({ statusCode: 409, ...answer }), { status: 409, headers: { 'Content-Type': 'application/json' } });
+      }
+      return base(input, init);
+    });
+    flow();
+    await waitFor(() => expect(within(quoteBox()).getByText('Main')).toBeTruthy());
+    fireEvent.click(screen.getByRole('button', { name: en['pay.continue'] }));
+    const dialog = document.querySelector('dialog')!;
+    fireEvent.click(within(dialog).getAllByRole('radio')[3]!);
+    fireEvent.change(dialog.querySelector('input[inputmode="numeric"]')!, { target: { value: '87236482' } });
+    fireEvent.change(dialog.querySelector('input[type="file"]')!, { target: { files: [png()] } });
+    fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.send'] }));
+    expect(await within(dialog).findByText(en['error.proof_duplicate'])).toBeTruthy();
+    expect(within(dialog).queryByText(en['error.conflict'])).toBeNull();
+    expect(posts).toHaveLength(1);
+    answer = { code: 'proof_open', message: 'A proof is already waiting for review.' };
+    fireEvent.click(within(dialog).getByRole('button', { name: en['portal.store.send'] }));
+    expect(await within(dialog).findByText(en['error.proof_open'])).toBeTruthy();
+    expect(posts).toHaveLength(2);
+  });
+
+  it('the refusal words exist in three languages, each its own', () => {
+    for (const k of ['error.proof_duplicate', 'error.proof_open', 'error.proof_key_reused', 'error.proof_decided', 'error.proof_revised'] as const) {
+      expect(new Set([en[k], fr[k], ar[k]]).size).toBe(3);
+    }
   });
 
   it('nothing offered yet: the window says so honestly, names no service or number, and cannot send', async () => {
@@ -229,7 +280,7 @@ describe('the payment window’s numbers and file', () => {
     expect(within(dialog).getAllByRole('radio').every((r) => !(r as HTMLInputElement).checked)).toBe(true);
     // The payer's own number stays international.
     const payer = dialog.querySelector('input[inputmode="numeric"]') as HTMLInputElement;
-    expect([payer.placeholder, payer.maxLength, within(dialog).getByText(en['pay.payer.hint']).textContent]).toEqual(['', 8, '8 digits, without +222.']);
+    expect([payer.placeholder, within(dialog).getByText(en['pay.payer.hint']).textContent]).toEqual(['', '8 digits, without +222.']);
   });
 
   it('the file: a real button opens the chooser; the name chosen is shown and announced with it', async () => {

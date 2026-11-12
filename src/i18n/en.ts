@@ -42,6 +42,11 @@ export const en = {
   'error.network': 'The server could not be reached. Check your connection and try again.',
   'error.unauthorized': 'You are not signed in, or your session ended.',
   'error.conflict': 'Somebody else changed this a moment ago. Refresh and try again.',
+  'error.proof_duplicate': "This file was already used for a payment we approved. Send the screenshot of this new payment.",
+  'error.proof_open': "A payment proof is already waiting for our check. You can send another one once it is decided.",
+  'error.proof_key_reused': "This payment was already sent with other details. Close this window and start the payment again.",
+  'error.proof_decided': "We have already decided on this payment proof. Refresh the page to see the result.",
+  'error.proof_revised': "This payment proof changed since you opened it. Refresh the page and try again.",
   'error.forbidden': 'Your account is not allowed to do this.',
   'error.tooManyRequests': 'Too many attempts in a short while. Wait a minute, then try again.',
 

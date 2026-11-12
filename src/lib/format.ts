@@ -75,3 +75,15 @@ export function localNumber(raw: string | null | undefined): string {
   const digits = raw.replace(/\D/g, '').replace(/^(?:00)?222(?=\d{8}$)/, '');
   return digits.length === 8 ? digits.replace(/(\d{2})(?=\d)/g, '$1 ') : raw;
 }
+
+/**
+ * Owner, 2026-11-12: the number a payment was sent from, as the Owner types or pastes it. Spaces, dots, dashes and
+ * brackets are dropped, and an explicit +222 or 00222 in front of eight digits is dropped too ("+222 36 96 38 39" →
+ * "36963839"). Nothing else changes: an eight-digit number beginning with 222 is kept as it is, and a number of the
+ * wrong length is never cut — it stays as entered, so the form can say it is wrong.
+ */
+export function payerInput(raw: string): string {
+  const compact = raw.replace(/[\s.\-()]/g, '');
+  const local = compact.match(/^(?:\+|00)222(\d{8})$/);
+  return local ? local[1]! : compact;
+}

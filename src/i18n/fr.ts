@@ -39,6 +39,11 @@ export const fr: Catalogue = {
   'error.network': 'Le serveur est injoignable. Vérifiez votre connexion et réessayez.',
   'error.unauthorized': 'Vous n’êtes pas connecté, ou votre session a expiré.',
   'error.conflict': 'Quelqu’un d’autre vient de modifier ceci. Actualisez et réessayez.',
+  'error.proof_duplicate': "Ce fichier a déjà servi pour un paiement que nous avons approuvé. Envoyez la capture de ce nouveau paiement.",
+  'error.proof_open': "Une preuve de paiement attend déjà notre vérification. Vous pourrez en envoyer une autre une fois qu’elle sera traitée.",
+  'error.proof_key_reused': "Ce paiement a déjà été envoyé avec d’autres informations. Fermez cette fenêtre et recommencez le paiement.",
+  'error.proof_decided': "Nous avons déjà traité cette preuve de paiement. Actualisez la page pour voir le résultat.",
+  'error.proof_revised': "Cette preuve de paiement a changé depuis que vous l’avez ouverte. Actualisez la page et réessayez.",
   'error.forbidden': 'Votre compte n’est pas autorisé à faire cela.',
   'error.tooManyRequests': 'Trop de tentatives en peu de temps. Attendez une minute, puis réessayez.',
 

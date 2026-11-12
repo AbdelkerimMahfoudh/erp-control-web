@@ -3,7 +3,7 @@ import type { Activity, NewStoreOption, PaymentInstructions, PaymentProof, PlanQ
 import { ownerRequest } from '../../auth/owner';
 import { Badge, ErrorNotice, Money, Notice } from '../../components/ui';
 import { useI18n, type Key } from '../../i18n';
-import { formatDate, formatMru } from '../../lib/format';
+import { formatDate, formatMru, payerInput } from '../../lib/format';
 import { arabicNameProblem, latinNameProblem, nameProblemKey, normalizeName } from '../../lib/names';
 
 const MAX_BYTES = 5 * 1024 * 1024;
@@ -398,7 +398,8 @@ function PayWindow({
     if (!open && d.open) d.close();
     if (open) {
       setReceiver(correcting?.receiveService && correcting.receiveNumber ? `${correcting.receiveService}:${correcting.receiveNumber}` : '');
-      setPayer((correcting?.payerPhone ?? '').replace(/\D/g, '').replace(/^(?:00)?222(?=\d{8}$)/, '').slice(0, 8));
+      // A number kept before the eight-digit rule may carry +222 (or 00222): shown without it, never cut.
+      setPayer(payerInput((correcting?.payerPhone ?? '').replace(/^222(?=\d{8}$)/, '+222')));
       setFile(null);
       setCopied(null);
       setProblem(null);
@@ -407,8 +408,11 @@ function PayWindow({
     }
   }, [open]);
 
+  // One save, one request: Enter pressed twice, or Enter then a click, before the button is disabled sends nothing more.
+  const sending = useRef(false);
   const send = async (e: FormEvent) => {
     e.preventDefault();
+    if (sending.current) return;
     setProblem(null);
     setError(null);
     const [service, number] = receiver.split(':');
@@ -421,6 +425,7 @@ function PayWindow({
     body.set('receiveNumber', number);
     body.set('payerPhone', payer);
     if (file) body.set('file', file);
+    sending.current = true;
     setBusy(true);
     try {
       if (correcting) {
@@ -438,6 +443,7 @@ function PayWindow({
     } catch (err) {
       setError(err);
     } finally {
+      sending.current = false;
       setBusy(false);
     }
   };
@@ -485,11 +491,9 @@ function PayWindow({
               inputMode="numeric"
               autoComplete="tel-national"
               dir="ltr"
-              maxLength={8}
-              pattern="[0-9]{8}"
               value={payer}
               aria-describedby="pay-payer-hint"
-              onChange={(e) => setPayer(e.target.value.replace(/\D/g, '').slice(0, 8))}
+              onChange={(e) => setPayer(payerInput(e.target.value))}
             />
             <span id="pay-payer-hint" className="muted small">
               {t('pay.payer.hint')}

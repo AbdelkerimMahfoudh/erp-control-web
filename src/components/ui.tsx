@@ -113,6 +113,9 @@ export function errorKey(e: unknown): Key {
     if (e.status === 0) return 'error.network';
     if (e.status === 401) return 'error.unauthorized';
     if (e.status === 403) return 'error.forbidden';
+    // Payment proofs (owner, 2026-11-12): each refusal in its own words. Only a proof that really changed meanwhile
+    // (proof_revised) reads as somebody else's change.
+    if (e.status === 409 && e.code && PROOF_CONFLICTS.includes(e.code)) return `error.${e.code}` as Key;
     if (e.status === 409) return 'error.conflict';
     // The API's rate limit refuses with no code and its class name for a sentence ("ThrottlerException: Too Many
     // Requests"); every limit it sets counts one minute. A refusal of its own, with a code, keeps the server's words.
@@ -219,3 +222,5 @@ export function Table<T>({ columns, rows, keyOf }: { columns: { label: string; r
     </div>
   );
 }
+
+const PROOF_CONFLICTS = ['proof_duplicate', 'proof_open', 'proof_key_reused', 'proof_decided', 'proof_revised'];
