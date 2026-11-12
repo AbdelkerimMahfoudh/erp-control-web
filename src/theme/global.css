@@ -1168,3 +1168,21 @@ fieldset.promo legend {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+/* The flow's checkboxes and radios at their own size (the form style above is for text fields), numbers on one line. */
+.pay-store input,
+.pay-receiver input {
+  flex: none;
+  inline-size: 20px;
+  block-size: 20px;
+  min-block-size: 0;
+  margin: 2px 0 0;
+  padding: 0;
+}
+.pay-receiver {
+  align-items: center;
+}
+.pay-receiver .ltr {
+  margin-inline-start: auto;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
