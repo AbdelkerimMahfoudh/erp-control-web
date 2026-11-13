@@ -410,6 +410,7 @@ function PayWindow({
 
   // One save, one request: Enter pressed twice, or Enter then a click, before the button is disabled sends nothing more.
   const sending = useRef(false);
+  const pasted = useRef(false);
   const send = async (e: FormEvent) => {
     e.preventDefault();
     if (sending.current) return;
@@ -493,7 +494,18 @@ function PayWindow({
               dir="ltr"
               value={payer}
               aria-describedby="pay-payer-hint"
-              onChange={(e) => setPayer(payerInput(e.target.value))}
+              onPaste={() => {
+                pasted.current = true;
+              }}
+              onChange={(e) => {
+                // Typed: no more than eight digits are taken. Pasted: +222 and separators dropped; a pasted number
+                // that is still too long stays as pasted (never cut) and the form says it is wrong.
+                const next = payerInput(e.target.value);
+                const fromPaste = pasted.current;
+                pasted.current = false;
+                if (!fromPaste && next.length > 8 && next.length > payer.length) return;
+                setPayer(next);
+              }}
             />
             <span id="pay-payer-hint" className="muted small">
               {t('pay.payer.hint')}

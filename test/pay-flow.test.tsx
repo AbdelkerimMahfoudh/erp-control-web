@@ -137,7 +137,12 @@ describe('the one payment flow', () => {
     // An eight-digit local number that begins with 222 is kept as entered.
     fireEvent.change(payer, { target: { value: '22236000' } });
     expect(payer.value).toBe('22236000');
-    // The wrong length stays as entered and is refused with our message — not truncated, no browser pattern tooltip.
+    // Typing: a ninth digit is not taken.
+    fireEvent.change(payer, { target: { value: '36963839' } });
+    fireEvent.change(payer, { target: { value: '369638396' } });
+    expect(payer.value).toBe('36963839');
+    // A pasted number of the wrong length stays as pasted and is refused with our message — not cut, no browser tooltip.
+    fireEvent.paste(payer);
     fireEvent.change(payer, { target: { value: '36 00 00 01 99' } });
     expect(payer.value).toBe('3600000199');
     expect([payer.maxLength, payer.getAttribute('pattern')]).toEqual([-1, null]);
