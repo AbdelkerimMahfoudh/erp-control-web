@@ -51,6 +51,8 @@ export function serve(handler: Handler) {
     const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status, headers: { 'Content-Type': 'application/json' } });
     if (answer instanceof Response) return answer;
     if (answer) return json(answer.body, answer.status ?? 200);
+    // The WhatsApp consent copy registration shows (owner, 2026-11-15): the server's, in the language asked.
+    if (url.includes('/messaging/whatsapp/consent')) return json({ version: 'wa-test', language: /language=(fr|ar)/.exec(url)?.[1] ?? 'en', title: 'WhatsApp messages', body: 'Consent body.', agreement: 'I agree to WhatsApp messages.', purposes: ['operational_whatsapp'] });
     if (url.endsWith('/platform/admin/me')) return json({ message: 'Unauthorized' }, 401);
     // The Owner's portal session (0099): signed in unless a test answers otherwise; a refresh finds nothing to renew.
     if (url.endsWith('/platform/portal/session')) return json(PORTAL_SESSION);

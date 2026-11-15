@@ -104,6 +104,20 @@ describe('a portal build, address by address', () => {
   }
 
   for (const lang of ['en', 'fr', 'ar'] as const) {
+    it(`in ${lang}: /signup is the business sign-up in the portal (App Store 3.1.1, owner 2026-11-15), and the sign-in leads to it`, async () => {
+      localStorage.setItem('erp.web.language', lang);
+      const cat = CATALOGUE[lang];
+      mount('/signup');
+      expect(await screen.findByRole('heading', { name: cat['apply.title'], level: 1 })).toBeTruthy();
+      expect(screen.getByRole('button', { name: cat['apply.submit'] })).toBeTruthy();
+      cleanup();
+      mount('/subscription');
+      const link = await screen.findByRole('link', { name: cat['portal.signin.create'] });
+      expect(link.getAttribute('href')).toBe('/signup');
+    });
+  }
+
+  for (const lang of ['en', 'fr', 'ar'] as const) {
     it(`in ${lang}: the legal and support pages are the portal’s own, in the reader’s language; the page reads ${lang === 'ar' ? 'right to left' : 'left to right'}`, async () => {
       localStorage.setItem('erp.web.language', lang);
       mount('/subscription');

@@ -130,8 +130,9 @@ describe('the build takes the portal’s stub, and its files carry none of the c
     expect(read('vite.config.ts')).toMatch(/surface === 'portal'\) \{\s+const areas = \[\{ find: \/\^\\\.\\\/public-areas\$\/, replacement: stub\('\.\/src\/public-areas\.portal\.tsx'\) \}\]/);
     const stub = read('src/public-areas.portal.tsx');
     // Only the legal and support pages (owner, 2026-11-05): no home, no application, no other company-site page.
-    expect(stub).not.toMatch(/Home|Apply|About|DukanErp|Contact|Products|Login/);
-    expect(stub.match(/from '\.\/pages\/public\/\w+'/g)).toEqual(["from './pages/public/Legal'", "from './pages/public/NotFound'"]);
+    // And the business sign-up at /signup (owner, 2026-11-15, App Store guideline 3.1.1: businesses sign up on the web).
+    expect(stub).not.toMatch(/Home|About|DukanErp|Contact|Products|Login/);
+    expect(stub.match(/from '\.\/pages\/public\/\w+'/g)).toEqual(["from './pages/public/Legal'", "from './pages/public/NotFound'", "from './pages/public/Apply'"]);
   });
 
   it('the prerenderer writes the shell for the portal and no page of the company site; the bundle audit has a portal mode', () => {

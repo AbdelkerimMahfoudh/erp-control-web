@@ -182,3 +182,6 @@ export function isInAppPath(pathname: string): boolean {
   return /^(?:\/(?:fr|ar))?\/in-app\//.test(pathname);
 }
 
+
+/** The portal's business sign-up (owner, 2026-11-15): the web is where a business account is created. */
+export const SIGNUP_PATH = '/signup';

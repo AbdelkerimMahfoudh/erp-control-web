@@ -58,6 +58,7 @@ async function fill(contacts: { email?: string; phone?: string } = {}) {
   if (contacts.email) await user.type(screen.getByLabelText(/Email address/), contacts.email);
   await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
   await user.click(screen.getByRole('radio', { name: /Electronics store/ }));
+  await user.click(await screen.findByRole('checkbox', { name: /I agree to WhatsApp messages/ }, SLOW_WAIT));
   return user;
 }
 
@@ -182,6 +183,7 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
     await user.type(screen.getByLabelText(literally(cat['apply.phone'])), '+22212345678');
     await user.type(screen.getByLabelText(new RegExp(`^${literally(cat['apply.password']).source}`)), 'a-long-password');
     await user.click(screen.getByRole('radio', { name: literally(cat['activity.electronics']) }));
+    await user.click(screen.getByRole('checkbox', { name: /I agree to WhatsApp messages/ }));
     await user.click(screen.getByRole('button', { name: cat['apply.submit'] }));
     const form = (await screen.findByLabelText(cat['apply.verify.code'], {}, SLOW_WAIT)).closest('form')!;
     /** Types `code` in place of what the field holds and confirms it; resolves once the page has the answer. */
@@ -194,7 +196,8 @@ describe('Apply: a code check that got no answer is never called a wrong code (R
       await waitFor(() => expect(button.disabled).toBe(false), SLOW_WAIT);
     };
     const confirmations = () => sent.filter((r) => r.url.endsWith('/platform/register/verify/confirm')).map((r) => (r.body as { code: string }).code);
-    const resends = () => sent.filter((r) => r.url.endsWith('/platform/register/verify/start')).length;
+    // The first code is sent as the step opens (owner, 2026-11-15); only the ones asked for again are resends.
+    const resends = () => sent.filter((r) => r.url.endsWith('/platform/register/verify/start')).length - 1;
     return { form, user, confirmCode, confirmations, resends };
   }
 

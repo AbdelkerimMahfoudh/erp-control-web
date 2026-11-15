@@ -1082,6 +1082,7 @@ describe('Apply ends at the portal’s sign-in', () => {
     await user.type(screen.getByLabelText(/WhatsApp number/), '+22236000001');
     await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
     await user.click(screen.getByRole('radio', { name: /Electronics store/ }));
+    await user.click(screen.getByRole('checkbox', { name: /I agree to WhatsApp messages/ }));
     await user.click(screen.getByRole('button', { name: 'Send my application' }));
     await user.type(await screen.findByLabelText('Verification code'), '123456');
     await user.click(screen.getByRole('button', { name: 'Confirm' }));
@@ -1114,6 +1115,7 @@ describe('Apply ends at the portal’s sign-in', () => {
     await user.type(screen.getByLabelText(/WhatsApp number/), '+22236000001');
     await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
     await user.click(screen.getByRole('radio', { name: /Electronics store/ }));
+    await user.click(screen.getByRole('checkbox', { name: /I agree to WhatsApp messages/ }));
     await user.click(screen.getByRole('button', { name: 'Send my application' }));
     expect(await screen.findByText(en['apply.done.body'])).toBeTruthy();
     expect(screen.queryByText(en['apply.done.trial'])).toBeNull();

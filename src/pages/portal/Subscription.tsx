@@ -1,3 +1,5 @@
+import { SIGNUP_PATH } from '../../site/routes';
+import { Link } from 'react-router-dom';
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { openProofFor } from './StorePayment';
 import { PayFlow, type PendingRequest } from './PayFlow';
@@ -111,6 +113,9 @@ export function Subscription() {
         <ErrorNotice error={error} />
         <SignIn onSigned={load} />
         <p className="muted small">{t('portal.signin.help')}</p>
+        <p>
+          {t('portal.signin.noAccount')} <Link to={SIGNUP_PATH}>{t('portal.signin.create')}</Link>
+        </p>
       </div>
     );
   }

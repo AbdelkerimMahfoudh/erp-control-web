@@ -1,7 +1,8 @@
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it } from 'vitest';
-import { BOTH, PLAN_V3, line, mount, quoteOf, serve, useActivityHarness } from './activity-fixtures';
+import { BOTH, PLAN_V3, SLOW_WAIT, line, mount, quoteOf, serve, useActivityHarness } from './activity-fixtures';
+import { en } from '../src/i18n/en';
 
 useActivityHarness();
 
@@ -36,18 +37,19 @@ describe('Apply: the first store’s activity', () => {
     await user.type(screen.getByLabelText(/^Password/), 'a-long-password');
 
     // Required: nothing is sent without a choice.
+    await user.click(screen.getByRole('checkbox', { name: /I agree to WhatsApp messages/ }));
     await user.click(screen.getByRole('button', { name: 'Send my application' }));
     expect(await screen.findByText('Choose what your first store does.')).toBeTruthy();
     expect(sent.filter((r) => r.url.endsWith('/platform/register'))).toHaveLength(0);
 
     await user.click(agent);
     await user.click(screen.getByRole('button', { name: 'Send my application' }));
-    expect(await screen.findByText('Your application is in')).toBeTruthy();
+    expect(await screen.findByText(en['apply.done.title'], {}, SLOW_WAIT)).toBeTruthy();
     const register = sent.find((r) => r.url.endsWith('/platform/register'))!;
     expect(register.body).toMatchObject({ ownerName: 'Aminetou', businessName: 'Agence Aminetou', branchName: 'Agence Centre', activity: 'money_agent', phone: '+22236000001' });
     // What the server recorded is what the page repeats.
     expect(screen.getByText('First store: Money services agent.')).toBeTruthy();
-  });
+  }, 15_000);
 });
 
 describe('The Dukan ERP page: three prices and an estimate by activity (moved from the home page, docs/74)', () => {

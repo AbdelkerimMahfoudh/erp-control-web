@@ -23,6 +23,15 @@ interface RegisterResponse {
   trialEligible?: boolean;
 }
 
+/** The WhatsApp consent copy in force (`GET messaging/whatsapp/consent`): shown as is, its version sent back. */
+interface ConsentCopy {
+  version: string;
+  language: string;
+  title: string;
+  body: string;
+  agreement: string;
+}
+
 type Step = { kind: 'form' } | { kind: 'verify'; response: RegisterResponse } | { kind: 'done'; response: RegisterResponse };
 
 /**
@@ -54,6 +63,11 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
   const [form, setForm] = useState({ ownerName: '', businessName: '', branchName: '', city: '', email: '', phone: '', password: '', language: lang });
   const [activity, setActivity] = useState<Activity | null>(null);
   const [plan, setPlan] = useState<PublicPlan | null>(null);
+  // Owner, 2026-11-15 (App Store 3.1.1): businesses sign up on the web. The server refuses a registration without the
+  // explicit WhatsApp consent to the copy in force, so the copy is shown in the form's language and its version sent.
+  const [consent, setConsent] = useState<ConsentCopy | null>(null);
+  const [agreed, setAgreed] = useState(false);
+  const [consentRound, setConsentRound] = useState(0);
   // One attempt keeps one key, so a retry after a lost answer is replayed rather than registered twice. A form changed
   // since — a field corrected after a failure — is a new attempt with a new key: under the old one the server would
   // replay the first registration and drop the correction.
@@ -79,6 +93,16 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
     };
   }, []);
 
+  useEffect(() => {
+    let alive = true;
+    request<ConsentCopy>(`messaging/whatsapp/consent?language=${form.language}`)
+      .then((c) => alive && setConsent(c))
+      .catch(() => alive && setConsent(null));
+    return () => {
+      alive = false;
+    };
+  }, [form.language, consentRound]);
+
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -89,6 +113,14 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
     }
     if (!activity) {
       setError(new ApiError(t('apply.error.activity'), 400, 'activity_required', null));
+      return;
+    }
+    if (!consent) {
+      setError(new ApiError(t('apply.consent.loadFailed'), 400, 'consent_unavailable', null));
+      return;
+    }
+    if (!agreed) {
+      setError(new ApiError(t('apply.consent.required'), 400, 'whatsapp_consent_required', null));
       return;
     }
     setBusy(true);
@@ -103,6 +135,8 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
         ...(form.email.trim() ? { email: form.email.trim() } : {}),
         password: form.password,
         language: form.language,
+        whatsappConsentVersion: consent.version,
+        whatsappConsentLocale: consent.language,
         // At most one source; the server checks it again and refuses, saving nothing, if it stopped being usable.
         ...(claim ?? {}),
       };
@@ -111,6 +145,12 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
       onRegistered(await request<RegisterResponse>('platform/register', { method: 'POST', body: { idempotencyKey: attempt.current.key, ...payload } }));
     } catch (err) {
       if (err instanceof ApiError && err.status === 503 && err.code === 'registration_unavailable') setUnavailable(true);
+      else if (err instanceof ApiError && err.code === 'whatsapp_consent_outdated') {
+        // An updated copy: shown again, unticked, and agreed to again.
+        setAgreed(false);
+        setConsentRound((n) => n + 1);
+        setError(new ApiError(t('apply.consent.outdated'), 400, err.code, null));
+      } else if (err instanceof ApiError && err.code === 'whatsapp_consent_required') setError(new ApiError(t('apply.consent.required'), 400, err.code, null));
       else setError(err);
     } finally {
       setBusy(false);
@@ -156,6 +196,16 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
         <Field label={t('apply.password')} hint={t('apply.password.hint')}>
           <input type="password" required minLength={8} maxLength={200} autoComplete="new-password" value={form.password} onChange={set('password')} />
         </Field>
+        {consent ? (
+          <fieldset className="stack-tight">
+            <legend>{consent.title}</legend>
+            <p className="muted small">{consent.body}</p>
+            <label className="row">
+              <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+              <span>{consent.agreement}</span>
+            </label>
+          </fieldset>
+        ) : null}
         <AcquisitionField arrived={arrived} onClaim={onClaim} onBusy={setChecking} disabled={busy} />
         <Field label={t('apply.language')}>
           <select value={form.language} onChange={set('language')}>
@@ -203,12 +253,19 @@ function Verify({ response, onDone }: { response: RegisterResponse; onDone: (r: 
   /** Every code whose confirmation got no answer: the account may already exist, made with it. */
   const [unanswered, setUnanswered] = useState<string[]>([]);
   const continuation = response.continuation!.token;
+  const asked = useRef(false);
+  useEffect(() => {
+    if (asked.current) return;
+    asked.current = true;
+    void start(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  const start = async () => {
+  const start = async (resend = true) => {
     setError(null);
     try {
       await request('platform/register/verify/start', { method: 'POST', body: { continuation, language: lang } });
-      setSent(t('apply.verify.sent'));
+      if (resend) setSent(t('apply.verify.sent'));
     } catch (e) {
       setError(e);
     }
@@ -258,7 +315,7 @@ function Verify({ response, onDone }: { response: RegisterResponse; onDone: (r: 
           <button type="submit" className="btn btn-primary" disabled={busy || !code.trim()}>
             {t('apply.verify.submit')}
           </button>
-          <button type="button" className="btn" onClick={() => void start()}>
+          <button type="button" className="btn" onClick={() => void start(true)}>
             {t('apply.verify.resend')}
           </button>
         </div>

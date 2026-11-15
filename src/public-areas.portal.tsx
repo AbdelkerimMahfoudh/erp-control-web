@@ -17,8 +17,9 @@ import { I18nProvider, useI18n } from './i18n';
 import { AccountDeletion, LegalNotice, Privacy, PrivacyChoices, Security, Support, Terms } from './pages/public/Legal';
 import { NotFound } from './pages/public/NotFound';
 import { PortalNotFound } from './pages/portal/PortalNotFound';
+import { Apply } from './pages/public/Apply';
 import { metaFor } from './site/meta';
-import { inAppRouteAt, isInAppPath, PORTAL_HOME, splitLanguage, type PublicRouteId } from './site/routes';
+import { inAppRouteAt, isInAppPath, PORTAL_HOME, SIGNUP_PATH, splitLanguage, type PublicRouteId } from './site/routes';
 
 const LEGAL_PAGES: Partial<Record<PublicRouteId, ComponentType>> = {
   support: Support,
@@ -33,7 +34,15 @@ const LEGAL_PAGES: Partial<Record<PublicRouteId, ComponentType>> = {
 export function PublicAreas() {
   const { pathname } = useLocation();
   if (pathname === '/') return <Navigate to={PORTAL_HOME} replace />;
-  const { lang } = splitLanguage(pathname);
+  const { lang, path } = splitLanguage(pathname);
+  // Owner, 2026-11-15 (App Store guideline 3.1.1): a business signs up here, on the web — the iOS app only signs in.
+  if (path === SIGNUP_PATH) {
+    return (
+      <PortalChrome>
+        <Apply />
+      </PortalChrome>
+    );
+  }
   const inApp = inAppRouteAt(pathname);
   const Page = inApp ? LEGAL_PAGES[inApp.route.id] : undefined;
   if (inApp && Page) {
