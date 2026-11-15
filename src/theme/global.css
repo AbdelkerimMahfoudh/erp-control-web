@@ -167,6 +167,71 @@ p {
   color: var(--text);
   background: var(--surface-2);
 }
+/* The admin console: its pages in a sidebar (owner, 2026-11-15); stacked above the page on a narrow screen. */
+.admin-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+.admin-side {
+  position: sticky;
+  top: 16px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  padding: 10px;
+}
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.admin-nav-group {
+  margin: 12px 10px 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.admin-nav-group:first-child {
+  margin-top: 4px;
+}
+.admin-nav a {
+  text-decoration: none;
+  color: var(--text-2);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+.admin-nav a:hover {
+  color: var(--text);
+  background: var(--surface-2);
+}
+.admin-nav a.active {
+  color: var(--text);
+  background: var(--brand-wash);
+  box-shadow: inset 3px 0 0 var(--brand);
+}
+[dir='rtl'] .admin-nav a.active {
+  box-shadow: inset -3px 0 0 var(--brand);
+}
+@media (max-width: 860px) {
+  .admin-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .admin-side {
+    position: static;
+  }
+  .admin-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .admin-nav-group {
+    flex-basis: 100%;
+  }
+}
 .controls {
   display: flex;
   gap: 8px;

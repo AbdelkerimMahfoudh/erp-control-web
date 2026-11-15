@@ -55,11 +55,11 @@ describe('the step-up window, reused', () => {
     expect(sent.filter((r) => r.method === 'POST')).toEqual([]);
   });
 
-  it('no window: the dialog once; then every decision in the next five minutes goes ahead, and no password travels with one', async () => {
+  it('no window: the dialog once; then every decision in the next ten minutes goes ahead, and no password travels with one', async () => {
     forgetStepUpWindow();
     const sent = serve((url, body) => {
       // The read (no body) finds none open; the step-up (password and code) opens one.
-      if (url.endsWith('/platform/admin/step-up')) return { body: { expiresAt: body ? new Date(Date.now() + 5 * 60_000).toISOString() : null } };
+      if (url.endsWith('/platform/admin/step-up')) return { body: { expiresAt: body ? new Date(Date.now() + 10 * 60_000).toISOString() : null } };
       return undefined;
     });
     const answers: boolean[] = [];
@@ -75,7 +75,7 @@ describe('the step-up window, reused', () => {
     expect(answers).toEqual([true, true, true]);
     const posts = sent.filter((r) => r.method === 'POST');
     expect(posts.map((r) => r.url.replace(/^.*\/api\/v1\//, ''))).toEqual(['platform/admin/step-up']);
-    expect(await screen.findByText(/^Verified for [45]:\d\d$/)).toBeTruthy();
+    expect(await screen.findByText(/^Verified for (?:9|10):\d\d$/)).toBeTruthy();
   });
 });
 

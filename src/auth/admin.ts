@@ -40,7 +40,7 @@ export function adminEnrolConfirm(code: string): Promise<{ recoveryCodes: string
   return request('platform/admin/mfa/enrolment/confirm', { method: 'POST', body: { code }, admin: true });
 }
 
-/** Step-up: the password and a fresh code, recorded on this session for five minutes. */
+/** Step-up: the password and a fresh code, recorded on this session for ten minutes (owner, 2026-11-15; was five). */
 export function adminStepUp(password: string, code: string): Promise<{ expiresAt: string }> {
   return request('platform/admin/step-up', { method: 'POST', body: { password, code }, admin: true });
 }
