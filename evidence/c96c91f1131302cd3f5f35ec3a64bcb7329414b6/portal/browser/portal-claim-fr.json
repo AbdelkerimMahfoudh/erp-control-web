@@ -1,0 +1,12 @@
+{
+  "claim": {
+    "path": "platform/my-subscription/trial/claim",
+    "csrf": "csrf-for-tests",
+    "body": {
+      "idempotencyKey": "[masked: 36 characters]",
+      "termsVersion": "2026-10-18"
+    }
+  },
+  "serious": [],
+  "errors": []
+}
