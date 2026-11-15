@@ -75,7 +75,9 @@ export const JOIN_PATH = '/join';
 /** The areas the application shell serves — behind a sign-in, and the registration link's landing: never prerendered, never indexed. */
 /** Post-Build-4: where the account-ready message's button lands, its single-use link as the last segment. Never indexed, never logged by the edge. */
 export const CLAIM_PATH = '/claim';
-export const PROTECTED_PREFIXES = [PORTAL_HOME, '/admin', JOIN_PATH, CLAIM_PATH] as const;
+/** The trial welcome's button (owner, 2026-11-15; dukan_trial_started_v2): the same single-use link, valid 12 hours. */
+export const WELCOME_PATH = '/welcome';
+export const PROTECTED_PREFIXES = [PORTAL_HOME, '/admin', JOIN_PATH, CLAIM_PATH, WELCOME_PATH] as const;
 
 /**
  * Where the Owner's page was before the portal (`/account`, `/account/trial`): sent on to {@link PORTAL_HOME}, never

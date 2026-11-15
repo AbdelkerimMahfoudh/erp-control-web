@@ -9,7 +9,7 @@ import { Subscription } from './pages/portal/Subscription';
 import { Admin } from './pages/admin/Admin';
 import { Join } from './pages/join/Join';
 import { Claim } from './pages/portal/Claim';
-import { CLAIM_PATH, JOIN_PATH, PORTAL_HOME } from './site/routes';
+import { CLAIM_PATH, JOIN_PATH, PORTAL_HOME, WELCOME_PATH } from './site/routes';
 
 export const PROTECTED_AREAS_BUILT = true;
 /** Whether this build holds the platform console (post-Build-4): a portal without it routes no /admin. */
@@ -23,6 +23,7 @@ export function ProtectedRoutes() {
       <Route path="/admin/*" element={<Admin />} />
       <Route path={JOIN_PATH} element={<Join />} />
       <Route path={`${CLAIM_PATH}/:token`} element={<Claim />} />
+      <Route path={`${WELCOME_PATH}/:token`} element={<Claim />} />
     </Routes>
   );
 }
