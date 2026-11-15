@@ -1,0 +1,23 @@
+{
+  "test": "console-business-fits",
+  "lang": "fr",
+  "overflow375": 0,
+  "offenders375": [
+    "button#btab-history.portal-tab [359..561]",
+    "button#btab-settings.portal-tab [565..666]"
+  ],
+  "overflow320": 0,
+  "offenders320": [
+    "button#btab-people.portal-tab.active [246..355]",
+    "button#btab-history.portal-tab [359..561]",
+    "button#btab-settings.portal-tab [565..666]"
+  ],
+  "tables": [
+    {
+      "inside": true
+    },
+    {
+      "inside": true
+    }
+  ]
+}
