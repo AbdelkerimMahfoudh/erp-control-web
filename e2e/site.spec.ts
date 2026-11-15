@@ -205,6 +205,8 @@ async function mockApi(page: Page, signedIn: Session = {}) {
     const url = route.request().url();
     const json = (body: unknown, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
     if (url.endsWith('/platform/plan')) return json(PLAN);
+    // The WhatsApp consent copy the sign-up shows (owner, 2026-11-15).
+    if (url.includes('/messaging/whatsapp/consent')) return json({ version: 'wa-test', language: /language=(fr|ar)/.exec(url)?.[1] ?? 'en', title: 'WhatsApp', body: 'Consent body.', agreement: 'I agree to WhatsApp messages.', purposes: ['operational_whatsapp'] });
     // The Owner's portal session (0099): the session route names who is signed in; nothing to refresh.
     if (url.endsWith('/platform/portal/session')) return signedIn.owner ? json(PORTAL_SESSION) : json({ message: 'Unauthorized' }, 401);
     if (url.endsWith('/platform/portal/refresh')) return json({ message: 'Unauthorized' }, 401);
@@ -643,8 +645,10 @@ for (const lang of LANGS) {
       const errors = watchConsole(page);
       await mockApi(page);
       let confirmations = 0;
-      await page.route(new RegExp(`^${API}/platform/register(/verify/confirm)?$`), async (route) => {
+      await page.route(new RegExp(`^${API}/platform/register(/verify/(confirm|start))?$`), async (route) => {
         const json = (body: unknown, status: number) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
+        // The first code, sent as the step opens (owner, 2026-11-15).
+        if (route.request().url().endsWith('/verify/start')) return json({ status: 'sent' }, 200);
         if (route.request().url().endsWith('/platform/register')) {
           return json(
             {
@@ -672,6 +676,7 @@ for (const lang of LANGS) {
       await page.getByLabel(cat['apply.phone']).fill('+22236000001');
       await page.getByLabel(cat['apply.password']).fill('a-long-password');
       await page.getByRole('radio', { name: cat['activity.electronics'] }).check();
+      await page.getByRole('checkbox', { name: 'I agree to WhatsApp messages.' }).check();
       await page.getByRole('button', { name: cat['apply.submit'] }).click();
       const form = page.locator('form:has(input[autocomplete="one-time-code"])');
       await form.getByLabel(cat['apply.verify.code']).fill('123456');
@@ -803,6 +808,7 @@ for (const lang of LANGS) {
       await page.getByLabel(cat['apply.phone']).fill('+22236000001');
       await page.getByLabel(cat['apply.password']).fill('a-long-password');
       await page.getByRole('radio', { name: cat['activity.electronics'] }).check();
+      await page.getByRole('checkbox', { name: 'I agree to WhatsApp messages.' }).check();
       await page.getByRole('button', { name: cat['apply.submit'] }).click();
       const form = page.locator('form:has(input[autocomplete="one-time-code"])');
       await form.getByRole('button', { name: cat['apply.verify.resend'], exact: true }).click();
@@ -822,7 +828,8 @@ for (const lang of LANGS) {
       const at320 = await layout(page);
       const unexpected = errors.filter((e) => !/Failed to load resource: the server responded with a status of 429/.test(e));
       record({ test: 'code-check-throttled', lang, width, asked, said, layout: l, overflow320: at320.overflow, offenders320: at320.offenders, consoleErrors: errors, axe: axe.violations.map((v) => ({ id: v.id, impact: v.impact, nodes: v.nodes.length })) });
-      expect(asked).toEqual({ resends: 1, confirmations: 1 });
+      // The first code is asked for as the step opens (owner, 2026-11-15), then once again by the button.
+      expect(asked).toEqual({ resends: 2, confirmations: 1 });
       expect(said).toContain(cat['error.tooManyRequests']);
       expect(said).not.toMatch(/Throttler|Too Many Requests/i);
       expect(said).not.toContain(cat['error.generic']);
