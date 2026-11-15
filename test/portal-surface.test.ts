@@ -110,6 +110,9 @@ describe('what a portal build publishes', () => {
         '/in-app/* /app-shell.html 200',
         '/fr/in-app/* /app-shell.html 200',
         '/ar/in-app/* /app-shell.html 200',
+        '/signup /app-shell.html 200',
+        '/fr/signup /app-shell.html 200',
+        '/ar/signup /app-shell.html 200',
         '',
       ].join('\n'),
     );

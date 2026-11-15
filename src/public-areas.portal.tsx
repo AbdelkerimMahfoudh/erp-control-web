@@ -37,11 +37,13 @@ export function PublicAreas() {
   const { lang, path } = splitLanguage(pathname);
   // Owner, 2026-11-15 (App Store guideline 3.1.1): a business signs up here, on the web — the iOS app only signs in.
   if (path === SIGNUP_PATH) {
-    return (
+    const page = (
       <PortalChrome>
         <Apply />
       </PortalChrome>
     );
+    // /fr/signup and /ar/signup open in their language; /signup in the reader's own.
+    return pathname === path ? page : <I18nProvider fixed={lang}>{page}</I18nProvider>;
   }
   const inApp = inAppRouteAt(pathname);
   const Page = inApp ? LEGAL_PAGES[inApp.route.id] : undefined;
