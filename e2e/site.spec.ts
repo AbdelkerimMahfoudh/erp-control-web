@@ -674,7 +674,7 @@ for (const lang of LANGS) {
       await page.getByLabel(cat['apply.business'], { exact: true }).fill('Boutique Test');
       await page.getByLabel(cat['apply.branch'], { exact: true }).fill('Centre');
       await page.getByLabel(cat['apply.phone']).fill('+22236000001');
-      await page.getByLabel(cat['apply.password']).fill('a-long-password');
+      await page.locator('input[autocomplete="new-password"]').fill('a-long-password');
       await page.getByRole('radio', { name: cat['activity.electronics'] }).check();
       await page.getByRole('checkbox', { name: 'I agree to WhatsApp messages.' }).check();
       await page.getByRole('button', { name: cat['apply.submit'] }).click();
@@ -806,7 +806,7 @@ for (const lang of LANGS) {
       await page.getByLabel(cat['apply.business'], { exact: true }).fill('Boutique Test');
       await page.getByLabel(cat['apply.branch'], { exact: true }).fill('Centre');
       await page.getByLabel(cat['apply.phone']).fill('+22236000001');
-      await page.getByLabel(cat['apply.password']).fill('a-long-password');
+      await page.locator('input[autocomplete="new-password"]').fill('a-long-password');
       await page.getByRole('radio', { name: cat['activity.electronics'] }).check();
       await page.getByRole('checkbox', { name: 'I agree to WhatsApp messages.' }).check();
       await page.getByRole('button', { name: cat['apply.submit'] }).click();
