@@ -132,7 +132,8 @@ describe('a decision’s step-up', () => {
     const dialog = screen.getByRole('dialog', { hidden: true });
     await user.type(within(dialog).getByLabelText('Password'), 'step-up-password');
     // The code must be six digits before anything is sent.
-    expect((within(dialog).getByRole('button', { name: 'Confirm', hidden: true }) as HTMLButtonElement).disabled).toBe(true);
+    await user.click(within(dialog).getByRole('button', { name: 'Confirm', hidden: true }));
+    expect(sent.some((r) => r.method === 'POST' && r.url.endsWith('/platform/admin/step-up'))).toBe(false);
     await user.type(within(dialog).getByLabelText('Code from your authenticator'), '12a3456');
     await user.click(within(dialog).getByRole('button', { name: 'Confirm', hidden: true }));
     expect(await within(dialog).findByText(/That password or code did not match/)).toBeTruthy();

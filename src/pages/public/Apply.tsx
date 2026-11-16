@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
+import { PasswordInput } from '../../components/PasswordInput';
 import { Link, useLocation } from 'react-router-dom';
 import { ApiError, request } from '../../api/client';
 import type { Activity, PublicPlan } from '../../api/types';
@@ -194,14 +195,14 @@ function ApplyForm({ lang, t, onRegistered }: { lang: Language; t: ReturnType<ty
           </Field>
         </div>
         <Field label={t('apply.password')} hint={t('apply.password.hint')}>
-          <input type="password" required minLength={8} maxLength={200} autoComplete="new-password" value={form.password} onChange={set('password')} />
+          <PasswordInput required minLength={8} maxLength={200} autoComplete="new-password" value={form.password} onChange={set('password')} />
         </Field>
         {consent ? (
           <fieldset className="stack-tight">
             <legend>{consent.title}</legend>
             <p className="muted small">{consent.body}</p>
             <label className="row">
-              <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+              <input type="checkbox" required checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
               <span>{consent.agreement}</span>
             </label>
           </fieldset>

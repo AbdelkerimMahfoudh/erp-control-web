@@ -1,3 +1,4 @@
+import { PasswordInput } from '../../components/PasswordInput';
 import {
   useCallback,
   useEffect,
@@ -210,9 +211,9 @@ function SignIn({ onSigned }: { onSigned: (mfa: AdminMfaState) => void }) {
           />
         </Field>
         <Field label={t("admin.password")}>
-          <input
+          <PasswordInput
             required
-            type="password"
+            
             autoComplete="current-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -596,8 +597,8 @@ function AdminSetup({
           hint={t("admin.invited.passwordHint")}
           error={said("password")}
         >
-          <input
-            type="password"
+          <PasswordInput
+            
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -605,8 +606,8 @@ function AdminSetup({
           />
         </Field>
         <Field label={t("admin.invited.again")} error={said("again")}>
-          <input
-            type="password"
+          <PasswordInput
+            
             autoComplete="new-password"
             value={again}
             onChange={(e) => setAgain(e.target.value)}

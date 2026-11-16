@@ -1356,3 +1356,40 @@ dialog.modal.pay-window {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* A field left empty or breaking its rule once its form was pressed, or one the page marks (owner, 2026-11-16). */
+form.tried input:invalid,
+form.tried select:invalid,
+form.tried textarea:invalid,
+input[aria-invalid='true'],
+select[aria-invalid='true'],
+textarea[aria-invalid='true'] {
+  border-color: var(--danger-fg);
+  box-shadow: 0 0 0 3px var(--danger-bg);
+}
+/* A password with its eye (owner, 2026-11-16 — as in the app). */
+.password-input {
+  position: relative;
+  display: block;
+}
+.password-input > input {
+  width: 100%;
+  padding-inline-end: 44px;
+}
+.password-toggle {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: 44px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--muted-fg);
+  cursor: pointer;
+}
+.password-toggle:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -4px;
+  border-radius: 8px;
+}

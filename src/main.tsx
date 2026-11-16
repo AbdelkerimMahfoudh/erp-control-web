@@ -5,7 +5,10 @@ import { App } from './app';
 import { I18nProvider } from './i18n';
 import { ThemeProvider } from './theme/theme';
 import './theme/global.css';
+import { installFormGuard } from './lib/form-guard';
 import './theme/public.css';
+
+installFormGuard();
 
 const root = document.getElementById('root')!;
 const app = (

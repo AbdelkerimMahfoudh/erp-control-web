@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react';
+import { PasswordInput } from './PasswordInput';
 import { useI18n } from '../i18n';
 import { ErrorNotice } from './ui';
 
@@ -46,13 +47,14 @@ export function StepUpDialog({
         <p className="muted">{t('admin.stepup.body')}</p>
         <label className="field">
           {t('admin.password')}
-          <input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus />
+          <PasswordInput required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} autoFocus />
         </label>
         <label className="field">
           {t('admin.mfa.code')}
           <input
             inputMode="numeric"
             autoComplete="one-time-code"
+            required
             pattern="\d{6}"
             maxLength={6}
             dir="ltr"
@@ -62,7 +64,7 @@ export function StepUpDialog({
         </label>
         <ErrorNotice error={error} />
         <div className="row">
-          <button type="submit" className="btn btn-primary" disabled={!ready || busy}>
+          <button type="submit" className="btn btn-primary" disabled={busy}>
             {t('action.confirm')}
           </button>
           <button type="button" className="btn" onClick={onCancel}>

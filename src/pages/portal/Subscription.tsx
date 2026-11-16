@@ -1,4 +1,5 @@
 import { SIGNUP_PATH } from '../../site/routes';
+import { PasswordInput } from '../../components/PasswordInput';
 import { Link } from 'react-router-dom';
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactNode } from 'react';
 import { openProofFor } from './StorePayment';
@@ -189,7 +190,7 @@ function SignIn({ onSigned }: { onSigned: () => Promise<void> }) {
         <input required autoComplete="username" value={identifier} onChange={(e) => setIdentifier(e.target.value)} dir="ltr" />
       </Field>
       <Field label={t('account.password')}>
-        <input required type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <PasswordInput required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
       {failed === 'credentials' ? <Notice tone="danger">{t('account.signin.failed')}</Notice> : null}
       {failed === 'owner_only' ? <Notice tone="danger">{t('portal.ownerOnly')}</Notice> : null}

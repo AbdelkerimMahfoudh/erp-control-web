@@ -15,6 +15,8 @@ export const ar: Catalogue = {
   'action.back': 'رجوع',
   'action.refresh': 'تحديث',
   'action.cancel': 'إلغاء',
+  'action.showPassword': 'إظهار كلمة المرور',
+  'action.hidePassword': 'إخفاء كلمة المرور',
   'action.confirm': 'تأكيد',
   'action.close': 'إغلاق',
   'action.signOut': 'تسجيل الخروج',

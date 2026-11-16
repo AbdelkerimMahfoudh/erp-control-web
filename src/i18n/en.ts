@@ -18,6 +18,8 @@ export const en = {
   'action.back': 'Back',
   'action.refresh': 'Refresh',
   'action.cancel': 'Cancel',
+  'action.showPassword': 'Show password',
+  'action.hidePassword': 'Hide password',
   'action.confirm': 'Confirm',
   'action.close': 'Close',
   'action.signOut': 'Sign out',

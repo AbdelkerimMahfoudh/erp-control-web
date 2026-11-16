@@ -15,6 +15,8 @@ export const fr: Catalogue = {
   'action.back': 'Retour',
   'action.refresh': 'Actualiser',
   'action.cancel': 'Annuler',
+  'action.showPassword': 'Afficher le mot de passe',
+  'action.hidePassword': 'Masquer le mot de passe',
   'action.confirm': 'Confirmer',
   'action.close': 'Fermer',
   'action.signOut': 'Se déconnecter',
